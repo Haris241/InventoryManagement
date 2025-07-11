@@ -1,0 +1,13 @@
+<div class="container"> 
+    <aside class="sidebar">
+        <h3 style="color: white;">Inventory Management</h3>
+        <nav>
+            <a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Dashboard</a>
+            <a routerLink="/products" routerLinkActive="active">Products</a>
+            <a routerLink="/suppliers" routerLinkActive="active">Supplier</a>
+        </nav>
+    </aside>
+<main class="content">
+      <router-outlet></router-outlet>
+</main>
+</div>

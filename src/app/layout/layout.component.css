@@ -1,0 +1,26 @@
+
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+.sidebar {
+    width: 200px;
+    padding: 1rem;
+    background-color: #21445F;
+    display: flex;
+    flex-direction: column;
+}
+.sidebar a{
+    color: white;
+    margin-bottom: 1rem;
+    text-decoration: none;
+    display: block;
+}
+.active {
+background-color: red;
+}
+.content {
+    flex: 1;
+    padding: 2rem;
+}
