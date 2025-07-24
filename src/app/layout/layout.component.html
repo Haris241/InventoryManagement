@@ -1,13 +1,38 @@
-<div class="container"> 
-    <aside class="sidebar">
-        <h3 style="color: white;">Inventory Management</h3>
-        <nav>
-            <a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Dashboard</a>
-            <a routerLink="/products" routerLinkActive="active">Products</a>
-            <a routerLink="/suppliers" routerLinkActive="active">Supplier</a>
-        </nav>
-    </aside>
-<main class="content">
-      <router-outlet></router-outlet>
-</main>
+<div class="d-flex vh-100">
+  <aside class=" text-white p-2 sidebar" [ngClass]="{collapsed: isCollapsed}">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      @if (!isCollapsed ) {
+      <h5 class="pt-2 ps-4">Inventory</h5>
+      }
+      <button class="btn btn-sm text-white btnhover" (click)="toogleSidebar()"><i class="bi bi-list fs-2"></i></button>
+    </div>
+    <hr>
+    @if (!isMobile) {
+    <nav class="nav flex-column">
+      <a class="nav-link text-white" routerLink="/dashboard" routerLinkActive="active"
+        [routerLinkActiveOptions]="{exact: true}" (click)="onSelectMobile()">
+        <i class="bi-bar-chart-line"></i>
+        @if (!isCollapsed) {
+        <span class="custom">DashBoard</span>
+        }
+      </a>
+      <a class="nav-link text-white" (click)="onSelectMobile()" routerLink="/products" routerLinkActive="active" >
+        <i class="bi-box"></i>
+        @if (!isCollapsed) {
+        <span class="custom">Products</span>
+        }
+      </a>
+      <a class="nav-link text-white" (click)="onSelectMobile()" routerLink="/suppliers" routerLinkActive="active">
+        <i class="bi-person-lines-fill"></i>
+        @if (!isCollapsed) {
+        <span class="custom">Suppliers</span>
+        }
+      </a>
+    </nav>
+    }
+  </aside>
+
+  <main class="flex-grow-1 pt-5 pt-md-4 p-4 main" [ngClass]="{collapsed: isCollapsed}">
+    <router-outlet></router-outlet>
+  </main>
 </div>
