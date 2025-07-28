@@ -12,14 +12,10 @@ import { DropdownModule } from 'primeng/dropdown';
   styleUrl: './products.component.css'
 })
 export class ProductsComponent {
-constructor (private baseservice:BaseApiService){}
-addDiv = false;
+constructor (private api:BaseApiService){}
 products: Product[]=[];
-showdiv(){
-  this.addDiv=!this.addDiv;
-}
 ngOnInit(){
-  this.baseservice.getAll<Product>("Products").subscribe((data: Product[])=>{
+  this.api.getAll<Product>("Products").subscribe((data: Product[])=>{
     console.log("Products: ",data);
     this.products=data;
   });

@@ -1,1 +1,52 @@
-<p>add-product works!</p>
+<form [formGroup]="addproduct" (ngSubmit)="createProduct()">
+  <div class="row global-div">
+    <div style="color: #4b49ac; text-align: center;">
+      <h3>Add Product Information</h3>
+      <hr>
+    </div>
+    <div class="col-md-6 mb-3">
+      <label for="name" class="mb-2">Product Name *</label>
+      <div class="col-8">
+        <input pInputText pSize="small" id="name" autocomplete="off" type="text" formControlName="name"
+          class="form-control">
+        @if (submit && addproduct.get('name')?.invalid) {
+        <small style="color: red;">Name is required</small>
+        }
+      </div>
+    </div>
+
+    <div class="col-md-6 mb-3">
+      <label for="price" class="mb-2">Product Price *</label>
+      <div class="col-8">
+        <input pInputText pSize="small" id="price" autocomplete="off" type="text" formControlName="price"
+          class="form-control">
+        @if (submit && addproduct.get('price')?.invalid) {
+        <small style="color: red;">Price is required</small>
+        }
+      </div>
+    </div>
+
+    <div class="col-md-6 mb-3">
+      <label for="quantity" class="mb-2">Product Quantity</label>
+      <div class="col-8">
+        <input pInputText pSize="small" id="quantity" autocomplete="off" type="text" formControlName="quantity"
+          class="form-control">
+      </div>
+
+    </div>
+
+    <div class="col-md-6 mb-3">
+      <label id="supplierLabel" class="mb-2">Select Supplier</label>
+      <div>
+        <p-select [options]="suppliers" inputId="supplierId" optionLabel="name" formControlName="supplierId"
+          [filter]="true" filterBy="name" optionValue="id" placeholder="Select a Supplier"></p-select>
+      </div>
+    </div>
+    <div class="col-md-6 mb-3">
+      <button class="global-button">Add Product</button>
+    </div>
+    <div class="col-md-6 mb-3">
+      <p-messages [value]="msg"></p-messages>
+    </div>
+  </div>
+</form>

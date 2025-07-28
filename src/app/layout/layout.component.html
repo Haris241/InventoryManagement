@@ -16,23 +16,71 @@
         <span class="custom">DashBoard</span>
         }
       </a>
-      <a class="nav-link text-white" (click)="onSelectMobile()" routerLink="/products" routerLinkActive="active" >
-        <i class="bi-box"></i>
+      <a class="nav-link text-white d-flex justify-content-between" (click)="toogleDropdown('Product')" 
+        [ngClass]="{'active': isCollapsed && isActiveGroup('Product')}">
+        <div>
+          <i class="bi-box"></i>
         @if (!isCollapsed) {
-        <span class="custom">Products</span>
+        <span class="custom">Product</span>
+        }
+        </div>
+        @if (!isCollapsed) {
+          <i class="bi" [ngClass]="{'bi-caret-down-fill': !isProductDropdown,'bi-caret-up-fill': isProductDropdown}"></i>
         }
       </a>
-      <a class="nav-link text-white" (click)="onSelectMobile()" routerLink="/suppliers" routerLinkActive="active">
-        <i class="bi-person-lines-fill"></i>
+      @if (!isCollapsed && isProductDropdown) {
+      <div class="ps-3">
+        <a class="nav-link text-white d-flex align-items-center " (click)="onSelectMobile()" routerLink="/addproduct" routerLinkActive="active">
+          <i class="pi pi-angle-right"></i>
+          @if (!isCollapsed) {
+          <span class="custom-dropdown">Add Product</span>
+          }
+        </a>
+      </div>
+      <div class="ps-3">
+        <a class="nav-link text-white d-flex align-items-center " (click)="onSelectMobile()" routerLink="/products" routerLinkActive="active">
+          <i class="pi pi-angle-right"></i>
+          @if (!isCollapsed) {
+          <span class="custom-dropdown">Product List</span>
+          }
+        </a>
+      </div>
+      }
+      <a class="nav-link text-white d-flex justify-content-between" (click)="toogleDropdown('Supplier')"
+        [ngClass]="{'active': isCollapsed && isActiveGroup('Supplier')}" >
+        <div>
+          <i class="bi-person-lines-fill"></i>
         @if (!isCollapsed) {
-        <span class="custom">Suppliers</span>
+        <span class="custom">Supplier</span>
+        }
+        </div>
+        @if (!isCollapsed) {
+          <i class="bi" [ngClass]="{'bi-caret-down-fill': !isSupplierDropdown,'bi-caret-up-fill': isSupplierDropdown}"></i>
         }
       </a>
+      @if (!isCollapsed && isSupplierDropdown) {
+      <div class="ps-3">
+        <a class="nav-link text-white d-flex align-items-center " (click)="onSelectMobile()" routerLink="/addsupplier" routerLinkActive="active">
+          <i class="pi pi-angle-right"></i>
+          @if (!isCollapsed) {
+          <span class="custom-dropdown">Add Supplier</span>
+          }
+        </a>
+      </div>
+      <div class="ps-3">
+        <a class="nav-link text-white d-flex align-items-center " (click)="onSelectMobile()" routerLink="/suppliers" routerLinkActive="active">
+          <i class="pi pi-angle-right"></i>
+          @if (!isCollapsed) {
+          <span class="custom-dropdown">Supplier List</span>
+          }
+        </a>
+      </div>
+      }
     </nav>
     }
   </aside>
 
-  <main class="flex-grow-1 pt-5 pt-md-4 p-4 main" [ngClass]="{collapsed: isCollapsed}">
+  <main class="flex-grow-1 pt-md-4 p-4 main" [ngClass]="{collapsed: isCollapsed}">
     <router-outlet></router-outlet>
   </main>
 </div>

@@ -13,4 +13,7 @@ export class BaseApiService {
   getAll<T>(controller: string): Observable<T[]>{
     return this.http.get<T[]>(`${this.baseurl}${controller}`);
   }
+  create<T>(controller: string, object: T): Observable<T>{
+    return this.http.post<T>(`${this.baseurl}${controller}`, object);
+  }
 }

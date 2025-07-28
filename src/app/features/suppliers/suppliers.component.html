@@ -1,30 +1,32 @@
-<h2 style="text-align: center;">Suppliers</h2>
-<div>
-    <button>Add Supplier</button>
+<h2 style="text-align: center;">Products</h2>
+<div class="row global-div">
+    <div class="col-12">
+        <div class="d-flex justify-content-center">
+            <div class="global-search m-3">
+                <i class="pi pi-search"></i>
+                <input type="text" (input)="dt?.filterGlobal($any($event.target).value, 'contains')"
+                    placeholder="Search" />
+            </div>
+        </div>
+        <p-table #dt [value]="suppliers" [globalFilterFields]="['name']" [paginator]="true" [rows]="10"
+            [tableStyle]="{ 'min-width': '50rem' }" [rowsPerPageOptions]="[5,10,20]">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Supplier Name</th>
+                    <th>Contact</th>
+                    <th>Actions</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-supplier>
+                <tr>
+                    <td>{{supplier.name}}</td>
+                    <td>{{supplier.contact}}</td>
+                    <td>
+                        <a class="me-3" routerLink=""><i class="pi pi-pencil "></i></a>
+                        <a routerLink=""><i class="pi pi-trash "></i></a>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
 </div>
-
-<p-table
-    [value]="[customer]"
-    [paginator]="true"
-    [rows]="5"
-    [tableStyle]="{ 'min-width': '50rem' }"
-    [rowsPerPageOptions]="[5, 10, 20]"
->
-    <ng-template #header>
-        <tr>
-            <th style="width:25%">Name</th>
-            <th style="width:25%">Country</th>
-            <th style="width:25%">Company</th>
-            <th style="width:25%">Representative</th>
-        </tr>
-    </ng-template>
-    <ng-template #body let-customer>
-        <tr>
-            <td>{{ customer.name }}</td>
-            <td>{{ customer.country}}</td>
-            <td>{{ customer.company }}</td>
-            <td>{{ customer.representative}}</td>
-        </tr>
-    </ng-template>
-</p-table>
-

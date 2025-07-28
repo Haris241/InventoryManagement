@@ -107,7 +107,10 @@ body {
   font-weight: 500;
   color: white;
 }
-
+.p-select-label {
+  padding: 5px !important;
+  width: 150px !important;
+}
 .global-button:hover{
   background-color: white;
   color: #1A3636;
@@ -116,9 +119,12 @@ body {
   font-weight: 500;
 }
 
-.global-tablediv{
+
+.global-div{
   background-color: white;
   border-radius: 20px;
   padding-bottom: 20px;
+  padding-top: 20px;
   box-shadow: 10px 10px 10px rgba(26, 54, 54, 0.3) ;
 }
+
