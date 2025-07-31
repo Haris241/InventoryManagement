@@ -1,7 +1,7 @@
-<h2 style="text-align: center;">Products</h2>
-<div class="row global-div">
-    <div class="col-12">
-        <div class="d-flex justify-content-center">
+<h2 class="text-center text-semibold text-3xl">Products</h2>
+<div class="flex flex-wrap global-div mt-4 p-4">
+    <div class="w-full">
+        <div class="flex justify-center">
             <div class="global-search m-3">
                 <i class="pi pi-search"></i>
                 <input type="text" (input)="dt?.filterGlobal($any($event.target).value, 'contains')"
@@ -24,8 +24,8 @@
                     <td>{{product.quantity}}</td>
                     <td>{{product.price}}</td>
                     <td>
-                        <a class="me-3" routerLink=""><i class="pi pi-pencil "></i></a>
-                        <a routerLink=""><i class="pi pi-trash "></i></a>
+                        <a class="me-3" routerLink=""><i class="pi pi-pencil edit-delete"></i></a>
+                        <a routerLink=""><i class="pi pi-trash edit-delete"></i></a>
                     </td>
                 </tr>
             </ng-template>

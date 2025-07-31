@@ -1,31 +1,31 @@
 <form [formGroup]="addSupplier" (ngSubmit)="createSupplier()">
-  <div class="row global-div">
-    <div style="color: #4b49ac; text-align: center;">
-      <h3>Add Supplier Information</h3>
-      <hr>
+  <div class="flex flex-wrap global-div p-5">
+    <div class="w-full mb-4">
+      <h3 class="text-2xl font-semibold text-center text-[#4b49ac] mb-3">Add Supplier Information</h3>
+      <hr class="text-[#4b49ac]">
     </div>
-    <div class="col-md-6 mb-3">
-      <label for="name" class="mb-2">Supplier Name *</label>
-      <div class="col-8">
+    <div class="md:w-1/2 w-full mb-3">
+      <label for="name">Supplier Name *</label>
+      <div class="md:w-1/2 w-2/3">
         <input pInputText pSize="small" id="name" autocomplete="off" type="text" formControlName="name"
-          class="form-control">
+          class="w-full">
         @if (submit && addSupplier.get('name')?.invalid) {
         <small style="color: red;">Name is required</small>
         }
       </div>
     </div>
 
-    <div class="col-md-6 mb-3">
-      <label for="contact" class="mb-2">Contact</label>
-      <div class="col-8">
+    <div class="md:w-1/2 w-full mb-3">
+      <label for="contact">Contact</label>
+      <div class="md:w-1/2 w-2/3">
         <input pInputText pSize="small" id="contact" autocomplete="off" type="text" formControlName="contact"
-        class="form-control">
+        class="w-full">
       </div>
     </div>
-    <div class="col-md-6 mb-3">
+    <div class="md:w-1/2 w-full mb-3">
       <button class="global-button">Add Supplier</button>
     </div>
-    <div class="col-md-6 mb-3">
+    <div class="md:w-1/2 w-full mb-3">
       <p-messages [value]="msg"></p-messages>
     </div>
   </div>

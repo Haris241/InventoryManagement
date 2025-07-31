@@ -1,6 +1,12 @@
 /* You can add global styles to this file, and also import other style files */
+@import "tailwindcss";
+
+
 body {
   margin: 0;
+}
+.pi {
+  line-height: unset;
 }
 .global-search {
   display: flex;
@@ -87,6 +93,9 @@ body {
   font-size: 14px;
   color: white;
 }
+.edit-delete{
+  color: rgb(83, 176, 212);
+}
 
 .delete-button:hover{
   background-color: white;
@@ -109,7 +118,6 @@ body {
 }
 .p-select-label {
   padding: 5px !important;
-  width: 150px !important;
 }
 .global-button:hover{
   background-color: white;
