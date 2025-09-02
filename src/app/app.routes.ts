@@ -7,8 +7,22 @@ import { SuppliersComponent } from './features/suppliers/suppliers.component';
 import { AddProductComponent } from './features/add-product/add-product.component';
 import { AddSupplierComponent } from './add-supplier/add-supplier.component';
 import { EditProductComponent } from './edit-product/edit-product.component';
+import { LoginComponent } from './auth/login/login.component';
+import { RegisterComponent } from './auth/register/register.component';
+import { AuthComponent } from './authlayout/auth/auth.component';
 
 export const routes: Routes = [
+    {
+        path:'', component: AuthComponent, children: [
+            {
+                path:'login', component: LoginComponent
+            },
+            {
+                path:'register', component: RegisterComponent
+            },
+            { path: '', redirectTo: 'login', pathMatch: 'full' }
+        ]
+    },
     {
         path:'', component:LayoutComponent, children: [
             {
@@ -30,7 +44,7 @@ export const routes: Routes = [
                 path:'editproduct', component: EditProductComponent
             },
             {
-                path:'', redirectTo:'dashboard', pathMatch:'full'
+                path:'', redirectTo:'login', pathMatch:'full'
             }
         ]
     }

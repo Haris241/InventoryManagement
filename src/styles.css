@@ -8,6 +8,12 @@ body {
 .pi {
   line-height: unset;
 }
+.global-bgcolor{
+  background-color: #4b49ac;
+}
+.global-color{
+  color: #4b49ac;
+}
 .global-search {
   display: flex;
   align-items: center;

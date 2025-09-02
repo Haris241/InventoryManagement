@@ -1,0 +1,59 @@
+<form [formGroup]="login">
+    <div class="containerr">
+        <div class="flex justify-center mt-4">
+            <img src="/Logo.png" alt="Inventory Management System Logo" class="logo">
+        </div>
+        <div class="mt-4 md:mx-10 mx-5">
+            <p class="text-2xl text-center global-color font-bold ">Let’s Get Started!</p>
+        </div>
+        <div class="mb-4 md:mx-10 mx-5">
+            <p class="text-sm text-center text-black">Create your account and take control of your inventory from day one.</p>
+        </div>
+        <div class="my-4 md:mx-10 mx-5">
+            <label class="global-color" for="name">Email</label>
+            <div class="w-full">
+                <input pInputText pSize="small" id="email" autocomplete="off" type="text" formControlName="email"
+                    class="w-full" placeholder="Enter your Email">
+                @if (submit && login.get('email')?.invalid) {
+                <small style="color: red;">Email is required</small>
+                }
+            </div>
+        </div>
+        <div class="my-4 md:mx-10 mx-5">
+            <label class="global-color" for="name">Username</label>
+            <div class="w-full">
+                <input pInputText pSize="small" id="userName" autocomplete="off" type="text" formControlName="userName"
+                    class="w-full" placeholder="Enter your Username">
+                @if (submit && login.get('userName')?.invalid) {
+                <small style="color: red;">UserName is required</small>
+                }
+            </div>
+        </div>
+        <div class="mt-4 md:mx-10 mx-5">
+            <label class="global-color" for="password">Password</label>
+            <div class="w-full">
+                <input pInputText pSize="small" id="password" autocomplete="off" type="text" formControlName="password"
+                    class="w-full" placeholder="Enter Your Password">
+                @if (submit && login.get('password')?.invalid) {
+                <small style="color: red;">Password is required</small>
+                }
+            </div>
+        </div>
+         <div class="mt-4 md:mx-10 mx-5">
+            <label class="global-color" for="password">Confirm Password</label>
+            <div class="w-full">
+                <input pInputText pSize="small" id="confirmPassword" autocomplete="off" type="text" formControlName="confirmPassword"
+                    class="w-full" placeholder="Confirm Your Password">
+                @if (submit && login.get('confirmPassword')?.invalid) {
+                <small style="color: red;">Password is not matched</small>
+                }
+            </div>
+        </div>
+        <div class="my-4 md:mx-10 mx-5">
+            <button class="login-button">Register Now</button>
+        </div>
+        <div class="mb-10 md:mx-10 mx-5 flex justify-center ">
+            <a routerLink="/login" class="text-sm font-bold global-color  hover:underline">Back To Login</a>
+        </div>
+    </div>
+</form>
