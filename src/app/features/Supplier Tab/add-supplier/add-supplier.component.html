@@ -1,8 +1,8 @@
 <form [formGroup]="addSupplier" (ngSubmit)="createSupplier()">
   <div class="flex flex-wrap global-div p-5">
     <div class="w-full mb-4">
-      <h3 class="text-2xl font-semibold text-center text-[#4b49ac] mb-3">Add Supplier Information</h3>
-      <hr class="text-[#4b49ac]">
+      <h3 class="text-2xl font-semibold text-center second-color mb-3">Add Supplier Information</h3>
+      <hr class="second-color">
     </div>
     <div class="md:w-1/2 w-full mb-3">
       <label for="name">Supplier Name *</label>
@@ -25,8 +25,6 @@
     <div class="md:w-1/2 w-full mb-3">
       <button class="global-button">Add Supplier</button>
     </div>
-    <div class="md:w-1/2 w-full mb-3">
-      <p-messages [value]="msg"></p-messages>
-    </div>
   </div>
 </form>
+<p-toast position="top-center" [baseZIndex]="9999" />

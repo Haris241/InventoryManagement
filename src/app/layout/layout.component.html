@@ -9,7 +9,7 @@
     <hr>
     @if (!isMobile) {
     <nav class="flex-col items-center mt-4 ">
-      <a class="flex nav-link text-white" routerLink="/dashboard" routerLinkActive="active"
+      <a class="flex nav-link text-white" routerLink="/Inventory/dashboard" routerLinkActive="active"
         [routerLinkActiveOptions]="{exact: true}" (click)="onSelectMobile()">
         <i class="pi pi-chart-bar"></i>
         @if (!isCollapsed) {
@@ -30,7 +30,7 @@
       </a>
       @if (!isCollapsed && isProductDropdown) {
       <div class="ps-3">
-        <a class="nav-link text-white flex items-center " (click)="onSelectMobile()" routerLink="/addproduct" routerLinkActive="active">
+        <a class="nav-link text-white flex items-center " (click)="onSelectMobile()" routerLink="/Inventory/addproduct" routerLinkActive="active">
           <i class="pi pi-angle-right"></i>
           @if (!isCollapsed) {
           <span class="custom-dropdown">Add Product</span>
@@ -38,7 +38,7 @@
         </a>
       </div>
       <div class="ps-3">
-        <a class="nav-link text-white flex items-center " (click)="onSelectMobile()" routerLink="/products" routerLinkActive="active">
+        <a class="nav-link text-white flex items-center " (click)="onSelectMobile()" routerLink="/Inventory/products" routerLinkActive="active">
           <i class="pi pi-angle-right"></i>
           @if (!isCollapsed) {
           <span class="custom-dropdown">Product List</span>
@@ -60,7 +60,7 @@
       </a>
       @if (!isCollapsed && isSupplierDropdown) {
       <div class="ps-3">
-        <a class="nav-link text-white flex items-center " (click)="onSelectMobile()" routerLink="/addsupplier" routerLinkActive="active">
+        <a class="nav-link text-white flex items-center " (click)="onSelectMobile()" routerLink="/Inventory/addsupplier" routerLinkActive="active">
           <i class="pi pi-angle-right"></i>
           @if (!isCollapsed) {
           <span class="custom-dropdown">Add Supplier</span>
@@ -68,7 +68,7 @@
         </a>
       </div>
       <div class="ps-3">
-        <a class="nav-link text-white flex items-center " (click)="onSelectMobile()" routerLink="/suppliers" routerLinkActive="active">
+        <a class="nav-link text-white flex items-center " (click)="onSelectMobile()" routerLink="/Inventory/suppliers" routerLinkActive="active">
           <i class="pi pi-angle-right"></i>
           @if (!isCollapsed) {
           <span class="custom-dropdown">Supplier List</span>

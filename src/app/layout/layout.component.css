@@ -1,5 +1,5 @@
 .active {
-    background-color: #4b49ac;
+    background-color: var(--MainColour);
 }
 
 .custom {
@@ -18,14 +18,14 @@
     height: 100%;
     transition: width 0.5s ease;
     position: fixed;
+    border-right: 1px solid var(--Outline);
     overflow-y: auto;
-    box-shadow: 10px 0px 10px rgba(20, 2, 87, 0.2);
     background-color: #181824;
     z-index: 2;
 }
 
 .btnhover:hover {
-    background-color: #4b49ac;
+    background-color: var(--MainColour);
 }
 
 .sidebar.collapsed {
@@ -45,9 +45,8 @@
     padding: 8px 8px;
     border-radius: 10px;
 }
-
 .main {
-    background-color: #e9e7e7;
+    background-color: var(--divBackgound);
     z-index: 1;
     margin-left: 200px;
     height: 100vh;
@@ -62,7 +61,7 @@
 @media (max-width: 768px) {
     .sidebar {
         position: fixed;
-        z-index: 2;
+        
         transition: 0.3s ease;
     }
 
@@ -75,8 +74,7 @@
     .sidebar.collapsed {
         height: 60px;
         width: 60px;
-        background-color: #4b49ac;
-        box-shadow: none;
+        background-color: var(--MainColour);
     }
 
 

@@ -5,6 +5,13 @@
 body {
   margin: 0;
 }
+:root{
+  --divBackgound: #09090b;
+  --DivColour: #17171a;
+  --MainColour: #007bff;
+  --White: white;
+  --Outline:  rgba(255, 255, 255, 0.164);
+}
 .pi {
   line-height: unset;
 }
@@ -14,10 +21,25 @@ body {
 .global-color{
   color: #4b49ac;
 }
+.second-bgcolor{
+  background-color: var(--MainColour);
+}
+.second-color{
+  color: var(--MainColour);
+}
+.globalBg{
+  background-color: var(--DivColour);
+}
+.WhiteC{
+  color: var(--White);
+}
+label{
+    color: var(--White) ;
+}
 .global-search {
   display: flex;
   align-items: center;
-  border: 1px solid #4b49ac;
+  border: 1px solid var(--MainColour);
   border-radius: 6px;
   padding: 6px 10px;
   width: 120px; 
@@ -25,7 +47,7 @@ body {
 
 .global-search i {
   margin-right: 8px;
-  color: #4b49ac;
+  color: var(--MainColour);
   font-size: 12px;
 }
 
@@ -38,9 +60,9 @@ body {
 }
 
 .p-datatable .p-datatable-thead > tr > th{
-  background-color: #4b49ac;
+  background-color: var(--MainColour);
   font-size: 16px;
-  color: white;
+  color: var(--White);
   padding: 5px;
   font-weight: 600;
 }
@@ -51,8 +73,8 @@ body {
   font-weight: 500;
 }
 .p-paginator-page.p-paginator-page-selected {
-    background: #4b49ac !important;
-    color: white !important ;
+    background: var(--MainColour) !important;
+    color: var(--White) !important ;
 }
 .p-paginator-pages{
   gap: 5px;
@@ -71,74 +93,104 @@ body {
   font-size: 12px;
   line-height: 1;
 }
+.p-inputtext:enabled:focus {
+  border-color: var(--White) !important;
+}
+.p-inputtext{
+  color: var(--White)!important;
+  border: 1px solid #52525b !important;
+}
+label.required::after {
+  content: '*';
+  color: red;
+}
 
 .edit-button {
   display: inline-block;
-  background-color: #007bff;
+  background-color: var(--MainColour);
   padding: 4px 16px;
   align-items: center;
+  cursor: pointer;
   border: 1px solid;
   border-radius: 10px;
   font-size: 14px;
-  color: white;
+  color:  white;
 }
 .edit-button:hover{
   background-color: white;
   align-items: center;
-  color: #007bff;
-  border: 1px solid #007bff;
+   cursor: pointer;
+  color: var(--MainColour);
+  border: 1px solid var(--MainColour);
 }
 
 .delete-button {
   display: inline-block;
   background-color: red;
   align-items: center;
+  cursor: pointer;
   padding: 4px 16px;
   border: 1px solid;
   border-radius: 10px;
   font-size: 14px;
-  color: white;
+  color:  white;
 }
 .edit-delete{
   color: rgb(83, 176, 212);
 }
 
 .delete-button:hover{
-  background-color: white;
+  background-color:  white;
   align-items: center;
   color: red;
+  cursor: pointer;
   border: 1px solid red;
 }
 
 .global-button {
   display: inline-block;
   align-items: center;
-  background-color: #4b49ac;
-  box-shadow: 0px 5px 10px rgba(26, 54, 54, 0.3);
+  background-color: var(--MainColour);
   padding: 8px 16px;
-  border: 2px solid #4b49ac;
+  border: 2px solid var(--MainColour);
   border-radius: 20px;
   font-size: 16px;
+  cursor: pointer;
   font-weight: 500;
   color: white;
 }
-.p-select-label {
-  padding: 5px !important;
+
+.p-toast-message-success{
+  background: #033012 !important;
+}
+.p-toast-message-error{
+  background: #2c0303 !important;
 }
 .global-button:hover{
   background-color: white;
-  color: #1A3636;
-  border: 2px solid #4b49ac;
+  color: var(--MainColour);
+  border: 2px solid var(--MainColour);
+  cursor: pointer;
   align-items: center;
   font-weight: 500;
 }
 
 
 .global-div{
-  background-color: white;
+  background-color: var(--DivColour);
   border-radius: 20px;
   padding-bottom: 20px;
   padding-top: 20px;
-  box-shadow: 10px 10px 10px rgba(26, 54, 54, 0.3) ;
+  border: 1px solid var(--Outline);
 }
+
+@media screen and (max-width: 768px) {
+  .p-toast {
+    width: 90vw !important;
+    border-radius: 8px !important;
+    z-index: 9999 !important;
+    top: 15% !important;
+  }
+}
+
 

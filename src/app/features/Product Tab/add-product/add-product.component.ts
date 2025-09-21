@@ -1,30 +1,37 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MessageService } from 'primeng/api';
 import { InputTextModule } from 'primeng/inputtext';
-import { BaseApiService } from '../../services/base-api.service';
-import { Product } from '../../Models/product.model';
-import { Supplier } from '../../Models/Supplier.model';
 import { SelectModule } from 'primeng/select';
-import { MessagesModule } from 'primeng/messages';
+import { CommonModule } from '@angular/common';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
+import { BaseApiService } from '../../../services/base-api.service';
+import { Supplier } from '../../../Models/Supplier.model';
+import { Product } from '../../../Models/product.model';
+
 
 @Component({
   selector: 'app-add-product',
-  imports: [ReactiveFormsModule, InputTextModule, MessagesModule, SelectModule],
+  imports: [ReactiveFormsModule, InputTextModule, SelectModule, CommonModule,ToastModule],
   templateUrl: './add-product.component.html',
   styleUrl: './add-product.component.css'
 })
 export class AddProductComponent {
-  constructor(private messageservice: MessageService,
-    private api: BaseApiService) { }
+  constructor(private api: BaseApiService) { }
   private fb = inject(FormBuilder);
+  private message = inject(MessageService)
   submit = false;
   suppliers: Supplier[] = [];
-  msg: MessagesModule[] = [];
+  msg: any[] = [];
 
   ngOnInit() {
-    this.api.getAll<Supplier>("Supplier").subscribe((data: Supplier[]) => {
-      this.suppliers = data;
+    this.api.getAll<Supplier>("Supplier").subscribe({
+      next:(data: Supplier[])=>{
+        this.suppliers= data;
+      },
+      error:(err)=>{
+        this.api.handleError(err,err.error.message);
+      }
     });
   }
 
@@ -44,20 +51,17 @@ export class AddProductComponent {
     const newproduct: Omit<Product, 'id'> = this.addproduct.value;
     this.api.create<Omit<Product, 'id'>>("Products", newproduct).subscribe({
       next: () => {
-        this.msg = [{
-          severity: "success",
-          detail: "Product added Succesfully",
-          life: "3000"
-        }];
+        
+        this.message.add({
+          severity: 'success',
+          summary: 'Success',
+          detail: 'Product Added Successfully',
+        });
         this.addproduct.reset();
         this.submit = false;
       },
-      error: () => {
-        this.msg = [{
-          severity: "error",
-          detail: "There is error in adding supplier",
-          life: "3000"
-        }];
+      error: (err) => {
+        this.api.handleError(err,err.error.message);
         this.submit = false;
       }
     });

@@ -1,0 +1,40 @@
+.gradient{
+    background-image: url('/Back.png');
+    background-size: cover;        
+    background-position: center;     
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+.navbar{
+    background: transparent;
+
+    border-bottom: 2px solid var(--MainColour);
+}
+.logo{
+  height: 50px;
+  width: 50px;
+}
+ul::before{
+    content: '• ';
+}
+.heading{
+    background-color: var(--MainColour) ;
+    color: white;
+    border-radius: 15px;
+    padding: 10px 50px;
+    font-style: italic;
+    font-weight: 600;
+    font-size: 25px;
+    letter-spacing: 2px;
+    margin-bottom: 30px;
+    align-items: center;
+    display: inline-block;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+@media  (max-width: 768px) {
+    .gradient{
+        background-image: url('/BackMobile.png');
+        background-attachment: fixed;
+    }
+}

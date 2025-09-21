@@ -1,12 +1,12 @@
 <form [formGroup]="addproduct" (ngSubmit)="createProduct()">
   <div class="flex flex-wrap global-div p-5">
     <div class="w-full mb-4">
-      <h3 class="text-2xl font-semibold text-center text-[#4b49ac] mb-3">Add Product Information</h3>
-      <hr class="text-[#4b49ac]">
+      <h3 class="text-2xl font-semibold text-center second-color mb-3">Add Product Information</h3>
+      <hr class="second-color">
     </div>
-    <div class="md:w-1/2 w-full mb-3">
-      <label for="name">Product Name *</label>
-      <div class="md:w-1/2 w-2/3">
+    <div class="lg:w-1/2 w-full mb-3">
+      <label for="name" class="required">Product Name </label>
+      <div class="lg:w-1/2 w-2/3">
         <input pInputText pSize="small" id="name" autocomplete="off" type="text" formControlName="name"
           class="w-full">
         @if (submit && addproduct.get('name')?.invalid) {
@@ -15,9 +15,9 @@
       </div>
     </div>
 
-    <div class="md:w-1/2 w-full mb-3">
-      <label for="price">Product Price *</label>
-      <div class="md:w-1/2 w-2/3">
+    <div class="lg:w-1/2 w-full mb-3">
+      <label for="price" class="required">Product Price </label>
+      <div class="lg:w-1/2 w-2/3">
         <input pInputText pSize="small" id="price" autocomplete="off" type="text" formControlName="price"
           class="w-full">
         @if (submit && addproduct.get('price')?.invalid) {
@@ -26,27 +26,26 @@
       </div>
     </div>
 
-    <div class="md:w-1/2 w-full mb-3">
+    <div class="lg:w-1/2 w-full mb-3">
       <label for="quantity">Product Quantity</label>
-      <div class="md:w-1/2 w-2/3">
+      <div class="lg:w-1/2 w-2/3">
         <input pInputText pSize="small" id="quantity" autocomplete="off" type="text" formControlName="quantity"
           class="w-full">
       </div>
 
     </div>
 
-    <div class="md:w-1/2 w-full mb-3">
-      <label id="supplierLabel" >Select Supplier</label>
+    <div class="lg:w-1/2 w-full mb-3">
+      <span class="WhiteC">Select Supplier</span>
       <div>
         <p-select [options]="suppliers" inputId="supplierId" optionLabel="name" formControlName="supplierId"
-          [filter]="true" filterBy="name" optionValue="id" placeholder="Select a Supplier"></p-select>
+          [filter]="true" filterBy="name" optionValue="id" placeholder="Select a Supplier" [showClear]="true"></p-select>
       </div>
     </div>
-    <div class="md:w-1/2 w-full mb-3">
+    <div class="lg:w-1/2 w-full mb-3">
       <button class="global-button">Add Product</button>
     </div>
-    <div class="md:w-1/2 w-full mb-3">
-      <p-messages [value]="msg"></p-messages>
-    </div>
+    
   </div>
 </form>
+<p-toast position="top-center" [baseZIndex]="9999"/>

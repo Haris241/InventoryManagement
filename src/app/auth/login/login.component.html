@@ -1,17 +1,14 @@
-<form [formGroup]="login">
-    <div class="containerr">
-        <div class="flex justify-center mt-4">
-            <img src="/Logo.png" alt="Inventory Management System Logo" class="logo">
+<form [formGroup]="login" (ngSubmit)="userlogin()" class="w-full flex justify-center pt-10">
+    <div class="containerr w-full mx-3 md:w-2/3 px-5">
+        <div class="my-4">
+            <p class="text-2xl text-center second-color font-bold ">Welcome Back!</p>
         </div>
-        <div class="mt-4 md:mx-10 mx-5">
-            <p class="text-2xl text-center global-color font-bold ">Welcome Back!</p>
-        </div>
-        <div class="mb-4 md:mx-10 mx-5">
-            <p class="text-sm text-center text-black">From stockroom to storefront — we’ve got your inventory
+        <div class="mb-4">
+            <p class="text-sm text-center WhiteC">From stockroom to storefront — we’ve got your inventory
                 covered</p>
         </div>
-        <div class="my-4 md:mx-10 mx-5">
-            <label class="global-color" for="name">Username</label>
+        <div class="my-4">
+            <label  for="userName">Username</label>
             <div class="w-full">
                 <input pInputText pSize="small" id="userName" autocomplete="off" type="text" formControlName="userName"
                     class="w-full" placeholder="Enter your Username">
@@ -20,27 +17,35 @@
                 }
             </div>
         </div>
-        <div class="mt-4 md:mx-10 mx-5">
-            <label class="global-color" for="password">Password</label>
-            <div class="w-full">
-                <input pInputText pSize="small" id="password" autocomplete="off" type="text" formControlName="password"
-                    class="w-full" placeholder="Enter Your Password">
+        <div class="mt-4">
+            <label  for="password">Password</label>
+            <div class="relative w-full">
+                <input pInputText pSize="small" id="password" autocomplete="off" [type]="showPassword? 'text':'password'"
+                    formControlName="password" class="w-full" placeholder="Enter Your Password">
+                <button type="button" (click)="tooglePassword()"
+                    class="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500">
+                    <i [class]="showPassword ? 'pi pi-eye-slash' : 'pi pi-eye'" style="cursor: pointer;"></i>
+                </button>
+
                 @if (submit && login.get('password')?.invalid) {
                 <small style="color: red;">Password is required</small>
                 }
             </div>
         </div>
-        <div class="my-2 md:mx-10 mx-5 flex justify-end">
-            <a href="" class="text-sm global-color hover:underline">Forgot Password?</a>
+        @if (err) {
+        <small style="color: red;" class="justify-center flex my-2 font-semibold">{{err}}</small>
+        }
+        <div class="my-2 flex justify-end">
+            <a href="" class="text-sm WhiteC hover:underline">Forgot Password?</a>
         </div>
-        <div class="my-4 md:mx-10 mx-5">
+        <div class="my-4 ">
             <button class="login-button">Login Now</button>
         </div>
-        <div class="mt-4 mb-2 md:mx-10 mx-5">
-            <p class="text-sm text-center text-black">Don't have any account?</p>
+        <div class="mb-2 ">
+            <p class="text-sm text-center WhiteC">Don't have any account?</p>
         </div>
-        <div class="mb-10 md:mx-10 mx-5 flex justify-center ">
-            <a routerLink="/register" class="text-sm font-bold global-color  hover:underline">Register Now</a>
+        <div class="mb-10 flex justify-center ">
+            <a routerLink="/register" class="text-sm font-bold second-color  hover:underline">Register Now</a>
         </div>
     </div>
 </form>

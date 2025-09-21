@@ -1,4 +1,4 @@
-<h2 class="text-center text-semibold text-3xl">Products</h2>
+<h2 class="text-center text-semibold text-3xl WhiteC">Suppliers</h2>
 <div class="flex flex-wrap global-div mt-4 p-4">
     <div class="w-full">
         <div class="flex justify-center">
@@ -8,21 +8,19 @@
                     placeholder="Search" />
             </div>
         </div>
-        <p-table #dt [value]="products" [globalFilterFields]="['name']" [paginator]="true" [rows]="10"
+        <p-table #dt [value]="suppliers" [globalFilterFields]="['name']" [paginator]="true" [rows]="10"
             [tableStyle]="{ 'min-width': '50rem' }" [rowsPerPageOptions]="[5,10,20]">
             <ng-template pTemplate="header">
                 <tr>
-                    <th>Product Name</th>
-                    <th>Price</th>
-                    <th>Quantity</th>
+                    <th>Supplier Name</th>
+                    <th>Contact</th>
                     <th>Actions</th>
                 </tr>
             </ng-template>
-            <ng-template pTemplate="body" let-product>
+            <ng-template pTemplate="body" let-supplier>
                 <tr>
-                    <td>{{product.name}}</td>
-                    <td>{{product.quantity}}</td>
-                    <td>{{product.price}}</td>
+                    <td>{{supplier.name}}</td>
+                    <td>{{supplier.contact}}</td>
                     <td>
                         <a class="me-3" routerLink=""><i class="pi pi-pencil edit-delete"></i></a>
                         <a routerLink=""><i class="pi pi-trash edit-delete"></i></a>
