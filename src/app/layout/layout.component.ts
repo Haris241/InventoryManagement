@@ -1,7 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { RouterOutlet } from '@angular/router';
+import { LoadingService } from '../services/loading.service';
+import { ConfirmationService } from 'primeng/api';
+import { BaseApiService } from '../services/base-api.service';
+
+
 
 @Component({
   selector: 'app-layout',
@@ -11,20 +16,22 @@ import { RouterOutlet } from '@angular/router';
 })
 export class LayoutComponent {
   constructor(private route: Router) { }
-
-  isCollapsed = false;
-  isMobile = false;
-  isProductDropdown = false;
-  isSupplierDropdown = false;
+  themeService = inject(LoadingService);
+  api = inject(BaseApiService);
+  confirmation = inject(ConfirmationService);
+  isCollapsed = signal(false);
+  isMobile = signal(false);
+  isProductDropdown = signal(false);
+  isSupplierDropdown = signal(false);
   screenSize = window.matchMedia('(max-width: 768px)');
   ngOnInit() {
     if (this.screenSize.matches) {
-      this.isMobile = true;
-      this.isCollapsed = true;
+      this.isMobile.set(true);
+      this.isCollapsed.set(true);
     }
     this.screenSize.addEventListener('change', (e) => {
-      this.isMobile = e.matches;
-      this.isCollapsed = e.matches;
+      this.isMobile.set(e.matches);
+      this.isCollapsed.set(e.matches);
     })
 
   }
@@ -32,33 +39,54 @@ export class LayoutComponent {
   isActiveGroup(value: string): boolean {
     const currenturl = this.route.url;
     if (value === 'Product') {
-      return ['/addproduct', '/products'].some(path => currenturl.startsWith(path));
+      return ['/Inventory/addproduct', '/Inventory/products'].some(path => currenturl.startsWith(path));
     }
     if (value === 'Supplier') {
-      return ['/addsupplier', '/suppliers'].some(path => currenturl.startsWith(path));
+      return ['/Inventory/addsupplier', '/Inventory/suppliers'].some(path => currenturl.startsWith(path));
     }
     return false;
   }
   toogleDropdown(value: string) {
     if (value === 'Product') {
-      this.isProductDropdown = !this.isProductDropdown
-      this.isSupplierDropdown = false;
+      this.isProductDropdown.update(v => !v);
+      this.isSupplierDropdown.set(false);
     }
     if (value === 'Supplier') {
-      this.isSupplierDropdown = !this.isSupplierDropdown
-      this.isProductDropdown = false;
+      this.isSupplierDropdown.update(v => !v);
+      this.isProductDropdown.set(false);
     }
   }
   toogleSidebar() {
-    this.isCollapsed = !this.isCollapsed;
+    this.isCollapsed.update(v => !v);
     if (this.screenSize.matches) {
-      this.isMobile = !this.isMobile;
+      this.isMobile.update(v => !v);
     }
   }
   onSelectMobile() {
     if (this.screenSize.matches) {
-      this.isCollapsed = true;
-      this.isMobile = true;
+      this.isCollapsed.set(true);
+      this.isMobile.set(true);
     }
+  }
+  ChangeTheme() {
+    this.themeService.toggleTheme();
+  }
+  ConifmationLogout() {
+    this.confirmation.confirm({
+      message: 'Are you sure you want to Log Out?',
+      header: 'Logout Confirmation',
+      icon: 'pi pi-exclamation-triangle',
+      acceptButtonStyleClass: 'p-button-success',
+      rejectButtonStyleClass: 'p-button-danger',
+      acceptLabel: 'Yes',
+      rejectLabel: 'No',
+      accept: () => {
+        this.api.logout();
+      },
+      reject: () => {
+        // Optional: handle rejection
+      }
+
+    });
   }
 }

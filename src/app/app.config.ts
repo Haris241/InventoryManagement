@@ -5,23 +5,21 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import Aura from '@primeuix/themes/aura';
 import { providePrimeNG } from 'primeng/config';
 import { provideAnimations } from '@angular/platform-browser/animations';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { refreshtokenInterceptor } from './auth/Guards/refreshtoken.interceptor';
 import { globalError } from './auth/Guards/globalError.interceptor';
+import { loadingInterceptor } from './auth/Guards/loading.Interceptor';
 
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes),
+  providers: [provideZoneChangeDetection({ eventCoalescing: true }),ConfirmationService ,provideRouter(routes),
     provideHttpClient(
       withInterceptors([
-        refreshtokenInterceptor,globalError
+        loadingInterceptor,refreshtokenInterceptor,globalError
       ])
     ),MessageService,provideAnimations(),providePrimeNG({
       theme: {
-        preset: Aura,
-        options: {
-            darkModeSelector: true || 'none'
-        }
+        preset: Aura
       }
     })
   ]

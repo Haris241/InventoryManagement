@@ -23,7 +23,12 @@
     background-color: #181824;
     z-index: 2;
 }
-
+.mainbar{
+    border-bottom:  1px solid var(--Outline);
+    height: 61px;
+    background-color: var(--DivColour);
+    padding: 0px 40px 0px 40px;
+}
 .btnhover:hover {
     background-color: var(--MainColour);
 }
@@ -38,7 +43,10 @@
 .sidebar::-webkit-scrollbar {
     display: none;
 }
-
+.logo{
+  height: 50px;
+  width: 50px;
+}
 .sidebar .nav-link {
     white-space: nowrap;
     overflow: hidden;
@@ -74,14 +82,12 @@
     .sidebar.collapsed {
         height: 60px;
         width: 60px;
-        background-color: var(--MainColour);
+        background-color: initial;
+        border-right: none;
     }
-
-
     .main {
         z-index: 1;
         margin-left: 0;
-        padding-top: 70px !important;
     }
     .sidebar.collapsed i {
     padding-left: 0px;
@@ -89,7 +95,12 @@
 
     .main.collapsed {
         margin-left: 0;
-        padding-top: 70px !important;
     }
+    .btnhover:hover {
+    background-color: initial;
+}
+.mainbar{
+    padding: 0px 60px 0px 80px;
+}
 
 }

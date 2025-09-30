@@ -1,0 +1,30 @@
+.loadingBar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 100%;
+  background-color: red; /* Initial color */
+  animation: colorCycle 3s linear infinite, glowCycle 3s ease-in-out infinite;
+  z-index: 9999;
+}
+
+@keyframes colorCycle {
+  0% { background-color: red; }
+  25% { background-color: yellow; }
+  50% { background-color: green; }
+  75% { background-color: blue; }
+  100% { background-color: red; }
+}
+@keyframes glowCycle {
+  0%   { box-shadow: 0 0 80px 8px red; }
+  25%  { box-shadow: 0 0 80px 8px yellow; }
+  50%  { box-shadow: 0 0 80px 8px green; }
+  75%  { box-shadow: 0 0 80px 8px blue; }
+  100% { box-shadow: 0 0 80px 8px red; }
+}
+@media  (max-width: 1024px) {
+  .loadingBar{
+    height: 4px;
+  }
+}

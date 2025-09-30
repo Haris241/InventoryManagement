@@ -1,9 +1,6 @@
 .gradient{
-    background-image: url('/Back.png');
-    background-size: cover;        
-    background-position: center;     
-    background-repeat: no-repeat;
-    background-attachment: fixed;
+background-color: var(--divBackgound);
+
 }
 .navbar{
     background: transparent;
@@ -30,11 +27,4 @@ ul::before{
     align-items: center;
     display: inline-block;
     font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-}
-
-@media  (max-width: 768px) {
-    .gradient{
-        background-image: url('/BackMobile.png');
-        background-attachment: fixed;
-    }
 }

@@ -1,76 +1,83 @@
 <div class="flex h-screen">
-  <aside class=" text-white p-2 sidebar" [ngClass]="{collapsed: isCollapsed}">
+  <aside class=" text-white p-2 sidebar" [ngClass]="{collapsed: isCollapsed()}">
     <div class="flex justify-between items-center mb-4 ">
-      @if (!isCollapsed ) {
+      @if (!isCollapsed() ) {
       <h5>Inventory</h5>
       }
-      <a class="text-white btnhover nav-link" (click)="toogleSidebar()"><i class="pi pi-list " style="font-size: 21px;" ></i></a>
+      <a class="btnhover nav-link second-color block md:hidden" (click)="toogleSidebar()"><i class="pi pi-list"
+          style="font-size: 21px;"></i></a>
+      <a class="btnhover nav-link hidden md:block" (click)="toogleSidebar()"><i class="pi pi-list"
+          style="font-size: 21px;"></i></a>
     </div>
     <hr>
-    @if (!isMobile) {
+    @if (!isMobile()) {
     <nav class="flex-col items-center mt-4 ">
       <a class="flex nav-link text-white" routerLink="/Inventory/dashboard" routerLinkActive="active"
         [routerLinkActiveOptions]="{exact: true}" (click)="onSelectMobile()">
         <i class="pi pi-chart-bar"></i>
-        @if (!isCollapsed) {
+        @if (!isCollapsed()) {
         <span class="custom">DashBoard</span>
         }
       </a>
-      <a class="nav-link text-white flex justify-between cursor-pointer" (click)="toogleDropdown('Product')" 
-        [ngClass]="{'active': isCollapsed && isActiveGroup('Product')}">
+      <a class="nav-link text-white flex justify-between cursor-pointer" (click)="toogleDropdown('Product')"
+        [ngClass]="{'active': isCollapsed() && isActiveGroup('Product')}">
         <div>
           <i class="pi pi-box"></i>
-        @if (!isCollapsed) {
-        <span class="custom" >Product</span>
-        }
+          @if (!isCollapsed()) {
+          <span class="custom">Product</span>
+          }
         </div>
-        @if (!isCollapsed) {
-          <i class="pi mt-1" [ngClass]="{'pi-caret-down': !isProductDropdown,'pi-caret-up': isProductDropdown}"></i>
+        @if (!isCollapsed()) {
+        <i class="pi mt-1" [ngClass]="{'pi-caret-down': !isProductDropdown(),'pi-caret-up': isProductDropdown()}"></i>
         }
       </a>
-      @if (!isCollapsed && isProductDropdown) {
+      @if (!isCollapsed() && isProductDropdown()) {
       <div class="ps-3">
-        <a class="nav-link text-white flex items-center " (click)="onSelectMobile()" routerLink="/Inventory/addproduct" routerLinkActive="active">
+        <a class="nav-link text-white flex items-center " (click)="onSelectMobile()" routerLink="/Inventory/addproduct"
+          routerLinkActive="active">
           <i class="pi pi-angle-right"></i>
-          @if (!isCollapsed) {
+          @if (!isCollapsed()) {
           <span class="custom-dropdown">Add Product</span>
           }
         </a>
       </div>
       <div class="ps-3">
-        <a class="nav-link text-white flex items-center " (click)="onSelectMobile()" routerLink="/Inventory/products" routerLinkActive="active">
+        <a class="nav-link text-white flex items-center " (click)="onSelectMobile()" routerLink="/Inventory/products"
+          routerLinkActive="active">
           <i class="pi pi-angle-right"></i>
-          @if (!isCollapsed) {
+          @if (!isCollapsed()) {
           <span class="custom-dropdown">Product List</span>
           }
         </a>
       </div>
       }
       <a class="nav-link text-white flex justify-between cursor-pointer" (click)="toogleDropdown('Supplier')"
-        [ngClass]="{'active': isCollapsed && isActiveGroup('Supplier')}" >
+        [ngClass]="{'active': isCollapsed() && isActiveGroup('Supplier')}">
         <div>
           <i class="pi pi-user"></i>
-        @if (!isCollapsed) {
-        <span class="custom">Supplier</span>
-        }
+          @if (!isCollapsed()) {
+          <span class="custom">Supplier</span>
+          }
         </div>
-        @if (!isCollapsed) {
-          <i class="pi mt-1" [ngClass]="{'pi-caret-down': !isSupplierDropdown,'pi-caret-up': isSupplierDropdown}"></i>
+        @if (!isCollapsed()) {
+        <i class="pi mt-1" [ngClass]="{'pi-caret-down': !isSupplierDropdown(),'pi-caret-up': isSupplierDropdown()}"></i>
         }
       </a>
-      @if (!isCollapsed && isSupplierDropdown) {
+      @if (!isCollapsed() && isSupplierDropdown()) {
       <div class="ps-3">
-        <a class="nav-link text-white flex items-center " (click)="onSelectMobile()" routerLink="/Inventory/addsupplier" routerLinkActive="active">
+        <a class="nav-link text-white flex items-center " (click)="onSelectMobile()" routerLink="/Inventory/addsupplier"
+          routerLinkActive="active">
           <i class="pi pi-angle-right"></i>
-          @if (!isCollapsed) {
+          @if (!isCollapsed()) {
           <span class="custom-dropdown">Add Supplier</span>
           }
         </a>
       </div>
       <div class="ps-3">
-        <a class="nav-link text-white flex items-center " (click)="onSelectMobile()" routerLink="/Inventory/suppliers" routerLinkActive="active">
+        <a class="nav-link text-white flex items-center " (click)="onSelectMobile()" routerLink="/Inventory/suppliers"
+          routerLinkActive="active">
           <i class="pi pi-angle-right"></i>
-          @if (!isCollapsed) {
+          @if (!isCollapsed()) {
           <span class="custom-dropdown">Supplier List</span>
           }
         </a>
@@ -80,7 +87,21 @@
     }
   </aside>
 
-  <main class="flex-grow-1 pt-md-4 p-4 main" [ngClass]="{collapsed: isCollapsed}">
-    <router-outlet></router-outlet>
+  <main class="flex-grow-1 main" [ngClass]="{collapsed: isCollapsed()}">
+    <div class="mainbar flex items-center justify-between">
+        <div>
+          <button  (click)="ChangeTheme()"><i class="pi" [ngClass]="themeService.isDark()?'pi-sun':'pi-moon'"></i></button>
+        </div>
+        <div>
+          <img src="/Logo.png" alt="Inventory Management System Logo" class="logo">
+        </div>
+        <div>
+          <button (click)="ConifmationLogout()"> <i class="pi pi-sign-out"></i></button>
+        </div>
+    </div>
+    <div class="p-4">
+      <router-outlet></router-outlet>
+    </div>
+
   </main>
 </div>
