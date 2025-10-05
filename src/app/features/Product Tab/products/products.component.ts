@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component,CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { TableModule } from 'primeng/table';
 import { RouterLink } from '@angular/router';
 import { DropdownModule } from 'primeng/dropdown';
@@ -9,7 +9,8 @@ import { Product } from '../../../Models/product.model';
   selector: 'app-products',
   imports: [TableModule,RouterLink, DropdownModule],
   templateUrl: './products.component.html',
-  styleUrl: './products.component.css'
+  styleUrl: './products.component.css',
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class ProductsComponent {
 constructor (private api:BaseApiService){}

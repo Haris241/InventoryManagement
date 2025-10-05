@@ -1,5 +1,9 @@
 <p-toast position="top-center" [baseZIndex]="9999"></p-toast>
-<p-confirmDialog></p-confirmDialog>
+<p-confirmDialog>
+  <ng-template pTemplate="icon">
+   <span class="material-symbols-outlined">warning</span>
+  </ng-template>
+</p-confirmDialog>
 @if (isloading | async) {
     <div class="loadingBar"></div>
 }

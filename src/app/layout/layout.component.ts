@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal,CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { RouterOutlet } from '@angular/router';
 import { LoadingService } from '../services/loading.service';
 import { ConfirmationService } from 'primeng/api';
 import { BaseApiService } from '../services/base-api.service';
+import { Token } from '../Models/Auth.model';
 
 
 
@@ -12,7 +13,8 @@ import { BaseApiService } from '../services/base-api.service';
   selector: 'app-layout',
   imports: [RouterLink, RouterLinkActive, RouterOutlet, CommonModule],
   templateUrl: './layout.component.html',
-  styleUrl: './layout.component.css'
+  styleUrl: './layout.component.css',
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class LayoutComponent {
   constructor(private route: Router) { }
@@ -75,13 +77,19 @@ export class LayoutComponent {
     this.confirmation.confirm({
       message: 'Are you sure you want to Log Out?',
       header: 'Logout Confirmation',
-      icon: 'pi pi-exclamation-triangle',
       acceptButtonStyleClass: 'p-button-success',
       rejectButtonStyleClass: 'p-button-danger',
       acceptLabel: 'Yes',
       rejectLabel: 'No',
       accept: () => {
-        this.api.logout();
+        this.api.createResponse<void,Token>('Auth/logout').subscribe({
+          next:()=>{
+             this.api.logout();
+          },
+          error: (err)=>{
+            this.api.handleError(err,err.error.message);
+          }
+        });
       },
       reject: () => {
         // Optional: handle rejection

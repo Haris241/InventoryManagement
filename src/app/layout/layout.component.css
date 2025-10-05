@@ -5,7 +5,7 @@
 .custom {
     margin-left: 10px;
     font-family: sans-serif;
-    padding-bottom: 2px;
+
 }
 .custom-dropdown {
     margin-left: 5px;
@@ -31,13 +31,16 @@
 }
 .btnhover:hover {
     background-color: var(--MainColour);
+    
 }
-
+.sidebar.collapsed .btnhover:hover{
+    background-color: initial;
+}
 .sidebar.collapsed {
     width: 70px;
 }
-.sidebar.collapsed i {
-    padding-left: 9px;
+.sidebar.collapsed  .material-symbols-outlined{
+    padding-left: 8px;
 }
 
 .sidebar::-webkit-scrollbar {

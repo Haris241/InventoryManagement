@@ -4,38 +4,40 @@
       @if (!isCollapsed() ) {
       <h5>Inventory</h5>
       }
-      <a class="btnhover nav-link second-color block md:hidden" (click)="toogleSidebar()"><i class="pi pi-list"
-          style="font-size: 21px;"></i></a>
-      <a class="btnhover nav-link hidden md:block" (click)="toogleSidebar()"><i class="pi pi-list"
-          style="font-size: 21px;"></i></a>
+      <a class="btnhover nav-link second-color block md:hidden" (click)="toogleSidebar()">
+        <span class="material-symbols-outlined">menu</span>
+      </a>
+      <a class="btnhover nav-link hidden md:block" style="cursor: pointer;" (click)="toogleSidebar()">
+        <span class="material-symbols-outlined">menu</span>
+      </a>
     </div>
     <hr>
     @if (!isMobile()) {
     <nav class="flex-col items-center mt-4 ">
       <a class="flex nav-link text-white" routerLink="/Inventory/dashboard" routerLinkActive="active"
         [routerLinkActiveOptions]="{exact: true}" (click)="onSelectMobile()">
-        <i class="pi pi-chart-bar"></i>
+        <span class="material-symbols-outlined">bar_chart</span>
         @if (!isCollapsed()) {
         <span class="custom">DashBoard</span>
         }
       </a>
-      <a class="nav-link text-white flex justify-between cursor-pointer" (click)="toogleDropdown('Product')"
-        [ngClass]="{'active': isCollapsed() && isActiveGroup('Product')}">
-        <div>
-          <i class="pi pi-box"></i>
+      <a class="nav-link text-white flex justify-between items-center cursor-pointer"
+        (click)="toogleDropdown('Product')" [ngClass]="{'active': isCollapsed() && isActiveGroup('Product')}">
+        <div class="flex items-center">
+          <span class="material-symbols-outlined">inventory_2</span>
           @if (!isCollapsed()) {
           <span class="custom">Product</span>
           }
         </div>
         @if (!isCollapsed()) {
-        <i class="pi mt-1" [ngClass]="{'pi-caret-down': !isProductDropdown(),'pi-caret-up': isProductDropdown()}"></i>
+        <span class="material-symbols-outlined">{{isProductDropdown()? 'expand_less':'expand_more'}}</span>
         }
       </a>
       @if (!isCollapsed() && isProductDropdown()) {
       <div class="ps-3">
         <a class="nav-link text-white flex items-center " (click)="onSelectMobile()" routerLink="/Inventory/addproduct"
           routerLinkActive="active">
-          <i class="pi pi-angle-right"></i>
+          <span class="material-symbols-outlined">chevron_right</span>
           @if (!isCollapsed()) {
           <span class="custom-dropdown">Add Product</span>
           }
@@ -44,7 +46,7 @@
       <div class="ps-3">
         <a class="nav-link text-white flex items-center " (click)="onSelectMobile()" routerLink="/Inventory/products"
           routerLinkActive="active">
-          <i class="pi pi-angle-right"></i>
+          <span class="material-symbols-outlined">chevron_right</span>
           @if (!isCollapsed()) {
           <span class="custom-dropdown">Product List</span>
           }
@@ -53,21 +55,22 @@
       }
       <a class="nav-link text-white flex justify-between cursor-pointer" (click)="toogleDropdown('Supplier')"
         [ngClass]="{'active': isCollapsed() && isActiveGroup('Supplier')}">
-        <div>
-          <i class="pi pi-user"></i>
+        <div class="flex items-center">
+          <span class="material-symbols-outlined">person</span>
           @if (!isCollapsed()) {
           <span class="custom">Supplier</span>
           }
         </div>
         @if (!isCollapsed()) {
-        <i class="pi mt-1" [ngClass]="{'pi-caret-down': !isSupplierDropdown(),'pi-caret-up': isSupplierDropdown()}"></i>
+          <span class="material-symbols-outlined">{{isSupplierDropdown()?'expand_less':'expand_more'}}</span>
+  
         }
       </a>
       @if (!isCollapsed() && isSupplierDropdown()) {
       <div class="ps-3">
         <a class="nav-link text-white flex items-center " (click)="onSelectMobile()" routerLink="/Inventory/addsupplier"
           routerLinkActive="active">
-          <i class="pi pi-angle-right"></i>
+          <span class="material-symbols-outlined">chevron_right</span>
           @if (!isCollapsed()) {
           <span class="custom-dropdown">Add Supplier</span>
           }
@@ -76,7 +79,7 @@
       <div class="ps-3">
         <a class="nav-link text-white flex items-center " (click)="onSelectMobile()" routerLink="/Inventory/suppliers"
           routerLinkActive="active">
-          <i class="pi pi-angle-right"></i>
+          <span class="material-symbols-outlined">chevron_right</span>
           @if (!isCollapsed()) {
           <span class="custom-dropdown">Supplier List</span>
           }
@@ -89,15 +92,17 @@
 
   <main class="flex-grow-1 main" [ngClass]="{collapsed: isCollapsed()}">
     <div class="mainbar flex items-center justify-between">
-        <div>
-          <button  (click)="ChangeTheme()"><i class="pi" [ngClass]="themeService.isDark()?'pi-sun':'pi-moon'"></i></button>
-        </div>
-        <div>
-          <img src="/Logo.png" alt="Inventory Management System Logo" class="logo">
-        </div>
-        <div>
-          <button (click)="ConifmationLogout()"> <i class="pi pi-sign-out"></i></button>
-        </div>
+      <div>
+        <button (click)="ChangeTheme()">
+          <span class="material-symbols-outlined">{{ themeService.isDark() ? 'light_mode' : 'dark_mode' }}
+          </span></button>
+      </div>
+      <div>
+        <img src="/Logo.png" alt="Inventory Management System Logo" class="logo">
+      </div>
+      <div>
+        <button (click)="ConifmationLogout()"><span class="material-symbols-outlined">logout</span></button>
+      </div>
     </div>
     <div class="p-4">
       <router-outlet></router-outlet>

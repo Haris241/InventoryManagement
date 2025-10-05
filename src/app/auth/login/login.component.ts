@@ -35,7 +35,7 @@ userlogin(){
   this.api.createResponse<Login,LoginResponse>("Auth/login",newlogin).subscribe({
     next: (response) => {
       this.submit = false;
-      this.api.setToken(response.accessToken, response.refreshToken);
+      this.api.setToken(response.accessToken);
       this.router.navigate(['/Inventory/dashboard']);
     },
     error:(err)=>{

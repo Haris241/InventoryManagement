@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject, filter, finalize, map, Observable, take, tap } from 'rxjs';
+import { BehaviorSubject, catchError, filter, finalize, map, Observable, take, tap, throwError } from 'rxjs';
 import { LoginResponse, Token } from '../Models/Auth.model';
 import { MessageService } from 'primeng/api';
 
@@ -21,11 +21,13 @@ export class BaseApiService {
     return this.http.get<T[]>(`${this.baseurl}${controller}`);
   }
   create<T>(controller: string, object: T): Observable<T> {
-    return this.http.post<T>(`${this.baseurl}${controller}`, object);
+    return this.http.post<T>(`${this.baseurl}${controller}`, object,{ withCredentials: true });
   }
-  createResponse<TInput, TOutput>(controller: string, object: TInput): Observable<TOutput> {
-    return this.http.post<TOutput>(`${this.baseurl}${controller}`, object);
-  }
+createResponse<TInput, TOutput>(controller: string, object?: TInput): Observable<TOutput> {
+  return this.http.post<TOutput>(`${this.baseurl}${controller}`,object ?? {},{ withCredentials: true });
+}
+
+
   private hasToken(): boolean {
     return !!localStorage.getItem('access_token');
   }
@@ -38,11 +40,14 @@ export class BaseApiService {
     } else {
       this.isrefeshing = true;
       this.refreshTokenSubject.next(null);
-      const payload: Token = { token: this.getRereshToken() ?? '' };
-      return this.createResponse<Token, LoginResponse>('Auth/refresh-token', payload).pipe(
+      return this.createResponse<void,LoginResponse>('Auth/refresh-token').pipe(
         tap(response => {
-          this.setToken(response.accessToken, response.refreshToken);
+          this.setToken(response.accessToken);
           this.refreshTokenSubject.next(response.accessToken);
+        }),catchError(err=>{
+          this.refreshTokenSubject.error(err);
+          this.refreshTokenSubject = new BehaviorSubject<string | null>(null);
+          return throwError(()=>err);
         }),
         finalize(() => {
           this.isrefeshing = false;
@@ -51,26 +56,22 @@ export class BaseApiService {
       );
     }
   }
-  setToken(accessToken: string, refreshToken: string) {
+  setToken(accessToken: string) {
     localStorage.setItem('access_token', accessToken)
-    localStorage.setItem('refresh_token', refreshToken)
     this.isLoggedIn.set(true);
   }
   logout() {
     localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
     this.isLoggedIn.set(false);
     this.routee.navigate(['/login']);
   }
   getAccessToken(): string | null {
     return localStorage.getItem('access_token')
   }
-  getRereshToken(): string | null {
-    return localStorage.getItem('refresh_token')
-  }
 
   handleError(error: unknown, fallbackMessage = 'An unexpected error occurred') {
     const err = error as HttpErrorResponse;
+    if ((err as any).handled) return; 
 
     if (err.status !== 0 && err.status < 500) {
       this.msg.add({

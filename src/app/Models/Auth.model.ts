@@ -3,8 +3,7 @@ export interface Login{
     password: string
 }
 export interface LoginResponse{
-    accessToken: string,
-    refreshToken: string
+    accessToken: string
 }
 export interface Register{
     email: string,

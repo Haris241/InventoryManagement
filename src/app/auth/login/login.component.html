@@ -8,7 +8,7 @@
                 covered</p>
         </div>
         <div class="my-4">
-            <label  for="userName">Username</label>
+            <label for="userName">Username</label>
             <div class="w-full">
                 <input pInputText pSize="small" id="userName" autocomplete="off" type="text" formControlName="userName"
                     class="w-full" placeholder="Enter your Username">
@@ -18,13 +18,16 @@
             </div>
         </div>
         <div class="mt-4">
-            <label  for="password">Password</label>
+            <label for="password">Password</label>
             <div class="relative w-full">
-                <input pInputText pSize="small" id="password" autocomplete="off" [type]="showPassword? 'text':'password'"
-                    formControlName="password" class="w-full" placeholder="Enter Your Password">
+                <input pInputText pSize="small" id="password" autocomplete="off"
+                    [type]="showPassword? 'text':'password'" formControlName="password" class="w-full"
+                    placeholder="Enter Your Password">
                 <button type="button" (click)="tooglePassword()"
                     class="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500">
-                    <i [class]="showPassword ? 'pi pi-eye-slash' : 'pi pi-eye'" style="cursor: pointer;"></i>
+                    <span class="material-symbols-outlined" >
+                        {{ showPassword ? 'visibility_off' : 'visibility' }}
+                    </span>
                 </button>
 
                 @if (submit && login.get('password')?.invalid) {

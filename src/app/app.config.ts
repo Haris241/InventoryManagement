@@ -4,11 +4,11 @@ import { routes } from './app.routes';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import Aura from '@primeuix/themes/aura';
 import { providePrimeNG } from 'primeng/config';
-import { provideAnimations } from '@angular/platform-browser/animations';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { refreshtokenInterceptor } from './auth/Guards/refreshtoken.interceptor';
 import { globalError } from './auth/Guards/globalError.interceptor';
 import { loadingInterceptor } from './auth/Guards/loading.Interceptor';
+import { provideAnimations } from '@angular/platform-browser/animations';
 
 
 export const appConfig: ApplicationConfig = {
@@ -19,7 +19,10 @@ export const appConfig: ApplicationConfig = {
       ])
     ),MessageService,provideAnimations(),providePrimeNG({
       theme: {
-        preset: Aura
+        preset: Aura,
+        options: {
+          cssLayer: false
+        }
       }
     })
   ]

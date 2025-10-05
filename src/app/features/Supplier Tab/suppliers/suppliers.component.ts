@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component,CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { TableModule } from 'primeng/table';
 import { RouterLink } from '@angular/router';
 import { ToastModule } from 'primeng/toast';
@@ -9,7 +9,8 @@ import { Supplier } from '../../../Models/Supplier.model';
   selector: 'app-suppliers',
   imports: [TableModule,RouterLink, ToastModule],
   templateUrl: './suppliers.component.html',
-  styleUrl: './suppliers.component.css'
+  styleUrl: './suppliers.component.css',
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SuppliersComponent {
   constructor(private api: BaseApiService){}

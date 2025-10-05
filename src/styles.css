@@ -167,7 +167,7 @@ label.required::after {
   background: #033012 !important;
 }
 .p-toast-message-error{
-  background: #490505 !important;
+  background: rgb(49, 6, 6) !important;
 }
 .p-toast-message-error .p-toast-detail{
   color: white !important;
@@ -194,6 +194,12 @@ label.required::after {
   padding-top: 20px;
   border: 1px solid var(--Outline);
 }
+.material-symbols-outlined {
+  font-size: 22px;
+  vertical-align: middle;
+
+}
+
 
 @media screen and (max-width: 768px) {
   .p-toast {
