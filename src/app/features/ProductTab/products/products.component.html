@@ -8,7 +8,7 @@
                     placeholder="Search" />
             </div>
         </div>
-        <p-table #dt [value]="products" [globalFilterFields]="['name']" [paginator]="true" [rows]="10"
+        <p-table #dt [value]="products()" [globalFilterFields]="['name']" [paginator]="true" [rows]="10"
             [tableStyle]="{ 'min-width': '50rem' }" [rowsPerPageOptions]="[5,10,20]">
             <ng-template pTemplate="header">
                 <tr>
@@ -21,11 +21,11 @@
             <ng-template pTemplate="body" let-product>
                 <tr>
                     <td>{{product.name}}</td>
-                    <td>{{product.quantity}}</td>
+                    <td>{{product.Quantity}}</td>
                     <td>{{product.price}}</td>
                     <td>
-                        <a class="me-3" routerLink=""><span class="material-symbols-outlined">edit</span></a>
-                        <a routerLink=""><span class="material-symbols-outlined">delete</span></a>
+                        <a class="me-3" routerLink=""><span class="material-symbols-outlined second-color">edit</span></a>
+                        <button (click)="deleteProduct(product.id)"><span class="material-symbols-outlined second-color">delete</span></button>
                     </td>
                 </tr>
             </ng-template>

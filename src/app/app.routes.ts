@@ -1,13 +1,7 @@
 import { Routes } from '@angular/router';
 import { LayoutComponent } from './layout/layout.component';
-import { DashboardComponent } from './features/dashboard/dashboard.component';
 import { LoginComponent } from './auth/login/login.component';
-import { RegisterComponent } from './auth/register/register.component';
 import { AuthComponent } from './auth/auth/auth.component';
-import { ProductsComponent } from './features/Product Tab/products/products.component';
-import { AddProductComponent } from './features/Product Tab/add-product/add-product.component';
-import { SuppliersComponent } from './features/Supplier Tab/suppliers/suppliers.component';
-import { AddSupplierComponent } from './features/Supplier Tab/add-supplier/add-supplier.component';
 import { authGuard } from './auth/Guards/auth.guard';
 import { guestGuard } from './auth/Guards/guest.guard';
 
@@ -19,7 +13,7 @@ export const routes: Routes = [
                 path:'login', component: LoginComponent
             },
             {
-                path:'register', component: RegisterComponent
+                path:'register', loadComponent:()=> import('./auth/register/register.component').then(m=> m.RegisterComponent)
             },
             { path: '', redirectTo: 'login', pathMatch: 'full' }
         ]
@@ -27,22 +21,22 @@ export const routes: Routes = [
     {
         path:'Inventory', component:LayoutComponent, children: [
             {
-                path:'dashboard', component:DashboardComponent
+                path:'dashboard', loadComponent:()=> import('./features/dashboard/dashboard.component').then(m=>m.DashboardComponent)
             },
             {
-                path:'products', component:ProductsComponent
+                path:'products', loadComponent:()=> import('./features/ProductTab/products/products.component').then(m=>m.ProductsComponent)
             },
             {
-                path:'addproduct', component: AddProductComponent
+                path:'addproduct', loadComponent:()=> import('./features/ProductTab/add-product/add-product.component').then(m=> m.AddProductComponent)
             },
             {
-                path:'suppliers', component:SuppliersComponent
+                path:'suppliers', loadComponent:()=> import('./features/SupplierTab/suppliers/suppliers.component').then(m=>m.SuppliersComponent)
             },
             {
-                path:'addsupplier', component: AddSupplierComponent
+                path:'addsupplier', loadComponent:()=> import('./features/SupplierTab/add-supplier/add-supplier.component').then(m=>m.AddSupplierComponent)
             },
             {
-                path:'', redirectTo:'login', pathMatch:'full'
+                path:'', redirectTo:'dashboard', pathMatch:'full'
             }
         ]
     }

@@ -8,7 +8,7 @@
                     placeholder="Search" />
             </div>
         </div>
-        <p-table #dt [value]="suppliers" [globalFilterFields]="['name']" [paginator]="true" [rows]="10"
+        <p-table #dt [value]="suppliers()" [globalFilterFields]="['name']" [paginator]="true" [rows]="10"
             [tableStyle]="{ 'min-width': '50rem' }" [rowsPerPageOptions]="[5,10,20]">
             <ng-template pTemplate="header">
                 <tr>
@@ -22,8 +22,8 @@
                     <td>{{supplier.name}}</td>
                     <td>{{supplier.contact}}</td>
                       <td>
-                        <a class="me-3" routerLink=""><span class="material-symbols-outlined">edit</span></a>
-                        <a routerLink=""><span class="material-symbols-outlined">delete</span></a>
+                        <a class="me-3" routerLink=""><span class="material-symbols-outlined second-color">edit</span></a>
+                        <button (click)="deleteSupplier(supplier.id)"><span class="material-symbols-outlined second-color">delete</span></button>
                     </td>
                 </tr>
             </ng-template>

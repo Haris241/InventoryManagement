@@ -21,11 +21,15 @@ export class BaseApiService {
     return this.http.get<T[]>(`${this.baseurl}${controller}`);
   }
   create<T>(controller: string, object: T): Observable<T> {
-    return this.http.post<T>(`${this.baseurl}${controller}`, object,{ withCredentials: true });
+    return this.http.post<T>(`${this.baseurl}${controller}`, object, { withCredentials: true });
   }
-createResponse<TInput, TOutput>(controller: string, object?: TInput): Observable<TOutput> {
-  return this.http.post<TOutput>(`${this.baseurl}${controller}`,object ?? {},{ withCredentials: true });
-}
+  createResponse<TInput, TOutput>(controller: string, object?: TInput): Observable<TOutput> {
+    return this.http.post<TOutput>(`${this.baseurl}${controller}`, object ?? {}, { withCredentials: true });
+  }
+  delete<T>(controller: string, id: string):Observable<T>{
+    return this.http.delete<T>(`${this.baseurl}${controller}/${id}`, { withCredentials: true });
+  }
+
 
 
   private hasToken(): boolean {
@@ -40,14 +44,14 @@ createResponse<TInput, TOutput>(controller: string, object?: TInput): Observable
     } else {
       this.isrefeshing = true;
       this.refreshTokenSubject.next(null);
-      return this.createResponse<void,LoginResponse>('Auth/refresh-token').pipe(
+      return this.createResponse<void, LoginResponse>('Auth/refresh-token').pipe(
         tap(response => {
           this.setToken(response.accessToken);
           this.refreshTokenSubject.next(response.accessToken);
-        }),catchError(err=>{
+        }), catchError(err => {
           this.refreshTokenSubject.error(err);
           this.refreshTokenSubject = new BehaviorSubject<string | null>(null);
-          return throwError(()=>err);
+          return throwError(() => err);
         }),
         finalize(() => {
           this.isrefeshing = false;
@@ -71,7 +75,7 @@ createResponse<TInput, TOutput>(controller: string, object?: TInput): Observable
 
   handleError(error: unknown, fallbackMessage = 'An unexpected error occurred') {
     const err = error as HttpErrorResponse;
-    if ((err as any).handled) return; 
+    if ((err as any).handled) return;
 
     if (err.status !== 0 && err.status < 500) {
       this.msg.add({

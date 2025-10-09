@@ -55,7 +55,7 @@ export class AddProductComponent {
         this.message.add({
           severity: 'success',
           summary: 'Success',
-          detail: 'Product Added Successfully',
+          detail: 'Product Added Successfully'
         });
         this.addproduct.reset();
         this.submit = false;
