@@ -24,7 +24,8 @@
                     <td>{{product.Quantity}}</td>
                     <td>{{product.price}}</td>
                     <td>
-                        <a class="me-3" routerLink=""><span class="material-symbols-outlined second-color">edit</span></a>
+                        <!-- use same component for edit  -->
+                        <button class="me-3" (click)="editProduct(product.id)"><span class="material-symbols-outlined second-color">edit</span></button>
                         <button (click)="deleteProduct(product.id)"><span class="material-symbols-outlined second-color">delete</span></button>
                     </td>
                 </tr>

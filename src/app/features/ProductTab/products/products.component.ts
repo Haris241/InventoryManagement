@@ -1,6 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
 import { TableModule } from 'primeng/table';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { DropdownModule } from 'primeng/dropdown';
 import { BaseApiService } from '../../../services/base-api.service';
 import { Product } from '../../../Models/product.model';
@@ -8,7 +8,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-products',
-  imports: [TableModule, RouterLink, DropdownModule],
+  imports: [TableModule, DropdownModule],
   templateUrl: './products.component.html',
   styleUrl: './products.component.css',
 })
@@ -16,6 +16,7 @@ export class ProductsComponent {
   constructor(private api: BaseApiService) { }
   confirmation = inject(ConfirmationService);
   msg = inject(MessageService);
+  router = inject(Router)
 
   products = signal<Product[]>([]);
   ngOnInit() {
@@ -56,6 +57,9 @@ export class ProductsComponent {
       }
 
     });
+  }
+  editProduct(id: string){
+    this.router.navigate(['Inventory/editproduct',id]);
   }
 
 }

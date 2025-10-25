@@ -30,6 +30,9 @@ export const routes: Routes = [
                 path:'addproduct', loadComponent:()=> import('./features/ProductTab/add-product/add-product.component').then(m=> m.AddProductComponent)
             },
             {
+                path:'editproduct/:id', loadComponent:()=> import('./features/ProductTab/add-product/add-product.component').then(m=> m.AddProductComponent)
+            },
+            {
                 path:'suppliers', loadComponent:()=> import('./features/SupplierTab/suppliers/suppliers.component').then(m=>m.SuppliersComponent)
             },
             {

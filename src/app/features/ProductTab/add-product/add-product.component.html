@@ -1,7 +1,12 @@
 <form [formGroup]="addproduct" (ngSubmit)="createProduct()">
   <div class="flex flex-wrap global-div p-5">
     <div class="w-full mb-4">
-      <h3 class="text-2xl font-semibold text-center second-color mb-3">Add Product Information</h3>
+      @if (isEditMode()) {
+        <input id="id" autocomplete="off" type="hidden" formControlName="id">
+        <h3 class="text-2xl font-semibold text-center second-color mb-3">Edit Product Information</h3>
+      }@else{
+        <h3 class="text-2xl font-semibold text-center second-color mb-3">Add Product Information</h3>
+      }
       <hr class="second-color">
     </div>
     <div class="lg:w-1/2 w-full mb-3">
@@ -21,7 +26,7 @@
         <input pInputText pSize="small" id="price" autocomplete="off" type="text" formControlName="price"
           class="w-full">
         @if (submit && addproduct.get('price')?.invalid) {
-        <small style="color: red;">Price is required</small>
+        <small style="color: red;">Price is required. Enter in Valid Format.</small>
         }
       </div>
     </div>
@@ -35,17 +40,38 @@
 
     </div>
 
+    <!-- <div class="lg:w-1/2 w-full mb-3">
+      <span class="WhiteC">Select Supplier</span>
+      <div>
+        <p-select [options]="suppliers()" inputId="supplierId" optionLabel="name" formControlName="supplierId"
+          [filter]="true" filterBy="name" optionValue="id" placeholder="Select a Supplier" [showClear]="true"></p-select>
+      </div>
+    </div> -->
+
     <div class="lg:w-1/2 w-full mb-3">
       <span class="WhiteC">Select Supplier</span>
       <div>
-        <p-select [options]="suppliers" inputId="supplierId" optionLabel="name" formControlName="supplierId"
-          [filter]="true" filterBy="name" optionValue="id" placeholder="Select a Supplier" [showClear]="true"></p-select>
+        <p-autoComplete 
+        (completeMethod)="SearchSuppliers($event)"
+        inputId="supplierId" 
+        optionLabel="name" 
+        formControlName="supplierId"
+        [dropdown]="true"
+        [suggestions]="suppliers()"
+        optionValue="id" 
+        placeholder="Write 3 Characters " 
+        [showClear]="true"
+        ></p-autoComplete>
       </div>
     </div>
+
     <div class="lg:w-1/2 w-full mb-3">
-      <button class="global-button">Add Product</button>
+      @if (isEditMode()) {
+        <button class="global-button">Updtae Product</button>
+      }@else {
+        <button class="global-button">Add Product</button>
+      }
     </div>
     
   </div>
 </form>
-<p-toast position="top-center" [baseZIndex]="9999"/>

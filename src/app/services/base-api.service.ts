@@ -29,6 +29,13 @@ export class BaseApiService {
   delete<T>(controller: string, id: string):Observable<T>{
     return this.http.delete<T>(`${this.baseurl}${controller}/${id}`, { withCredentials: true });
   }
+  edit<T>(controller:string, id: string,object: T):Observable<T>{
+    return this.http.put<T>( `${this.baseurl}${controller}/${id}`,object, { withCredentials: true });
+  }
+  getById<T>(controller:string, id: string):Observable<T>{
+    return this.http.get<T>( `${this.baseurl}${controller}/${id}`, { withCredentials: true });
+  }
+  
 
 
 
