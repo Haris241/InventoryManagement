@@ -3,8 +3,9 @@ import { TableModule } from 'primeng/table';
 import { Router, RouterLink } from '@angular/router';
 import { DropdownModule } from 'primeng/dropdown';
 import { BaseApiService } from '../../../services/base-api.service';
-import { Product } from '../../../Models/product.model';
+import { Product, ProductList } from '../../../Models/product.model';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { PaginationResult } from '../../../Models/Pagination.model';
 
 @Component({
   selector: 'app-products',
@@ -18,10 +19,16 @@ export class ProductsComponent {
   msg = inject(MessageService);
   router = inject(Router)
 
-  products = signal<Product[]>([]);
+  products = signal<PaginationResult<ProductList>>({
+    items: [],
+    pageNumber: 1,
+    pageSize: 10,
+    hasNextPage: false,
+    hasPreviousPage: false
+});
   ngOnInit() {
-    this.api.getAll<Product>('Products').subscribe({
-      next: (data: Product[]) => {
+    this.api.getAll<PaginationResult<ProductList>>('Products').subscribe({
+      next: (data: PaginationResult<ProductList>) => {
         this.products.set(data);
       },
       error: (err) => {
@@ -40,7 +47,8 @@ export class ProductsComponent {
       accept: () => {
         this.api.delete<void>('Products', id).subscribe({
           next: () => {
-            this.products.update(products=>products.filter(p=>p.id!==id) );
+            this.products.update(products=>({
+              ...products,items: products.items.filter(p=>p.id!==id)}));
             this.msg.add({
               severity: 'success',
               summary: 'Success',

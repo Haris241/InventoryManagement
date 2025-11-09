@@ -22,7 +22,9 @@ register: FormGroup = this.fb.group({
   email: ['', Validators.required],
   userName: ['', Validators.required],
   password: ['', Validators.required],
-  confirmPassword: ['', Validators.required]
+  confirmPassword: ['', Validators.required],
+  phoneNo: [null],
+  name: [null]
 });
 registerUser(){
   this.submit=true;

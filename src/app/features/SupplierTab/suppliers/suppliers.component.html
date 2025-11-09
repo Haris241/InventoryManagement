@@ -8,7 +8,7 @@
                     placeholder="Search" />
             </div>
         </div>
-        <p-table #dt [value]="suppliers()" [globalFilterFields]="['name']" [paginator]="true" [rows]="10"
+        <p-table #dt [value]="suppliers().items" [globalFilterFields]="['name']" [paginator]="true" [rows]="10"
             [tableStyle]="{ 'min-width': '50rem' }" [rowsPerPageOptions]="[5,10,20]">
             <ng-template pTemplate="header">
                 <tr>

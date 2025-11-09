@@ -9,7 +9,9 @@ export interface Register{
     email: string,
     userName: string,
     password: string,
-    confirmPassword: string
+    confirmPassword: string,
+    phoneNo: string,
+    name: string
 }
 export interface Token{
     token: string

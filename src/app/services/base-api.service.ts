@@ -17,7 +17,10 @@ export class BaseApiService {
   private baseurl = "https://localhost:7049/api/"
   constructor(private http: HttpClient, private routee: Router) { }
 
-  getAll<T>(controller: string): Observable<T[]> {
+  getAll<T>(controller: string): Observable<T> {
+    return this.http.get<T>(`${this.baseurl}${controller}`);
+  }
+  getAllSimple<T>(controller: string): Observable<T[]> {
     return this.http.get<T[]>(`${this.baseurl}${controller}`);
   }
   create<T>(controller: string, object: T): Observable<T> {

@@ -5,6 +5,7 @@ import { ToastModule } from 'primeng/toast';
 import { BaseApiService } from '../../../services/base-api.service';
 import { Supplier } from '../../../Models/Supplier.model';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { PaginationResult } from '../../../Models/Pagination.model';
 
 @Component({
   selector: 'app-suppliers',
@@ -17,11 +18,17 @@ export class SuppliersComponent {
   constructor(private api: BaseApiService){}
   confimation = inject(ConfirmationService);
   msg = inject(MessageService);
-  suppliers=signal<Supplier[]>([]);
+  suppliers=signal<PaginationResult<Supplier>>({
+    items: [],
+    pageNumber: 1,
+    pageSize: 10,
+    hasNextPage: false,
+    hasPreviousPage: false
+  });
 
   ngOnInit(){
-    this.api.getAll<Supplier>("Supplier").subscribe({
-      next:(data:Supplier[])=>{
+    this.api.getAll<PaginationResult<Supplier>>("Supplier").subscribe({
+      next:(data:PaginationResult<Supplier>)=>{
         this.suppliers.set(data);
       },
       error:(err)=>{
@@ -40,7 +47,8 @@ export class SuppliersComponent {
       accept:()=>{
         this.api.delete<void>('Supplier',id).subscribe({
           next:()=>{
-            this.suppliers.update(supplier=>supplier.filter(s=>s.id!==id));
+            this.suppliers.update(supplier=>({
+              ...supplier,items: supplier.items.filter(s=>s.id!==id)}));
             this.msg.add({
               severity: 'success',
               summary: 'Success',

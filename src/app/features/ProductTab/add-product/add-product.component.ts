@@ -7,11 +7,9 @@ import { CommonModule } from '@angular/common';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { BaseApiService } from '../../../services/base-api.service';
-import { Supplier } from '../../../Models/Supplier.model';
 import { Product } from '../../../Models/product.model';
 import { ActivatedRoute } from '@angular/router';
 import { AutoCompleteModule } from 'primeng/autocomplete';
-import { debounceTime, distinctUntilChanged, filter, switchMap } from 'rxjs';
 import { PaginationService } from '../../../services/pagination.service';
 import { AutoDropdown } from '../../../Models/Pagination.model';
 
@@ -28,7 +26,7 @@ export class AddProductComponent {
   private pagination = inject(PaginationService)
   private message = inject(MessageService);
   private activatedRoute = inject(ActivatedRoute);
-  submit = false;
+  submit = signal<boolean>(false);
   isEditMode = signal<boolean>(false);
   suppliersearch=this.pagination.autoSearchDropdown<AutoDropdown>('Supplier/dropdown');
   suppliers = this.suppliersearch.result
@@ -47,20 +45,23 @@ export class AddProductComponent {
 
   addproduct: FormGroup = this.fb.group({
     name: ['', Validators.required],
-    price: [0, [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
+    price: [null, [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
     quantity: [0, [Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
     supplierId: [null]
   });
 
   createProduct() {
-    this.submit = true;
+    this.submit.set(true);
     if (this.addproduct.invalid) {
       this.addproduct.markAllAsTouched();
       return;
     }
+    const formValue = this.addproduct.value;
+  if (formValue.quantity == null || formValue.quantity === '') {
+    formValue.quantity = 0;
+  }
     if (!this.isEditMode()) {
-      const newproduct: Omit<Product, 'id'> = this.addproduct.value;
-      this.api.create<Omit<Product, 'id'>>('Products', newproduct).subscribe({
+      this.api.create<Product>('Products', formValue).subscribe({
         next: () => {
 
           this.message.add({
@@ -68,17 +69,20 @@ export class AddProductComponent {
             summary: 'Success',
             detail: 'Product Added Successfully'
           });
-          this.addproduct.reset();
-          this.submit = false;
+          this.addproduct.patchValue({
+            name:'',
+            quantity:0
+          });
+          this.submit.set(false);
         },
         error: (err) => {
           this.api.handleError(err, err.error.message);
-          this.submit = false;
+          this.submit.set(false);
         }
       });
     } else {
       const id = this.addproduct.get('id')?.value;
-      this.api.edit<Product>('Products', id, this.addproduct.value).subscribe({
+      this.api.edit<Product>('Products', id, formValue).subscribe({
         next: () => {
 
           this.message.add({
@@ -87,11 +91,11 @@ export class AddProductComponent {
             detail: 'Product Updated Successfully'
           });
           this.addproduct.reset();
-          this.submit = false;
+          this.submit.set(false);
         },
         error: (err) => {
           this.api.handleError(err, err.error.message);
-          this.submit = false;
+          this.submit.set(false);
         }
       });
     }

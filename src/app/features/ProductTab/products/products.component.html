@@ -8,21 +8,25 @@
                     placeholder="Search" />
             </div>
         </div>
-        <p-table #dt [value]="products()" [globalFilterFields]="['name']" [paginator]="true" [rows]="10"
+        <p-table #dt [value]="products().items" [globalFilterFields]="['name']" [paginator]="true" [rows]="10"
             [tableStyle]="{ 'min-width': '50rem' }" [rowsPerPageOptions]="[5,10,20]">
             <ng-template pTemplate="header">
                 <tr>
+                    <th>Product Number</th>
                     <th>Product Name</th>
                     <th>Price</th>
                     <th>Quantity</th>
+                    <th>Supplier Name</th>
                     <th>Actions</th>
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-product>
                 <tr>
+                    <td>{{product.productNumber}}</td>
                     <td>{{product.name}}</td>
-                    <td>{{product.Quantity}}</td>
                     <td>{{product.price}}</td>
+                    <td>{{product.quantity}}</td>
+                    <td>{{product.supplierName}}</td>
                     <td>
                         <!-- use same component for edit  -->
                         <button class="me-3" (click)="editProduct(product.id)"><span class="material-symbols-outlined second-color">edit</span></button>

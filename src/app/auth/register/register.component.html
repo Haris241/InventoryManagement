@@ -20,6 +20,16 @@
         <div class="my-6">
             
             <div class="w-full">
+                <input pInputText pSize="small" id="name" autocomplete="off" type="text" formControlName="name"
+                    class="w-full" placeholder="Enter your Name">
+                <!-- @if (submit && register.get('email')?.invalid) {
+                <small style="color: red;">Email is required</small>
+                } -->
+            </div>
+        </div>
+        <div class="my-6">
+            
+            <div class="w-full">
                 <input pInputText pSize="small" id="userName" autocomplete="off" type="text" formControlName="userName"
                     class="w-full" placeholder="Enter your Username">
                 @if (submit && register.get('userName')?.invalid) {
@@ -45,6 +55,16 @@
                 @if (submit && register.get('confirmPassword')?.invalid) {
                 <small style="color: red;">Password is not matched</small>
                 }
+            </div>
+        </div>
+        <div class="my-6">
+            
+            <div class="w-full">
+                <input pInputText pSize="small" id="phoneNo" autocomplete="off" type="text" formControlName="phoneNo"
+                    class="w-full" placeholder="Enter your PhoneNo">
+                <!-- @if (submit && register.get('email')?.invalid) {
+                <small style="color: red;">Email is required</small>
+                } -->
             </div>
         </div>
          @if(err){
