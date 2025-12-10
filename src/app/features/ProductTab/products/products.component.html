@@ -8,8 +8,16 @@
                     placeholder="Search" />
             </div>
         </div>
-        <p-table #dt [value]="products().items" [globalFilterFields]="['name']" [paginator]="true" [rows]="10"
-            [tableStyle]="{ 'min-width': '50rem' }" [rowsPerPageOptions]="[5,10,20]">
+        <p-table #dt 
+        [value]="products()" 
+        [globalFilterFields]="['name']" 
+        [paginator]="true" 
+        [rows]="20"
+        [lazy]="true"
+        (onLazyLoad)="loadProducts($event)"
+        [totalRecords]="totalrecords()"
+        [tableStyle]="{ 'min-width': '50rem' }" 
+        >
             <ng-template pTemplate="header">
                 <tr>
                     <th>Product Number</th>

@@ -1,6 +1,6 @@
 import { Injectable, signal } from '@angular/core';
 import { ThemeProvider } from 'primeng/config';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, distinctUntilChanged } from 'rxjs';
 import  Aura  from '@primeuix/themes/aura'; 
 
 
@@ -17,7 +17,7 @@ export class LoadingService {
   private request: number = 0;
   private loadingSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
-  loading$ = this.loadingSubject.asObservable();
+  loading$ = this.loadingSubject.asObservable().pipe(distinctUntilChanged());
   show(){
     this.request++;
     

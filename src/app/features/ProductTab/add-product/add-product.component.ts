@@ -1,37 +1,42 @@
-import { Component, inject, signal } from '@angular/core';
-import { toObservable } from '@angular/core/rxjs-interop';
+import { Component, inject, signal, WritableSignal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
 import { CommonModule } from '@angular/common';
 import { ToastModule } from 'primeng/toast';
-import { MessageService } from 'primeng/api';
 import { BaseApiService } from '../../../services/base-api.service';
-import { Product } from '../../../Models/product.model';
+import { Product, ProductList } from '../../../Models/product.model';
 import { ActivatedRoute } from '@angular/router';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { PaginationService } from '../../../services/pagination.service';
 import { AutoDropdown } from '../../../Models/Pagination.model';
+import { FieldErrorComponent } from "../../../shared/field-error/field-error.component";
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-add-product',
-  imports: [ReactiveFormsModule, InputTextModule, SelectModule, CommonModule, ToastModule, AutoCompleteModule],
+  imports: [ReactiveFormsModule, InputTextModule, SelectModule, CommonModule, ToastModule, AutoCompleteModule, FieldErrorComponent],
   templateUrl: './add-product.component.html',
   styleUrl: './add-product.component.css'
 })
 export class AddProductComponent {
-  constructor() { }
+  constructor() {
+    this.addproduct.valueChanges
+      .pipe(takeUntilDestroyed())
+      .subscribe(() => {
+        this.formChange.update(v => v + 1);
+      });
+  }
   private fb = inject(FormBuilder);
   private api = inject(BaseApiService);
-  private pagination = inject(PaginationService)
-  private message = inject(MessageService);
+  private pagination = inject(PaginationService);
   private activatedRoute = inject(ActivatedRoute);
   submit = signal<boolean>(false);
   isEditMode = signal<boolean>(false);
-  suppliersearch=this.pagination.autoSearchDropdown<AutoDropdown>('Supplier/dropdown');
-  suppliers = this.suppliersearch.result
-  searchFilter = this.suppliersearch.searchterm;
-  
+  suppliersearch = this.pagination.autoSearchDropdown<AutoDropdown>('Dropdowns/Suppliers');
+  suppliers = this.suppliersearch.result;
+  backendErrors = signal<Record<string, string[]>>({});
+  formChange = signal<number>(0);
 
   ngOnInit() {
     this.activatedRoute.paramMap.subscribe(param => {
@@ -44,8 +49,9 @@ export class AddProductComponent {
   }
 
   addproduct: FormGroup = this.fb.group({
+    id: [null],
     name: ['', Validators.required],
-    price: [null, [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
+    price: [null,[Validators.required,Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
     quantity: [0, [Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
     supplierId: [null]
   });
@@ -54,30 +60,34 @@ export class AddProductComponent {
     this.submit.set(true);
     if (this.addproduct.invalid) {
       this.addproduct.markAllAsTouched();
+      this.submit.set(false);
       return;
     }
+    this.backendErrors.set({});
     const formValue = this.addproduct.value;
-  if (formValue.quantity == null || formValue.quantity === '') {
-    formValue.quantity = 0;
-  }
+    if (formValue.quantity == null || formValue.quantity === '') {
+      formValue.quantity = 0;
+    }
     if (!this.isEditMode()) {
+      delete formValue.id;
+      console.log("Form Value:", formValue);
       this.api.create<Product>('Products', formValue).subscribe({
         next: () => {
-
-          this.message.add({
-            severity: 'success',
-            summary: 'Success',
-            detail: 'Product Added Successfully'
-          });
+          this.api.globalMessage('success', 'Product Added Successfully');
           this.addproduct.patchValue({
-            name:'',
-            quantity:0
+            name: '',
+            quantity: 0
           });
           this.submit.set(false);
         },
         error: (err) => {
-          this.api.handleError(err, err.error.message);
-          this.submit.set(false);
+          if (err.error.errors) {
+            this.backendErrors.set(err.error.errors);
+            this.submit.set(false);
+          } else {
+            this.api.handleError(err, err.error.message);
+            this.submit.set(false);
+          }
         }
       });
     } else {
@@ -85,11 +95,7 @@ export class AddProductComponent {
       this.api.edit<Product>('Products', id, formValue).subscribe({
         next: () => {
 
-          this.message.add({
-            severity: 'success',
-            summary: 'Success',
-            detail: 'Product Updated Successfully'
-          });
+          this.api.globalMessage('success', 'Product Updated Successfully');
           this.addproduct.reset();
           this.submit.set(false);
         },
@@ -103,11 +109,18 @@ export class AddProductComponent {
   }
 
   loadProduct(id: string) {
-    this.api.getById<Product>('Products', id).subscribe({
-      next: (data: Product) => {
+    this.api.getById<ProductList>('Products', id).subscribe({
+      next: (data: ProductList) => {
         console.log("data: ", data);
-        this.addproduct.patchValue(data);
-        this.addproduct.addControl('id', this.fb.control(data.id));
+
+        if (data.supplierId && data.supplierName) {
+          this.suppliersearch.setInitialValue([{
+            id: data.supplierId,
+            name: data.supplierName
+          }]);
+        }
+        queueMicrotask(() => this.addproduct.patchValue(data));
+
       },
       error: (err) => {
         this.api.handleError(err, err.error?.message);
@@ -115,10 +128,10 @@ export class AddProductComponent {
     });
   }
 
-  SearchSuppliers(event: { query: string }) {
+  SearchSuppliers(event: { query: string }, searchtermsignal: WritableSignal<string>) {
     const search = event.query?.trim() ?? '';
     if (search.length > 2) {
-      this.searchFilter.set(search);
+      searchtermsignal.set(search);
     }
   }
 

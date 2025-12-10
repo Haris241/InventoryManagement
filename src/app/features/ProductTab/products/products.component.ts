@@ -1,11 +1,12 @@
 import { Component, inject, signal } from '@angular/core';
-import { TableModule } from 'primeng/table';
-import { Router, RouterLink } from '@angular/router';
+import { TableLazyLoadEvent, TableModule } from 'primeng/table';
+import { Router } from '@angular/router';
 import { DropdownModule } from 'primeng/dropdown';
 import { BaseApiService } from '../../../services/base-api.service';
-import { Product, ProductList } from '../../../Models/product.model';
+import { ProductList } from '../../../Models/product.model';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { PaginationResult } from '../../../Models/Pagination.model';
+import { PaginationService } from '../../../services/pagination.service';
 
 @Component({
   selector: 'app-products',
@@ -17,24 +18,23 @@ export class ProductsComponent {
   constructor(private api: BaseApiService) { }
   confirmation = inject(ConfirmationService);
   msg = inject(MessageService);
-  router = inject(Router)
+  router = inject(Router);
+  pagination = inject(PaginationService);
 
-  products = signal<PaginationResult<ProductList>>({
-    items: [],
-    pageNumber: 1,
-    pageSize: 10,
-    hasNextPage: false,
-    hasPreviousPage: false
-});
-  ngOnInit() {
-    this.api.getAll<PaginationResult<ProductList>>('Products').subscribe({
-      next: (data: PaginationResult<ProductList>) => {
-        this.products.set(data);
+  totalrecords=signal<number>(0);
+  products = signal<ProductList[]>([]);
+ 
+  loadProducts(event: TableLazyLoadEvent){
+    this.pagination.getData<ProductList>('Products',event).subscribe({
+      next:(result)=>{
+        this.products.set(result.data);
+        console.log("Data Length", result.data.length);
+        this.totalrecords.set(result.total);
       },
       error: (err) => {
-        this.api.handleError(err, err.error.message);
-      }
-    });
+          this.api.handleError(err, err.error.message);
+        }
+    })
   }
   deleteProduct(id: string) {
     this.confirmation.confirm({
@@ -47,8 +47,7 @@ export class ProductsComponent {
       accept: () => {
         this.api.delete<void>('Products', id).subscribe({
           next: () => {
-            this.products.update(products=>({
-              ...products,items: products.items.filter(p=>p.id!==id)}));
+            this.products.update(products=>(products.filter(p=>p.id!==id)));
             this.msg.add({
               severity: 'success',
               summary: 'Success',

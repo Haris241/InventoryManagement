@@ -1,0 +1,11 @@
+<div class="error-container">
+  <!-- FRONTEND VALIDATION ERROR -->
+  @if (frontendError()) {
+    <small class="error-message">{{ frontendError() }}</small>
+  }
+
+  <!-- BACKEND MODELSTATE ERRORS -->
+  @for (err of backendErrorList(); track err) {
+    <small class="error-message">{{ err }}</small>
+  }
+</div>

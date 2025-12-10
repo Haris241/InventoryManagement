@@ -14,9 +14,7 @@
       <div class="lg:w-1/2 w-2/3">
         <input pInputText pSize="small" id="name" autocomplete="off" type="text" formControlName="name"
           class="w-full">
-        @if (submit() && addproduct.get('name')?.invalid) {
-        <small style="color: red;">Name is required</small>
-        }
+        <app-field-error [form]="addproduct" field="name" [backendErrors]="backendErrors" [submit]="submit" [formChange]="formChange"></app-field-error>
       </div>
     </div>
 
@@ -25,9 +23,7 @@
       <div class="lg:w-1/2 w-2/3">
         <input pInputText pSize="small" id="price" autocomplete="off" type="text" formControlName="price"
           class="w-full">
-        @if (submit() && addproduct.get('price')?.invalid) {
-        <small style="color: red;">Price is required. Enter in Valid Format.</small>
-        }
+        <app-field-error [form]="addproduct" field="price" [backendErrors]="backendErrors" [submit]="submit" [formChange]="formChange"></app-field-error>
       </div>
     </div>
 
@@ -36,9 +32,7 @@
       <div class="lg:w-1/2 w-2/3">
         <input pInputText pSize="small" id="quantity" autocomplete="off" type="text" formControlName="quantity"
           class="w-full">
-           @if (submit() && addproduct.get('quantity')?.invalid) {
-        <small style="color: red;">Quantity can only be in Numbers</small>
-        }
+        <app-field-error [form]="addproduct" field="quantity" [backendErrors]="backendErrors" [submit]="submit" [formChange]="formChange"></app-field-error>
       </div>
 
     </div>
@@ -55,7 +49,7 @@
       <span class="WhiteC">Select Supplier</span>
       <div>
         <p-autoComplete 
-        (completeMethod)="SearchSuppliers($event)"
+        (completeMethod)="SearchSuppliers($event,suppliersearch.searchterm)"
         inputId="supplierId" 
         optionLabel="name" 
         formControlName="supplierId"

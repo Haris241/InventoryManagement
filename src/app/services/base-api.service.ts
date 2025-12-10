@@ -96,6 +96,13 @@ export class BaseApiService {
       });
     }
   }
+ globalMessage(type: 'success' | 'error', message = 'An unexpected error occurred') {
+  this.msg.add({
+    severity: type,
+    summary: type === 'success' ? 'Success' : 'Error',
+    detail: message
+  });
+}
 
 
 }
