@@ -35,9 +35,9 @@ export class PaginationService {
     };
   }
 
-  getData<T>(endpoint:string,event: TableLazyLoadEvent):Observable<{data:T[],total:number}>{
+  getData<TOutput,TInput>(endpoint:string,event: TableLazyLoadEvent,object: TInput):Observable<{data:TOutput[],total:number}>{
     const pageNumber= event.first && event.rows? Math.floor(event.first/event.rows) + 1 : 1;
-    return this.api.getAll<PaginationResult<T>>(`${endpoint}?pageNumber=${pageNumber}`).pipe(
+    return this.api.getAllPost<PaginationResult<TOutput>,TInput>(`${endpoint}?pageNumber=${pageNumber}`,object).pipe(
         map(res=>{
           const currentTotal= (res.pageNumber-1)*res.pageSize + res.items.length;
           const totalrecords= res.hasNextPage?currentTotal + 1 : currentTotal;

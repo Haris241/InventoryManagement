@@ -27,14 +27,14 @@ export class SuppliersComponent {
   });
 
   ngOnInit(){
-    this.api.getAll<PaginationResult<Supplier>>("Supplier").subscribe({
-      next:(data:PaginationResult<Supplier>)=>{
-        this.suppliers.set(data);
-      },
-      error:(err)=>{
-        this.api.handleError(err,err.error.message);
-      }
-    });
+    // this.api.getAll<PaginationResult<Supplier>>("Supplier").subscribe({
+    //   next:(data:PaginationResult<Supplier>)=>{
+    //     this.suppliers.set(data);
+    //   },
+    //   error:(err)=>{
+    //     this.api.handleError(err,err.error.message);
+    //   }
+    // });
   }
   deleteSupplier(id: string){
     this.confimation.confirm({

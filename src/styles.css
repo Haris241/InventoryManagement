@@ -156,7 +156,7 @@ label.required::after {
   background-color: var(--MainColour);
   padding: 8px 16px;
   border: 2px solid var(--MainColour);
-  border-radius: 20px;
+  border-radius: 18px;
   font-size: 16px;
   cursor: pointer;
   font-weight: 500;
@@ -199,7 +199,18 @@ label.required::after {
   vertical-align: middle;
 
 }
+/* Hidding Spinner Arrows */
+/* Chrome, Edge, Safari */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
 
+/* Firefox */
+input[type="number"] {
+  appearance: textfield;
+}
 
 @media screen and (max-width: 768px) {
   .p-toast {

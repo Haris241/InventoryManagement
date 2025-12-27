@@ -37,8 +37,6 @@ export class FieldErrorComponent {
   });
 
   backendErrorList=computed(()=>{
-    this.formChange();
-    console.log("Child: " ,this.backendErrors());
     return this.backendErrors()?.[this.field]??[];
   });
 }

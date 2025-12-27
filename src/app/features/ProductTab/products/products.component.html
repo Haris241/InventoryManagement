@@ -1,4 +1,27 @@
-<h2 class="text-center text-semibold text-3xl WhiteC">Products</h2>
+<h2 class="text-center text-semibold text-3xl WhiteC mb-4">Products List</h2>
+<form [formGroup]="producSearchForm" (ngSubmit)="OnSearch()">
+    <div class="flex flex-wrap global-div p-5">
+        <div class="lg:w-1/2 w-full mb-3">
+            <span class="WhiteC">Search Product Name</span>
+            <div>
+                <p-autoComplete (completeMethod)="SearchDropDown($event,productsearch.searchterm)" inputId="productId"
+                    optionLabel="name" formControlName="productId" [dropdown]="true" [suggestions]="productByName()"
+                    optionValue="id" placeholder="Write 3 Characters " [showClear]="true"></p-autoComplete>
+            </div>
+        </div>
+        <div class="lg:w-1/2 w-full mb-3">
+            <span class="WhiteC">Search Supplier</span>
+            <div>
+                <p-autoComplete (completeMethod)="SearchDropDown($event,suppliersearch.searchterm)" inputId="supplierId"
+                    optionLabel="name" formControlName="supplierId" [dropdown]="true" [suggestions]="suppliers()"
+                    optionValue="id" placeholder="Write 3 Characters " [showClear]="true"></p-autoComplete>
+            </div>
+        </div>
+        <div class="lg:w-1/2 w-full mb-3">
+            <button class="global-button">Search</button>
+        </div>
+    </div>
+</form>
 <div class="flex flex-wrap global-div mt-4 p-4">
     <div class="w-full">
         <div class="flex justify-center">
@@ -8,16 +31,8 @@
                     placeholder="Search" />
             </div>
         </div>
-        <p-table #dt 
-        [value]="products()" 
-        [globalFilterFields]="['name']" 
-        [paginator]="true" 
-        [rows]="20"
-        [lazy]="true"
-        (onLazyLoad)="loadProducts($event)"
-        [totalRecords]="totalrecords()"
-        [tableStyle]="{ 'min-width': '50rem' }" 
-        >
+        <p-table #dt [value]="products()"  [globalFilterFields]="['name']" [paginator]="true" [rows]="20" [lazy]="true"
+            (onLazyLoad)="loadProducts($event)" [totalRecords]="totalrecords()" [tableStyle]="{ 'min-width': '50rem' }">
             <ng-template pTemplate="header">
                 <tr>
                     <th>Product Number</th>
@@ -37,8 +52,10 @@
                     <td>{{product.supplierName}}</td>
                     <td>
                         <!-- use same component for edit  -->
-                        <button class="me-3" (click)="editProduct(product.id)"><span class="material-symbols-outlined second-color">edit</span></button>
-                        <button (click)="deleteProduct(product.id)"><span class="material-symbols-outlined second-color">delete</span></button>
+                        <button class="me-3" (click)="editProduct(product.id)"><span
+                                class="material-symbols-outlined second-color">edit</span></button>
+                        <button (click)="deleteProduct(product.id)"><span
+                                class="material-symbols-outlined second-color">delete</span></button>
                     </td>
                 </tr>
             </ng-template>

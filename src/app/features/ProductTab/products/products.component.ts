@@ -1,16 +1,18 @@
-import { Component, inject, signal } from '@angular/core';
-import { TableLazyLoadEvent, TableModule } from 'primeng/table';
+import { Component, inject, signal, ViewChild, WritableSignal } from '@angular/core';
+import { Table, TableLazyLoadEvent, TableModule } from 'primeng/table';
 import { Router } from '@angular/router';
 import { DropdownModule } from 'primeng/dropdown';
 import { BaseApiService } from '../../../services/base-api.service';
-import { ProductList } from '../../../Models/product.model';
+import { ProductList, ProductSearch } from '../../../Models/product.model';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { PaginationResult } from '../../../Models/Pagination.model';
+import { AutoDropdown } from '../../../Models/Pagination.model';
 import { PaginationService } from '../../../services/pagination.service';
+import { AutoCompleteModule } from 'primeng/autocomplete';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-products',
-  imports: [TableModule, DropdownModule],
+  imports: [TableModule, DropdownModule,AutoCompleteModule,ReactiveFormsModule],
   templateUrl: './products.component.html',
   styleUrl: './products.component.css',
 })
@@ -20,21 +22,37 @@ export class ProductsComponent {
   msg = inject(MessageService);
   router = inject(Router);
   pagination = inject(PaginationService);
+  fb = inject(FormBuilder);
 
   totalrecords=signal<number>(0);
   products = signal<ProductList[]>([]);
- 
+  suppliersearch = this.pagination.autoSearchDropdown<AutoDropdown>('Dropdowns/Suppliers');
+  suppliers = this.suppliersearch.result;
+  productsearch = this.pagination.autoSearchDropdown<AutoDropdown>('Dropdowns/Products');
+  productByName= this.productsearch.result;
+  @ViewChild('dt') dt!: Table;
+
+  producSearchForm: FormGroup= this.fb.group({
+    productId: [null],
+    supplierId: [null]
+  });
+
   loadProducts(event: TableLazyLoadEvent){
-    this.pagination.getData<ProductList>('Products',event).subscribe({
+    console.log("Lazy Loading Triggered");
+    const formValue = this.producSearchForm.value;
+    this.pagination.getData<ProductList,ProductSearch>('Products/GetAll',event,formValue).subscribe({
       next:(result)=>{
         this.products.set(result.data);
-        console.log("Data Length", result.data.length);
         this.totalrecords.set(result.total);
       },
       error: (err) => {
           this.api.handleError(err, err.error.message);
         }
     })
+  }
+  OnSearch(){
+    console.log("Event Triggered");
+    this.dt.reset();
   }
   deleteProduct(id: string) {
     this.confirmation.confirm({
@@ -68,5 +86,12 @@ export class ProductsComponent {
   editProduct(id: string){
     this.router.navigate(['Inventory/editproduct',id]);
   }
+  SearchDropDown(event: { query: string }, searchtermsignal: WritableSignal<string>) {
+    const search = event.query?.trim() ?? '';
+    if (search.length > 2) {
+      searchtermsignal.set(search);
+    }
+  }
+
 
 }

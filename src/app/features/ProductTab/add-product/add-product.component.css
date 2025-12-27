@@ -1,0 +1,45 @@
+/* Upload button container */
+.uploadImage {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+
+  background-color: var(--white); 
+  border: 1px solid #374151; 
+  color: var(--MainColour);
+
+  font-size: 0.875rem;
+  font-weight: 500;
+
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* Hover effect */
+.uploadImage:hover {
+  background-color: #1f2937;
+  border-color: var(--MainColour); /* blue accent */
+  color: #ffffff;
+}
+
+/* Icon styling */
+.uploadImage .material-symbols-outlined {
+  font-size: 22px;
+  color: var(--MainColour);
+}
+
+.image-preview-container {
+  margin-top: 15px;
+  position: relative;
+  display: inline-block;
+}
+
+.image-preview {
+  max-width: 200px;
+  max-height: 200px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+}

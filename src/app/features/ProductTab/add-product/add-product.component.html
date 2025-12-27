@@ -2,37 +2,39 @@
   <div class="flex flex-wrap global-div p-5">
     <div class="w-full mb-4">
       @if (isEditMode()) {
-        <input id="id" autocomplete="off" type="hidden" formControlName="id">
-        <h3 class="text-2xl font-semibold text-center second-color mb-3">Edit Product Information</h3>
+      <input id="id" autocomplete="off" type="hidden" formControlName="id">
+      <h3 class="text-2xl font-semibold text-center second-color mb-3">Edit Product Information</h3>
       }@else{
-        <h3 class="text-2xl font-semibold text-center second-color mb-3">Add Product Information</h3>
+      <h3 class="text-2xl font-semibold text-center second-color mb-3">Add Product Information</h3>
       }
       <hr class="second-color">
     </div>
     <div class="lg:w-1/2 w-full mb-3">
       <label for="name" class="required">Product Name </label>
       <div class="lg:w-1/2 w-2/3">
-        <input pInputText pSize="small" id="name" autocomplete="off" type="text" formControlName="name"
-          class="w-full">
-        <app-field-error [form]="addproduct" field="name" [backendErrors]="backendErrors" [submit]="submit" [formChange]="formChange"></app-field-error>
+        <input pInputText pSize="small" id="name" autocomplete="off" type="text" formControlName="name" class="w-full">
+        <app-field-error [form]="addproduct" field="name" [backendErrors]="backendErrors" [submit]="submit"
+          [formChange]="formChange"></app-field-error>
       </div>
     </div>
 
     <div class="lg:w-1/2 w-full mb-3">
       <label for="price" class="required">Product Price </label>
       <div class="lg:w-1/2 w-2/3">
-        <input pInputText pSize="small" id="price" autocomplete="off" type="text" formControlName="price"
+        <input pInputText pSize="small" id="price" autocomplete="off" type="number" formControlName="price"
           class="w-full">
-        <app-field-error [form]="addproduct" field="price" [backendErrors]="backendErrors" [submit]="submit" [formChange]="formChange"></app-field-error>
+        <app-field-error [form]="addproduct" field="price" [backendErrors]="backendErrors" [submit]="submit"
+          [formChange]="formChange"></app-field-error>
       </div>
     </div>
 
     <div class="lg:w-1/2 w-full mb-3">
       <label for="quantity">Product Quantity</label>
       <div class="lg:w-1/2 w-2/3">
-        <input pInputText pSize="small" id="quantity" autocomplete="off" type="text" formControlName="quantity"
+        <input pInputText pSize="small" id="quantity" autocomplete="off" type="number" formControlName="quantity"
           class="w-full">
-        <app-field-error [form]="addproduct" field="quantity" [backendErrors]="backendErrors" [submit]="submit" [formChange]="formChange"></app-field-error>
+        <app-field-error [form]="addproduct" field="quantity" [backendErrors]="backendErrors" [submit]="submit"
+          [formChange]="formChange"></app-field-error>
       </div>
 
     </div>
@@ -48,27 +50,47 @@
     <div class="lg:w-1/2 w-full mb-3">
       <span class="WhiteC">Select Supplier</span>
       <div>
-        <p-autoComplete 
-        (completeMethod)="SearchSuppliers($event,suppliersearch.searchterm)"
-        inputId="supplierId" 
-        optionLabel="name" 
-        formControlName="supplierId"
-        [dropdown]="true"
-        [suggestions]="suppliers()"
-        optionValue="id" 
-        placeholder="Write 3 Characters " 
-        [showClear]="true"
-        ></p-autoComplete>
+        <p-autoComplete (completeMethod)="SearchSuppliers($event,suppliersearch.searchterm)" inputId="supplierId"
+          optionLabel="name" formControlName="supplierId" [dropdown]="true" [suggestions]="suppliers()" optionValue="id"
+          placeholder="Write 3 Characters " [showClear]="true"></p-autoComplete>
       </div>
     </div>
+    <div class="lg:w-1/2 w-full mb-3">
+      <label class="block mb-2">Upload Product Image</label>
+
+      <label for="productImage" class="uploadImage">
+        <span class="material-symbols-outlined ">Upload</span>
+        <span>Select Image</span>
+      </label>
+
+      <input id="productImage" type="file" accept="image/jpeg,image/png,image/webp" class="hidden" 
+            (change)="onImageSelected($event)"/>
+    </div>
+    <div class="lg:w-1/2 w-full mb-3">
+      <label class="block mb-2">Product Image</label>
+
+      @if (imagePreview()) {
+        <div class="image-preview-container">
+          <img [src]="imagePreview()" alt="Preview" class="image-preview" />
+          <button 
+            type="button"
+           
+            class="btn-remove-image"
+          >
+            ✕ Remove
+          </button>
+        </div>
+      }
+    </div>
+
 
     <div class="lg:w-1/2 w-full mb-3">
       @if (isEditMode()) {
-        <button class="global-button">Updtae Product</button>
+      <button class="global-button">Updtae Product</button>
       }@else {
-        <button class="global-button">Add Product</button>
+      <button class="global-button">Add Product</button>
       }
     </div>
-    
+
   </div>
 </form>
