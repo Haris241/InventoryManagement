@@ -5,6 +5,7 @@ import { BaseApiService } from '../../../services/base-api.service';
 import { Supplier } from '../../../Models/Supplier.model';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
+import { DataLayerService } from '../../../services/data-layer.service';
 
 @Component({
   selector: 'app-add-supplier',
@@ -13,8 +14,10 @@ import { MessageService } from 'primeng/api';
   styleUrl: './add-supplier.component.css'
 })
 export class AddSupplierComponent {
-  constructor(private api: BaseApiService ){}
+  constructor( ){}
   fb = inject(FormBuilder);
+  base = inject(BaseApiService);
+  dataService=inject(DataLayerService);
   private message = inject(MessageService)
 
   submit = false;
@@ -29,7 +32,7 @@ export class AddSupplierComponent {
       return this.addSupplier.markAllAsTouched();
     }
     const createSupplier: Omit<Supplier,'id'> = this.addSupplier.value;
-    this.api.create<Omit<Supplier,'id'>>("Supplier",createSupplier).subscribe({
+    this.dataService.create<Omit<Supplier,'id'>>("Supplier",createSupplier).subscribe({
       next:()=>{
         this.message.add({
           severity: 'success',
@@ -40,7 +43,7 @@ export class AddSupplierComponent {
       this.addSupplier.reset();
       },
       error:(err)=>{
-          this.api.handleError(err,err.error.message);
+          this.base.handleError(err,err.error.message);
           this.submit=false;
       }
     });

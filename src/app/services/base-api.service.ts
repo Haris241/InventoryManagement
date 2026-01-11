@@ -1,46 +1,24 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, catchError, filter, finalize, map, Observable, take, tap, throwError } from 'rxjs';
-import { LoginResponse, Token } from '../Models/Auth.model';
+import { LoginResponse} from '../Models/Auth.model';
 import { MessageService } from 'primeng/api';
+import { DataLayerService } from './data-layer.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BaseApiService {
   msg = inject(MessageService);
+  dataservice=inject(DataLayerService);
 
   isLoggedIn = signal<boolean>(this.hasToken());
   private isrefeshing = false;
   private refreshTokenSubject = new BehaviorSubject<string | null>(null);
-  private baseurl = "https://localhost:7049/api/"
-  constructor(private http: HttpClient, private routee: Router) { }
+  constructor( private routee: Router) { }
 
-  getAll<T>(controller: string): Observable<T> {
-    return this.http.get<T>(`${this.baseurl}${controller}`,{ withCredentials: true });
-  }
-  getAllPost<TOutput,TInput>(controller: string,object: TInput): Observable<TOutput> {
-    return this.http.post<TOutput>(`${this.baseurl}${controller}`,object,{ withCredentials: true });
-  }
-  getAllSimple<T>(controller: string): Observable<T[]> {
-    return this.http.get<T[]>(`${this.baseurl}${controller}`,{ withCredentials: true });
-  }
-  create<T>(controller: string, object: T | FormData): Observable<T> {
-    return this.http.post<T>(`${this.baseurl}${controller}`, object, { withCredentials: true });
-  }
-  createResponse<TInput, TOutput>(controller: string, object?: TInput): Observable<TOutput> {
-    return this.http.post<TOutput>(`${this.baseurl}${controller}`, object ?? {}, { withCredentials: true });
-  }
-  delete<T>(controller: string, id: string):Observable<T>{
-    return this.http.delete<T>(`${this.baseurl}${controller}/${id}`, { withCredentials: true });
-  }
-  edit<T>(controller:string, id: string,object: T | FormData):Observable<T>{
-    return this.http.put<T>( `${this.baseurl}${controller}/${id}`,object, { withCredentials: true });
-  }
-  getById<T>(controller:string, id: string):Observable<T>{
-    return this.http.get<T>( `${this.baseurl}${controller}/${id}`, { withCredentials: true });
-  }
+  
   
 
 
@@ -57,7 +35,7 @@ export class BaseApiService {
     } else {
       this.isrefeshing = true;
       this.refreshTokenSubject.next(null);
-      return this.createResponse<void, LoginResponse>('Auth/refresh-token').pipe(
+      return this.dataservice.createResponse<void, LoginResponse>('Auth/refresh-token').pipe(
         tap(response => {
           this.setToken(response.accessToken);
           this.refreshTokenSubject.next(response.accessToken);

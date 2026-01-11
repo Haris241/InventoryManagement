@@ -6,6 +6,7 @@ import { LoadingService } from '../services/loading.service';
 import { ConfirmationService } from 'primeng/api';
 import { BaseApiService } from '../services/base-api.service';
 import { Token } from '../Models/Auth.model';
+import { DataLayerService } from '../services/data-layer.service';
 
 
 
@@ -19,7 +20,8 @@ import { Token } from '../Models/Auth.model';
 export class LayoutComponent {
   constructor(private route: Router) { }
   themeService = inject(LoadingService);
-  api = inject(BaseApiService);
+  base = inject(BaseApiService);
+  dataService=inject(DataLayerService);
   confirmation = inject(ConfirmationService);
   isCollapsed = signal(false);
   isMobile = signal(false);
@@ -82,12 +84,12 @@ export class LayoutComponent {
       acceptLabel: 'Yes',
       rejectLabel: 'No',
       accept: () => {
-        this.api.createResponse<void,Token>('Auth/logout').subscribe({
+        this.dataService.createResponse<void,Token>('Auth/logout').subscribe({
           next:()=>{
-             this.api.logout();
+             this.base.logout();
           },
           error: (err)=>{
-            this.api.handleError(err,err.error.message);
+            this.base.handleError(err,err.error.message);
           }
         });
       },

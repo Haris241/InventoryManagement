@@ -9,6 +9,7 @@ import { AutoDropdown } from '../../../Models/Pagination.model';
 import { PaginationService } from '../../../services/pagination.service';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { DataLayerService } from '../../../services/data-layer.service';
 
 @Component({
   selector: 'app-products',
@@ -17,12 +18,14 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
   styleUrl: './products.component.css',
 })
 export class ProductsComponent {
-  constructor(private api: BaseApiService) { }
+  constructor() { }
   confirmation = inject(ConfirmationService);
+  base=inject(BaseApiService);
   msg = inject(MessageService);
   router = inject(Router);
   pagination = inject(PaginationService);
   fb = inject(FormBuilder);
+  dataService = inject(DataLayerService);
 
   totalrecords=signal<number>(0);
   products = signal<ProductList[]>([]);
@@ -46,7 +49,7 @@ export class ProductsComponent {
         this.totalrecords.set(result.total);
       },
       error: (err) => {
-          this.api.handleError(err, err.error.message);
+          this.base.handleError(err, err.error.message);
         }
     })
   }
@@ -63,7 +66,7 @@ export class ProductsComponent {
       acceptLabel: 'Yes',
       rejectLabel: 'No',
       accept: () => {
-        this.api.delete<void>('Products', id).subscribe({
+        this.dataService.delete<void>('Products', id).subscribe({
           next: () => {
             this.products.update(products=>(products.filter(p=>p.id!==id)));
             this.msg.add({
@@ -73,7 +76,7 @@ export class ProductsComponent {
             });
           },
           error: (err) => {
-            this.api.handleError(err, err.error?.message);
+            this.base.handleError(err, err.error?.message);
           }
         });
       },

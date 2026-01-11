@@ -2,8 +2,8 @@ import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { RouterLink } from '@angular/router';
-import { BaseApiService } from '../../services/base-api.service';
 import { Register } from '../../Models/Auth.model';
+import { DataLayerService } from '../../services/data-layer.service';
 
 
 @Component({
@@ -14,7 +14,7 @@ import { Register } from '../../Models/Auth.model';
 })
 export class RegisterComponent {
   private fb = inject(FormBuilder)
-  private api = inject(BaseApiService)
+  private dataService = inject(DataLayerService)
   submit = false;
   err:string[]=[];
 
@@ -39,7 +39,7 @@ registerUser(){
     this.err=['Passwords do not Match'];
     return;
   }
-  this.api.create<Register>("Auth/register",this.register.value).subscribe({
+  this.dataService.create<Register>("Auth/register",this.register.value).subscribe({
     next:()=>{
       this.submit=false;
       this.err=['User Register Successfully'];

@@ -13,6 +13,7 @@ import { AutoDropdown } from '../../../Models/Pagination.model';
 import { FieldErrorComponent } from "../../../shared/field-error/field-error.component";
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormDataService } from '../../../services/formData.service';
+import { DataLayerService } from '../../../services/data-layer.service';
 
 @Component({
   selector: 'app-add-product',
@@ -29,11 +30,12 @@ export class AddProductComponent {
       });
   }
   private fb = inject(FormBuilder);
-  private api = inject(BaseApiService);
+  private base = inject(BaseApiService);
   private pagination = inject(PaginationService);
   private activatedRoute = inject(ActivatedRoute);
   private formservice = inject(FormDataService);
   private destroyRef= inject(DestroyRef);
+  private dataService = inject(DataLayerService);
 
   submit = signal<boolean>(false);
   isEditMode = signal<boolean>(false);
@@ -79,9 +81,9 @@ export class AddProductComponent {
         formValue.productImage = this.selectedImage;
       }
        const formdata = this.formservice.buildFormData(formValue);
-      this.api.create<ProductCreate>('Products', formdata).subscribe({
+      this.dataService.create<ProductCreate>('Products', formdata).subscribe({
         next: () => {
-          this.api.globalMessage('success', 'Product Added Successfully');
+          this.base.globalMessage('success', 'Product Added Successfully');
           this.addproduct.patchValue({
             name: '',
             quantity: 0
@@ -93,7 +95,7 @@ export class AddProductComponent {
             this.backendErrors.set(err.error.errors);
             this.submit.set(false);
           } else {
-            this.api.handleError(err, err.error.message);
+            this.base.handleError(err, err.error.message);
             this.submit.set(false);
           }
         }
@@ -104,15 +106,15 @@ export class AddProductComponent {
         formValue.productImage = this.selectedImage;
       }
        const formdata = this.formservice.buildFormData(formValue);
-      this.api.edit<ProductCreate>('Products', id, formdata).subscribe({
+      this.dataService.edit<ProductCreate>('Products', id, formdata).subscribe({
         next: () => {
 
-          this.api.globalMessage('success', 'Product Updated Successfully');
+          this.base.globalMessage('success', 'Product Updated Successfully');
           this.addproduct.reset();
           this.submit.set(false);
         },
         error: (err) => {
-          this.api.handleError(err, err.error.message);
+          this.base.handleError(err, err.error.message);
           this.submit.set(false);
         }
       });
@@ -121,7 +123,7 @@ export class AddProductComponent {
   }
 
   loadProduct(id: string) {
-    this.api.getById<ProductList>('Products', id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+    this.dataService.getById<ProductList>('Products', id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (data: ProductList) => {
         console.log("data: ", data);
 
@@ -135,7 +137,7 @@ export class AddProductComponent {
         this.imagePreview.set(data.productImageUrl);
       },
       error: (err) => {
-        this.api.handleError(err, err.error?.message);
+        this.base.handleError(err, err.error?.message);
       }
     });
   }
@@ -156,14 +158,14 @@ export class AddProductComponent {
     }
     const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg'];
     if (!allowedTypes.includes(file.type)) {
-      this.api.globalMessage('error', 'Invalid file type. Please select JPEG, PNG or WebP Only');
+      this.base.globalMessage('error', 'Invalid file type. Please select JPEG, PNG or WebP Only');
       this.selectedImage = null;
       input.value = '';
       return;
     }
     const fileSize = 3 * 1024 * 1024
     if (file.size > fileSize) {
-      this.api.globalMessage('error', 'File Must be Less than 3 MB.');
+      this.base.globalMessage('error', 'File Must be Less than 3 MB.');
       this.selectedImage = null;
       input.value = '';
       return;

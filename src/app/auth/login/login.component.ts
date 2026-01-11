@@ -5,6 +5,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { Router, RouterLink } from '@angular/router';
 import { BaseApiService } from '../../services/base-api.service';
 import { Login, LoginResponse } from '../../Models/Auth.model';
+import { DataLayerService } from '../../services/data-layer.service';
 
 @Component({
   selector: 'app-login',
@@ -15,6 +16,7 @@ import { Login, LoginResponse } from '../../Models/Auth.model';
 export class LoginComponent {
   private fb = inject(FormBuilder)
   private api= inject(BaseApiService)
+  private dataService = inject(DataLayerService)
   private router = inject(Router)
   submit = false;
   showPassword = false;
@@ -32,7 +34,7 @@ userlogin(){
     return;
   }
   const newlogin: Login = this.login.value
-  this.api.createResponse<Login,LoginResponse>("Auth/login",newlogin).subscribe({
+  this.dataService.createResponse<Login,LoginResponse>("Auth/login",newlogin).subscribe({
     next: (response) => {
       this.submit = false;
       this.api.setToken(response.accessToken);

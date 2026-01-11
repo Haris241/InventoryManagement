@@ -6,6 +6,7 @@ import { BaseApiService } from '../../../services/base-api.service';
 import { Supplier } from '../../../Models/Supplier.model';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { PaginationResult } from '../../../Models/Pagination.model';
+import { DataLayerService } from '../../../services/data-layer.service';
 
 @Component({
   selector: 'app-suppliers',
@@ -15,8 +16,10 @@ import { PaginationResult } from '../../../Models/Pagination.model';
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SuppliersComponent {
-  constructor(private api: BaseApiService){}
+  constructor(){}
   confimation = inject(ConfirmationService);
+  base=inject(BaseApiService);
+  dataService=inject(DataLayerService);
   msg = inject(MessageService);
   suppliers=signal<PaginationResult<Supplier>>({
     items: [],
@@ -45,7 +48,7 @@ export class SuppliersComponent {
       acceptLabel: 'Yes',
       rejectLabel: 'No',
       accept:()=>{
-        this.api.delete<void>('Supplier',id).subscribe({
+        this.dataService.delete<void>('Supplier',id).subscribe({
           next:()=>{
             this.suppliers.update(supplier=>({
               ...supplier,items: supplier.items.filter(s=>s.id!==id)}));
@@ -56,7 +59,7 @@ export class SuppliersComponent {
             });
           },
           error:(err)=>{
-            this.api.handleError(err)
+            this.base.handleError(err)
           }
         });
       },
