@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class DataLayerService {
 
-  private baseurl = "https://localhost:7049/api/"
+  private baseurl = "https://localhost:8081/api/"
   private http=inject(HttpClient)
   getAll<T>(controller: string): Observable<T> {
       return this.http.get<T>(`${this.baseurl}${controller}`,{ withCredentials: true });

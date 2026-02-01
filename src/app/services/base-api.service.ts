@@ -18,11 +18,6 @@ export class BaseApiService {
   private refreshTokenSubject = new BehaviorSubject<string | null>(null);
   constructor( private routee: Router) { }
 
-  
-  
-
-
-
   private hasToken(): boolean {
     return !!localStorage.getItem('access_token');
   }

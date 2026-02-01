@@ -1,7 +1,6 @@
 import { Component, inject, signal, ViewChild, WritableSignal } from '@angular/core';
 import { Table, TableLazyLoadEvent, TableModule } from 'primeng/table';
 import { Router } from '@angular/router';
-import { DropdownModule } from 'primeng/dropdown';
 import { BaseApiService } from '../../../services/base-api.service';
 import { ProductList, ProductSearch } from '../../../Models/product.model';
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -13,7 +12,7 @@ import { DataLayerService } from '../../../services/data-layer.service';
 
 @Component({
   selector: 'app-products',
-  imports: [TableModule, DropdownModule,AutoCompleteModule,ReactiveFormsModule],
+  imports: [TableModule,AutoCompleteModule,ReactiveFormsModule],
   templateUrl: './products.component.html',
   styleUrl: './products.component.css',
 })
