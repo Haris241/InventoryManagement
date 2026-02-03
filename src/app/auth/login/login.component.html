@@ -1,54 +1,77 @@
 <form [formGroup]="login" (ngSubmit)="userlogin()" class="w-full flex justify-center pt-10">
     <div class="containerr w-full mx-3 md:w-2/3 px-5">
+
         <div class="my-4">
-            <p class="text-2xl text-center second-color font-bold ">Welcome Back!</p>
+            <p class="text-2xl text-center second-color font-bold">Welcome Back!</p>
         </div>
+
         <div class="mb-4">
-            <p class="text-sm text-center WhiteC">From stockroom to storefront — we’ve got your inventory
-                covered</p>
+            <p class="text-sm text-center WhiteC">
+                From stockroom to storefront — we’ve got your inventory covered
+            </p>
         </div>
+
+        <!-- Username -->
         <div class="my-4">
-            <label for="userName">Username</label>
             <div class="w-full">
-                <input pInputText pSize="small" id="userName" autocomplete="off" type="text" formControlName="userName"
-                    class="w-full" placeholder="Enter your Username">
+                <p-floatLabel variant="on">
+
+                    <input pInputText pSize="small" id="userName" autocomplete="off" type="text"
+                        formControlName="userName" class="w-full">
+
+                    <label for="userName">Username</label>
+                </p-floatLabel>
                 @if (submit && login.get('userName')?.invalid) {
                 <small style="color: red;">UserName is required</small>
                 }
             </div>
         </div>
-        <div class="mt-4">
-            <label for="password">Password</label>
-            <div class="relative w-full">
-                <input pInputText pSize="small" id="password" autocomplete="off"
-                    [type]="showPassword? 'text':'password'" formControlName="password" class="w-full"
-                    placeholder="Enter Your Password">
-                <button type="button" (click)="tooglePassword()"
-                    class="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500">
-                    <span class="material-symbols-outlined" >
-                        {{ showPassword ? 'visibility_off' : 'visibility' }}
-                    </span>
-                </button>
 
+        <!-- Password -->
+        <div class="mt-4">
+            <div class="relative w-full">
+                <p-floatLabel variant="on">
+                    <input pInputText pSize="small" id="password" autocomplete="off"
+                        [type]="showPassword ? 'text' : 'password'" formControlName="password" class="w-full">
+
+                    <label for="password">Password</label>
+
+                    <button type="button" (click)="tooglePassword()"
+                        class="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500">
+                        <span class="material-symbols-outlined">
+                            {{ showPassword ? 'visibility_off' : 'visibility' }}
+                        </span>
+                    </button>
+                </p-floatLabel>
                 @if (submit && login.get('password')?.invalid) {
                 <small style="color: red;">Password is required</small>
                 }
             </div>
         </div>
+
         @if (err) {
-        <small style="color: red;" class="justify-center flex my-2 font-semibold">{{err}}</small>
+        <small style="color: red;" class="justify-center flex my-2 font-semibold">
+            {{ err }}
+        </small>
         }
+
         <div class="my-2 flex justify-end">
             <a href="" class="text-sm WhiteC hover:underline">Forgot Password?</a>
         </div>
-        <div class="my-4 ">
+
+        <div class="my-4">
             <button class="login-button">Login Now</button>
         </div>
-        <div class="mb-2 ">
+
+        <div class="mb-2">
             <p class="text-sm text-center WhiteC">Don't have any account?</p>
         </div>
-        <div class="mb-10 flex justify-center ">
-            <a routerLink="/register" class="text-sm font-bold second-color  hover:underline">Register Now</a>
+
+        <div class="mb-10 flex justify-center">
+            <a routerLink="/register" class="text-sm font-bold second-color hover:underline">
+                Register Now
+            </a>
         </div>
+
     </div>
 </form>

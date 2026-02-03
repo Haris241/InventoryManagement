@@ -1,6 +1,7 @@
 import { Component, DestroyRef, inject, signal, WritableSignal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
+import { FloatLabelModule } from 'primeng/floatlabel';
 import { SelectModule } from 'primeng/select';
 import { CommonModule } from '@angular/common';
 import { ToastModule } from 'primeng/toast';
@@ -17,7 +18,7 @@ import { DataLayerService } from '../../../services/data-layer.service';
 
 @Component({
   selector: 'app-add-product',
-  imports: [ReactiveFormsModule, InputTextModule, SelectModule, CommonModule, ToastModule, AutoCompleteModule, FieldErrorComponent],
+  imports: [ReactiveFormsModule, InputTextModule,FloatLabelModule, SelectModule, CommonModule, ToastModule, AutoCompleteModule, FieldErrorComponent],
   templateUrl: './add-product.component.html',
   styleUrl: './add-product.component.css'
 })

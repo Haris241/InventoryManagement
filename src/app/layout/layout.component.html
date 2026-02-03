@@ -1,92 +1,115 @@
 <div class="flex h-screen">
-  <aside class=" text-white p-2 sidebar" [ngClass]="{collapsed: isCollapsed()}">
-    <div class="flex justify-between items-center mb-4 ">
+  <aside class=" text-white px-2 sidebar" [ngClass]="{collapsed: isCollapsed()}">
+    <div class="sidebar-header ">
       @if (!isCollapsed() ) {
       <h5>Inventory</h5>
       }
-      <a class="btnhover nav-link second-color block md:hidden" (click)="toogleSidebar()">
+      <a class="btnhover nav-link second-color block lg:hidden" (click)="toogleSidebar()">
         <span class="material-symbols-outlined">menu</span>
       </a>
-      <a class="btnhover nav-link hidden md:block" style="cursor: pointer;" (click)="toogleSidebar()">
+      <a class="btnhover nav-link hidden lg:block" style="cursor: pointer;" (click)="toogleSidebar()">
         <span class="material-symbols-outlined">menu</span>
       </a>
     </div>
-    <hr>
     @if (!isMobile()) {
-    <nav class="flex-col items-center mt-4 ">
-      <a class="flex nav-link text-white" routerLink="/Inventory/dashboard" routerLinkActive="active"
-        [routerLinkActiveOptions]="{exact: true}" (click)="onSelectMobile()">
-        <span class="material-symbols-outlined">bar_chart</span>
-        @if (!isCollapsed()) {
-        <span class="custom">DashBoard</span>
-        }
-      </a>
-      <a class="nav-link text-white flex justify-between items-center cursor-pointer"
-        (click)="toogleDropdown('Product')" [ngClass]="{'active': isCollapsed() && isActiveGroup('Product')}">
-        <div class="flex items-center">
-          <span class="material-symbols-outlined">inventory_2</span>
-          @if (!isCollapsed()) {
-          <span class="custom">Product</span>
+    <nav class="mt-4 sidebar-menu">
+      <ul style="list-style: none; padding: 0; margin: 0;">
+        <li>
+          <a class="flex nav-link text-white" routerLink="/Inventory/dashboard" routerLinkActive="active"
+            [routerLinkActiveOptions]="{exact: true}" (click)="onSelectMobile()">
+            <span class="material-symbols-outlined">bar_chart</span>
+            @if (!isCollapsed()) {
+            <span class="custom">DashBoard</span>
+            }
+          </a>
+        </li>
+
+        <li>
+          <a class="nav-link text-white flex justify-between items-center cursor-pointer"
+            (click)="toogleDropdown('Product')" [ngClass]="{'active': isCollapsed() && isActiveGroup('Product')}">
+            <div class="flex items-center">
+              <span class="material-symbols-outlined">inventory_2</span>
+              @if (!isCollapsed()) {
+              <span class="custom">Product</span>
+              }
+            </div>
+            @if (!isCollapsed()) {
+            <span class="material-symbols-outlined">{{isProductDropdown()? 'expand_less':'expand_more'}}</span>
+            }
+          </a>
+          @if (!isCollapsed() && isProductDropdown()) {
+          <ul style="list-style: none; padding: 0; margin: 0;">
+            <li class="ps-3">
+              <a class="nav-link text-white flex items-center " (click)="onSelectMobile()"
+                routerLink="/Inventory/addproduct" routerLinkActive="active">
+                <span class="material-symbols-outlined">chevron_right</span>
+                @if (!isCollapsed()) {
+                <span class="custom-dropdown">Add Product</span>
+                }
+              </a>
+            </li>
+            <li class="ps-3">
+              <a class="nav-link text-white flex items-center " (click)="onSelectMobile()"
+                routerLink="/Inventory/products" routerLinkActive="active">
+                <span class="material-symbols-outlined">chevron_right</span>
+                @if (!isCollapsed()) {
+                <span class="custom-dropdown">Product List</span>
+                }
+              </a>
+            </li>
+          </ul>
           }
-        </div>
-        @if (!isCollapsed()) {
-        <span class="material-symbols-outlined">{{isProductDropdown()? 'expand_less':'expand_more'}}</span>
-        }
-      </a>
-      @if (!isCollapsed() && isProductDropdown()) {
-      <div class="ps-3">
-        <a class="nav-link text-white flex items-center " (click)="onSelectMobile()" routerLink="/Inventory/addproduct"
-          routerLinkActive="active">
-          <span class="material-symbols-outlined">chevron_right</span>
-          @if (!isCollapsed()) {
-          <span class="custom-dropdown">Add Product</span>
+        </li>
+
+        <li>
+          <a class="nav-link text-white flex justify-between cursor-pointer" (click)="toogleDropdown('Supplier')"
+            [ngClass]="{'active': isCollapsed() && isActiveGroup('Supplier')}">
+            <div class="flex items-center">
+              <span class="material-symbols-outlined">person</span>
+              @if (!isCollapsed()) {
+              <span class="custom">Supplier</span>
+              }
+            </div>
+            @if (!isCollapsed()) {
+            <span class="material-symbols-outlined">{{isSupplierDropdown()?'expand_less':'expand_more'}}</span>
+            }
+          </a>
+          @if (!isCollapsed() && isSupplierDropdown()) {
+          <ul style="list-style: none; padding: 0; margin: 0;">
+            <li class="ps-3">
+              <a class="nav-link text-white flex items-center " (click)="onSelectMobile()"
+                routerLink="/Inventory/addsupplier" routerLinkActive="active">
+                <span class="material-symbols-outlined">chevron_right</span>
+                @if (!isCollapsed()) {
+                <span class="custom-dropdown">Add Supplier</span>
+                }
+              </a>
+            </li>
+            <li class="ps-3">
+              <a class="nav-link text-white flex items-center " (click)="onSelectMobile()"
+                routerLink="/Inventory/suppliers" routerLinkActive="active">
+                <span class="material-symbols-outlined">chevron_right</span>
+                @if (!isCollapsed()) {
+                <span class="custom-dropdown">Supplier List</span>
+                }
+              </a>
+            </li>
+          </ul>
           }
-        </a>
-      </div>
-      <div class="ps-3">
-        <a class="nav-link text-white flex items-center " (click)="onSelectMobile()" routerLink="/Inventory/products"
-          routerLinkActive="active">
-          <span class="material-symbols-outlined">chevron_right</span>
-          @if (!isCollapsed()) {
-          <span class="custom-dropdown">Product List</span>
-          }
-        </a>
-      </div>
-      }
-      <a class="nav-link text-white flex justify-between cursor-pointer" (click)="toogleDropdown('Supplier')"
-        [ngClass]="{'active': isCollapsed() && isActiveGroup('Supplier')}">
-        <div class="flex items-center">
-          <span class="material-symbols-outlined">person</span>
-          @if (!isCollapsed()) {
-          <span class="custom">Supplier</span>
-          }
-        </div>
-        @if (!isCollapsed()) {
-          <span class="material-symbols-outlined">{{isSupplierDropdown()?'expand_less':'expand_more'}}</span>
-  
-        }
-      </a>
-      @if (!isCollapsed() && isSupplierDropdown()) {
-      <div class="ps-3">
-        <a class="nav-link text-white flex items-center " (click)="onSelectMobile()" routerLink="/Inventory/addsupplier"
-          routerLinkActive="active">
-          <span class="material-symbols-outlined">chevron_right</span>
-          @if (!isCollapsed()) {
-          <span class="custom-dropdown">Add Supplier</span>
-          }
-        </a>
-      </div>
-      <div class="ps-3">
-        <a class="nav-link text-white flex items-center " (click)="onSelectMobile()" routerLink="/Inventory/suppliers"
-          routerLinkActive="active">
-          <span class="material-symbols-outlined">chevron_right</span>
-          @if (!isCollapsed()) {
-          <span class="custom-dropdown">Supplier List</span>
-          }
-        </a>
-      </div>
-      }
+        </li>
+      </ul>
     </nav>
+    <div class="sidebar-footer">
+      <div class="nav-link">
+        <button (click)="ConifmationLogout()">
+          <span class="material-symbols-outlined ps-3">logout</span>
+          @if (!isCollapsed()) {
+          <span class="custom">Logout</span>
+          }
+        </button>
+      </div>
+
+    </div>
     }
   </aside>
 
@@ -104,7 +127,7 @@
         <button (click)="ConifmationLogout()"><span class="material-symbols-outlined">logout</span></button>
       </div>
     </div>
-    <div class="p-4">
+    <div class="p-4 main-content">
       <router-outlet></router-outlet>
     </div>
 

@@ -38,7 +38,9 @@ button{
 }
 label{
     color: var(--White) ;
+    font-size: small;
 }
+
 .global-search {
   display: flex;
   align-items: center;
@@ -97,14 +99,26 @@ label{
   line-height: 1;
 }
 .p-inputtext:enabled:focus {
-  border-color: var(--White) !important;
+  border-color: var(--MainColour) !important;
+  box-shadow: 0 0 10px var(--MainColour) !important;
 }
+
+.p-floatlabel .p-inputtext:focus ~ label {
+  color: var(--White) !important;
+  background-color: var(--divBackgound) !important;
+}
+
+.p-floatlabel .p-inputtext {
+  padding-block: 0.55rem !important;
+
+}
+
 .p-inputtext{
   color: var(--White)!important;
   border: 1px solid #52525b !important;
 }
 label.required::after {
-  content: '*';
+  content: ' *';
   color: red;
 }
 

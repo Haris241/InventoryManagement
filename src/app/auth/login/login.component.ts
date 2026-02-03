@@ -6,10 +6,11 @@ import { Router, RouterLink } from '@angular/router';
 import { BaseApiService } from '../../services/base-api.service';
 import { Login, LoginResponse } from '../../Models/Auth.model';
 import { DataLayerService } from '../../services/data-layer.service';
+import { FloatLabelModule } from 'primeng/floatlabel';
 
 @Component({
   selector: 'app-login',
-  imports: [InputTextModule, ReactiveFormsModule, RouterLink],
+  imports: [InputTextModule, ReactiveFormsModule, RouterLink,FloatLabelModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
