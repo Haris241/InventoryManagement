@@ -1,0 +1,34 @@
+<div class="w-full flex flex-col px-4 py-8 modules-page-background">
+
+    <!-- Header Section -->
+    <div class="text-center mb-10 md:mb-12 flex justify-center">
+        <div class="animated-border-box">
+            <h1 class="page-heading">Select a Module</h1>
+            <p class="page-subline">Choose your workspace and start managing efficiently</p>
+        </div>
+    </div>
+
+    <!-- Module Grid (CENTERED FIX) -->
+    <div class="w-full max-w-6xl mx-auto
+           grid gap-6 place-items-center
+           [grid-template-columns:repeat(auto-fit,minmax(280px,1fr))]">
+        <!-- Module Card -->
+        <div class="module-card w-full max-w-sm cursor-pointer" routerLink="/Inventory/dashboard">
+            <span class="material-symbols-outlined module-icon">
+                account_balance
+            </span>
+            <h3 class="module-title">Accounts</h3>
+            <p class="module-desc">Manage financial records and transactions</p>
+        </div>
+
+        <!-- Module Card -->
+        <div class="module-card w-full max-w-sm cursor-pointer" routerLink="/Inventory/dashboard">
+            <span class="material-symbols-outlined module-icon">
+                inventory_2
+            </span>
+            <h3 class="module-title">Inventory</h3>
+            <p class="module-desc">Track stock, items, and warehouses</p>
+        </div>
+
+    </div>
+</div>

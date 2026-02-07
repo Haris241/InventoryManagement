@@ -39,7 +39,7 @@ userlogin(){
     next: (response) => {
       this.submit = false;
       this.api.setToken(response.accessToken);
-      this.router.navigate(['/Inventory/dashboard']);
+      this.router.navigate(['/modules']);
     },
     error:(err)=>{
       if(err.status !== 0 && err.status < 500){

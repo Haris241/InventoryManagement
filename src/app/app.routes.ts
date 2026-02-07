@@ -19,6 +19,10 @@ export const routes: Routes = [
         ]
     },
     {
+        path:'modules', loadComponent:()=> import('./auth/modules-layout/modules-layout.component').then(m=> m.ModulesLayoutComponent)
+            
+    },
+    {
         path:'Inventory', component:LayoutComponent, children: [
             {
                 path:'dashboard', loadComponent:()=> import('./features/dashboard/dashboard.component').then(m=>m.DashboardComponent)

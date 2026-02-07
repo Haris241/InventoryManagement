@@ -59,7 +59,7 @@ export class LoadingService {
     if(!isDark){
       document.documentElement.style.setProperty('--divBackgound','#F2F4F7');
       document.documentElement.style.setProperty('--DivColour','#FFFFFF');
-      document.documentElement.style.setProperty('--MainColour','#4b49ac');
+      document.documentElement.style.setProperty('--MainColour','#47c4cf');
       document.documentElement.style.setProperty('--White','#000000ff');
       document.documentElement.style.setProperty('--Outline','#1a191962');
     }else{

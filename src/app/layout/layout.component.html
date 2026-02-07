@@ -1,5 +1,5 @@
-<div class="flex h-screen">
-  <aside class=" text-white px-2 sidebar" [ngClass]="{collapsed: isCollapsed()}">
+<div class="flex LayoutHeight">
+  <aside class=" px-2 sidebar" [ngClass]="{collapsed: isCollapsed()}">
     <div class="sidebar-header ">
       @if (!isCollapsed() ) {
       <h5>Inventory</h5>
@@ -15,7 +15,7 @@
     <nav class="mt-4 sidebar-menu">
       <ul style="list-style: none; padding: 0; margin: 0;">
         <li>
-          <a class="flex nav-link text-white" routerLink="/Inventory/dashboard" routerLinkActive="active"
+          <a class="flex nav-link" routerLink="/Inventory/dashboard" routerLinkActive="active"
             [routerLinkActiveOptions]="{exact: true}" (click)="onSelectMobile()">
             <span class="material-symbols-outlined">bar_chart</span>
             @if (!isCollapsed()) {
@@ -25,7 +25,7 @@
         </li>
 
         <li>
-          <a class="nav-link text-white flex justify-between items-center cursor-pointer"
+          <a class="nav-link flex justify-between items-center cursor-pointer"
             (click)="toogleDropdown('Product')" [ngClass]="{'active': isCollapsed() && isActiveGroup('Product')}">
             <div class="flex items-center">
               <span class="material-symbols-outlined">inventory_2</span>
@@ -40,7 +40,7 @@
           @if (!isCollapsed() && isProductDropdown()) {
           <ul style="list-style: none; padding: 0; margin: 0;">
             <li class="ps-3">
-              <a class="nav-link text-white flex items-center " (click)="onSelectMobile()"
+              <a class="nav-link  flex items-center " (click)="onSelectMobile()"
                 routerLink="/Inventory/addproduct" routerLinkActive="active">
                 <span class="material-symbols-outlined">chevron_right</span>
                 @if (!isCollapsed()) {
@@ -49,7 +49,7 @@
               </a>
             </li>
             <li class="ps-3">
-              <a class="nav-link text-white flex items-center " (click)="onSelectMobile()"
+              <a class="nav-link  flex items-center " (click)="onSelectMobile()"
                 routerLink="/Inventory/products" routerLinkActive="active">
                 <span class="material-symbols-outlined">chevron_right</span>
                 @if (!isCollapsed()) {
@@ -62,7 +62,7 @@
         </li>
 
         <li>
-          <a class="nav-link text-white flex justify-between cursor-pointer" (click)="toogleDropdown('Supplier')"
+          <a class="nav-link flex justify-between cursor-pointer" (click)="toogleDropdown('Supplier')"
             [ngClass]="{'active': isCollapsed() && isActiveGroup('Supplier')}">
             <div class="flex items-center">
               <span class="material-symbols-outlined">person</span>
@@ -77,7 +77,7 @@
           @if (!isCollapsed() && isSupplierDropdown()) {
           <ul style="list-style: none; padding: 0; margin: 0;">
             <li class="ps-3">
-              <a class="nav-link text-white flex items-center " (click)="onSelectMobile()"
+              <a class="nav-link flex items-center " (click)="onSelectMobile()"
                 routerLink="/Inventory/addsupplier" routerLinkActive="active">
                 <span class="material-symbols-outlined">chevron_right</span>
                 @if (!isCollapsed()) {
@@ -86,7 +86,7 @@
               </a>
             </li>
             <li class="ps-3">
-              <a class="nav-link text-white flex items-center " (click)="onSelectMobile()"
+              <a class="nav-link flex items-center " (click)="onSelectMobile()"
                 routerLink="/Inventory/suppliers" routerLinkActive="active">
                 <span class="material-symbols-outlined">chevron_right</span>
                 @if (!isCollapsed()) {
