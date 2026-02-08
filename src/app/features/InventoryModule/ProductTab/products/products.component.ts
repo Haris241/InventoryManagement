@@ -1,14 +1,14 @@
 import { Component, inject, signal, ViewChild, WritableSignal } from '@angular/core';
 import { Table, TableLazyLoadEvent, TableModule } from 'primeng/table';
 import { Router } from '@angular/router';
-import { BaseApiService } from '../../../services/base-api.service';
-import { ProductList, ProductSearch } from '../../../Models/product.model';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { AutoDropdown } from '../../../Models/Pagination.model';
-import { PaginationService } from '../../../services/pagination.service';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { DataLayerService } from '../../../services/data-layer.service';
+import { BaseApiService } from '../../../../services/base-api.service';
+import { PaginationService } from '../../../../services/pagination.service';
+import { DataLayerService } from '../../../../services/data-layer.service';
+import { ProductList, ProductSearch } from '../../../../Models/product.model';
+import { AutoDropdown } from '../../../../Models/Pagination.model';
 
 @Component({
   selector: 'app-products',

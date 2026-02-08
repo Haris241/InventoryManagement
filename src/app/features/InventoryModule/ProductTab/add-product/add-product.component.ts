@@ -5,16 +5,16 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 import { SelectModule } from 'primeng/select';
 import { CommonModule } from '@angular/common';
 import { ToastModule } from 'primeng/toast';
-import { BaseApiService } from '../../../services/base-api.service';
-import { ProductCreate, ProductList } from '../../../Models/product.model';
 import { ActivatedRoute } from '@angular/router';
 import { AutoCompleteModule } from 'primeng/autocomplete';
-import { PaginationService } from '../../../services/pagination.service';
-import { AutoDropdown } from '../../../Models/Pagination.model';
-import { FieldErrorComponent } from "../../../shared/field-error/field-error.component";
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormDataService } from '../../../services/formData.service';
-import { DataLayerService } from '../../../services/data-layer.service';
+import { BaseApiService } from '../../../../services/base-api.service';
+import { DataLayerService } from '../../../../services/data-layer.service';
+import { FormDataService } from '../../../../services/formData.service';
+import { PaginationService } from '../../../../services/pagination.service';
+import { AutoDropdown } from '../../../../Models/Pagination.model';
+import { ProductCreate, ProductList } from '../../../../Models/product.model';
+import { FieldErrorComponent } from '../../../../shared/field-error/field-error.component';
 
 @Component({
   selector: 'app-add-product',

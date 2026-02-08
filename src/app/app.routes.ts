@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import { LayoutComponent } from './layout/layout.component';
 import { LoginComponent } from './auth/login/login.component';
 import { AuthComponent } from './auth/auth/auth.component';
 import { authGuard } from './auth/Guards/auth.guard';
@@ -8,6 +7,7 @@ import { guestGuard } from './auth/Guards/guest.guard';
 
 export const routes: Routes = [
     {
+        //Auth Routes
         path:'', component: AuthComponent,children: [
             {
                 path:'login', component: LoginComponent
@@ -19,31 +19,44 @@ export const routes: Routes = [
         ]
     },
     {
+        //Modules Layout
         path:'modules', loadComponent:()=> import('./auth/modules-layout/modules-layout.component').then(m=> m.ModulesLayoutComponent)
             
     },
     {
-        path:'Inventory', component:LayoutComponent, children: [
+        //Inventory Module
+        path:'Inventory', loadComponent:()=> import('./features/InventoryModule/layout/layout.component').then(m=> m.LayoutComponent), children: [
             {
-                path:'dashboard', loadComponent:()=> import('./features/dashboard/dashboard.component').then(m=>m.DashboardComponent)
+                path:'dashboard', loadComponent:()=> import('./features/InventoryModule/dashboard/dashboard.component').then(m=>m.DashboardComponent)
             },
             {
-                path:'products', loadComponent:()=> import('./features/ProductTab/products/products.component').then(m=>m.ProductsComponent)
+                path:'products', loadComponent:()=> import('./features/InventoryModule/ProductTab/products/products.component').then(m=>m.ProductsComponent)
             },
             {
-                path:'addproduct', loadComponent:()=> import('./features/ProductTab/add-product/add-product.component').then(m=> m.AddProductComponent)
+                path:'addproduct', loadComponent:()=> import('./features/InventoryModule/ProductTab/add-product/add-product.component').then(m=> m.AddProductComponent)
             },
             {
-                path:'editproduct/:id', loadComponent:()=> import('./features/ProductTab/add-product/add-product.component').then(m=> m.AddProductComponent)
+                path:'editproduct/:id', loadComponent:()=> import('./features/InventoryModule/ProductTab/add-product/add-product.component').then(m=> m.AddProductComponent)
             },
             {
-                path:'suppliers', loadComponent:()=> import('./features/SupplierTab/suppliers/suppliers.component').then(m=>m.SuppliersComponent)
+                path:'suppliers', loadComponent:()=> import('./features/InventoryModule/SupplierTab/suppliers/suppliers.component').then(m=>m.SuppliersComponent)
             },
             {
-                path:'addsupplier', loadComponent:()=> import('./features/SupplierTab/add-supplier/add-supplier.component').then(m=>m.AddSupplierComponent)
+                path:'addsupplier', loadComponent:()=> import('./features/InventoryModule/SupplierTab/add-supplier/add-supplier.component').then(m=>m.AddSupplierComponent)
             },
             {
                 path:'', redirectTo:'dashboard', pathMatch:'full'
+            }
+        ]
+    },
+    {
+        //Accounts Module
+        path:'Accounts', loadComponent:()=> import('./features/AccountsModule/accountlayout/accountlayout.component').then(m=> m.AccountlayoutComponent), children: [
+            {
+                path:'accountdashboard', loadComponent:()=> import('./features/AccountsModule/account-dashboard/account-dashboard.component').then(m=>m.AccountDashboardComponent)
+            },
+            {
+                path:'', redirectTo:'AccountDashboard', pathMatch:'full'
             }
         ]
     }

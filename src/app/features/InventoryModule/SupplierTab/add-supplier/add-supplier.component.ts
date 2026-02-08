@@ -1,11 +1,11 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
-import { BaseApiService } from '../../../services/base-api.service';
-import { Supplier } from '../../../Models/Supplier.model';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
-import { DataLayerService } from '../../../services/data-layer.service';
+import { BaseApiService } from '../../../../services/base-api.service';
+import { DataLayerService } from '../../../../services/data-layer.service';
+import { Supplier } from '../../../../Models/Supplier.model';
 
 @Component({
   selector: 'app-add-supplier',

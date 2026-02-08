@@ -14,17 +14,81 @@ background-color: var(--divBackgound);
 ul::before{
     content: '• ';
 }
-.heading{
-    background-color: var(--MainColour) ;
+.heading {
+    position: relative;
+    padding: 10px 50px;
+    background: black;
     color: white;
     border-radius: 15px;
-    padding: 10px 50px;
     font-style: italic;
     font-weight: 600;
     font-size: 25px;
     letter-spacing: 2px;
     margin-bottom: 30px;
-    align-items: center;
     display: inline-block;
     font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    overflow: hidden;
+    z-index: 1;
+}
+
+/* ONE-WAY snake */
+.heading::before {
+    content: "";
+    position: absolute;
+    inset: -4px;
+    background-image: conic-gradient(
+        from 0deg,
+        transparent 0deg,
+        transparent 260deg,
+        #ff004c 270deg,
+        #ffa600 290deg,
+        #2afadf 310deg,
+        transparent 330deg,
+        transparent 360deg
+    );
+    animation: snakeSpin 3s linear infinite;
+    border-radius: inherit;
+    z-index: -2;
+}
+
+/* Inner mask */
+.heading::after {
+    content: "";
+    position: absolute;
+    inset: 4px;
+    background: black;
+    border-radius: 11px;
+    z-index: -1;
+}
+
+/* Smooth one-direction spin */
+@keyframes snakeSpin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+.bottom-tagline {
+  background: linear-gradient(135deg,
+    color-mix(in srgb, var(--MainColour) 15%, transparent),
+    transparent
+  );
+  border-left: 4px solid var(--MainColour);
+  padding: 1.0rem 1.4rem;
+  border-radius: 0 12px 12px 0;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  margin-top: 14px;
+}
+.tagline-main {
+  color: var(--White);
+  font-weight: 700;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.5px;
+}
+
+.tagline-sub {
+  color: color-mix(in srgb, var(--White) 80%, transparent);
+  font-weight: 500;
+  font-size: 1rem;
+  font-style: italic;
 }

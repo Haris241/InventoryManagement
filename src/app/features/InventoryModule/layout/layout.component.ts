@@ -2,11 +2,11 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, signal,CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { RouterOutlet } from '@angular/router';
-import { LoadingService } from '../services/loading.service';
 import { ConfirmationService } from 'primeng/api';
-import { BaseApiService } from '../services/base-api.service';
-import { Token } from '../Models/Auth.model';
-import { DataLayerService } from '../services/data-layer.service';
+import { Token } from '../../../Models/Auth.model';
+import { LoadingService } from '../../../services/loading.service';
+import { DataLayerService } from '../../../services/data-layer.service';
+import { BaseApiService } from '../../../services/base-api.service';
 
 
 

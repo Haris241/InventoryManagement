@@ -2,11 +2,11 @@ import { Component,CUSTOM_ELEMENTS_SCHEMA, inject, signal } from '@angular/core'
 import { TableModule } from 'primeng/table';
 import { RouterLink } from '@angular/router';
 import { ToastModule } from 'primeng/toast';
-import { BaseApiService } from '../../../services/base-api.service';
-import { Supplier } from '../../../Models/Supplier.model';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { PaginationResult } from '../../../Models/Pagination.model';
-import { DataLayerService } from '../../../services/data-layer.service';
+import { BaseApiService } from '../../../../services/base-api.service';
+import { DataLayerService } from '../../../../services/data-layer.service';
+import { PaginationResult } from '../../../../Models/Pagination.model';
+import { Supplier } from '../../../../Models/Supplier.model';
 
 @Component({
   selector: 'app-suppliers',
