@@ -1,10 +1,10 @@
-import { CommonModule } from '@angular/common';
+
 import { ChangeDetectionStrategy, Component, computed, Input, Signal, WritableSignal } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-field-error',
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './field-error.component.html',
   styleUrl: './field-error.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush

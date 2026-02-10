@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { InputTextModule } from 'primeng/inputtext';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { SelectModule } from 'primeng/select';
-import { CommonModule } from '@angular/common';
+
 import { ToastModule } from 'primeng/toast';
 import { ActivatedRoute } from '@angular/router';
 import { AutoCompleteModule } from 'primeng/autocomplete';
@@ -18,7 +18,7 @@ import { FieldErrorComponent } from '../../../../shared/field-error/field-error.
 
 @Component({
   selector: 'app-add-product',
-  imports: [ReactiveFormsModule, InputTextModule,FloatLabelModule, SelectModule, CommonModule, ToastModule, AutoCompleteModule, FieldErrorComponent],
+  imports: [ReactiveFormsModule, InputTextModule, FloatLabelModule, SelectModule, ToastModule, AutoCompleteModule, FieldErrorComponent],
   templateUrl: './add-product.component.html',
   styleUrl: './add-product.component.css'
 })
