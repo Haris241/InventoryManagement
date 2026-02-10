@@ -23,7 +23,7 @@ export class AccountlayoutComponent {
   confirmation = inject(ConfirmationService);
   isCollapsed = signal(false);
   isMobile = signal(false);
-  isProductDropdown = signal(false);
+  isSettingDropdown = signal(false);
   isSupplierDropdown = signal(false);
   screenSize = window.matchMedia('(max-width: 768px)');
   ngOnInit() {
@@ -40,8 +40,8 @@ export class AccountlayoutComponent {
 
   isActiveGroup(value: string): boolean {
     const currenturl = this.route.url;
-    if (value === 'Product') {
-      return ['/Inventory/addproduct', '/Inventory/products'].some(path => currenturl.startsWith(path));
+    if (value === 'Settings') {
+      return ['/Accounts/fiscalyear'].some(path => currenturl.startsWith(path));
     }
     if (value === 'Supplier') {
       return ['/Inventory/addsupplier', '/Inventory/suppliers'].some(path => currenturl.startsWith(path));
@@ -49,13 +49,13 @@ export class AccountlayoutComponent {
     return false;
   }
   toogleDropdown(value: string) {
-    if (value === 'Product') {
-      this.isProductDropdown.update(v => !v);
+    if (value === 'Settings') {
+      this.isSettingDropdown.update(v => !v);
       this.isSupplierDropdown.set(false);
     }
     if (value === 'Supplier') {
       this.isSupplierDropdown.update(v => !v);
-      this.isProductDropdown.set(false);
+      this.isSettingDropdown.set(false);
     }
   }
   toogleSidebar() {

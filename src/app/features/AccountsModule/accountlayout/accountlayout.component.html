@@ -15,7 +15,7 @@
     <nav class="mt-4 sidebar-menu">
       <ul style="list-style: none; padding: 0; margin: 0;">
         <li>
-          <a class="flex nav-link" routerLink="/Inventory/dashboard" routerLinkActive="active"
+          <a class="flex nav-link" routerLink="/Accounts/accountdashboard" routerLinkActive="active"
             [routerLinkActiveOptions]="{exact: true}" (click)="onSelectMobile()">
             <span class="material-symbols-outlined">bar_chart</span>
             @if (!isCollapsed()) {
@@ -24,31 +24,31 @@
           </a>
         </li>
 
-        <!-- <li>
+        <li>
           <a class="nav-link flex justify-between items-center cursor-pointer"
-            (click)="toogleDropdown('Product')" [ngClass]="{'active': isCollapsed() && isActiveGroup('Product')}">
+            (click)="toogleDropdown('Settings')" [ngClass]="{'active': isCollapsed() && isActiveGroup('Settings')}">
             <div class="flex items-center">
-              <span class="material-symbols-outlined">inventory_2</span>
+              <span class="material-symbols-outlined">rule_settings</span>
               @if (!isCollapsed()) {
-              <span class="custom">Product</span>
+              <span class="custom">Settings</span>
               }
             </div>
             @if (!isCollapsed()) {
-            <span class="material-symbols-outlined">{{isProductDropdown()? 'expand_less':'expand_more'}}</span>
+            <span class="material-symbols-outlined">{{isSettingDropdown()? 'expand_less':'expand_more'}}</span>
             }
           </a>
-          @if (!isCollapsed() && isProductDropdown()) {
+          @if (!isCollapsed() && isSettingDropdown()) {
           <ul style="list-style: none; padding: 0; margin: 0;">
             <li class="ps-3">
               <a class="nav-link  flex items-center " (click)="onSelectMobile()"
-                routerLink="/Inventory/addproduct" routerLinkActive="active">
+                routerLink="/Accounts/fiscalyear" routerLinkActive="active">
                 <span class="material-symbols-outlined">chevron_right</span>
                 @if (!isCollapsed()) {
-                <span class="custom-dropdown">Add Product</span>
+                <span class="custom-dropdown">Add Fiscal Year</span>
                 }
               </a>
             </li>
-            <li class="ps-3">
+            <!-- <li class="ps-3">
               <a class="nav-link  flex items-center " (click)="onSelectMobile()"
                 routerLink="/Inventory/products" routerLinkActive="active">
                 <span class="material-symbols-outlined">chevron_right</span>
@@ -56,10 +56,10 @@
                 <span class="custom-dropdown">Product List</span>
                 }
               </a>
-            </li>
+            </li> -->
           </ul>
           }
-        </li> -->
+        </li>
       </ul>
     </nav>
     <div class="sidebar-footer">

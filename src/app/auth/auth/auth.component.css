@@ -46,7 +46,7 @@ ul::before{
         transparent 330deg,
         transparent 360deg
     );
-    animation: snakeSpin 3s linear infinite;
+    animation: snakeSpin 4s linear infinite;
     border-radius: inherit;
     z-index: -2;
 }
