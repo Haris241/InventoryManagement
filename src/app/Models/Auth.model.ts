@@ -1,6 +1,7 @@
 export interface Login{
     userName: string,
-    password: string
+    password: string,
+    fiscalYearId: string
 }
 export interface LoginResponse{
     accessToken: string
@@ -12,6 +13,7 @@ export interface Register{
     confirmPassword: string,
     phoneNo: string,
     name: string
+    FiscalStartMonth: Date
 }
 export interface Token{
     token: string
