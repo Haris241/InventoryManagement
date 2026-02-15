@@ -1,6 +1,7 @@
 export interface CreateFiscalYear{
-    startMonth: Date
-    year: Date
+    year: number | null,
+    yearDate: Date | null,
+    remarks: string
 }
 
 export interface FiscalYearList{

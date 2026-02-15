@@ -1,7 +1,6 @@
 export interface Login{
     userName: string,
-    password: string,
-    fiscalYearId: string
+    password: string
 }
 export interface LoginResponse{
     accessToken: string

@@ -8,11 +8,10 @@ import { Login, LoginResponse } from '../../Models/Auth.model';
 import { DataLayerService } from '../../services/data-layer.service';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { FieldErrorComponent } from '../../shared/field-error/field-error.component';
-import { SelectModule } from 'primeng/select';
 
 @Component({
   selector: 'app-login',
-  imports: [InputTextModule, ReactiveFormsModule, RouterLink, FloatLabelModule,FieldErrorComponent,SelectModule ],
+  imports: [InputTextModule, ReactiveFormsModule, RouterLink, FloatLabelModule,FieldErrorComponent ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })

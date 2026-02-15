@@ -1,0 +1,6 @@
+.ng-invalid.ng-untouched {
+  border-color: #ced4da !important; /* Reset to default grey */
+}
+.ng-invalid.ng-untouched + label {
+  color: #6c757d !important; /* Reset label to default grey */
+}

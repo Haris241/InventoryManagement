@@ -1,45 +1,40 @@
 <!-- Fiscal Year Create Form -->
-<div class="flex flex-wrap global-div p-5">
-  <div class="w-full mb-4">
-    <h3 class="text-2xl font-semibold text-center second-color mb-3">Add Fiscal Year</h3>
-    <hr class="second-color">
+<form (ngSubmit)="createFiscalYear($event)">
+  <div class="flex flex-wrap global-div p-5">
+    <div class="w-full mb-4">
+      <h3 class="text-2xl font-semibold text-center second-color mb-3">Add Fiscal Year</h3>
+      <hr class="second-color">
+    </div>
+    <div class="lg:w-1/4 w-full mb-3">
+      <p-floatLabel variant="on">
+        <div class="lg:w-8/12 w-2/3">
+          <p-datepicker [(ngModel)]="fiscalYearModel().yearDate" [ngModelOptions]="{standalone: true}" (ngModelChange)="updateField('yearDate',$event)" view="year"
+            dateFormat="yy" size="small" showicon iconDisplay="input" />
+          <label for="name" class="required">Fiscal Year</label>
+        </div>
+      </p-floatLabel>
+      <app-field-errorS [field]="fiscalYearForm.yearDate" [submit]="submit()" [backendErrors]="backendErrors()">
+      </app-field-errorS>
+    </div>
+    <div class="lg:w-1/4 w-full mb-3">
+      <p-floatLabel variant="on">
+        <div class="lg:w-8/12 w-2/3">
+          <input pInputText pSize="small" id="name" autocomplete="off" type="text" class="w-full"
+            [formField]="fiscalYearForm.remarks">
+          <label for="name" class="required">Remarks</label>
+        </div>
+      </p-floatLabel>
+    </div>
+
+    <div class="lg:w-1/4 w-full mb-3">
+      <button class="global-button" type="submit">Add</button>
+    </div>
   </div>
-  <div class="lg:w-1/4 w-full mb-3">
-    <p-floatLabel variant="on">
-      <div class="lg:w-8/12 w-2/3">
-        <p-datepicker view="month" dateFormat="MM" size="small" />
-        <label for="name" class="required">Starting Month</label>
-      </div>
-    </p-floatLabel>
-  </div>
-  <div class="lg:w-1/4 w-full mb-3">
-    <p-floatLabel variant="on">
-      <div class="lg:w-8/12 w-2/3">
-        <p-datepicker view="year" dateFormat="yy" size="small" showicon iconDisplay="input" />
-        <label for="name" class="required">Fiscal Year</label>
-      </div>
-    </p-floatLabel>
-  </div>
-  <div class="lg:w-1/4 w-full mb-3">
-    <p-floatLabel variant="on">
-      <div class="lg:w-8/12 w-2/3">
-        <input pInputText pSize="small" id="name" autocomplete="off" type="text" class="w-full">
-        <label for="name" class="required">Product Name</label>
-      </div>
-    </p-floatLabel>
-  </div>
-  <div class="lg:w-1/4 w-full mb-3">
-    <p-floatLabel variant="on">
-      <div class="lg:w-8/12 w-2/3">
-        <input pInputText pSize="small" id="name" autocomplete="off" type="text" class="w-full">
-        <label for="name" class="required">Product Name</label>
-      </div>
-    </p-floatLabel>
-  </div>
-</div>
+</form>
+
 
 <!-- Fiscal Year List -->
- <!-- <div class="flex flex-wrap global-div mt-4 p-4">
+<!-- <div class="flex flex-wrap global-div mt-4 p-4">
     <div class="w-full">
         <p-table #dt [value]="products()"   [paginator]="true" [rows]="20" [lazy]="true"
             (onLazyLoad)="loadProducts($event)" [totalRecords]="totalrecords()" [tableStyle]="{ 'min-width': '50rem' }">

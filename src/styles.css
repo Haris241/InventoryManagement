@@ -113,6 +113,10 @@ label{
   background-color: var(--divBackgound) !important;
 }
 
+.p-floatlabel:has(.p-invalid) label {
+    color: var(--p-floatlabel-color) !important;
+}
+
 .p-inputtext{
   color: var(--White)!important;
   border: 1px solid #52525b !important;
