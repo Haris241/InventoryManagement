@@ -9,7 +9,7 @@ import Aura from '@primeuix/themes/aura';
 })
 export class LoadingService {
   isDark = signal<boolean>(this.loadFromStorage());
-  constructor(private themeProvider: ThemeProvider) {
+  constructor() {
     this.applyTheme(this.isDark());
   }
 
@@ -47,15 +47,13 @@ export class LoadingService {
     return value === 'true';
   }
   private applyTheme(isDark: boolean): void {
-    this.themeProvider.setThemeConfig({
-      theme: {
-        preset: Aura,
-        options: {
-          darkModeSelector: isDark
-        }
-      }
-    });
+    const element = document.documentElement;
 
+    if (isDark) {
+      element.classList.add('my-app-dark');
+    } else {
+      element.classList.remove('my-app-dark');
+    }
     if (!isDark) {
       document.documentElement.style.setProperty('--divBackgound', '#F2F4F7');
       document.documentElement.style.setProperty('--DivColour', '#FFFFFF');
