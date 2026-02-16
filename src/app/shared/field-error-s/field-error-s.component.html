@@ -1,0 +1,9 @@
+<div class="error-container">
+  @if (frontendError()) {
+    <small class="error-message">{{ frontendError() }}</small>
+  }
+
+  @for (err of backendErrorList(); track err) {
+    <small class="error-message">{{ err }}</small>
+  }
+</div>

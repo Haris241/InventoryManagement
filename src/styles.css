@@ -103,15 +103,18 @@ label{
   border-color: var(--MainColour) !important;
   box-shadow: 0 0 10px var(--MainColour) !important;
 }
+.p-floatlabel .p-inputtext {
+  padding-block: 0.55rem !important;
 
+}
+.p-floatlabel .p-inputwrapper-focus ~ label,
 .p-floatlabel .p-inputtext:focus ~ label {
   color: var(--White) !important;
   background-color: var(--divBackgound) !important;
 }
 
-.p-floatlabel .p-inputtext {
-  padding-block: 0.55rem !important;
-
+.p-floatlabel:has(.p-invalid) label {
+    color: var(--p-floatlabel-color) !important;
 }
 
 .p-inputtext{

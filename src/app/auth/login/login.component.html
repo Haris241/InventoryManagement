@@ -21,9 +21,9 @@
 
                     <label for="userName">Username</label>
                 </p-floatLabel>
-                @if (submit && login.get('userName')?.invalid) {
-                <small style="color: red;">UserName is required</small>
-                }
+                <app-field-error [form]="login" field="userName" [backendErrors]="backendErrors" [submit]="submit"
+                    [formChange]="formChange">
+                </app-field-error>
             </div>
         </div>
 
@@ -43,17 +43,11 @@
                         </span>
                     </button>
                 </p-floatLabel>
-                @if (submit && login.get('password')?.invalid) {
-                <small style="color: red;">Password is required</small>
-                }
+                <app-field-error [form]="login" field="password" [backendErrors]="backendErrors" [submit]="submit"
+                    [formChange]="formChange">
+                </app-field-error>
             </div>
         </div>
-
-        @if (err) {
-        <small style="color: red;" class="justify-center flex my-2 font-semibold">
-            {{ err }}
-        </small>
-        }
 
         <div class="my-2 flex justify-end">
             <a href="" class="text-sm WhiteC hover:underline">Forgot Password?</a>
