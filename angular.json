@@ -27,12 +27,9 @@
               }
             ],
             "styles": [
-         
               "src/styles.css"
             ],
-            "scripts": [
-              
-            ]
+            "scripts": []
           },
           "configurations": {
             "production": {
@@ -121,8 +118,5 @@
     "@schematics/angular:resolver": {
       "typeSeparator": "."
     }
-  },
-  "cli": {
-    "analytics": "ef07a435-03ba-4146-ba21-174a2545ac7a"
   }
 }

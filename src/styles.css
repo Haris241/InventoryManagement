@@ -5,40 +5,50 @@
 body {
   margin: 0;
 }
-:root{
+
+:root {
   --divBackgound: #09090b;
   --DivColour: #17171a;
   --MainColour: #007bff;
   --White: white;
-  --Outline:  rgba(255, 255, 255, 0.164);
+  --Outline: rgba(255, 255, 255, 0.164);
 }
+
 .pi {
   line-height: unset;
 }
-.global-bgcolor{
+
+.global-bgcolor {
   background-color: #4b49ac;
 }
-.global-color{
+
+.global-color {
   color: #4b49ac;
 }
-.second-bgcolor{
+
+.second-bgcolor {
   background-color: var(--MainColour);
 }
-.second-color{
+
+.second-color {
   color: var(--MainColour);
 }
-.globalBg{
+
+.globalBg {
   background-color: var(--DivColour);
 }
-.WhiteC{
+
+.WhiteC {
   color: var(--White);
 }
-button{
+
+button {
   cursor: pointer;
 }
-label{
-    color: var(--White) ;
-    font-size: small;
+
+label {
+  color: var(--White);
+  font-size: small;
 }
 
 .global-search {
@@ -47,7 +57,7 @@ label{
   border: 1px solid var(--MainColour);
   border-radius: 6px;
   padding: 6px 10px;
-  width: 120px; 
+  width: 120px;
 }
 
 .global-search i {
@@ -64,7 +74,7 @@ label{
   font-size: 10px;
 }
 
-.p-datatable .p-datatable-thead > tr > th{
+.p-datatable .p-datatable-thead>tr>th {
   background-color: var(--MainColour);
   font-family: sans-serif;
   font-size: 14px;
@@ -73,54 +83,62 @@ label{
   font-weight: 600;
 }
 
-.p-datatable .p-datatable-tbody > tr >td{
+.p-datatable .p-datatable-tbody>tr>td {
   font-size: small;
   padding: 5px;
   font-weight: 500;
 }
+
 .p-paginator-page.p-paginator-page-selected {
-    background: var(--MainColour) !important;
-    color: var(--White) !important ;
+  background: var(--MainColour) !important;
+  color: var(--White) !important;
 }
-.p-paginator-pages{
+
+.p-paginator-pages {
   gap: 5px;
 }
-.p-paginator-page{
+
+.p-paginator-page {
   height: 20px !important;
   min-width: 20px !important;
 }
 
-.p-paginator{
+.p-paginator {
   justify-content: flex-end !important;
   font-size: 12px;
   gap: 0px !important;
 }
+
 .p-paginator .p-select {
   font-size: 12px;
   line-height: 1;
 }
+
 .p-inputtext:enabled:focus {
   border-color: var(--MainColour) !important;
   box-shadow: 0 0 10px var(--MainColour) !important;
 }
+
 .p-floatlabel .p-inputtext {
   padding-block: 0.55rem !important;
 
 }
-.p-floatlabel .p-inputwrapper-focus ~ label,
-.p-floatlabel .p-inputtext:focus ~ label {
+
+.p-floatlabel .p-inputwrapper-focus~label,
+.p-floatlabel .p-inputtext:focus~label {
   color: var(--White) !important;
   background-color: var(--divBackgound) !important;
 }
 
 .p-floatlabel:has(.p-invalid) label {
-    color: var(--p-floatlabel-color) !important;
+  color: var(--p-floatlabel-color) !important;
 }
 
-.p-inputtext{
-  color: var(--White)!important;
+.p-inputtext {
+  color: var(--White) !important;
   border: 1px solid #52525b !important;
 }
+
 label.required::after {
   content: ' *';
   color: red;
@@ -135,12 +153,13 @@ label.required::after {
   border: 1px solid;
   border-radius: 10px;
   font-size: 14px;
-  color:  white;
+  color: white;
 }
-.edit-button:hover{
+
+.edit-button:hover {
   background-color: white;
   align-items: center;
-   cursor: pointer;
+  cursor: pointer;
   color: var(--MainColour);
   border: 1px solid var(--MainColour);
 }
@@ -154,69 +173,55 @@ label.required::after {
   border: 1px solid;
   border-radius: 10px;
   font-size: 14px;
-  color:  white;
+  color: white;
 }
-.edit-delete{
+
+.edit-delete {
   color: rgb(83, 176, 212);
 }
 
-.delete-button:hover{
-  background-color:  white;
+.delete-button:hover {
+  background-color: white;
   align-items: center;
   color: red;
   cursor: pointer;
   border: 1px solid red;
 }
 
-.global-button {
-  display: inline-block;
-  align-items: center;
-  background-color: var(--MainColour);
-  padding: 8px 16px;
-  border: 2px solid var(--MainColour);
-  border-radius: 18px;
-  font-size: 16px;
-  cursor: pointer;
-  font-weight: 500;
-  color: white;
-}
-
-.p-toast-message-success{
+.p-toast-message-success {
   background: #033012 !important;
 }
-.p-toast-message-error{
+
+.p-toast-message-error {
   background: rgb(49, 6, 6) !important;
 }
-.p-toast-message-error .p-toast-detail{
+
+.p-toast-message-error .p-toast-detail {
   color: white !important;
 }
-.p-toast-message-success .p-toast-detail{
+
+.p-toast-message-success .p-toast-detail {
   color: white !important;
 }
-.global-button:hover{
-  background-color: white;
-  color: var(--MainColour);
-  border: 2px solid var(--MainColour);
-  cursor: pointer;
-  align-items: center;
-  font-weight: 500;
-}
-.p-dialog{
+
+.p-dialog {
   border: 1px solid var(--Outline) !important;
 }
 
-.global-div{
+.global-div {
   background-color: var(--DivColour);
   border-radius: 20px;
   padding-bottom: 20px;
   padding-top: 20px;
   border: 1px solid var(--Outline);
 }
+
 .material-symbols-outlined {
   font-size: 22px;
   vertical-align: middle;
 
 }
+
 /* Hidding Spinner Arrows */
 /* Chrome, Edge, Safari */
 input[type="number"]::-webkit-inner-spin-button,
@@ -230,6 +235,34 @@ input[type="number"] {
   appearance: textfield;
 }
 
+.global-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 10px;
+  color: white;
+
+  border: 2px solid transparent;
+
+  /* Two backgrounds */
+  background:
+    linear-gradient(black, black) padding-box,
+    linear-gradient(90deg, #ff0080, #7928ca, #2afadf) border-box;
+}
+
+/* Hover State */
+.global-button:hover {
+  background:
+    linear-gradient(90deg, #ff0080, #7928ca, #2afadf) padding-box,
+    linear-gradient(90deg, #ff0080, #7928ca, #2afadf) border-box;
+
+  color: white;
+}
+
 @media screen and (max-width: 768px) {
   .p-toast {
     width: 90vw !important;
@@ -238,5 +271,3 @@ input[type="number"] {
     top: 15% !important;
   }
 }
-
-
