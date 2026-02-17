@@ -138,7 +138,6 @@ label {
 .p-inputtext {
   color: var(--White) !important;
   border: 1px solid #52525b !important;
-  background-color: var(--InputBackground) !important;
 }
 
 label.required::after {
@@ -265,6 +264,29 @@ input[type="number"] {
     linear-gradient(90deg, #ff0080, #7928ca, #2afadf) border-box;
 
   color: white;
+}
+
+.global-buttonS {
+  display: inline-block;
+  align-items: center;
+  background-color: var(--MainColour);
+  padding: 8px 18px;
+  min-width: 120px;
+  border: 2px solid var(--MainColour);
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  font-weight: 500;
+  color: white;
+}
+
+.global-buttonS:hover {
+  background-color: white;
+  color: var(--MainColour);
+  border: 2px solid var(--MainColour);
+  cursor: pointer;
+  align-items: center;
+  font-weight: 500;
 }
 
 @media screen and (max-width: 768px) {
