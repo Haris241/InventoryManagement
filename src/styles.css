@@ -130,7 +130,10 @@ label {
   color: var(--White) !important;
   background-color: var(--divBackgound) !important;
 }
-
+.p-floatlabel:has(input:-webkit-autofill) label{
+  color: var(--White) !important;
+  background-color: var(--divBackgound) !important;
+}
 .p-floatlabel:has(.p-invalid) label {
   color: var(--p-floatlabel-color) !important;
 }
@@ -288,7 +291,33 @@ input[type="number"] {
   align-items: center;
   font-weight: 500;
 }
+.status-badge {
+  padding: 0.25rem 0.5rem;
+  display: inline-flex;
+  border-radius: 4px;
+  font-weight: 600;
+  min-width: 100px;
+  color: white;
+  justify-content: center;
+}
 
+.status-active {
+  background-color: #22c55e;
+  /* Green */
+}
+
+.status-closed {
+  background-color: #ef4444;
+  /* Red */
+}
+
+.status-reclosure {
+  background-color: #f59e0b;
+  /* Amber/Orange */
+}
+.status-inactive {
+  background-color: #6b7280; /* Gray */
+}
 @media screen and (max-width: 768px) {
   .p-toast {
     width: 90vw !important;

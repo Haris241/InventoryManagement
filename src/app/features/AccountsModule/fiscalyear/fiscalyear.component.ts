@@ -5,7 +5,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { form, FormField, required } from '@angular/forms/signals';
 import { BaseApiService } from '../../../services/base-api.service';
 import { DataLayerService } from '../../../services/data-layer.service';
-import { CreateFiscalYear, FiscalYearList, FiscalYearStatus } from '../../../Models/Accouting/FiscalYear.model';
+import { CreateFiscalYear, FiscalYearList, FiscalYearStatus, SwitchYearRequest } from '../../../Models/Accouting/FiscalYear.model';
 import { FormsModule } from '@angular/forms';
 import { FieldErrorSComponent } from '../../../shared/field-error-s/field-error-s.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -30,6 +30,7 @@ export class FiscalyearComponent {
   backendErrors = signal<Record<string, string[]>>({});
   fiscalYears = signal<FiscalYearList[]>([]);
   totalrecords = signal<number>(0);
+  lastLazyEvent: TableLazyLoadEvent | null = null;
 
   //Signal Model For FormData
   fiscalYearModel = signal<CreateFiscalYear>({
@@ -69,10 +70,13 @@ export class FiscalyearComponent {
     console.log("Form Value: ", formvalue);
 
     //Making Api Call
-    this.dataService.create<CreateFiscalYear>('FiscalYear', formvalue).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+    this.dataService.createResponse<CreateFiscalYear, FiscalYearList>('FiscalYear', formvalue).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
         this.base.globalMessage('success', 'FiscalYear Added Successfully');
         this.fiscalYearForm().reset();
+        if (this.lastLazyEvent) {
+          this.loadFiscalYears(this.lastLazyEvent);
+        }
         this.submit.set(false);
       },
       error: (err) => {
@@ -91,7 +95,7 @@ export class FiscalyearComponent {
 
   //Loading Fiscal Year List
   loadFiscalYears(event: TableLazyLoadEvent) {
-    console.log("Lazy Loading Triggered");
+    this.lastLazyEvent = event;
     this.pagination.getDataWithoutForm<FiscalYearList>('FiscalYear/GetAll', event).subscribe({
       next: (result) => {
         this.fiscalYears.set(result.data);
@@ -110,8 +114,10 @@ export class FiscalyearComponent {
         return 'status-active';
       case FiscalYearStatus.Closed:
         return 'status-closed';
-      case FiscalYearStatus.NeedsReclosure:
+      case FiscalYearStatus.NeedReClosure:
         return 'status-reclosure';
+         case FiscalYearStatus.InActive:
+        return 'status-inactive';
       default:
         return '';
     }
@@ -119,5 +125,23 @@ export class FiscalyearComponent {
 
   getStatusLabel(status: FiscalYearStatus): string {
     return FiscalYearStatus[status];
+  }
+
+  //Change Fiscal Year
+  SwitchYear(requestedId: SwitchYearRequest) {
+    console.log("ID ", requestedId);
+    this.dataService.create<SwitchYearRequest>('FiscalYear/SwitchYear', requestedId).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: (res) => {
+        this.base.globalMessage('success', 'FiscalYear Changed Successfully');
+        const defaulId = res.id;
+        this.fiscalYears.update(list =>
+          list.map(fy => ({
+            ...fy, isDefault: fy.id === defaulId
+          })));
+      },
+      error: (err) => {
+        this.base.handleError(err, err.error.message);
+      }
+    });
   }
 }
