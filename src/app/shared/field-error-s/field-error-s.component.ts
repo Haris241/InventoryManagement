@@ -16,7 +16,6 @@ export class FieldErrorSComponent {
   submit = input<boolean>(false);
 
   frontendError = computed(() => {
-    console.log("Coming in componet");
     const state = this.field()(); // Get the current field state
 
     const isSubmit = this.submit();

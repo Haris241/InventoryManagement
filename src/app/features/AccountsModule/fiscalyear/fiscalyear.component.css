@@ -7,24 +7,3 @@
  
 } */
 
-.status-badge {
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
-  font-weight: 600;
-  color: white;
-}
-
-.status-active {
-  background-color: #22c55e;
-  /* Green */
-}
-
-.status-closed {
-  background-color: #ef4444;
-  /* Red */
-}
-
-.status-reclosure {
-  background-color: #f59e0b;
-  /* Amber/Orange */
-}
