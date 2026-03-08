@@ -110,14 +110,12 @@ export class FiscalyearComponent {
   //FiscalYear Status
   getStatusClass(status: FiscalYearStatus): string {
     switch (status) {
-      case FiscalYearStatus.Active:
+      case FiscalYearStatus.Open:
         return 'status-active';
       case FiscalYearStatus.Closed:
         return 'status-closed';
       case FiscalYearStatus.NeedReClosure:
         return 'status-reclosure';
-         case FiscalYearStatus.InActive:
-        return 'status-inactive';
       default:
         return '';
     }

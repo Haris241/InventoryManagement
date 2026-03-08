@@ -19,9 +19,8 @@ export interface SwitchYearRequest {
 }
 
 export enum FiscalYearStatus {
-    Active = 1,
+    Open = 1,
     Closed = 2,
-    NeedReClosure = 3,
-    InActive = 4
+    NeedReClosure = 3
 }
 

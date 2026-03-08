@@ -315,9 +315,6 @@ input[type="number"] {
   background-color: #f59e0b;
   /* Amber/Orange */
 }
-.status-inactive {
-  background-color: #6b7280; /* Gray */
-}
 @media screen and (max-width: 768px) {
   .p-toast {
     width: 90vw !important;
