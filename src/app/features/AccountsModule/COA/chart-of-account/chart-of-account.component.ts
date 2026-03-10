@@ -1,11 +1,100 @@
-import { Component } from '@angular/core';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { AccountKind, AccountType, CreateCOA } from '../../../../Models/Accouting/ChartOfAccount.model';
+import { form, FormField, required, min } from '@angular/forms/signals';
+import { FormsModule } from '@angular/forms';
+import { FieldErrorSComponent } from '../../../../shared/field-error-s/field-error-s.component';
+import { BaseApiService } from '../../../../services/base-api.service';
+import { DataLayerService } from '../../../../services/data-layer.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FloatLabelModule } from 'primeng/floatlabel';
+import { InputTextModule } from 'primeng/inputtext';
+import { SelectModule } from 'primeng/select';
+import { enumToOptions } from '../../../../shared/Utility';
+
 
 @Component({
   selector: 'app-chart-of-account',
-  imports: [],
+  imports: [FormField, FormsModule, FieldErrorSComponent, FloatLabelModule, InputTextModule, SelectModule],
   templateUrl: './chart-of-account.component.html',
   styleUrl: './chart-of-account.component.css',
 })
 export class ChartOfAccountComponent {
+
+  private dataService = inject(DataLayerService);
+  private destroyRef = inject(DestroyRef);
+  private base = inject(BaseApiService);
+  submit = signal<boolean>(false);
+  formSubmitted = signal<boolean>(false);
+  backendErrors = signal<Record<string, string[]>>({});
+  totalrecords = signal<number>(0);
+
+  //Dropdowns
+  accoundKind = signal(enumToOptions(AccountKind, true));
+
+
+  //Signal Model For FormData
+  coaModel = signal<CreateCOA>({
+    name: '',
+    parentId: null,
+    kind: null,
+    category: null,
+    openingBalance: 0
+  });
+
+  // Signal form with validation schema
+  coaForm = form(this.coaModel, (schemaPath) => {
+    required(schemaPath.name, { message: 'Name is required' });
+    required(schemaPath.parentId, { message: 'Parent is required' });
+    required(schemaPath.kind, { message: 'Kind is required' });
+    required(schemaPath.category, { message: 'Category is required' });
+    min(schemaPath.openingBalance, 0, { message: 'Opening Balance must be greater than 0' });
+  });
+
+  //Method to Update Fields For Non supporting Primeng Fields
+  updateField<K extends keyof CreateCOA>(field: K, value: CreateCOA[K]) {
+    this.coaModel.update(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  }
+
+  //Creating COA
+  createCOA(event: Event) {
+    if (this.submit()) {
+      return;
+    }
+    //Validating the Form
+    event.preventDefault();
+    this.submit.set(true);
+    this.formSubmitted.set(true);
+    if (this.coaForm().invalid()) {
+      this.coaForm().markAsTouched();
+      this.submit.set(false);
+      return;
+    }
+
+    //Accessing Form Value
+    this.backendErrors.set({});
+    const formvalue = this.coaForm().value() as CreateCOA;
+
+    //Making Api Call
+    this.dataService.createResponse<CreateCOA, CreateCOA>('ChartOfAccount', formvalue).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: () => {
+        this.base.globalMessage('success', 'Chart Of Account Added Successfully');
+        this.coaForm().reset();
+        this.submit.set(false);
+        this.formSubmitted.set(false);
+      },
+      error: (err) => {
+        if (err.error.errors) {
+          this.backendErrors.set(err.error.errors);
+        } else {
+          this.base.handleError(err, err.error.message);
+        }
+        this.submit.set(false);
+      }
+    });
+
+  }
 
 }

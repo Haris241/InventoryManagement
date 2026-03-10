@@ -24,7 +24,7 @@ export class AccountlayoutComponent {
   isCollapsed = signal(false);
   isMobile = signal(false);
   isSettingDropdown = signal(false);
-  isSupplierDropdown = signal(false);
+  isCOADropdown = signal(false);
   screenSize = window.matchMedia('(max-width: 768px)');
   ngOnInit() {
     if (this.screenSize.matches) {
@@ -43,18 +43,18 @@ export class AccountlayoutComponent {
     if (value === 'Settings') {
       return ['/Accounts/fiscalyear'].some(path => currenturl.startsWith(path));
     }
-    if (value === 'Supplier') {
-      return ['/Inventory/addsupplier', '/Inventory/suppliers'].some(path => currenturl.startsWith(path));
+    if (value === 'COA') {
+      return ['/Accounts/coa'].some(path => currenturl.startsWith(path));
     }
     return false;
   }
   toogleDropdown(value: string) {
     if (value === 'Settings') {
       this.isSettingDropdown.update(v => !v);
-      this.isSupplierDropdown.set(false);
+      this.isCOADropdown.set(false);
     }
-    if (value === 'Supplier') {
-      this.isSupplierDropdown.update(v => !v);
+    if (value === 'COA') {
+      this.isCOADropdown.update(v => !v);
       this.isSettingDropdown.set(false);
     }
   }

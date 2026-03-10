@@ -1,8 +1,8 @@
 export interface CreateCOA {
     name: string,
-    parentId: number,
-    kind: AccountKind,
-    category: AccountType,
+    parentId: number | null,
+    kind: AccountKind | null,
+    category: AccountType | null,
     openingBalance: number
 }
 export enum AccountType {

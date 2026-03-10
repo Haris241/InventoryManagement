@@ -23,10 +23,37 @@
             }
           </a>
         </li>
+        <li>
+          <a class="nav-link flex justify-between items-center cursor-pointer" (click)="toogleDropdown('COA')"
+            [ngClass]="{'active': isCollapsed() && isActiveGroup('COA')}">
+            <div class="flex items-center">
+              <span class="material-symbols-outlined">account_balance</span>
+              @if (!isCollapsed()) {
+              <span class="custom">Char Of Accounts</span>
+              }
+            </div>
+            @if (!isCollapsed()) {
+            <span class="material-symbols-outlined">{{isCOADropdown()? 'expand_less':'expand_more'}}</span>
+            }
+          </a>
+          @if (!isCollapsed() && isCOADropdown()) {
+          <ul style="list-style: none; padding: 0; margin: 0;">
+            <li class="ps-3">
+              <a class="nav-link  flex items-center " (click)="onSelectMobile()" routerLink="/Accounts/coa"
+                routerLinkActive="active">
+                <span class="material-symbols-outlined">chevron_right</span>
+                @if (!isCollapsed()) {
+                <span class="custom-dropdown">Add Chart of Account</span>
+                }
+              </a>
+            </li>
+          </ul>
+          }
+        </li>
 
         <li>
-          <a class="nav-link flex justify-between items-center cursor-pointer"
-            (click)="toogleDropdown('Settings')" [ngClass]="{'active': isCollapsed() && isActiveGroup('Settings')}">
+          <a class="nav-link flex justify-between items-center cursor-pointer" (click)="toogleDropdown('Settings')"
+            [ngClass]="{'active': isCollapsed() && isActiveGroup('Settings')}">
             <div class="flex items-center">
               <span class="material-symbols-outlined">rule_settings</span>
               @if (!isCollapsed()) {
@@ -40,8 +67,8 @@
           @if (!isCollapsed() && isSettingDropdown()) {
           <ul style="list-style: none; padding: 0; margin: 0;">
             <li class="ps-3">
-              <a class="nav-link  flex items-center " (click)="onSelectMobile()"
-                routerLink="/Accounts/fiscalyear" routerLinkActive="active">
+              <a class="nav-link  flex items-center " (click)="onSelectMobile()" routerLink="/Accounts/fiscalyear"
+                routerLinkActive="active">
                 <span class="material-symbols-outlined">chevron_right</span>
                 @if (!isCollapsed()) {
                 <span class="custom-dropdown">Add Fiscal Year</span>
