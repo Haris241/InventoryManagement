@@ -14,7 +14,7 @@
           <label for="yearDate" class="required">Fiscal Year</label>
         </div>
       </p-floatLabel>
-      <app-field-errorS [field]="fiscalYearForm.yearDate" [submit]="submit()" [backendErrors]="backendErrors()">
+      <app-field-errorS [field]="fiscalYearForm.yearDate" [submit]="formSubmitted()" [backendErrors]="backendErrors()">
       </app-field-errorS>
     </div>
     <div class="lg:w-1/4 w-full mb-3">
@@ -28,7 +28,7 @@
     </div>
 
     <div class="lg:w-1/4 w-full mb-3">
-      <button class="global-button" type="submit">Add Fiscal Year</button>
+      <button class="global-button" type="submit" [disabled]="submit()">Add Fiscal Year</button>
     </div>
   </div>
 </form>
@@ -60,11 +60,11 @@
             </span>
           </td>
           @if (fiscal.isDefault) {
-            <td><span class="status-badge status-active">Current Year</span></td>
+          <td><span class="status-badge status-active">Current Year</span></td>
           }@else{
-            <td><button (click)="SwitchYear({ id: fiscal.id })" class="status-badge status-closed">Switch</button></td>
+          <td><button (click)="SwitchYear({ id: fiscal.id })" class="status-badge status-closed">Switch</button></td>
           }
-          
+
         </tr>
       </ng-template>
     </p-table>

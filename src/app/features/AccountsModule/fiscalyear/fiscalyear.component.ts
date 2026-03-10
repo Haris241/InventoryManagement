@@ -27,6 +27,7 @@ export class FiscalyearComponent {
   private destroyRef = inject(DestroyRef);
   private pagination = inject(PaginationService);
   submit = signal<boolean>(false);
+  formSubmitted = signal<boolean>(false);
   backendErrors = signal<Record<string, string[]>>({});
   fiscalYears = signal<FiscalYearList[]>([]);
   totalrecords = signal<number>(0);
@@ -54,12 +55,17 @@ export class FiscalyearComponent {
 
   //Creating Fiscal Year
   createFiscalYear(event: Event) {
-    console.log("Coming here!");
+    if (this.submit()) {
+      return;
+    }
+
     //Validating the Form
     event.preventDefault();
     this.submit.set(true);
+    this.formSubmitted.set(true);
     if (this.fiscalYearForm().invalid()) {
       this.fiscalYearForm().markAsTouched();
+      this.submit.set(false);
       return;
     }
 
@@ -78,6 +84,7 @@ export class FiscalyearComponent {
           this.loadFiscalYears(this.lastLazyEvent);
         }
         this.submit.set(false);
+        this.formSubmitted.set(false);
       },
       error: (err) => {
         console.log("Backend Errors: ", err.error.errors);
