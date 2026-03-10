@@ -130,12 +130,23 @@ label {
   color: var(--White) !important;
   background-color: var(--divBackgound) !important;
 }
-.p-floatlabel:has(input:-webkit-autofill) label{
+
+.p-floatlabel:has(input:-webkit-autofill) label {
   color: var(--White) !important;
   background-color: var(--divBackgound) !important;
 }
+
 .p-floatlabel:has(.p-invalid) label {
   color: var(--p-floatlabel-color) !important;
+}
+
+.p-select:not(.p-disabled).p-focus {
+  border-color: var(--MainColour) !important;
+  box-shadow: 0 0 10px var(--MainColour) !important;
+}
+
+.p-select {
+  border: 1px solid #52525b !important;
 }
 
 .p-inputtext {
@@ -291,6 +302,7 @@ input[type="number"] {
   align-items: center;
   font-weight: 500;
 }
+
 .status-badge {
   padding: 0.25rem 0.5rem;
   display: inline-flex;
@@ -315,6 +327,7 @@ input[type="number"] {
   background-color: #f59e0b;
   /* Amber/Orange */
 }
+
 @media screen and (max-width: 768px) {
   .p-toast {
     width: 90vw !important;
