@@ -22,3 +22,12 @@ export enum AccountKind {
     Group = 1,
     Ledger = 2
 }
+
+    public class COADropdownDto
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = "";
+        public int Level { get; set; }
+    }
+     [HttpGet("COAList")]
+     
