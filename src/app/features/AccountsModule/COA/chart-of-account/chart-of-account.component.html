@@ -19,6 +19,18 @@
         <div class="lg:w-1/4 w-full mb-3">
             <p-floatLabel variant="on">
                 <div class="lg:w-8/12 w-2/3">
+                    <p-select [(ngModel)]="coaModel().parentId" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('parentId',$event)" [options]="coaList()" optionLabel="displayName"
+                        optionValue="id" class="w-full" />
+                    <label for="parentId">Select Parent</label>
+                </div>
+            </p-floatLabel>
+            <app-field-errorS [field]="coaForm.parentId" [submit]="formSubmitted()" [backendErrors]="backendErrors()">
+            </app-field-errorS>
+        </div>
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-2/3">
                     <p-select [(ngModel)]="coaModel().kind" [ngModelOptions]="{standalone: true}"
                         (ngModelChange)="updateField('kind',$event)" [options]="accoundKind()" optionLabel="name"
                         optionValue="value" class="w-full" />
@@ -26,6 +38,18 @@
                 </div>
             </p-floatLabel>
             <app-field-errorS [field]="coaForm.kind" [submit]="formSubmitted()" [backendErrors]="backendErrors()">
+            </app-field-errorS>
+        </div>
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-2/3">
+                    <p-select [(ngModel)]="coaModel().category" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('category',$event)" [options]="accountType()" optionLabel="name"
+                        optionValue="value" class="w-full" />
+                    <label for="category">Account Type</label>
+                </div>
+            </p-floatLabel>
+            <app-field-errorS [field]="coaForm.category" [submit]="formSubmitted()" [backendErrors]="backendErrors()">
             </app-field-errorS>
         </div>
 

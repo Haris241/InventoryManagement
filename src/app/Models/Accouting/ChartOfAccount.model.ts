@@ -5,6 +5,14 @@ export interface CreateCOA {
     category: AccountType | null,
     openingBalance: number
 }
+
+export interface COADropdownDto {
+    id: number,
+    name: string,
+    level: number,
+    displayName?: string
+}
+
 export enum AccountType {
     Asset = 1,
     Liability = 2,
@@ -23,11 +31,4 @@ export enum AccountKind {
     Ledger = 2
 }
 
-    public class COADropdownDto
-    {
-        public int Id { get; set; }
-        public string Name { get; set; } = "";
-        public int Level { get; set; }
-    }
-     [HttpGet("COAList")]
-     
+//  [HttpGet("COAList")]

@@ -1,5 +1,5 @@
 import { Component, DestroyRef, inject, signal } from '@angular/core';
-import { AccountKind, AccountType, CreateCOA } from '../../../../Models/Accouting/ChartOfAccount.model';
+import { AccountKind, AccountType, COADropdownDto, CreateCOA } from '../../../../Models/Accouting/ChartOfAccount.model';
 import { form, FormField, required, min } from '@angular/forms/signals';
 import { FormsModule } from '@angular/forms';
 import { FieldErrorSComponent } from '../../../../shared/field-error-s/field-error-s.component';
@@ -20,6 +20,18 @@ import { enumToOptions } from '../../../../shared/Utility';
 })
 export class ChartOfAccountComponent {
 
+  //load COA Lis when user comes to page
+  constructor() {
+    this.dataService.getAllSimple<COADropdownDto>('Dropdowns/COAList').pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: (res) => {
+        const formatted = res.map(acc => ({ ...acc, displayName: `${'— '.repeat(acc.level)}${acc.name}` }));
+        this.coaList.set(formatted);
+      },
+      error: (err) => {
+        this.base.handleError(err, err.error.message);
+      }
+    });
+  }
   private dataService = inject(DataLayerService);
   private destroyRef = inject(DestroyRef);
   private base = inject(BaseApiService);
@@ -30,6 +42,8 @@ export class ChartOfAccountComponent {
 
   //Dropdowns
   accoundKind = signal(enumToOptions(AccountKind, true));
+  accountType = signal(enumToOptions(AccountType, true));
+  coaList = signal<COADropdownDto[]>([]);
 
 
   //Signal Model For FormData
