@@ -72,6 +72,16 @@ export class ChartOfAccountComponent {
     }));
   }
 
+  onParentChange(parentId: number | null) {
+    this.updateField('parentId', parentId);
+
+    const parent = this.coaList().find(c => c.id === parentId);
+
+    if (parent?.category) {
+      this.updateField('category', parent.category);
+    }
+  }
+
   //Creating COA
   createCOA(event: Event) {
     if (this.submit()) {
