@@ -38,7 +38,6 @@ export class ChartOfAccountComponent {
   submit = signal<boolean>(false);
   formSubmitted = signal<boolean>(false);
   backendErrors = signal<Record<string, string[]>>({});
-  totalrecords = signal<number>(0);
 
   //Dropdowns
   accoundKind = signal(enumToOptions(AccountKind, true));
