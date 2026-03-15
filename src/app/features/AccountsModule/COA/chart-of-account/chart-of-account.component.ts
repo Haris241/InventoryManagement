@@ -24,7 +24,7 @@ export class ChartOfAccountComponent {
   constructor() {
     this.dataService.getAllSimple<COADropdownDto>('Dropdowns/COAList').pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (res) => {
-        const formatted = res.map(acc => ({ ...acc, displayName: `${'— '.repeat(acc.level)}${acc.name}` }));
+        const formatted = res.map(acc => ({ ...acc, displayName: `${'-> '.repeat(acc.level)}${acc.name}` }));
         this.coaList.set(formatted);
       },
       error: (err) => {

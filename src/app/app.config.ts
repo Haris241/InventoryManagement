@@ -8,6 +8,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { refreshtokenInterceptor } from './auth/Guards/refreshtoken.interceptor';
 import { globalError } from './auth/Guards/globalError.interceptor';
 import { loadingInterceptor } from './auth/Guards/loading.Interceptor';
+import MyPreset from './shared/Utility';
 
 
 export const appConfig: ApplicationConfig = {
@@ -19,7 +20,7 @@ export const appConfig: ApplicationConfig = {
   ), MessageService, providePrimeNG({
     ripple: false,
     theme: {
-      preset: Aura,
+      preset: MyPreset,
       options: {
        
         darkModeSelector: '.my-app-dark'

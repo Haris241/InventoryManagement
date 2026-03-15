@@ -141,13 +141,9 @@ label {
 }
 
 .p-select:not(.p-disabled).p-focus {
-  border-color: var(--MainColour) !important;
   box-shadow: 0 0 10px var(--MainColour) !important;
 }
 
-.p-select {
-  border: 1px solid #52525b !important;
-}
 
 .p-inputtext {
   color: var(--White) !important;
