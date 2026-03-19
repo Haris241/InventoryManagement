@@ -15,16 +15,15 @@ body {
   --InputBackground: #09090b;
 }
 
+.gradient-heading {
+  background: linear-gradient(135deg, #6366f1, var(--MainColour), #8b5cf6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
 .pi {
   line-height: unset;
-}
-
-.global-bgcolor {
-  background-color: #4b49ac;
-}
-
-.global-color {
-  color: #4b49ac;
 }
 
 .second-bgcolor {
@@ -204,7 +203,7 @@ label.required::after {
 }
 
 .p-toast-message-error {
-  background: rgb(49, 6, 6) !important;
+  background: rgb(73, 12, 12) !important;
 }
 
 .p-toast-message-error .p-toast-detail {
