@@ -24,7 +24,7 @@ export class ChartOfAccountComponent {
   constructor() {
     this.dataService.getAllSimple<COADropdownDto>('Dropdowns/COAList').pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (res) => {
-        const formatted = res.map(acc => ({ ...acc, displayName: `${'-> '.repeat(acc.level)}${acc.name}` }));
+        const formatted = res.map(acc => ({ ...acc, displayName: `${' - '.repeat(acc.level)}${acc.name}` }));
         this.coaList.set(formatted);
       },
       error: (err) => {
@@ -71,6 +71,7 @@ export class ChartOfAccountComponent {
     }));
   }
 
+  //Update category based on Parent
   onParentChange(parentId: number | null) {
     this.updateField('parentId', parentId);
 
@@ -101,9 +102,35 @@ export class ChartOfAccountComponent {
     const formvalue = this.coaForm().value() as CreateCOA;
 
     //Making Api Call
-    this.dataService.createResponse<CreateCOA, CreateCOA>('ChartOfAccount', formvalue).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-      next: () => {
+    this.dataService.createResponse<CreateCOA, COADropdownDto>('COA', formvalue).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: (newAccount) => {
         this.base.globalMessage('success', 'Chart Of Account Added Successfully');
+
+        //Append the list without hitting db for Groups
+        if (formvalue.kind == AccountKind.Group) {
+          const formatted = { ...newAccount, displayName: `${' - '.repeat(newAccount.level)}${newAccount.name}` };
+
+          this.coaList.update(list => {
+            const parentIndex = list.findIndex(x => x.id === formatted.parentId);
+
+            if (parentIndex === -1) {
+              return [...list, formatted]; // fallback
+            }
+
+            const parentLevel = list[parentIndex].level;
+            let insertAt = parentIndex + 1;
+
+            // skip all existing descendants of parent
+            while (insertAt < list.length && list[insertAt].level > parentLevel) {
+              insertAt++;
+            }
+
+            const updated = [...list];
+            updated.splice(insertAt, 0, formatted);
+            return updated;
+          });
+        }
+
         this.coaForm().reset();
         this.submit.set(false);
         this.formSubmitted.set(false);

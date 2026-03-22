@@ -1,4 +1,4 @@
-import { Component, computed, input, Signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, Signal } from '@angular/core';
 import { retry } from 'rxjs';
 
 @Component({
@@ -6,6 +6,7 @@ import { retry } from 'rxjs';
   imports: [],
   templateUrl: './field-error-s.component.html',
   styleUrl: './field-error-s.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FieldErrorSComponent {
   field = input.required<any>();

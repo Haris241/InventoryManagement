@@ -11,7 +11,9 @@ export interface COADropdownDto {
     name: string,
     level: number,
     displayName?: string,
-    category?: AccountType
+    category?: AccountType,
+    code: number,
+    parentId?: number
 }
 
 export enum AccountType {

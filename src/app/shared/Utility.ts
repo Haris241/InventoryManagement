@@ -1,5 +1,7 @@
 import { definePreset } from '@primeuix/themes';
 import Aura from '@primeuix/themes/aura';
+
+//Enum Converter for Dropdowns
 export function enumToOptions<T extends Record<string, string | number>>(enumObj: T, humanize = false): { name: string; value: number }[] {
     return Object.keys(enumObj)
         .filter(key => isNaN(Number(key)))
