@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { AccountKind, AccountType, COADropdownDto, CreateCOA } from '../../../../Models/Accouting/ChartOfAccount.model';
 import { form, FormField, required, min } from '@angular/forms/signals';
 import { FormsModule } from '@angular/forms';
@@ -38,21 +38,23 @@ export class ChartOfAccountComponent {
   submit = signal<boolean>(false);
   formSubmitted = signal<boolean>(false);
   backendErrors = signal<Record<string, string[]>>({});
+  isLedger = computed(() => this.coaForm.kind().value() === AccountKind.Ledger);
 
   //Dropdowns
   accoundKind = signal(enumToOptions(AccountKind, true));
   accountType = signal(enumToOptions(AccountType, true));
   coaList = signal<COADropdownDto[]>([]);
 
-
-  //Signal Model For FormData
-  coaModel = signal<CreateCOA>({
+  private readonly initialModel: CreateCOA = {
     name: '',
     parentId: null,
     kind: null,
     category: null,
     openingBalance: 0
-  });
+  };
+  //Signal Model For FormData
+  coaModel = signal<CreateCOA>({ ...this.initialModel });
+
 
   // Signal form with validation schema
   coaForm = form(this.coaModel, (schemaPath) => {
@@ -131,7 +133,7 @@ export class ChartOfAccountComponent {
           });
         }
 
-        this.coaForm().reset();
+        this.coaForm().reset({ ...this.coaModel(), name: '', openingBalance: 0})
         this.submit.set(false);
         this.formSubmitted.set(false);
       },

@@ -23,7 +23,7 @@
                 <div class="lg:w-8/12 w-2/3">
                     <p-select [(ngModel)]="coaModel().parentId" [ngModelOptions]="{standalone: true}"
                         (ngModelChange)="onParentChange($event)" [options]="coaList()" optionLabel="displayName"
-                        optionValue="id" class="w-full" />
+                        optionValue="id" class="w-full" inputId="parentId" [showClear]="true" [filter]="true" filterBy="displayName" />
                     <label for="parentId">Select Parent</label>
                 </div>
             </p-floatLabel>
@@ -54,16 +54,20 @@
             <app-field-errorS [field]="coaForm.category" [submit]="formSubmitted()" [backendErrors]="backendErrors()">
             </app-field-errorS>
         </div>
-        
+        @if(isLedger()) {
         <div class="lg:w-1/4 w-full mb-3">
             <p-floatLabel variant="on">
                 <div class="lg:w-8/12 w-2/3">
-                    <input pInputText pSize="small" id="name" autocomplete="off" type="number" class="w-full"
+                    <input pInputText pSize="small" id="openingBalance" autocomplete="off" type="number" class="w-full"
                         [formField]="coaForm.openingBalance">
                     <label for="openingBalance">Opening balance</label>
                 </div>
             </p-floatLabel>
+            <app-field-errorS [field]="coaForm.openingBalance" [submit]="formSubmitted()"
+                [backendErrors]="backendErrors()">
+            </app-field-errorS>
         </div>
+        }
 
         <div class="lg:w-1/4 w-full mb-3">
             <button class="global-button" type="submit" [disabled]="submit()">

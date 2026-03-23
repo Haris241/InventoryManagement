@@ -7,7 +7,6 @@ export function refreshtokenInterceptor(req: HttpRequest<unknown>, next: HttpHan
     const auth = inject(BaseApiService);
     const msg = inject(MessageService);
     const token = auth.getAccessToken();
-    console.log("token, ",token);
     let authreq = req;
     if (token) {
         authreq = req.clone({
