@@ -49,6 +49,19 @@
             </li>
           </ul>
           }
+          @if (!isCollapsed() && isCOADropdown()) {
+          <ul style="list-style: none; padding: 0; margin: 0;">
+            <li class="ps-3">
+              <a class="nav-link  flex items-center " (click)="onSelectMobile()" routerLink="/Accounts/coaList"
+                routerLinkActive="active">
+                <span class="material-symbols-outlined">chevron_right</span>
+                @if (!isCollapsed()) {
+                <span class="custom-dropdown">Chart of Account List</span>
+                }
+              </a>
+            </li>
+          </ul>
+          }
         </li>
 
         <li>

@@ -23,7 +23,8 @@
                 <div class="lg:w-8/12 w-2/3">
                     <p-select [(ngModel)]="coaModel().parentId" [ngModelOptions]="{standalone: true}"
                         (ngModelChange)="onParentChange($event)" [options]="coaList()" optionLabel="displayName"
-                        optionValue="id" class="w-full" inputId="parentId" [showClear]="true" [filter]="true" filterBy="displayName" />
+                        optionValue="id" class="w-full" inputId="parentId" [showClear]="true" [filter]="true"
+                        filterBy="displayName" />
                     <label for="parentId">Select Parent</label>
                 </div>
             </p-floatLabel>

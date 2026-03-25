@@ -59,7 +59,10 @@ export const routes: Routes = [
                 path: 'fiscalyear', loadComponent: () => import('./features/AccountsModule/fiscalyear/fiscalyear.component').then(m => m.FiscalyearComponent)
             },
             {
-                path: 'coa', loadComponent: () => import('./features/AccountsModule/COA/chart-of-account/chart-of-account.component').then(m => m.ChartOfAccountComponent)
+                path: 'coa', loadComponent: () => import('./features/AccountsModule/COA/ChartOfAccountAdd/chart-of-account.component').then(m => m.ChartOfAccountComponent)
+            },
+            {
+                path: 'coaList', loadComponent: () => import('./features/AccountsModule/COA/ChartOfAccountList/coalist.component').then(m => m.COAListComponent)
             },
             {
                 path: '', redirectTo: 'accountdashboard', pathMatch: 'full'
