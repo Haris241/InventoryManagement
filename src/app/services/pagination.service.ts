@@ -3,7 +3,7 @@ import { BaseApiService } from './base-api.service';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { debounceTime, distinctUntilChanged, filter, map, Observable, of, switchMap } from 'rxjs';
 import { TableLazyLoadEvent } from 'primeng/table';
-import { PaginationResult } from '../Models/Pagination.model';
+import { CursorPaginationResult, CursorResponse, PaginationResult } from '../Models/Pagination.model';
 import { DataLayerService } from './data-layer.service';
 
 @Injectable({
@@ -45,6 +45,20 @@ export class PaginationService {
         return {
           data: res.items,
           total: totalrecords
+        };
+      })
+    );
+  }
+
+  getDataCursor<TOutput, TInput>(endpoint: string, object: TInput): Observable<CursorResponse<TOutput>> {
+    return this.dataService.getAllPost<CursorPaginationResult<TOutput>, TInput>(`${endpoint}`, object).pipe(
+      map(res => {
+        return {
+          data: res.items,
+          nextCursor: res.nextCursor,
+          previousCursor: res.previousCursor,
+          hasNextPage: res.hasNextPage,
+          hasPreviousPage: res.hasPreviousPage
         };
       })
     );

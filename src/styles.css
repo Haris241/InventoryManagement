@@ -51,6 +51,30 @@ label {
   font-size: small;
 }
 
+label.lg-text {
+  color: var(--White);
+  font-size: large;
+}
+
+/* Bigger checkbox */
+input[type="checkbox"] {
+  width: 15px;
+  height: 15px;
+  cursor: pointer;
+  accent-color: var(--MainColour);
+}
+
+/* Note banner */
+.note-banner {
+  padding: 8px 14px;
+  font-size: 13px;
+  color: #2e80df;
+  min-width: 100%;
+  border-left: 3px solid var(--MainColour);
+  background: linear-gradient(to right, rgba(6, 102, 206, 0.12), transparent);
+  border-radius: 0 6px 6px 0;
+}
+
 .global-search {
   display: flex;
   align-items: center;
@@ -75,7 +99,7 @@ label {
 }
 
 .p-datatable .p-datatable-thead>tr>th {
-  background-color: var(--MainColour);
+  background: linear-gradient(135deg, var(--MainColour), var(--MainColour));
   font-family: sans-serif;
   font-size: 14px;
   color: var(--White);
@@ -141,6 +165,7 @@ label {
 
 .p-select:not(.p-disabled).p-focus {
   box-shadow: 0 0 10px var(--MainColour) !important;
+  border-color: var(--MainColour) !important;
 }
 
 
@@ -154,49 +179,8 @@ label.required::after {
   color: red;
 }
 
-.edit-button {
-  display: inline-block;
-  background-color: var(--MainColour);
-  padding: 4px 16px;
-  align-items: center;
-  cursor: pointer;
-  border: 1px solid;
-  border-radius: 10px;
-  font-size: 14px;
-  color: white;
-}
 
-.edit-button:hover {
-  background-color: white;
-  align-items: center;
-  cursor: pointer;
-  color: var(--MainColour);
-  border: 1px solid var(--MainColour);
-}
 
-.delete-button {
-  display: inline-block;
-  background-color: red;
-  align-items: center;
-  cursor: pointer;
-  padding: 4px 16px;
-  border: 1px solid;
-  border-radius: 10px;
-  font-size: 14px;
-  color: white;
-}
-
-.edit-delete {
-  color: rgb(83, 176, 212);
-}
-
-.delete-button:hover {
-  background-color: white;
-  align-items: center;
-  color: red;
-  cursor: pointer;
-  border: 1px solid red;
-}
 
 .p-toast-message-success {
   background: #033012 !important;
@@ -290,6 +274,29 @@ input[type="number"] {
 }
 
 .global-buttonS:hover {
+  background-color: white;
+  color: var(--MainColour);
+  border: 2px solid var(--MainColour);
+  cursor: pointer;
+  align-items: center;
+  font-weight: 500;
+}
+
+.pagination-button {
+  display: inline-block;
+  align-items: center;
+  background-color: var(--MainColour);
+  padding: 4px 10px;
+  min-width: 90px;
+  border: 2px solid var(--MainColour);
+  border-radius: 10px;
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: 500;
+  color: white;
+}
+
+.pagination-button:hover {
   background-color: white;
   color: var(--MainColour);
   border: 2px solid var(--MainColour);
