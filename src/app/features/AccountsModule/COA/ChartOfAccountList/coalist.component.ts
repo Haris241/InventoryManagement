@@ -12,10 +12,11 @@ import { form, FormField } from '@angular/forms/signals';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { SelectModule } from 'primeng/select';
 import { enumToOptions } from '../../../../shared/Utility';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-coalist',
-  imports: [TableModule, AutoCompleteModule, FormsModule, FloatLabelModule, SelectModule, FormField],
+  imports: [TableModule, AutoCompleteModule, FormsModule, FloatLabelModule, SelectModule, FormField, CommonModule],
   templateUrl: './coalist.component.html',
   styleUrl: './coalist.component.css',
 })
@@ -66,6 +67,8 @@ export class COAListComponent {
     this.pagination.getDataCursor<COAList, COASearchDto>('COA/GetAll', formValue).subscribe({
       next: (result) => {
         this.CoaList.set(result.data);
+        this.hasNextPage.set(result.hasNextPage);
+        this.hasPreviousPage.set(result.hasPreviousPage);
       },
       error: (err) => {
         this.base.handleError(err, err.error.message);

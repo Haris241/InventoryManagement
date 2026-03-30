@@ -80,11 +80,11 @@
                     <td>{{coa.isPostable}}</td>
                     <td>{{coa.isSystem}}</td>
                     <td>{{coa.isActive}}</td>
-                    <td>{{coa.createdAt}}</td>
+                    <td>{{ coa.createdAt | date:'yyyy-MM-dd' }}</td>
                     <td>
                         <!-- use same component for edit  -->
                         <button class="me-3" (click)="editProduct(coa.id)"><span
-                                class="material-symbols-outlined second-color">edit</span></button>
+                                class="material-symbols-outlined icon-color">edit</span></button>
                     </td>
                 </tr>
             </ng-template>

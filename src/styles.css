@@ -34,6 +34,10 @@ body {
   color: var(--MainColour);
 }
 
+.icon-color {
+  --icon-color: var(--MainColour);
+}
+
 .globalBg {
   background-color: var(--DivColour);
 }
@@ -213,7 +217,7 @@ label.required::after {
 .material-symbols-outlined {
   font-size: 22px;
   vertical-align: middle;
-  color: var(--White);
+  color: var(--icon-color, var(--White));
 
 }
 

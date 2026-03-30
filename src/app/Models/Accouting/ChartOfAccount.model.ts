@@ -21,8 +21,8 @@ export interface COAList {
     isActive: boolean;
     code: number;
     name: string;
-    category: AccountType;
-    kind: AccountKind;
+    category: string;
+    kind: string;
     isPostable: boolean;
     isSystem: boolean;
     createdAt: Date;
