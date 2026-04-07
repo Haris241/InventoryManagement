@@ -37,6 +37,15 @@ export interface COASearchDto {
     previousCursor: string | null;
 }
 
+export interface COATreeView {
+    id: number;
+    name: string;
+    code: number;
+    isActive: boolean;
+    parentId?: number;
+    level: number;
+    hasChildren: boolean;
+}
 export enum AccountType {
     Asset = 1,
     Liability = 2,

@@ -44,7 +44,7 @@ export class AccountlayoutComponent {
       return ['/Accounts/fiscalyear'].some(path => currenturl.startsWith(path));
     }
     if (value === 'COA') {
-      return ['/Accounts/coa', '/Accounts/coaList'].some(path => currenturl.startsWith(path));
+      return ['/Accounts/coa', '/Accounts/coaList', '/Accounts/coaTree'].some(path => currenturl.startsWith(path));
     }
     return false;
   }
