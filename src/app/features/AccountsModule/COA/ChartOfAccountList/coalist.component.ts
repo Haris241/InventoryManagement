@@ -29,9 +29,13 @@ export class COAListComponent {
   CoaList = signal<COAList[]>([]);
   coaSearch = this.pagination.autoSearchDropdown<AutoDropdown>('Dropdowns/COA');
   coaSearchList = this.coaSearch.result;
+
+  //pagination signals
   hasNextPage = signal<boolean>(false);
   hasPreviousPage = signal<boolean>(false);
-  @ViewChild('dt') dt!: Table;
+  nextCursor = signal<string | null>(null);
+  previousCursor = signal<string | null>(null);
+
   formSubmitted = signal<boolean>(false);
   backendErrors = signal<Record<string, string[]>>({});
 
@@ -62,13 +66,18 @@ export class COAListComponent {
     }));
   }
 
-  loadCOA() {
+  loadCOA(direction: 'next' | 'previous' | 'fresh' = 'fresh') {
     const formValue = this.coaForm().value();
-    this.pagination.getDataCursor<COAList, COASearchDto>('COA/GetAll', formValue).subscribe({
+
+    // attach cursors based on direction
+    const payload = { ...formValue, nextCursor: direction === 'next' ? this.nextCursor() : null, previousCursor: direction === 'previous' ? this.previousCursor() : null };
+    this.pagination.getDataCursor<COAList, COASearchDto>('COA/GetAll', payload).subscribe({
       next: (result) => {
         this.CoaList.set(result.data);
         this.hasNextPage.set(result.hasNextPage);
         this.hasPreviousPage.set(result.hasPreviousPage);
+        this.nextCursor.set(result.nextCursor ?? null);
+        this.previousCursor.set(result.previousCursor ?? null);
       },
       error: (err) => {
         this.base.handleError(err, err.error.message);
@@ -76,7 +85,9 @@ export class COAListComponent {
     })
   }
   OnSearch() {
-    this.dt.reset();
+    this.nextCursor.set(null);
+    this.previousCursor.set(null);
+    this.loadCOA('fresh');
   }
 
   editProduct(id: string) {

@@ -334,6 +334,23 @@ input[type="number"] {
   /* Amber/Orange */
 }
 
+.status-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.status-dot.active {
+  background-color: #22c55e;
+  /* green */
+}
+
+.status-dot.inactive {
+  background-color: #ef4444;
+  /* red */
+}
+
 @media screen and (max-width: 768px) {
   .p-toast {
     width: 90vw !important;

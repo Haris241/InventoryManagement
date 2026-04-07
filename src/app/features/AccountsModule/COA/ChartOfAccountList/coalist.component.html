@@ -14,8 +14,8 @@
         <div class="lg:w-1/4 w-full mb-3">
             <p-floatLabel variant="on">
                 <div class="lg:w-8/12 w-2/3">
-                    <p-autoComplete [(ngModel)]="coaModel().category" [ngModelOptions]="{standalone: true}"
-                        (ngModelChange)="updateField('category',$event)"
+                    <p-autoComplete [(ngModel)]="coaModel().id" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('id',$event)"
                         (completeMethod)="SearchDropDown($event,coaSearch.searchterm)" inputId="id" optionLabel="name"
                         [dropdown]="true" [suggestions]="coaSearchList()" optionValue="id"
                         [showClear]="true"></p-autoComplete>
@@ -30,7 +30,7 @@
                 <div class="lg:w-8/12 w-2/3">
                     <p-select [(ngModel)]="coaModel().kind" [ngModelOptions]="{standalone: true}"
                         (ngModelChange)="updateField('kind',$event)" [options]="accoundKind()" optionLabel="name"
-                        optionValue="value" class="w-full" />
+                        optionValue="value" class="w-full" [showClear]="true" />
                     <label for="kind">Account Kind</label>
                 </div>
             </p-floatLabel>
@@ -40,7 +40,7 @@
                 <div class="lg:w-8/12 w-2/3">
                     <p-select [(ngModel)]="coaModel().category" [ngModelOptions]="{standalone: true}"
                         (ngModelChange)="updateField('category',$event)" [options]="accountType()" optionLabel="name"
-                        optionValue="value" class="w-full" />
+                        optionValue="value" class="w-full" [showClear]="true" />
                     <label for="category">Account Type</label>
                 </div>
             </p-floatLabel>
@@ -65,7 +65,6 @@
                     <th>Category</th>
                     <th>Kind</th>
                     <th>IsPostable</th>
-                    <th>IsSystem</th>
                     <th>IsActive</th>
                     <th>CreatedAt</th>
                     <th>Actions</th>
@@ -77,12 +76,14 @@
                     <td>{{coa.name}}</td>
                     <td>{{coa.category}}</td>
                     <td>{{coa.kind}}</td>
-                    <td>{{coa.isPostable}}</td>
-                    <td>{{coa.isSystem}}</td>
-                    <td>{{coa.isActive}}</td>
+                    <td>
+                        <span class="status-dot" [ngClass]="coa.isPostable ? 'active' : 'inactive'"></span>
+                    </td>
+                    <td>
+                        <span class="status-dot" [ngClass]="coa.isActive ? 'active' : 'inactive'"></span>
+                    </td>
                     <td>{{ coa.createdAt | date:'yyyy-MM-dd' }}</td>
                     <td>
-                        <!-- use same component for edit  -->
                         <button class="me-3" (click)="editProduct(coa.id)"><span
                                 class="material-symbols-outlined icon-color">edit</span></button>
                     </td>
@@ -91,10 +92,10 @@
         </p-table>
         <div class="flex justify-end mt-3">
             @if(hasPreviousPage()){
-            <button class="pagination-button me-3" (click)="loadCOA()">Previous</button>
+            <button class="pagination-button me-3" (click)="loadCOA('previous')">Previous</button>
             }
             @if(hasNextPage()){
-            <button class="pagination-button me-3" (click)="loadCOA()">Next</button>
+            <button class="pagination-button me-3" (click)="loadCOA('next')">Next</button>
             }
         </div>
 
