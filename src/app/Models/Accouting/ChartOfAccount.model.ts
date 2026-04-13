@@ -16,6 +16,36 @@ export interface COADropdownDto {
     parentId?: number
 }
 
+export interface COAList {
+    id: number;
+    isActive: boolean;
+    code: number;
+    name: string;
+    category: string;
+    kind: string;
+    isPostable: boolean;
+    isSystem: boolean;
+    createdAt: Date;
+}
+
+export interface COASearchDto {
+    id: number | null;
+    category: AccountType | null;
+    kind: AccountKind | null;
+    isActive: boolean;
+    nextCursor: string | null;
+    previousCursor: string | null;
+}
+
+export interface COATreeView {
+    id: number;
+    name: string;
+    code: number;
+    isActive: boolean;
+    parentId?: number;
+    level: number;
+    hasChildren: boolean;
+}
 export enum AccountType {
     Asset = 1,
     Liability = 2,

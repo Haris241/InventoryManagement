@@ -2,7 +2,11 @@
   <aside class=" px-2 sidebar" [ngClass]="{collapsed: isCollapsed()}">
     <div class="sidebar-header ">
       @if (!isCollapsed() ) {
-      <h5>Inventory</h5>
+      <a routerLink="/modules">
+        <h5 class=" font-bold">
+          <span class="gradient-heading">Inventory</span>
+        </h5>
+      </a>
       }
       <a class="btnhover nav-link second-color block lg:hidden" (click)="toogleSidebar()">
         <span class="material-symbols-outlined">menu</span>
@@ -25,8 +29,8 @@
         </li>
 
         <li>
-          <a class="nav-link flex justify-between items-center cursor-pointer"
-            (click)="toogleDropdown('Product')" [ngClass]="{'active': isCollapsed() && isActiveGroup('Product')}">
+          <a class="nav-link flex justify-between items-center cursor-pointer" (click)="toogleDropdown('Product')"
+            [ngClass]="{'active': isCollapsed() && isActiveGroup('Product')}">
             <div class="flex items-center">
               <span class="material-symbols-outlined">inventory_2</span>
               @if (!isCollapsed()) {
@@ -40,8 +44,8 @@
           @if (!isCollapsed() && isProductDropdown()) {
           <ul style="list-style: none; padding: 0; margin: 0;">
             <li class="ps-3">
-              <a class="nav-link  flex items-center " (click)="onSelectMobile()"
-                routerLink="/Inventory/addproduct" routerLinkActive="active">
+              <a class="nav-link  flex items-center " (click)="onSelectMobile()" routerLink="/Inventory/addproduct"
+                routerLinkActive="active">
                 <span class="material-symbols-outlined">chevron_right</span>
                 @if (!isCollapsed()) {
                 <span class="custom-dropdown">Add Product</span>
@@ -49,8 +53,8 @@
               </a>
             </li>
             <li class="ps-3">
-              <a class="nav-link  flex items-center " (click)="onSelectMobile()"
-                routerLink="/Inventory/products" routerLinkActive="active">
+              <a class="nav-link  flex items-center " (click)="onSelectMobile()" routerLink="/Inventory/products"
+                routerLinkActive="active">
                 <span class="material-symbols-outlined">chevron_right</span>
                 @if (!isCollapsed()) {
                 <span class="custom-dropdown">Product List</span>
@@ -77,8 +81,8 @@
           @if (!isCollapsed() && isSupplierDropdown()) {
           <ul style="list-style: none; padding: 0; margin: 0;">
             <li class="ps-3">
-              <a class="nav-link flex items-center " (click)="onSelectMobile()"
-                routerLink="/Inventory/addsupplier" routerLinkActive="active">
+              <a class="nav-link flex items-center " (click)="onSelectMobile()" routerLink="/Inventory/addsupplier"
+                routerLinkActive="active">
                 <span class="material-symbols-outlined">chevron_right</span>
                 @if (!isCollapsed()) {
                 <span class="custom-dropdown">Add Supplier</span>
@@ -86,8 +90,8 @@
               </a>
             </li>
             <li class="ps-3">
-              <a class="nav-link flex items-center " (click)="onSelectMobile()"
-                routerLink="/Inventory/suppliers" routerLinkActive="active">
+              <a class="nav-link flex items-center " (click)="onSelectMobile()" routerLink="/Inventory/suppliers"
+                routerLinkActive="active">
                 <span class="material-symbols-outlined">chevron_right</span>
                 @if (!isCollapsed()) {
                 <span class="custom-dropdown">Supplier List</span>

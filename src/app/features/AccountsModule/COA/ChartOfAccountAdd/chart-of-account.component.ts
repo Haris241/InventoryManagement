@@ -2,7 +2,6 @@ import { Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { AccountKind, AccountType, COADropdownDto, CreateCOA } from '../../../../Models/Accouting/ChartOfAccount.model';
 import { form, FormField, required, min } from '@angular/forms/signals';
 import { FormsModule } from '@angular/forms';
-import { FieldErrorSComponent } from '../../../../shared/field-error-s/field-error-s.component';
 import { BaseApiService } from '../../../../services/base-api.service';
 import { DataLayerService } from '../../../../services/data-layer.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -10,6 +9,7 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
 import { enumToOptions } from '../../../../shared/Utility';
+import { FieldErrorSComponent } from '../../../../shared/field-error-s/field-error-s.component';
 
 
 @Component({
@@ -133,7 +133,7 @@ export class ChartOfAccountComponent {
           });
         }
 
-        this.coaForm().reset({ ...this.coaModel(), name: '', openingBalance: 0})
+        this.coaForm().reset({ ...this.coaModel(), name: '', openingBalance: 0 })
         this.submit.set(false);
         this.formSubmitted.set(false);
       },

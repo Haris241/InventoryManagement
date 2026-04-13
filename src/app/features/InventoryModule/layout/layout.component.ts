@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, signal,CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
+import { Component, inject, signal, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { RouterOutlet } from '@angular/router';
 import { ConfirmationService } from 'primeng/api';
@@ -21,7 +21,7 @@ export class LayoutComponent {
   constructor(private route: Router) { }
   themeService = inject(LoadingService);
   base = inject(BaseApiService);
-  dataService=inject(DataLayerService);
+  dataService = inject(DataLayerService);
   confirmation = inject(ConfirmationService);
   isCollapsed = signal(false);
   isMobile = signal(false);
@@ -84,12 +84,12 @@ export class LayoutComponent {
       acceptLabel: 'Yes',
       rejectLabel: 'No',
       accept: () => {
-        this.dataService.createResponse<void,Token>('Auth/logout').subscribe({
-          next:()=>{
-             this.base.logout();
+        this.dataService.createResponse<void, Token>('Auth/logout').subscribe({
+          next: () => {
+            this.base.logout();
           },
-          error: (err)=>{
-            this.base.handleError(err,err.error.message);
+          error: (err) => {
+            this.base.handleError(err, err.error.message);
           }
         });
       },
