@@ -133,7 +133,7 @@ export class ChartOfAccountComponent {
           });
         }
 
-        this.coaForm().reset({ ...this.coaModel(), name: '', openingBalance: 0 })
+        this.coaForm().reset({ ...this.coaModel(), name: '', openingBalance: 0 });
         this.submit.set(false);
         this.formSubmitted.set(false);
       },

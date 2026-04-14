@@ -12,11 +12,11 @@ export const routes: Routes = [
             {
                 path: 'login', component: LoginComponent
             },
-            {
-                path: 'register', loadComponent: () => import('./auth/register/register.component').then(m => m.RegisterComponent)
-            },
             { path: '', redirectTo: 'login', pathMatch: 'full' }
         ]
+    },
+    {
+        path: 'register', loadComponent: () => import('./auth/register/register.component').then(m => m.RegisterComponent)
     },
     {
         //Modules Layout

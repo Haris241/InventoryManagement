@@ -1,82 +1,166 @@
-<form [formGroup]="register" (ngSubmit)="registerUser()" class="w-full flex justify-center pt-10">
-    <div class="containerr w-full mx-3 md:w-2/3 px-5">
-        <div class="my-4">
-            <p class="text-2xl text-center second-color font-bold">Let’s Get Started!</p>
-        </div>
-        <div class="mb-4">
-            <p class="text-sm text-center WhiteC">Create your account and take control of inventory from day
+<form (ngSubmit)="registerUser($event)" class="w-full flex justify-center pt-10">
+    <div class="flex flex-wrap global-div p-5 mx-3 lg:mx-30">
+        <div class="w-full mb-4">
+            <h3 class="text-2xl font-semibold text-center mb-3">
+                <span class="gradient-heading">Let's Get Started!</span>
+            </h3>
+            <p class="text-sm text-center WhiteC mb-3">Create your account and take control of inventory from day
                 one.</p>
+            <hr class="second-color">
         </div>
-        <div class="my-6">
-            
-            <div class="w-full">
-                <input pInputText pSize="small" id="email" autocomplete="off" type="text" formControlName="email"
-                    class="w-full" placeholder="Enter your Email">
-                @if (submit && register.get('email')?.invalid) {
-                <small style="color: red;">Email is required</small>
-                }
+
+        <!-- Name -->
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-2/3">
+                    <input pInputText pSize="small" id="name" autocomplete="off" type="text" class="w-full"
+                        [formField]="registerForm.name">
+                    <label for="name">Name</label>
+                </div>
+            </p-floatLabel>
+            <app-field-errorS [field]="registerForm.name" [submit]="formSubmitted()" [backendErrors]="backendErrors()">
+            </app-field-errorS>
+        </div>
+
+        <!-- Email -->
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-2/3">
+                    <input pInputText pSize="small" id="email" autocomplete="off" type="text" class="w-full"
+                        [formField]="registerForm.email">
+                    <label for="email">Email</label>
+                </div>
+            </p-floatLabel>
+            <app-field-errorS [field]="registerForm.email" [submit]="formSubmitted()" [backendErrors]="backendErrors()">
+            </app-field-errorS>
+        </div>
+
+        <!-- Username -->
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-2/3">
+                    <input pInputText pSize="small" id="userName" autocomplete="off" type="text" class="w-full"
+                        [formField]="registerForm.userName">
+                    <label for="userName">Username</label>
+                </div>
+            </p-floatLabel>
+            <app-field-errorS [field]="registerForm.userName" [submit]="formSubmitted()"
+                [backendErrors]="backendErrors()">
+            </app-field-errorS>
+        </div>
+
+        <!-- Phone No -->
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-2/3">
+                    <input pInputText pSize="small" id="phoneNo" autocomplete="off" type="text" class="w-full"
+                        [formField]="registerForm.phoneNo">
+                    <label for="phoneNo">Phone No</label>
+                </div>
+            </p-floatLabel>
+            <app-field-errorS [field]="registerForm.phoneNo" [submit]="formSubmitted()"
+                [backendErrors]="backendErrors()">
+            </app-field-errorS>
+        </div>
+
+        <!-- Password -->
+        <div class="lg:w-1/4 w-full mb-3">
+            <div class="relative w-full">
+                <p-floatLabel variant="on">
+                    <div class="lg:w-8/12 w-2/3 relative">
+                        <input pInputText pSize="small" id="password" autocomplete="off"
+                            [type]="showPassword ? 'text' : 'password'" [formField]="registerForm.password"
+                            class="w-full" autocomplete="new-password">
+                        <label for="password">Password</label>
+
+                        <button type="button" (click)="togglePassword()"
+                            class="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500">
+                            <span class="material-symbols-outlined">
+                                {{ showPassword ? 'visibility_off' : 'visibility' }}
+                            </span>
+                        </button>
+                    </div>
+                </p-floatLabel>
+                <app-field-errorS [field]="registerForm.password" [submit]="formSubmitted()"
+                    [backendErrors]="backendErrors()">
+                </app-field-errorS>
             </div>
         </div>
-        <div class="my-6">
-            
-            <div class="w-full">
-                <input pInputText pSize="small" id="name" autocomplete="off" type="text" formControlName="name"
-                    class="w-full" placeholder="Enter your Name">
-                <!-- @if (submit && register.get('email')?.invalid) {
-                <small style="color: red;">Email is required</small>
-                } -->
+
+        <!-- Confirm Password -->
+        <div class="lg:w-1/4 w-full mb-3">
+            <div class="relative w-full">
+                <p-floatLabel variant="on">
+                    <div class="lg:w-8/12 w-2/3 relative">
+                        <input pInputText pSize="small" id="confirmPassword" autocomplete="off"
+                            [type]="showConfirmPassword ? 'text' : 'password'"
+                            [formField]="registerForm.confirmPassword" class="w-full" autocomplete="new-password">
+                        <label for="confirmPassword">Confirm Password</label>
+
+                        <button type="button" (click)="toggleConfirmPassword()"
+                            class="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500">
+                            <span class="material-symbols-outlined">
+                                {{ showConfirmPassword ? 'visibility_off' : 'visibility' }}
+                            </span>
+                        </button>
+                    </div>
+                </p-floatLabel>
+                <app-field-errorS [field]="registerForm.confirmPassword" [submit]="formSubmitted()"
+                    [backendErrors]="backendErrors()">
+                </app-field-errorS>
             </div>
         </div>
-        <div class="my-6">
-            
+
+        <!-- Currency -->
+        <div class="lg:w-1/4 w-full mb-3">
             <div class="w-full">
-                <input pInputText pSize="small" id="userName" autocomplete="off" type="text" formControlName="userName"
-                    class="w-full" placeholder="Enter your Username">
-                @if (submit && register.get('userName')?.invalid) {
-                <small style="color: red;">UserName is required</small>
-                }
+                <p-floatLabel variant="on">
+                    <div class="lg:w-8/12 w-2/3">
+                        <p-select [(ngModel)]="registerModel().currencyCode" [ngModelOptions]="{standalone: true}"
+                            (ngModelChange)="updateField('currencyCode', $event)" [options]="currencies()"
+                            optionLabel="name" optionValue="code" class="w-full" inputId="currencyCode"
+                            [showClear]="true" [filter]="true" filterBy="name" />
+                        <label for="currencyCode">Currency</label>
+                    </div>
+                </p-floatLabel>
+                <app-field-errorS [field]="registerForm.currencyCode" [submit]="formSubmitted()"
+                    [backendErrors]="backendErrors()">
+                </app-field-errorS>
             </div>
         </div>
-        <div class="my-6">
-           
+
+        <!-- Fiscal Start Month -->
+        <div class="lg:w-1/4 w-full mb-3">
             <div class="w-full">
-                <input pInputText pSize="small" id="password" autocomplete="off" type="text" formControlName="password"
-                    class="w-full" placeholder="Enter Your Password">
-                @if (submit && register.get('password')?.invalid) {
-                <small style="color: red;">Password is required</small>
-                }
+                <p-floatLabel variant="on">
+                    <div class="lg:w-8/12 w-2/3">
+                        <p-select [(ngModel)]="registerModel().fiscalStartMonth" [ngModelOptions]="{standalone: true}"
+                            (ngModelChange)="updateField('fiscalStartMonth', $event)" inputId="fiscalStartMonth"
+                            [options]="monthsDropdown()" optionLabel="name" optionValue="value" class="w-full"
+                            [showClear]="true" [filter]="true" filterBy="name" />
+                        <label for="fiscalStartMonth">Fiscal Start Month</label>
+                    </div>
+                </p-floatLabel>
+                <app-field-errorS [field]="registerForm.fiscalStartMonth" [submit]="formSubmitted()"
+                    [backendErrors]="backendErrors()">
+                </app-field-errorS>
             </div>
         </div>
-        <div class="my-6">
-            
-            <div class="w-full">
-                <input pInputText pSize="small" id="confirmPassword" autocomplete="off" type="text"
-                    formControlName="confirmPassword" class="w-full" placeholder="Confirm Your Password">
-                @if (submit && register.get('confirmPassword')?.invalid) {
-                <small style="color: red;">Password is not matched</small>
-                }
-            </div>
-        </div>
-        <div class="my-6">
-            
-            <div class="w-full">
-                <input pInputText pSize="small" id="phoneNo" autocomplete="off" type="text" formControlName="phoneNo"
-                    class="w-full" placeholder="Enter your PhoneNo">
-                <!-- @if (submit && register.get('email')?.invalid) {
-                <small style="color: red;">Email is required</small>
-                } -->
-            </div>
-        </div>
-         @if(err){
-            @for (e of err; track err) {
-            <small style="color: red;" class="justify-start flex font-semibold "><span>&bull;</span>{{e}}</small>
+        <ul class="text-red-500 text-sm font-medium pl-4">
+            @if (err) {
+            @for (e of err; track e) {
+            <li>{{ e }}</li>
             }
-        }
-        <div class="my-6">
-            <button class="login-button">Register Now</button>
+            }
+        </ul>
+        <div class="w-full flex justify-center m-3">
+            <button class="global-button" type="submit" [disabled]="submit()">
+                {{ submit() ? 'Processing...' : 'Register Now' }}
+            </button>
         </div>
-        <div class="mb-10 flex justify-center ">
-            <a routerLink="/login" class="text-sm WhiteC  hover:underline">Back To Login</a>
+
+        <div class="w-full flex justify-center mb-3">
+            <a routerLink="/login" class="text-sm WhiteC hover:underline">Back To Login</a>
         </div>
     </div>
 </form>
