@@ -13,12 +13,12 @@
         </div>
         <div class="lg:w-1/4 w-full mb-3">
             <p-floatLabel variant="on">
-                <div class="lg:w-8/12 w-2/3">
+                <div class="lg:w-10/12 w-full">
                     <p-autoComplete [(ngModel)]="coaModel().id" [ngModelOptions]="{standalone: true}"
                         (ngModelChange)="updateField('id',$event)"
                         (completeMethod)="SearchDropDown($event,coaSearch.searchterm)" inputId="id" optionLabel="name"
-                        [dropdown]="true" [suggestions]="coaSearchList()" optionValue="id"
-                        [showClear]="true"></p-autoComplete>
+                        [dropdown]="true" [suggestions]="coaSearchList()" optionValue="id" [showClear]="true"
+                        class="w-full"></p-autoComplete>
                     <label for="id">Search by Name or Code</label>
                 </div>
 
@@ -27,7 +27,7 @@
         </div>
         <div class="lg:w-1/4 w-full mb-3">
             <p-floatLabel variant="on">
-                <div class="lg:w-8/12 w-2/3">
+                <div class="lg:w-8/12 w-full">
                     <p-select [(ngModel)]="coaModel().kind" [ngModelOptions]="{standalone: true}"
                         (ngModelChange)="updateField('kind',$event)" [options]="accoundKind()" optionLabel="name"
                         optionValue="value" class="w-full" [showClear]="true" />
@@ -37,7 +37,7 @@
         </div>
         <div class="lg:w-1/4 w-full mb-3">
             <p-floatLabel variant="on">
-                <div class="lg:w-8/12 w-2/3">
+                <div class="lg:w-8/12 w-full">
                     <p-select [(ngModel)]="coaModel().category" [ngModelOptions]="{standalone: true}"
                         (ngModelChange)="updateField('category',$event)" [options]="accountType()" optionLabel="name"
                         optionValue="value" class="w-full" [showClear]="true" />
@@ -49,7 +49,7 @@
             <input id="isActive" type="checkbox" [formField]="coaForm.isActive" class="w-auto" />
             <label for="isActive" class="mb-0 !text-lg font-medium gradient-heading">Active</label>
         </div>
-        <div class="lg:w-1/4 w-full mb-3">
+        <div class="w-full flex justify-center m-3">
             <button class="global-button">Search</button>
         </div>
     </div>

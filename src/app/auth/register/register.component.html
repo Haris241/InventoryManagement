@@ -12,7 +12,7 @@
         <!-- Name -->
         <div class="lg:w-1/4 w-full mb-3">
             <p-floatLabel variant="on">
-                <div class="lg:w-8/12 w-2/3">
+                <div class="w-full lg:w-8/12">
                     <input pInputText pSize="small" id="name" autocomplete="off" type="text" class="w-full"
                         [formField]="registerForm.name">
                     <label for="name">Name</label>
@@ -25,7 +25,7 @@
         <!-- Email -->
         <div class="lg:w-1/4 w-full mb-3">
             <p-floatLabel variant="on">
-                <div class="lg:w-8/12 w-2/3">
+                <div class="w-full lg:w-8/12">
                     <input pInputText pSize="small" id="email" autocomplete="off" type="text" class="w-full"
                         [formField]="registerForm.email">
                     <label for="email">Email</label>
@@ -38,7 +38,7 @@
         <!-- Username -->
         <div class="lg:w-1/4 w-full mb-3">
             <p-floatLabel variant="on">
-                <div class="lg:w-8/12 w-2/3">
+                <div class="w-full lg:w-8/12">
                     <input pInputText pSize="small" id="userName" autocomplete="off" type="text" class="w-full"
                         [formField]="registerForm.userName">
                     <label for="userName">Username</label>
@@ -52,7 +52,7 @@
         <!-- Phone No -->
         <div class="lg:w-1/4 w-full mb-3">
             <p-floatLabel variant="on">
-                <div class="lg:w-8/12 w-2/3">
+                <div class="w-full lg:w-8/12">
                     <input pInputText pSize="small" id="phoneNo" autocomplete="off" type="text" class="w-full"
                         [formField]="registerForm.phoneNo">
                     <label for="phoneNo">Phone No</label>
@@ -67,7 +67,7 @@
         <div class="lg:w-1/4 w-full mb-3">
             <div class="relative w-full">
                 <p-floatLabel variant="on">
-                    <div class="lg:w-8/12 w-2/3 relative">
+                    <div class="w-full lg:w-8/12 relative">
                         <input pInputText pSize="small" id="password" autocomplete="off"
                             [type]="showPassword ? 'text' : 'password'" [formField]="registerForm.password"
                             class="w-full" autocomplete="new-password">
@@ -91,7 +91,7 @@
         <div class="lg:w-1/4 w-full mb-3">
             <div class="relative w-full">
                 <p-floatLabel variant="on">
-                    <div class="lg:w-8/12 w-2/3 relative">
+                    <div class="w-full lg:w-8/12 relative">
                         <input pInputText pSize="small" id="confirmPassword" autocomplete="off"
                             [type]="showConfirmPassword ? 'text' : 'password'"
                             [formField]="registerForm.confirmPassword" class="w-full" autocomplete="new-password">
@@ -115,7 +115,7 @@
         <div class="lg:w-1/4 w-full mb-3">
             <div class="w-full">
                 <p-floatLabel variant="on">
-                    <div class="lg:w-8/12 w-2/3">
+                    <div class="w-full lg:w-8/12">
                         <p-select [(ngModel)]="registerModel().currencyCode" [ngModelOptions]="{standalone: true}"
                             (ngModelChange)="updateField('currencyCode', $event)" [options]="currencies()"
                             optionLabel="name" optionValue="code" class="w-full" inputId="currencyCode"
@@ -133,7 +133,7 @@
         <div class="lg:w-1/4 w-full mb-3">
             <div class="w-full">
                 <p-floatLabel variant="on">
-                    <div class="lg:w-8/12 w-2/3">
+                    <div class="w-full lg:w-8/12">
                         <p-select [(ngModel)]="registerModel().fiscalStartMonth" [ngModelOptions]="{standalone: true}"
                             (ngModelChange)="updateField('fiscalStartMonth', $event)" inputId="fiscalStartMonth"
                             [options]="monthsDropdown()" optionLabel="name" optionValue="value" class="w-full"

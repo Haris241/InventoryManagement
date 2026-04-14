@@ -8,7 +8,7 @@
   </div>
 
   <!-- Toolbar -->
-  <div class="w-full mb-4 flex gap-3">
+  <div class="w-full mb-4 flex justify-center gap-3">
     <button class="global-button" (click)="expandAll()">
       <span class="material-symbols-outlined">unfold_more</span>
       Expand All
@@ -22,16 +22,12 @@
   <!-- Tree -->
   <div class="w-full">
     @for (node of visibleNodes(); track node.id) {
-    <div class="tree-row"
-      [class.tree-row-parent]="node.hasChildren"
-      [class.tree-row-leaf]="!node.hasChildren"
-      [style.padding-left.px]="16 + node.level * 28"
-      (click)="toggleExpand(node)">
+    <div class="tree-row" [class.tree-row-parent]="node.hasChildren" [class.tree-row-leaf]="!node.hasChildren"
+      [style.padding-left.px]="16 + node.level * 28" (click)="toggleExpand(node)">
       <!-- Expand/Collapse Icon -->
       <span class="tree-toggle">
         @if (node.hasChildren) {
-        <span class="material-symbols-outlined toggle-icon"
-          [class.rotated]="isExpanded(node.id)">chevron_right</span>
+        <span class="material-symbols-outlined toggle-icon" [class.rotated]="isExpanded(node.id)">chevron_right</span>
         } @else {
         <span class="toggle-spacer"></span>
         }

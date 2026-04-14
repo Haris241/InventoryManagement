@@ -9,7 +9,7 @@
         </div>
         <div class="lg:w-1/4 w-full mb-3">
             <p-floatLabel variant="on">
-                <div class="lg:w-8/12 w-2/3">
+                <div class="lg:w-8/12 w-full">
                     <input pInputText pSize="small" id="name" autocomplete="off" type="text" class="w-full"
                         [formField]="coaForm.name">
                     <label for="name">Name</label>
@@ -20,7 +20,7 @@
         </div>
         <div class="lg:w-1/4 w-full mb-3">
             <p-floatLabel variant="on">
-                <div class="lg:w-8/12 w-2/3">
+                <div class="lg:w-8/12 w-full">
                     <p-select [(ngModel)]="coaModel().parentId" [ngModelOptions]="{standalone: true}"
                         (ngModelChange)="onParentChange($event)" [options]="coaList()" optionLabel="displayName"
                         optionValue="id" class="w-full" inputId="parentId" [showClear]="true" [filter]="true"
@@ -33,7 +33,7 @@
         </div>
         <div class="lg:w-1/4 w-full mb-3">
             <p-floatLabel variant="on">
-                <div class="lg:w-8/12 w-2/3">
+                <div class="lg:w-8/12 w-full">
                     <p-select [(ngModel)]="coaModel().kind" [ngModelOptions]="{standalone: true}"
                         (ngModelChange)="updateField('kind',$event)" [options]="accoundKind()" optionLabel="name"
                         optionValue="value" class="w-full" />
@@ -45,7 +45,7 @@
         </div>
         <div class="lg:w-1/4 w-full mb-3">
             <p-floatLabel variant="on">
-                <div class="lg:w-8/12 w-2/3">
+                <div class="lg:w-8/12 w-full">
                     <p-select [(ngModel)]="coaModel().category" [ngModelOptions]="{standalone: true}"
                         (ngModelChange)="updateField('category',$event)" [options]="accountType()" optionLabel="name"
                         optionValue="value" class="w-full" [readonly]="true" />
@@ -58,7 +58,7 @@
         @if(isLedger()) {
         <div class="lg:w-1/4 w-full mb-3">
             <p-floatLabel variant="on">
-                <div class="lg:w-8/12 w-2/3">
+                <div class="lg:w-8/12 w-full">
                     <input pInputText pSize="small" id="openingBalance" autocomplete="off" type="number" class="w-full"
                         [formField]="coaForm.openingBalance">
                     <label for="openingBalance">Opening balance</label>
@@ -70,7 +70,7 @@
         </div>
         }
 
-        <div class="lg:w-1/4 w-full mb-3">
+        <div class="w-full flex justify-center m-3">
             <button class="global-button" type="submit" [disabled]="submit()">
                 {{ submit() ? 'Processing...' : 'Add Chart of Account' }}
             </button>
