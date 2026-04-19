@@ -71,6 +71,22 @@ export const routes: Routes = [
                 path: 'coaEdit/:id', loadComponent: () => import('./features/AccountsModule/COA/ChartOfAccountEdit/coa-edit.component').then(m => m.CoaEditComponent)
             },
             {
+                path: 'voucherManager', loadComponent: () => import('./features/AccountsModule/VoucherManager/AddVoucher/voucher-manger.component').then(m => m.VoucherMangerComponent), children: [
+                    {
+                        path: 'jv', loadComponent: () => import('./features/AccountsModule/VoucherManager/VoucherTypes/jv-voucher/jv-voucher.component').then(m => m.JvVoucherComponent)
+                    },
+                    {
+                        path: 'cv', loadComponent: () => import('./features/AccountsModule/VoucherManager/VoucherTypes/cv-voucher/cv-voucher.component').then(m => m.CvVoucherComponent)
+                    },
+                    {
+                        path: 'bv', loadComponent: () => import('./features/AccountsModule/VoucherManager/VoucherTypes/bv-voucher/bv-voucher.component').then(m => m.BvVoucherComponent)
+                    },
+                    {
+                        path: '', redirectTo: 'jv', pathMatch: 'full'
+                    }
+                ]
+            },
+            {
                 path: '', redirectTo: 'accountdashboard', pathMatch: 'full'
             }
         ]

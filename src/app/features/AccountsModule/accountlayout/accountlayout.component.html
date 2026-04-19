@@ -80,6 +80,46 @@
           </ul>
           }
         </li>
+        <li>
+          <a class="nav-link flex justify-between items-center cursor-pointer" (click)="toogleDropdown('Voucher')"
+            [ngClass]="{'active': isCollapsed() && isActiveGroup('Voucher')}">
+            <div class="flex items-center">
+              <span class="material-symbols-outlined">description</span>
+              @if (!isCollapsed()) {
+              <span class="custom">Voucher Manager</span>
+              }
+            </div>
+            @if (!isCollapsed()) {
+            <span class="material-symbols-outlined">{{isVoucherDropdown()? 'expand_less':'expand_more'}}</span>
+            }
+          </a>
+          @if (!isCollapsed() && isVoucherDropdown()) {
+          <ul style="list-style: none; padding: 0; margin: 0;">
+            <li class="ps-3">
+              <a class="nav-link  flex items-center " (click)="onSelectMobile()" routerLink="/Accounts/voucherManager"
+                routerLinkActive="active">
+                <span class="material-symbols-outlined">chevron_right</span>
+                @if (!isCollapsed()) {
+                <span class="custom-dropdown">Add Voucher</span>
+                }
+              </a>
+            </li>
+          </ul>
+          }
+          <!-- @if (!isCollapsed() && isCOADropdown()) {
+          <ul style="list-style: none; padding: 0; margin: 0;">
+            <li class="ps-3">
+              <a class="nav-link  flex items-center " (click)="onSelectMobile()" routerLink="/Accounts/coaList"
+                routerLinkActive="active">
+                <span class="material-symbols-outlined">chevron_right</span>
+                @if (!isCollapsed()) {
+                <span class="custom-dropdown">Chart of Account List</span>
+                }
+              </a>
+            </li>
+          </ul>
+          } -->
+        </li>
 
         <li>
           <a class="nav-link flex justify-between items-center cursor-pointer" (click)="toogleDropdown('Settings')"
