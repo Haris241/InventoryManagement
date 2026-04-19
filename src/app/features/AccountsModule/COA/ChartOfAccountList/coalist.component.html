@@ -83,10 +83,17 @@
                         <span class="status-dot" [ngClass]="coa.isActive ? 'active' : 'inactive'"></span>
                     </td>
                     <td>{{ coa.createdAt | date:'yyyy-MM-dd' }}</td>
+                    @if(!coa.isSystem){
                     <td>
-                        <button class="me-3" (click)="editProduct(coa.id)"><span
+                        <button class="me-3" (click)="editCOA(coa.id)"><span
                                 class="material-symbols-outlined icon-color">edit</span></button>
                     </td>
+                    }
+                    @else{
+                    <td>
+                        <span>-</span>
+                    </td>
+                    }
                 </tr>
             </ng-template>
         </p-table>

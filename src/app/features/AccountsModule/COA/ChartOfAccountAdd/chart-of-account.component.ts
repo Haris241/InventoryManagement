@@ -38,7 +38,15 @@ export class ChartOfAccountComponent {
   submit = signal<boolean>(false);
   formSubmitted = signal<boolean>(false);
   backendErrors = signal<Record<string, string[]>>({});
-  isLedger = computed(() => this.coaForm.kind().value() === AccountKind.Ledger);
+  isPermanentLedger = computed(() => {
+    const kind = this.coaForm.kind().value();
+    const category = this.coaForm.category().value();
+
+    return kind === AccountKind.Ledger &&
+      (category === AccountType.Asset ||
+        category === AccountType.Liability ||
+        category === AccountType.Equity);
+  });
 
   //Dropdowns
   accoundKind = signal(enumToOptions(AccountKind, true));

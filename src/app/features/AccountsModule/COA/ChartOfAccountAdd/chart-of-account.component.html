@@ -7,6 +7,11 @@
             </h3>
             <hr class="second-color">
         </div>
+        <div class="w-full mb-3">
+            <div class="lg:w-1/2 w-full">
+                <p class="note-banner">Opening balance is not allowed for Income/Expense accounts</p>
+            </div>
+        </div>
         <div class="lg:w-1/4 w-full mb-3">
             <p-floatLabel variant="on">
                 <div class="lg:w-8/12 w-full">
@@ -55,7 +60,7 @@
             <app-field-errorS [field]="coaForm.category" [submit]="formSubmitted()" [backendErrors]="backendErrors()">
             </app-field-errorS>
         </div>
-        @if(isLedger()) {
+        @if(isPermanentLedger()) {
         <div class="lg:w-1/4 w-full mb-3">
             <p-floatLabel variant="on">
                 <div class="lg:w-8/12 w-full">

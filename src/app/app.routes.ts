@@ -68,6 +68,9 @@ export const routes: Routes = [
                 path: 'coaTree', loadComponent: () => import('./features/AccountsModule/COA/ChartOfAccountTree/coa-tree.component').then(m => m.CoaTreeComponent)
             },
             {
+                path: 'coaEdit/:id', loadComponent: () => import('./features/AccountsModule/COA/ChartOfAccountEdit/coa-edit.component').then(m => m.CoaEditComponent)
+            },
+            {
                 path: '', redirectTo: 'accountdashboard', pathMatch: 'full'
             }
         ]

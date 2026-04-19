@@ -27,6 +27,19 @@ export interface COAList {
     isSystem: boolean;
     createdAt: Date;
 }
+export interface UpdateCOAGET {
+    id: number;
+    isActive: boolean;
+    code: number;
+    name: string;
+    category: string;
+    kind: string;
+}
+export interface UpdateCOAPOST {
+    isActive: boolean;
+    name: string;
+    deactivateChildren: boolean;
+}
 
 export interface COASearchDto {
     id: number | null;

@@ -90,8 +90,8 @@ export class COAListComponent {
     this.loadCOA('fresh');
   }
 
-  editProduct(id: string) {
-    this.router.navigate(['Inventory/editproduct', id]);
+  editCOA(id: string) {
+    this.router.navigate(['Accounts/coaEdit', id]);
   }
   SearchDropDown(event: { query: string }, searchtermsignal: WritableSignal<string>) {
     const search = event.query?.trim() ?? '';
