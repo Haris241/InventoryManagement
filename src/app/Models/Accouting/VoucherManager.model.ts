@@ -8,7 +8,7 @@ export interface CreateJournalEntry {
     lines: CreateJournalEntryLine[];
 }
 export interface CreateJournalEntryLine {
-    chartOfAccountId: number;
+    chartOfAccountId: number | null;
     description: string;
     debit: number;
     credit: number;
@@ -16,6 +16,11 @@ export interface CreateJournalEntryLine {
     exchangeRate: number;
     relatedEntityId: string;
     referenceNo: string;
+}
+export interface AccountingLine {
+    debit?: number;
+    credit?: number;
+    exchangeRate?: number;
 }
 export enum JournalCategory {
     Normal = 1,
