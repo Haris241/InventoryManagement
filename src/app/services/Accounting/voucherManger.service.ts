@@ -22,6 +22,9 @@ export class voucherMangerService {
         if (lines.some(l => (l.debit || 0) < 0 || (l.credit || 0) < 0)) {
             errors.push('Negative values are not allowed.');
         }
+        if (lines.some(l => (l.exchangeRate || 0) <= 0)) {
+            errors.push('Exchange rate must be greater than 0.');
+        }
 
         if (lines.some(l => (l.debit || 0) > 0 && (l.credit || 0) > 0)) {
             errors.push('One line cannot have both debit and credit.');

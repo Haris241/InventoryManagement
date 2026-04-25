@@ -1,4 +1,4 @@
-<!-- COA Create Form -->
+<!-- JV Create Form -->
 <form (ngSubmit)="createJV($event)">
     <div class="flex flex-wrap global-div p-5">
         <div class="w-full mb-4">
@@ -81,7 +81,7 @@
                     <tr class="border-b second-color">
 
                         <!-- Account (AutoComplete) -->
-                        <td class="p-2">
+                        <td class="p-2 align-top">
                             <p-autoComplete [(ngModel)]="line.chartOfAccountId" [ngModelOptions]="{standalone: true}"
                                 (ngModelChange)="updateLineField($index, 'chartOfAccountId', $event)"
                                 (completeMethod)="SearchDropDown($event, coaSearch.searchterm)" optionLabel="name"
@@ -94,12 +94,9 @@
                         </td>
 
                         <!-- Description -->
-                        <td class="p-2">
+                        <td class="p-2 align-top">
                             <input pInputText pSize="small" autocomplete="off" type="text" class="w-full"
                                 [formField]="journalForm.lines[$index].description">
-                            <app-field-errorS [field]="journalForm.lines[$index].description" [submit]="formSubmitted()"
-                                [backendErrors]="backendErrors()">
-                            </app-field-errorS>
                         </td>
 
                         <!-- Debit -->
@@ -112,7 +109,7 @@
                         </td>
 
                         <!-- Credit -->
-                        <td class="p-2">
+                        <td class="p-2 align-top">
                             <input pInputText pSize="small" autocomplete="off" type="number" class="w-full"
                                 [formField]="journalForm.lines[$index].credit">
                             <app-field-errorS [field]="journalForm.lines[$index].credit" [submit]="formSubmitted()"
@@ -121,7 +118,7 @@
                         </td>
 
                         <!-- Currency -->
-                        <td class="p-2">
+                        <td class="p-2 align-top">
                             <p-select [ngModel]="line.currencyCode" [ngModelOptions]="{standalone: true}"
                                 (ngModelChange)="updateLineField($index, 'currencyCode', $event)"
                                 [options]="currencies()" optionLabel="name" optionValue="code" [filter]="true"
@@ -130,19 +127,19 @@
                         </td>
 
                         <!-- Exchange Rate -->
-                        <td class="p-2">
+                        <td class="p-2 align-top">
                             <input pInputText pSize="small" autocomplete="off" type="number" class="w-full"
                                 [formField]="journalForm.lines[$index].exchangeRate">
                         </td>
 
                         <!-- Reference No -->
-                        <td class="p-2">
+                        <td class="p-2 align-top">
                             <input pInputText pSize="small" autocomplete="off" type="text" class="w-full"
                                 [formField]="journalForm.lines[$index].referenceNo">
                         </td>
 
                         <!-- Delete -->
-                        <td class="p-2 text-center">
+                        <td class="p-2 text-center align-top">
                             <button type="button" (click)="deleteLine($index)">
                                 <span class="material-symbols-outlined icon-color">delete</span>
                             </button>

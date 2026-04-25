@@ -2,7 +2,7 @@ import { Component, computed, DestroyRef, inject, signal, WritableSignal } from 
 import { DataLayerService } from '../../../../../services/data-layer.service';
 import { BaseApiService } from '../../../../../services/base-api.service';
 import { CreateJournalEntry, CreateJournalEntryLine, JournalCategory, SourceType, VoucherType } from '../../../../../Models/Accouting/VoucherManager.model';
-import { applyEach, form, FormField, min, required } from '@angular/forms/signals';
+import { applyEach, form, FormField, min, required, validate } from '@angular/forms/signals';
 import { FloatLabel } from "primeng/floatlabel";
 import { FieldErrorSComponent } from "../../../../../shared/field-error-s/field-error-s.component";
 import { FormsModule } from '@angular/forms';
@@ -117,9 +117,23 @@ export class JvVoucherComponent {
     // Nested lines validation
     applyEach(schema.lines, (line) => {
       required(line.chartOfAccountId, { message: 'Account is required' });
-      required(line.description, { message: 'Description is required' });
       min(line.debit, 0, { message: 'Debit must be >= 0' });
       min(line.credit, 0, { message: 'Credit must be >= 0' });
+
+      // ✅ Cross-field validation attached to ONE field
+      validate(line.debit, ({ value, valueOf }) => {
+        const debit = value();
+        const credit = valueOf(line.credit);
+
+        if ((debit > 0 && credit > 0) || (debit === 0 && credit === 0)) {
+          return {
+            kind: 'debitCredit',
+            message: 'Enter either Debit OR Credit'
+          };
+        }
+
+        return null;
+      });
     });
   });
 
@@ -146,15 +160,39 @@ export class JvVoucherComponent {
   // ✅ Add a new empty line
   addLine(): void {
 
+    const index = this.journalModel().lines.length - 1;
+    const line = this.journalForm.lines[index];
+
+    //Mark required field 
+    const isInvalid = line.chartOfAccountId().invalid() || line.debit().invalid() || line.credit().invalid();
+
+    if (isInvalid) {
+      // only mark THIS line
+      line.chartOfAccountId().markAsTouched();
+      line.debit().markAsTouched();
+      line.credit().markAsTouched();
+      return;
+    }
+
     this.journalModel.update(prev => ({
       ...prev,
       lines: [...prev.lines, { ...this.jvLines }]
     }));
-    console.log("Full Data:", JSON.stringify(this.journalModel(), null, 2));
   }
 
   // ✅ Delete a line by index
   deleteLine(index: number): void {
+    const lines = this.journalModel().lines;
+
+    if (lines.length === 1) {
+      // reset instead of delete
+      this.journalModel.update(prev => ({
+        ...prev,
+        lines: [{ ...this.jvLines }]
+      }));
+      return;
+    }
+
     this.journalModel.update(prev => ({
       ...prev,
       lines: prev.lines.filter((_, i) => i !== index)
@@ -175,6 +213,41 @@ export class JvVoucherComponent {
       this.submit.set(false);
       return;
     }
+
+    //Checking Business Logical Errors
+    const errors = this.voucherMangerService.validate(this.journalModel().lines);
+    if (errors.length > 0) {
+      this.errors.set(errors);
+      this.submit.set(false);
+      this.formSubmitted.set(false);
+      return;
+    }
+
+    //Accessing Form Value
+    this.errors.set([]);
+    this.backendErrors.set({});
+    const formvalue = this.journalForm().value() as CreateJournalEntry;
+
+    //Making Api Call
+    this.dataService.create<CreateJournalEntry>('VoucherManager/jv', formvalue).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: () => {
+        this.base.globalMessage('success', 'Voucher Posted Successfully');
+
+        //Reset the form
+        this.journalForm().reset({ ...this.jvModel, lines: [{ ...this.jvLines }] });
+        this.submit.set(false);
+        this.formSubmitted.set(false);
+      },
+      error: (err) => {
+        if (err.error.errors) {
+          this.backendErrors.set(err.error.errors);
+        } else {
+          this.base.handleError(err, err.error.message);
+        }
+        this.submit.set(false);
+      }
+    });
+
   }
 
   //Global Search

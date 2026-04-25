@@ -2,7 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, catchError, filter, finalize, map, Observable, take, tap, throwError } from 'rxjs';
-import { LoginResponse} from '../Models/Auth.model';
+import { LoginResponse } from '../Models/Auth.model';
 import { MessageService } from 'primeng/api';
 import { DataLayerService } from './data-layer.service';
 
@@ -11,12 +11,12 @@ import { DataLayerService } from './data-layer.service';
 })
 export class BaseApiService {
   msg = inject(MessageService);
-  dataservice=inject(DataLayerService);
+  dataservice = inject(DataLayerService);
 
   isLoggedIn = signal<boolean>(this.hasToken());
   private isrefeshing = false;
   private refreshTokenSubject = new BehaviorSubject<string | null>(null);
-  constructor( private routee: Router) { }
+  constructor(private routee: Router) { }
 
   private hasToken(): boolean {
     return !!localStorage.getItem('access_token');
@@ -59,7 +59,7 @@ export class BaseApiService {
     return localStorage.getItem('access_token')
   }
 
-  handleError(error: unknown, fallbackMessage = 'An unexpected error occurred') {
+  handleError(error: unknown, fallbackMessage = 'An unexpected error occurred', sticky: boolean = true) {
     const err = error as HttpErrorResponse;
     if ((err as any).handled) return;
 
@@ -68,17 +68,18 @@ export class BaseApiService {
         severity: 'error',
         summary: 'Error',
         detail: fallbackMessage,
-        sticky: true
+        sticky: sticky
       });
     }
   }
- globalMessage(type: 'success' | 'error', message = 'An unexpected error occurred') {
-  this.msg.add({
-    severity: type,
-    summary: type === 'success' ? 'Success' : 'Error',
-    detail: message
-  });
-}
+  globalMessage(type: 'success' | 'error', message = 'An unexpected error occurred', sticky: boolean = true) {
+    this.msg.add({
+      severity: type,
+      summary: type === 'success' ? 'Success' : 'Error',
+      detail: message,
+      sticky: sticky
+    });
+  }
 
 
 }
