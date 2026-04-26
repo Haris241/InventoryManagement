@@ -88,7 +88,7 @@ export class CoaEditComponent {
     const formvalue = this.coaEditForm().value() as UpdateCOAPOST;
     this.dataService.edit('COA', this.coaId(), formvalue).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (res) => {
-        this.base.globalMessage('success', 'Chart Of Account Updated Successfully');
+        this.base.globalMessage('success', 'Chart Of Account Updated Successfully', false);
         this.submit.set(false);
         this.formSubmitted.set(false);
       },

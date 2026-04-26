@@ -3,6 +3,7 @@ export interface CreateCOA {
     parentId: number | null,
     kind: AccountKind | null,
     category: AccountType | null,
+    accountUsage: AccountUsageType | null,
     openingBalance: number
 }
 
@@ -77,3 +78,11 @@ export enum AccountKind {
     Ledger = 2
 }
 
+export enum AccountUsageType {
+    None = 1,
+    Cash = 2,
+    Bank = 3,
+    Customer = 4,
+    Supplier = 5,
+    Tax = 6
+}

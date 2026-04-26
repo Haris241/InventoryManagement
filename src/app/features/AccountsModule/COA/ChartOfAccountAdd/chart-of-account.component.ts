@@ -1,5 +1,5 @@
 import { Component, computed, DestroyRef, inject, signal } from '@angular/core';
-import { AccountKind, AccountType, COADropdownDto, CreateCOA } from '../../../../Models/Accouting/ChartOfAccount.model';
+import { AccountKind, AccountType, AccountUsageType, COADropdownDto, CreateCOA } from '../../../../Models/Accouting/ChartOfAccount.model';
 import { form, FormField, required, min } from '@angular/forms/signals';
 import { FormsModule } from '@angular/forms';
 import { BaseApiService } from '../../../../services/base-api.service';
@@ -47,10 +47,20 @@ export class ChartOfAccountComponent {
         category === AccountType.Liability ||
         category === AccountType.Equity);
   });
+  //AccountUsage
+  showAccountUsage = computed(() => {
+    const kind = this.coaForm.kind().value();
+    const category = this.coaForm.category().value();
+
+    return kind === AccountKind.Ledger &&
+      (category === AccountType.Asset ||
+        category === AccountType.Liability);
+  });
 
   //Dropdowns
   accoundKind = signal(enumToOptions(AccountKind, true));
   accountType = signal(enumToOptions(AccountType, true));
+  accountUsage = signal(enumToOptions(AccountUsageType, true));
   coaList = signal<COADropdownDto[]>([]);
 
   private readonly initialModel: CreateCOA = {
@@ -58,6 +68,7 @@ export class ChartOfAccountComponent {
     parentId: null,
     kind: null,
     category: null,
+    accountUsage: null,
     openingBalance: 0
   };
   //Signal Model For FormData
@@ -114,7 +125,7 @@ export class ChartOfAccountComponent {
     //Making Api Call
     this.dataService.createResponse<CreateCOA, COADropdownDto>('COA', formvalue).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (newAccount) => {
-        this.base.globalMessage('success', 'Chart Of Account Added Successfully');
+        this.base.globalMessage('success', 'Chart Of Account Added Successfully', false);
 
         //Append the list without hitting db for Groups
         if (formvalue.kind == AccountKind.Group) {

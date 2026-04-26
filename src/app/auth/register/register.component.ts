@@ -98,7 +98,7 @@ export class RegisterComponent {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
-          this.base.globalMessage('success', 'User Registered Successfully');
+          this.base.globalMessage('success', 'User Registered Successfully', false);
           this.submit.set(false);
           this.formSubmitted.set(false);
         },

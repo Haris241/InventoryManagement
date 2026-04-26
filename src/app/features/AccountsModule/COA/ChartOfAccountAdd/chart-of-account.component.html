@@ -74,6 +74,18 @@
             </app-field-errorS>
         </div>
         }
+        @if(showAccountUsage()){
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <p-select [(ngModel)]="coaModel().accountUsage" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('accountUsage',$event)" [options]="accountUsage()"
+                        optionLabel="name" optionValue="value" class="w-full" />
+                    <label for="accountUsage">Account Usage</label>
+                </div>
+            </p-floatLabel>
+        </div>
+        }
 
         <div class="w-full flex justify-center m-3">
             <button class="global-button" type="submit" [disabled]="submit()">
