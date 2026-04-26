@@ -36,7 +36,7 @@
                 <div class="lg:w-8/12 w-full">
                     <input pInputText pSize="small" id="narration" autocomplete="off" type="text" class="w-full"
                         [formField]="journalForm.narration">
-                    <label for="narration">Narration</label>
+                    <label for="narration" class="required">Narration</label>
                 </div>
             </p-floatLabel>
             <app-field-errorS [field]="journalForm.narration" [submit]="formSubmitted()"

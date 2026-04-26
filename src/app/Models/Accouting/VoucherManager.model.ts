@@ -4,7 +4,7 @@ export interface CreateJournalEntry {
     narration: string;
     category: JournalCategory;
     sourceType: SourceType;
-    sourceId: string;
+    sourceId: string | null;
     lines: CreateJournalEntryLine[];
 }
 export interface CreateJournalEntryLine {
@@ -14,7 +14,7 @@ export interface CreateJournalEntryLine {
     credit: number;
     currencyCode: string;
     exchangeRate: number;
-    relatedEntityId: string;
+    relatedEntityId: string | null;
     referenceNo: string;
 }
 export interface AccountingLine {

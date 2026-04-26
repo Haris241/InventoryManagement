@@ -89,7 +89,7 @@ export class JvVoucherComponent {
     credit: 0,
     currencyCode: '',
     exchangeRate: 1,
-    relatedEntityId: '',
+    relatedEntityId: null,
     referenceNo: ''
   };
 
@@ -100,7 +100,7 @@ export class JvVoucherComponent {
     narration: '',
     category: JournalCategory.Normal,
     sourceType: SourceType.Manual,
-    sourceId: '',
+    sourceId: null,
     lines: [{ ...this.jvLines }]
   };
 
@@ -113,6 +113,7 @@ export class JvVoucherComponent {
     required(schema.voucherType, { message: 'Voucher Type is required' });
     required(schema.postingDate, { message: 'Posting Date is required' });
     required(schema.category, { message: 'Category is required' });
+    required(schema.narration, { message: 'Narration is required' });
 
     // Nested lines validation
     applyEach(schema.lines, (line) => {
@@ -171,6 +172,7 @@ export class JvVoucherComponent {
       line.chartOfAccountId().markAsTouched();
       line.debit().markAsTouched();
       line.credit().markAsTouched();
+
       return;
     }
 
@@ -231,8 +233,7 @@ export class JvVoucherComponent {
     //Making Api Call
     this.dataService.create<CreateJournalEntry>('VoucherManager/jv', formvalue).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
-        this.base.globalMessage('success', 'Voucher Posted Successfully');
-
+        this.base.globalMessage('success', 'Voucher Posted Successfully', false);
         //Reset the form
         this.journalForm().reset({ ...this.jvModel, lines: [{ ...this.jvLines }] });
         this.submit.set(false);
