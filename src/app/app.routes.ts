@@ -76,10 +76,10 @@ export const routes: Routes = [
                         path: 'jv', loadComponent: () => import('./features/AccountsModule/VoucherManager/VoucherTypes/jv-voucher/jv-voucher.component').then(m => m.JvVoucherComponent)
                     },
                     {
-                        path: 'cv', loadComponent: () => import('./features/AccountsModule/VoucherManager/VoucherTypes/cv-voucher/cv-voucher.component').then(m => m.CvVoucherComponent)
+                        path: 'cpv', loadComponent: () => import('./features/AccountsModule/VoucherManager/VoucherTypes/cpv-voucher/cpv-voucher.component').then(m => m.CpvVoucherComponent)
                     },
                     {
-                        path: 'bv', loadComponent: () => import('./features/AccountsModule/VoucherManager/VoucherTypes/bv-voucher/bv-voucher.component').then(m => m.BvVoucherComponent)
+                        path: 'bpv', loadComponent: () => import('./features/AccountsModule/VoucherManager/VoucherTypes/bpv-voucher/bpv-voucher.component').then(m => m.BpvVoucherComponent)
                     },
                     {
                         path: '', redirectTo: 'jv', pathMatch: 'full'
