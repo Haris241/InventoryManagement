@@ -82,6 +82,15 @@ export const routes: Routes = [
                         path: 'bpv', loadComponent: () => import('./features/AccountsModule/VoucherManager/VoucherTypes/bpv-voucher/bpv-voucher.component').then(m => m.BpvVoucherComponent)
                     },
                     {
+                        path: 'crv', loadComponent: () => import('./features/AccountsModule/VoucherManager/VoucherTypes/crv-voucher/crv-voucher.component').then(m => m.CrvVoucherComponent)
+                    },
+                    {
+                        path: 'brv', loadComponent: () => import('./features/AccountsModule/VoucherManager/VoucherTypes/brv-voucher/brv-voucher.component').then(m => m.BrvVoucherComponent)
+                    },
+                    {
+                        path: 'list', loadComponent: () => import('./features/AccountsModule/VoucherManager/VoucherList/voucher-list.component').then(m => m.VoucherListComponent)
+                    },
+                    {
                         path: '', redirectTo: 'jv', pathMatch: 'full'
                     }
                 ]

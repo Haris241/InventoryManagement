@@ -20,13 +20,13 @@
         <div class="lg:w-1/4 w-full mb-3">
             <p-floatLabel variant="on">
                 <div class="lg:w-8/12 w-full">
-                    <p-datepicker [(ngModel)]="journalModel().postingDate" [ngModelOptions]="{standalone: true}"
-                        (ngModelChange)="updateField('postingDate',$event)" view="date" dateFormat="dd/mm/yy"
-                        size="small" inputId="postingDate" class="w-full" />
-                    <label for="postingDate" class="required">Posting Date</label>
+                    <p-datepicker [(ngModel)]="journalModel().postingDateUI" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('postingDateUI',$event)" view="date" dateFormat="dd/mm/yy"
+                        size="small" inputId="postingDateUI" class="w-full" />
+                    <label for="postingDateUI" class="required">Posting Date</label>
                 </div>
             </p-floatLabel>
-            <app-field-errorS [field]="journalForm.postingDate" [submit]="formSubmitted()"
+            <app-field-errorS [field]="journalForm.postingDateUI" [submit]="formSubmitted()"
                 [backendErrors]="backendErrors()">
             </app-field-errorS>
         </div>

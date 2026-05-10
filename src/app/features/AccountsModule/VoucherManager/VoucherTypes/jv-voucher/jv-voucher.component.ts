@@ -8,7 +8,7 @@ import { FieldErrorSComponent } from "../../../../../shared/field-error-s/field-
 import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { DatePickerModule } from 'primeng/datepicker';
-import { enumToOptions } from '../../../../../shared/Utility';
+import { enumToOptions, toDateOnlyString } from '../../../../../shared/Utility';
 import { SelectModule } from 'primeng/select';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { PaginationService } from '../../../../../services/pagination.service';
@@ -96,7 +96,8 @@ export class JvVoucherComponent {
   //Intialize Main Object
   private readonly jvModel: CreateJournalEntry = {
     voucherType: VoucherType.Journal,
-    postingDate: new Date(),
+    postingDateUI: new Date(),
+    postingDate: '',
     narration: '',
     category: JournalCategory.Normal,
     sourceType: SourceType.Manual,
@@ -111,7 +112,7 @@ export class JvVoucherComponent {
   journalForm = form(this.journalModel, (schema) => {
     // Root validations
     required(schema.voucherType, { message: 'Voucher Type is required' });
-    required(schema.postingDate, { message: 'Posting Date is required' });
+    required(schema.postingDateUI, { message: 'Posting Date is required' });
     required(schema.category, { message: 'Category is required' });
     required(schema.narration, { message: 'Narration is required' });
 
@@ -229,6 +230,7 @@ export class JvVoucherComponent {
     this.errors.set([]);
     this.backendErrors.set({});
     const formvalue = this.journalForm().value() as CreateJournalEntry;
+    formvalue.postingDate = toDateOnlyString(formvalue.postingDateUI);
 
     //Making Api Call
     this.dataService.create<CreateJournalEntry>('VoucherManager/jv', formvalue).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({

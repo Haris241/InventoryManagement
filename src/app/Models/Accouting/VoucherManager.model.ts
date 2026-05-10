@@ -1,6 +1,7 @@
 export interface CreateJournalEntry {
     voucherType: VoucherType;
-    postingDate: Date;
+    postingDate: string | null;
+    postingDateUI: Date;
     narration: string;
     category: JournalCategory;
     sourceType: SourceType;
@@ -22,6 +23,30 @@ export interface AccountingLine {
     credit?: number;
     exchangeRate?: number;
 }
+export interface JournalEntrySearchDto {
+    accountId: number | null;
+    voucherId: number | null;
+    voucherType: VoucherType | null;
+    fromDate: Date | null;
+    toDate: Date | null;
+    fromDateUI: Date | null;
+    toDateUI: Date | null;
+    nextCursor: string | null;
+    previousCursor: string | null;
+}
+
+export interface JournalEntryListDto {
+    id: number;
+    voucherNo: number;
+    voucherType: VoucherType;
+    postingDate: Date;
+    narration: string;
+    totalDebit: number;
+    totalCredit: number;
+    createdAt: Date;
+}
+
+
 export enum JournalCategory {
     Normal = 1,
     Opening = 2,
