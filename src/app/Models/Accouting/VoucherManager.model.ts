@@ -27,8 +27,8 @@ export interface JournalEntrySearchDto {
     accountId: number | null;
     voucherId: number | null;
     voucherType: VoucherType | null;
-    fromDate: Date | null;
-    toDate: Date | null;
+    fromDate: string | null;
+    toDate: string | null;
     fromDateUI: Date | null;
     toDateUI: Date | null;
     nextCursor: string | null;
@@ -37,7 +37,7 @@ export interface JournalEntrySearchDto {
 
 export interface JournalEntryListDto {
     id: number;
-    voucherNo: number;
+    voucherNo: string;
     voucherType: VoucherType;
     postingDate: Date;
     narration: string;

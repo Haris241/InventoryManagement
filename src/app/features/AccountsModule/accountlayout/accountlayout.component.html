@@ -109,8 +109,8 @@
           @if (!isCollapsed() && isVoucherDropdown()) {
           <ul style="list-style: none; padding: 0; margin: 0;">
             <li class="ps-3">
-              <a class="nav-link  flex items-center " (click)="onSelectMobile()"
-                routerLink="/Accounts/voucherManager/list" routerLinkActive="active">
+              <a class="nav-link  flex items-center " (click)="onSelectMobile()" routerLink="/Accounts/voucherList"
+                routerLinkActive="active">
                 <span class="material-symbols-outlined">chevron_right</span>
                 @if (!isCollapsed()) {
                 <span class="custom-dropdown">Voucher List</span>
@@ -145,15 +145,6 @@
                 }
               </a>
             </li>
-            <!-- <li class="ps-3">
-              <a class="nav-link  flex items-center " (click)="onSelectMobile()"
-                routerLink="/Inventory/products" routerLinkActive="active">
-                <span class="material-symbols-outlined">chevron_right</span>
-                @if (!isCollapsed()) {
-                <span class="custom-dropdown">Product List</span>
-                }
-              </a>
-            </li> -->
           </ul>
           }
         </li>
