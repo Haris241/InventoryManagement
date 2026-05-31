@@ -1,7 +1,7 @@
 import { Component, computed, DestroyRef, inject, signal, WritableSignal } from '@angular/core';
 import { DataLayerService } from '../../../../../services/data-layer.service';
 import { BaseApiService } from '../../../../../services/base-api.service';
-import { CreateJournalEntry, CreateJournalEntryLine, JournalCategory, SourceType, VoucherType } from '../../../../../Models/Accouting/VoucherManager.model';
+import { ChequeStatus, CreateBankVoucher, CreateJournalEntry, CreateJournalEntryLine, JournalCategory, SourceType, VoucherType } from '../../../../../Models/Accouting/VoucherManager.model';
 import { applyEach, form, FormField, min, required, validate } from '@angular/forms/signals';
 import { FloatLabel } from "primeng/floatlabel";
 import { FieldErrorSComponent } from "../../../../../shared/field-error-s/field-error-s.component";
@@ -93,8 +93,16 @@ export class BpvVoucherComponent {
   };
 
   //Intialize Main Object
-  private readonly jvModel: CreateJournalEntry = {
-    voucherType: VoucherType.Journal,
+  private readonly jvModel: CreateBankVoucher = {
+    bankName: '',
+    bankAccountNumber: '',
+    bankBranch: '',
+    chequeNumber: '',
+    chequeDate: null,
+    chequeDateUI: null,
+    chequeStatus: null,
+    paymentMode: '',
+    voucherType: VoucherType.BankPayment,
     postingDateUI: new Date(),
     postingDate: '',
     narration: '',
@@ -105,11 +113,13 @@ export class BpvVoucherComponent {
   };
 
   //Intialize Main Object with Signal
-  journalModel = signal<CreateJournalEntry>(this.jvModel);
+  journalModel = signal<CreateBankVoucher>(this.jvModel);
 
   //validations
   journalForm = form(this.journalModel, (schema) => {
     // Root validations
+    required(schema.bankName, { message: 'Bank Name is required' });
+    required(schema.bankAccountNumber, { message: 'Bank Account Number is required' });
     required(schema.voucherType, { message: 'Voucher Type is required' });
     required(schema.postingDateUI, { message: 'Posting Date is required' });
     required(schema.category, { message: 'Category is required' });

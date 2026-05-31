@@ -25,7 +25,7 @@ export interface CreateBankVoucher extends CreateJournalEntry {
     chequeNumber: string;
     chequeDate: Date | null;
     chequeDateUI: Date | null;
-    chequeStatus: ChequeStatus;
+    chequeStatus: ChequeStatus | null;
     paymentMode: string;
 }
 
