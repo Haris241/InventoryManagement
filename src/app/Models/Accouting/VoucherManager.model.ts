@@ -18,6 +18,17 @@ export interface CreateJournalEntryLine {
     relatedEntityId: string | null;
     referenceNo: string;
 }
+export interface CreateBankVoucher extends CreateJournalEntry {
+    bankName: string;
+    bankAccountNumber: string;
+    bankBranch: string;
+    chequeNumber: string;
+    chequeDate: Date | null;
+    chequeDateUI: Date | null;
+    chequeStatus: ChequeStatus;
+    paymentMode: string;
+}
+
 export interface AccountingLine {
     debit?: number;
     credit?: number;
@@ -68,4 +79,11 @@ export enum VoucherType {
     Contra = 7,
     Purchase = 8,
     Sales = 9
+}
+export enum ChequeStatus {
+    Issued = 1,
+    Cleared = 2,
+    Bounced = 3,
+    Cancelled = 4,
+    PostDated = 5
 }
