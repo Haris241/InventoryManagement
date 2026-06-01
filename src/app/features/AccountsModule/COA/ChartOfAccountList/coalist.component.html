@@ -64,6 +64,7 @@
                     <th>Name</th>
                     <th>Category</th>
                     <th>Kind</th>
+                    <th>Account Usage</th>
                     <th>IsPostable</th>
                     <th>IsActive</th>
                     <th>CreatedAt</th>
@@ -76,6 +77,7 @@
                     <td>{{coa.name}}</td>
                     <td>{{coa.category}}</td>
                     <td>{{coa.kind}}</td>
+                    <td>{{coa.accountUsage}}</td>
                     <td>
                         <span class="status-dot" [ngClass]="coa.isPostable ? 'active' : 'inactive'"></span>
                     </td>
