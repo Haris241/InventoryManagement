@@ -1,16 +1,16 @@
 <!-- JV Create Form -->
-<form (ngSubmit)="createJV($event)">
+<form (ngSubmit)="createBPV($event)">
     <div class="flex flex-wrap global-div p-5">
         <div class="w-full mb-4">
             <h3 class="text-2xl font-semibold text-center mb-3">
-                <span class="gradient-heading">Add Journal Voucher</span>
+                <span class="gradient-heading">Add Bank Payment Voucher</span>
             </h3>
             <hr class="second-color">
         </div>
         <div class="lg:w-1/4 w-full mb-3">
             <p-floatLabel variant="on">
                 <div class="lg:w-8/12 w-full">
-                    <p-select [(ngModel)]="journalModel().voucherType" [ngModelOptions]="{standalone: true}"
+                    <p-select [(ngModel)]="bankbankJournalModel().voucherType" [ngModelOptions]="{standalone: true}"
                         (ngModelChange)="updateField('voucherType',$event)" [options]="voucherTypes()"
                         optionLabel="name" optionValue="value" class="w-full" readonly />
                     <label for="voucherType">Voucher Type</label>
@@ -20,13 +20,13 @@
         <div class="lg:w-1/4 w-full mb-3">
             <p-floatLabel variant="on">
                 <div class="lg:w-8/12 w-full">
-                    <p-datepicker [(ngModel)]="journalModel().postingDateUI" [ngModelOptions]="{standalone: true}"
-                        (ngModelChange)="updateField('postingDateUI',$event)" view="date" dateFormat="dd/mm/yy"
-                        size="small" inputId="postingDateUI" class="w-full" />
+                    <p-datepicker [(ngModel)]="bankbankJournalModel().postingDateUI"
+                        [ngModelOptions]="{standalone: true}" (ngModelChange)="updateField('postingDateUI',$event)"
+                        view="date" dateFormat="dd/mm/yy" size="small" inputId="postingDateUI" class="w-full" />
                     <label for="postingDateUI" class="required">Posting Date</label>
                 </div>
             </p-floatLabel>
-            <app-field-errorS [field]="journalForm.postingDateUI" [submit]="formSubmitted()"
+            <app-field-errorS [field]="bpvForm.postingDateUI" [submit]="formSubmitted()"
                 [backendErrors]="backendErrors()">
             </app-field-errorS>
         </div>
@@ -35,13 +35,84 @@
             <p-floatLabel variant="on">
                 <div class="lg:w-8/12 w-full">
                     <input pInputText pSize="small" id="narration" autocomplete="off" type="text" class="w-full"
-                        [formField]="journalForm.narration">
+                        [formField]="bpvForm.narration">
                     <label for="narration" class="required">Narration</label>
                 </div>
             </p-floatLabel>
-            <app-field-errorS [field]="journalForm.narration" [submit]="formSubmitted()"
+            <app-field-errorS [field]="bpvForm.narration" [submit]="formSubmitted()" [backendErrors]="backendErrors()">
+            </app-field-errorS>
+        </div>
+
+        <!--Bank Details-->
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <input pInputText pSize="small" id="bankName" autocomplete="off" type="text" class="w-full"
+                        [formField]="bpvForm.bankName">
+                    <label for="bankName" class="required">Bank Name</label>
+                </div>
+            </p-floatLabel>
+            <app-field-errorS [field]="bpvForm.bankName" [submit]="formSubmitted()" [backendErrors]="backendErrors()">
+            </app-field-errorS>
+        </div>
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <input pInputText pSize="small" id="bankAccountNumber" autocomplete="off" type="text" class="w-full"
+                        [formField]="bpvForm.bankAccountNumber">
+                    <label for="bankAccountNumber" class="required">Account Number</label>
+                </div>
+            </p-floatLabel>
+            <app-field-errorS [field]="bpvForm.bankAccountNumber" [submit]="formSubmitted()"
                 [backendErrors]="backendErrors()">
             </app-field-errorS>
+        </div>
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <input pInputText pSize="small" id="bankBranch" autocomplete="off" type="text" class="w-full"
+                        [formField]="bpvForm.bankBranch">
+                    <label for="bankBranch">Branch</label>
+                </div>
+            </p-floatLabel>
+        </div>
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <input pInputText pSize="small" id="chequeNumber" autocomplete="off" type="text" class="w-full"
+                        [formField]="bpvForm.chequeNumber">
+                    <label for="chequeNumber">Cheque Number</label>
+                </div>
+            </p-floatLabel>
+        </div>
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <p-datepicker [(ngModel)]="bankbankJournalModel().chequeDateUI"
+                        [ngModelOptions]="{standalone: true}" (ngModelChange)="updateField('chequeDateUI',$event)"
+                        view="date" dateFormat="dd/mm/yy" size="small" inputId="chequeDateUI" class="w-full" />
+                    <label for="chequeDateUI">Cheque Date</label>
+                </div>
+            </p-floatLabel>
+        </div>
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <p-select [(ngModel)]="bankbankJournalModel().chequeStatus" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('chequeStatus',$event)" [options]="chequeStatuses()"
+                        optionLabel="name" optionValue="value" class="w-full" />
+                    <label for="chequeStatus">Cheque Status</label>
+                </div>
+            </p-floatLabel>
+        </div>
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <input pInputText pSize="small" id="paymentMode" autocomplete="off" type="text" class="w-full"
+                        [formField]="bpvForm.paymentMode">
+                    <label for="paymentMode">Payment Mode</label>
+                </div>
+            </p-floatLabel>
         </div>
 
         <div class="w-full mb-3">
@@ -49,10 +120,100 @@
                 <p class="note-banner">Enter at least 3 characters to search Account Below</p>
             </div>
         </div>
+
+        <!-- Bank Usage Accounts -->
         <div class="w-full">
             <div class="w-full mt-3">
                 <h4 class="text-lg font-semibold mb-2 float-left">
-                    <span>Journal Voucher Lines</span>
+                    <span>Bank Account Line</span>
+                </h4>
+            </div>
+        </div>
+
+        <!-- Bank Account Line table -->
+        <div class="overflow-auto">
+            <table class="w-full border-collapse" style="table-layout: fixed; min-width: 1000px;">
+                <thead>
+                    <tr class="text-left border-b second-color">
+                        <th class="p-2">Account</th>
+                        <th class="p-2">Description</th>
+                        <th class="p-2">Credit</th>
+                        <th class="p-2">Currency</th>
+                        <th class="p-2">Exchange Rate</th>
+                        <th class="p-2">Reference No</th>
+                        <th class="p-2 text-center">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="border-b second-color">
+
+                        <!-- Account (Banks Dropdown) -->
+                        <td class="p-2 align-top">
+                            <p-select [(ngModel)]="bpvForm.lines[0].chartOfAccountId"
+                                [ngModelOptions]="{standalone: true}"
+                                (ngModelChange)="updateLineField(0, 'chartOfAccountId', $event)"
+                                [options]="bankUsageAccounts()" optionLabel="name" optionValue="value" class="w-full"
+                                appendTo="body" fluid size="small" />
+                            <app-field-errorS [field]="bpvForm.lines[0].chartOfAccountId" [submit]="formSubmitted()"
+                                [backendErrors]="backendErrors()">
+                            </app-field-errorS>
+                        </td>
+
+                        <!-- Description -->
+                        <td class="p-2 align-top">
+                            <input pInputText pSize="small" autocomplete="off" type="text" class="w-full"
+                                [formField]="bpvForm.lines[0].description">
+                        </td>
+
+
+                        <!-- Credit -->
+                        <td class="p-2 align-top">
+                            <input pInputText pSize="small" autocomplete="off" type="number" class="w-full"
+                                [formField]="bpvForm.lines[0].credit">
+                            <app-field-errorS [field]="bpvForm.lines[0].credit" [submit]="formSubmitted()"
+                                [backendErrors]="backendErrors()">
+                            </app-field-errorS>
+                        </td>
+
+                        <!-- Currency -->
+                        <td class="p-2 align-top">
+                            <p-select [ngModel]="bpvForm.lines[0].currencyCode" [ngModelOptions]="{standalone: true}"
+                                (ngModelChange)="updateLineField(0, 'currencyCode', $event)" [options]="currencies()"
+                                optionLabel="name" optionValue="code" [filter]="true" filterBy="name" class="w-full"
+                                appendTo="body" size="small">
+                            </p-select>
+                        </td>
+
+                        <!-- Exchange Rate -->
+                        <td class="p-2 align-top">
+                            <input pInputText pSize="small" autocomplete="off" type="number" class="w-full"
+                                [formField]="bpvForm.lines[0].exchangeRate">
+                        </td>
+
+                        <!-- Reference No -->
+                        <td class="p-2 align-top">
+                            <input pInputText pSize="small" autocomplete="off" type="text" class="w-full"
+                                [formField]="bpvForm.lines[0].referenceNo">
+                        </td>
+
+                        <!-- Empty for allining same design as below lines-->
+                        <td class="p-2 text-center align-top">
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+
+            </table>
+
+        </div>
+
+        <!-- Other Accounts Lines (Debit only for BPV) -->
+        <div class="w-full">
+            <div class="w-full mt-3">
+                <h4 class="text-lg font-semibold mb-2 float-left">
+                    <span>Expense / Payment Lines</span>
                 </h4>
                 <!--add line button -->
                 <button type="button" class="global-button float-right" (click)="addLine()">
@@ -69,7 +230,6 @@
                         <th class="p-2">Account</th>
                         <th class="p-2">Description</th>
                         <th class="p-2">Debit</th>
-                        <th class="p-2">Credit</th>
                         <th class="p-2">Currency</th>
                         <th class="p-2">Exchange Rate</th>
                         <th class="p-2">Reference No</th>
@@ -77,18 +237,19 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @for(line of journalModel().lines; track $index) {
+                    @for(line of bankbankJournalModel().lines; track $index) {
+                    @if($index > 0) {
                     <tr class="border-b second-color">
 
                         <!-- Account (AutoComplete) -->
                         <td class="p-2 align-top">
                             <p-autoComplete [(ngModel)]="line.chartOfAccountId" [ngModelOptions]="{standalone: true}"
                                 (ngModelChange)="updateLineField($index, 'chartOfAccountId', $event)"
-                                (completeMethod)="SearchDropDown($event, coaSearch.searchterm)" optionLabel="name"
-                                optionValue="id" [suggestions]="coaSearchList()" [showClear]="true" appendTo="body"
+                                (completeMethod)="SearchDropDown($event, nonBankCoa.searchterm)" optionLabel="name"
+                                optionValue="id" [suggestions]="nonBankCoaSearchList()" [showClear]="true" appendTo="body"
                                 fluid size="small">
                             </p-autoComplete>
-                            <app-field-errorS [field]="journalForm.lines[$index].chartOfAccountId"
+                            <app-field-errorS [field]="bpvForm.lines[$index].chartOfAccountId"
                                 [submit]="formSubmitted()" [backendErrors]="backendErrors()">
                             </app-field-errorS>
                         </td>
@@ -96,23 +257,14 @@
                         <!-- Description -->
                         <td class="p-2 align-top">
                             <input pInputText pSize="small" autocomplete="off" type="text" class="w-full"
-                                [formField]="journalForm.lines[$index].description">
+                                [formField]="bpvForm.lines[$index].description">
                         </td>
 
                         <!-- Debit -->
                         <td class="p-2">
                             <input pInputText pSize="small" autocomplete="off" type="number" class="w-full"
-                                [formField]="journalForm.lines[$index].debit">
-                            <app-field-errorS [field]="journalForm.lines[$index].debit" [submit]="formSubmitted()"
-                                [backendErrors]="backendErrors()">
-                            </app-field-errorS>
-                        </td>
-
-                        <!-- Credit -->
-                        <td class="p-2 align-top">
-                            <input pInputText pSize="small" autocomplete="off" type="number" class="w-full"
-                                [formField]="journalForm.lines[$index].credit">
-                            <app-field-errorS [field]="journalForm.lines[$index].credit" [submit]="formSubmitted()"
+                                [formField]="bpvForm.lines[$index].debit">
+                            <app-field-errorS [field]="bpvForm.lines[$index].debit" [submit]="formSubmitted()"
                                 [backendErrors]="backendErrors()">
                             </app-field-errorS>
                         </td>
@@ -129,13 +281,13 @@
                         <!-- Exchange Rate -->
                         <td class="p-2 align-top">
                             <input pInputText pSize="small" autocomplete="off" type="number" class="w-full"
-                                [formField]="journalForm.lines[$index].exchangeRate">
+                                [formField]="bpvForm.lines[$index].exchangeRate">
                         </td>
 
                         <!-- Reference No -->
                         <td class="p-2 align-top">
                             <input pInputText pSize="small" autocomplete="off" type="text" class="w-full"
-                                [formField]="journalForm.lines[$index].referenceNo">
+                                [formField]="bpvForm.lines[$index].referenceNo">
                         </td>
 
                         <!-- Delete -->
@@ -146,6 +298,7 @@
                         </td>
 
                     </tr>
+                    }
                     }
                 </tbody>
 

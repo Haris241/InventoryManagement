@@ -26,8 +26,11 @@ import { voucherMangerService } from '../../../../../services/Accounting/voucher
 export class BpvVoucherComponent {
   //Initial Call
   currencies = signal<CurrencyDto[]>([]);
+  bankUsageAccounts = signal<AutoDropdown[]>([]);
+
   ngOnInit(): void {
     this.loadCurrencies();
+    this.loadBankUsageAccounts();
   }
 
   loadCurrencies(): void {
@@ -41,6 +44,17 @@ export class BpvVoucherComponent {
     });
   }
 
+  //Load Bank Usage Acccounts
+  loadBankUsageAccounts(): void {
+    this.dataService.getAll<AutoDropdown[]>("Dropdowns/BankUsageAccounts").pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: (res) => {
+        this.bankUsageAccounts.set(res);
+      },
+      error: (err) => {
+        this.base.handleError(err, err.error.message);
+      }
+    });
+  }
   //properties
   private dataService = inject(DataLayerService);
   private destroyRef = inject(DestroyRef);
@@ -52,33 +66,36 @@ export class BpvVoucherComponent {
   backendErrors = signal<Record<string, string[]>>({});
   errors = signal<string[]>([]);
   voucherTypes = signal(enumToOptions(VoucherType, true));
+  chequeStatuses = signal(enumToOptions(ChequeStatus, true));
 
   //Computed Totals
   totalDebit = computed(() =>
-    this.journalModel().lines.reduce((sum, line) => sum + (line.debit || 0), 0)
+    this.bankbankJournalModel().lines.reduce((sum, line) => sum + (line.debit || 0), 0)
   );
 
   totalCredit = computed(() =>
-    this.journalModel().lines.reduce((sum, line) => sum + (line.credit || 0), 0)
+    this.bankbankJournalModel().lines.reduce((sum, line) => sum + (line.credit || 0), 0)
   );
 
   baseTotalDebit = computed(() =>
-    this.journalModel().lines.reduce(
+    this.bankbankJournalModel().lines.reduce(
       (sum, l) => sum + ((l.debit || 0) * (l.exchangeRate || 1)),
       0
     )
   );
 
   baseTotalCredit = computed(() =>
-    this.journalModel().lines.reduce(
+    this.bankbankJournalModel().lines.reduce(
       (sum, l) => sum + ((l.credit || 0) * (l.exchangeRate || 1)),
       0
     )
   );
 
+  
+
   //for Global Search
-  coaSearch = this.pagination.autoSearchDropdown<AutoDropdown>('Dropdowns/VoucherAccounts');
-  coaSearchList = this.coaSearch.result;
+  nonBankCoa = this.pagination.autoSearchDropdown<AutoDropdown>('Dropdowns/VoucherAccounts');
+  nonBankCoaSearchList = this.nonBankCoa.result;
 
   //Initialize Lines
   private readonly jvLines: CreateJournalEntryLine = {
@@ -89,11 +106,12 @@ export class BpvVoucherComponent {
     currencyCode: '',
     exchangeRate: 1,
     relatedEntityId: null,
-    referenceNo: ''
+    referenceNo: '',
+    isMainLine:false
   };
 
-  //Intialize Main Object
-  private readonly jvModel: CreateBankVoucher = {
+  //Intialize Main Object..The Lines are Multipe ...one for Bank and one for Other
+  private readonly bpvModel: CreateBankVoucher = {
     bankName: '',
     bankAccountNumber: '',
     bankBranch: '',
@@ -109,14 +127,15 @@ export class BpvVoucherComponent {
     category: JournalCategory.Normal,
     sourceType: SourceType.Manual,
     sourceId: null,
-    lines: [{ ...this.jvLines }]
+    lines: [{ ...this.jvLines ,isMainLine:true},{...this.jvLines,isMainLine:false}]
   };
 
   //Intialize Main Object with Signal
-  journalModel = signal<CreateBankVoucher>(this.jvModel);
+  bankbankJournalModel = signal<CreateBankVoucher>(this.bpvModel);
+  
 
   //validations
-  journalForm = form(this.journalModel, (schema) => {
+  bpvForm = form(this.bankbankJournalModel, (schema) => {
     // Root validations
     required(schema.bankName, { message: 'Bank Name is required' });
     required(schema.bankAccountNumber, { message: 'Bank Account Number is required' });
@@ -131,37 +150,43 @@ export class BpvVoucherComponent {
       min(line.debit, 0, { message: 'Debit must be >= 0' });
       min(line.credit, 0, { message: 'Credit must be >= 0' });
 
-      // ✅ Cross-field validation attached to ONE field
-      validate(line.debit, ({ value, valueOf }) => {
-        const debit = value();
-        const credit = valueOf(line.credit);
+       // ✅ Validation for bpv for credit and debit
+       validate(line.credit, ({ value, valueOf }) => {
 
-        if ((debit > 0 && credit > 0) || (debit === 0 && credit === 0)) {
+        if (valueOf(line.isMainLine) && Number(value() ?? 0) <= 0) {
           return {
-            kind: 'debitCredit',
-            message: 'Enter either Debit OR Credit'
+            kind: 'bankCredit',
+            message: 'Bank line credit is required'
           };
         }
-
+    
+        return null;
+      });
+    
+      validate(line.debit, ({ value, valueOf }) => {
+    
+        if (!valueOf(line.isMainLine) && Number(value() ?? 0) <= 0) {
+          return {
+            kind: 'expenseDebit',
+            message: 'Debit is required'
+          };
+        }
+    
         return null;
       });
     });
   });
 
   //Method to Update Fields For Non supporting Primeng Fields
-  updateField<K extends keyof CreateJournalEntry>(field: K, value: CreateJournalEntry[K]) {
-    this.journalModel.update(prev => ({
+  updateField<K extends keyof CreateBankVoucher>(field: K, value: CreateBankVoucher[K]) {
+    this.bankbankJournalModel.update(prev => ({
       ...prev,
       [field]: value
     }));
   }
   // ✅ Update a specific field inside a specific line by index
-  updateLineField<K extends keyof CreateJournalEntryLine>(
-    index: number,
-    field: K,
-    value: CreateJournalEntryLine[K]
-  ) {
-    this.journalModel.update(prev => {
+  updateLineField<K extends keyof CreateJournalEntryLine>(index: number,field: K,value: CreateJournalEntryLine[K]) {
+    this.bankbankJournalModel.update(prev => {
       const lines = [...prev.lines];           // shallow copy the array
       lines[index] = { ...lines[index], [field]: value }; // copy the line, update field
       return { ...prev, lines };
@@ -171,8 +196,8 @@ export class BpvVoucherComponent {
   // ✅ Add a new empty line
   addLine(): void {
 
-    const index = this.journalModel().lines.length - 1;
-    const line = this.journalForm.lines[index];
+    const index = this.bankbankJournalModel().lines.length - 1;
+    const line = this.bpvForm.lines[index];
 
     //Mark required field 
     const isInvalid = line.chartOfAccountId().invalid() || line.debit().invalid() || line.credit().invalid();
@@ -186,7 +211,7 @@ export class BpvVoucherComponent {
       return;
     }
 
-    this.journalModel.update(prev => ({
+    this.bankbankJournalModel.update(prev => ({
       ...prev,
       lines: [...prev.lines, { ...this.jvLines }]
     }));
@@ -194,25 +219,33 @@ export class BpvVoucherComponent {
 
   // ✅ Delete a line by index
   deleteLine(index: number): void {
-    const lines = this.journalModel().lines;
+    
+    //Protecting Deleting Bank Line
+    if(index === 0){
+      return;
+    }
 
-    if (lines.length === 1) {
-      // reset instead of delete
-      this.journalModel.update(prev => ({
+    const lines = this.bankbankJournalModel().lines;
+    //Make sure it is starting from next line
+    if (lines.length === 2) {
+      this.bankbankJournalModel.update(prev => ({
         ...prev,
-        lines: [{ ...this.jvLines }]
+        lines: [
+          prev.lines[0], // keep bank line
+          { ...this.jvLines, isMainLine: false }
+        ]
       }));
       return;
     }
 
-    this.journalModel.update(prev => ({
+    this.bankbankJournalModel.update(prev => ({
       ...prev,
       lines: prev.lines.filter((_, i) => i !== index)
     }));
   }
 
   //Create method
-  createJV(event: Event) {
+  createBPV(event: Event) {
     if (this.submit()) {
       return;
     }
@@ -220,14 +253,14 @@ export class BpvVoucherComponent {
     event.preventDefault();
     this.submit.set(true);
     this.formSubmitted.set(true);
-    if (this.journalForm().invalid()) {
-      this.journalForm().markAsTouched();
+    if (this.bpvForm().invalid()) {
+      this.bpvForm().markAsTouched();
       this.submit.set(false);
       return;
     }
 
     //Checking Business Logical Errors
-    const errors = this.voucherMangerService.validate(this.journalModel().lines);
+    const errors = this.voucherMangerService.validate(this.bankbankJournalModel().lines);
     if (errors.length > 0) {
       this.errors.set(errors);
       this.submit.set(false);
@@ -238,15 +271,15 @@ export class BpvVoucherComponent {
     //Accessing Form Value
     this.errors.set([]);
     this.backendErrors.set({});
-    const formvalue = this.journalForm().value() as CreateJournalEntry;
+    const formvalue = this.bpvForm().value() as CreateBankVoucher;
     formvalue.postingDate = toDateOnlyString(formvalue.postingDateUI);
 
     //Making Api Call
-    this.dataService.create<CreateJournalEntry>('VoucherManager/jv', formvalue).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+    this.dataService.create<CreateBankVoucher>('VoucherManager/bpv', formvalue).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
         this.base.globalMessage('success', 'Voucher Posted Successfully', false);
         //Reset the form
-        this.journalForm().reset({ ...this.jvModel, lines: [{ ...this.jvLines }] });
+        this.bpvForm().reset({ ...this.bpvModel, lines: [{ ...this.jvLines,isMainLine:true},{ ...this.jvLines,isMainLine:false}] });
         this.submit.set(false);
         this.formSubmitted.set(false);
       },

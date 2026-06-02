@@ -17,6 +17,7 @@ export interface CreateJournalEntryLine {
     exchangeRate: number;
     relatedEntityId: string | null;
     referenceNo: string;
+    isMainLine:boolean;
 }
 export interface CreateBankVoucher extends CreateJournalEntry {
     bankName: string;

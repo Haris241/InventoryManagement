@@ -90,7 +90,8 @@ export class JvVoucherComponent {
     currencyCode: '',
     exchangeRate: 1,
     relatedEntityId: null,
-    referenceNo: ''
+    referenceNo: '',
+    isMainLine:false
   };
 
   //Intialize Main Object
