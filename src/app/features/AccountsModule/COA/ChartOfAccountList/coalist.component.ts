@@ -27,7 +27,7 @@ export class COAListComponent {
   dataService = inject(DataLayerService);
 
   CoaList = signal<COAList[]>([]);
-  coaSearch = this.pagination.autoSearchDropdown<AutoDropdown>('Dropdowns/COA');
+  coaSearch = this.pagination.autoSearchDropdown<AutoDropdown>('AccountsDropDown/COA');
   coaSearchList = this.coaSearch.result;
 
   //pagination signals

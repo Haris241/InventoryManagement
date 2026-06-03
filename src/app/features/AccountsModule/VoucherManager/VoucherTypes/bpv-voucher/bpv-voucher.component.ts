@@ -46,7 +46,7 @@ export class BpvVoucherComponent {
 
   //Load Bank Usage Acccounts
   loadBankUsageAccounts(): void {
-    this.dataService.getAll<AutoDropdown[]>("Dropdowns/BankUsageAccounts").pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+    this.dataService.getAll<AutoDropdown[]>("AccountsDropDown/BankUsageAccounts").pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (res) => {
         this.bankUsageAccounts.set(res);
       },
@@ -91,10 +91,10 @@ export class BpvVoucherComponent {
     )
   );
 
-  
+
 
   //for Global Search
-  nonBankCoa = this.pagination.autoSearchDropdown<AutoDropdown>('Dropdowns/VoucherAccounts');
+  nonBankCoa = this.pagination.autoSearchDropdown<AutoDropdown>('AccountsDropDown/NonBankCashAccounts');
   nonBankCoaSearchList = this.nonBankCoa.result;
 
   //Initialize Lines
@@ -107,7 +107,7 @@ export class BpvVoucherComponent {
     exchangeRate: 1,
     relatedEntityId: null,
     referenceNo: '',
-    isMainLine:false
+    isMainLine: false
   };
 
   //Intialize Main Object..The Lines are Multipe ...one for Bank and one for Other
@@ -127,12 +127,12 @@ export class BpvVoucherComponent {
     category: JournalCategory.Normal,
     sourceType: SourceType.Manual,
     sourceId: null,
-    lines: [{ ...this.jvLines ,isMainLine:true},{...this.jvLines,isMainLine:false}]
+    lines: [{ ...this.jvLines, isMainLine: true }, { ...this.jvLines, isMainLine: false }]
   };
 
   //Intialize Main Object with Signal
   bankbankJournalModel = signal<CreateBankVoucher>(this.bpvModel);
-  
+
 
   //validations
   bpvForm = form(this.bankbankJournalModel, (schema) => {
@@ -150,8 +150,8 @@ export class BpvVoucherComponent {
       min(line.debit, 0, { message: 'Debit must be >= 0' });
       min(line.credit, 0, { message: 'Credit must be >= 0' });
 
-       // ✅ Validation for bpv for credit and debit
-       validate(line.credit, ({ value, valueOf }) => {
+      // ✅ Validation for bpv for credit and debit
+      validate(line.credit, ({ value, valueOf }) => {
 
         if (valueOf(line.isMainLine) && Number(value() ?? 0) <= 0) {
           return {
@@ -159,19 +159,19 @@ export class BpvVoucherComponent {
             message: 'Bank line credit is required'
           };
         }
-    
+
         return null;
       });
-    
+
       validate(line.debit, ({ value, valueOf }) => {
-    
+
         if (!valueOf(line.isMainLine) && Number(value() ?? 0) <= 0) {
           return {
             kind: 'expenseDebit',
             message: 'Debit is required'
           };
         }
-    
+
         return null;
       });
     });
@@ -185,7 +185,7 @@ export class BpvVoucherComponent {
     }));
   }
   // ✅ Update a specific field inside a specific line by index
-  updateLineField<K extends keyof CreateJournalEntryLine>(index: number,field: K,value: CreateJournalEntryLine[K]) {
+  updateLineField<K extends keyof CreateJournalEntryLine>(index: number, field: K, value: CreateJournalEntryLine[K]) {
     this.bankbankJournalModel.update(prev => {
       const lines = [...prev.lines];           // shallow copy the array
       lines[index] = { ...lines[index], [field]: value }; // copy the line, update field
@@ -219,9 +219,9 @@ export class BpvVoucherComponent {
 
   // ✅ Delete a line by index
   deleteLine(index: number): void {
-    
+
     //Protecting Deleting Bank Line
-    if(index === 0){
+    if (index === 0) {
       return;
     }
 
@@ -279,7 +279,7 @@ export class BpvVoucherComponent {
       next: () => {
         this.base.globalMessage('success', 'Voucher Posted Successfully', false);
         //Reset the form
-        this.bpvForm().reset({ ...this.bpvModel, lines: [{ ...this.jvLines,isMainLine:true},{ ...this.jvLines,isMainLine:false}] });
+        this.bpvForm().reset({ ...this.bpvModel, lines: [{ ...this.jvLines, isMainLine: true }, { ...this.jvLines, isMainLine: false }] });
         this.submit.set(false);
         this.formSubmitted.set(false);
       },

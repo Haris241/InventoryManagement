@@ -22,7 +22,7 @@ export class ChartOfAccountComponent {
 
   //load COA Lis when user comes to page
   constructor() {
-    this.dataService.getAllSimple<COADropdownDto>('Dropdowns/COAList').pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+    this.dataService.getAllSimple<COADropdownDto>('AccountsDropDown/COAList').pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (res) => {
         const formatted = res.map(acc => ({ ...acc, displayName: `${' - '.repeat(acc.level)}${acc.name}` }));
         this.coaList.set(formatted);

@@ -28,7 +28,7 @@ export class VoucherListComponent {
   dataService = inject(DataLayerService);
 
   voucherList = signal<JournalEntryListDto[]>([]);
-  coaSearch = this.pagination.autoSearchDropdown<AutoDropdown>('Dropdowns/VoucherAccounts');
+  coaSearch = this.pagination.autoSearchDropdown<AutoDropdown>('AccountsDropDown/VoucherAccounts');
   coaSearchList = this.coaSearch.result;
   voucherNoSearch = this.pagination.autoSearchDropdown<AutoDropdown>('Dropdowns/Vouchers');
   voucherNoSearchList = this.voucherNoSearch.result;
