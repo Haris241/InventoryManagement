@@ -171,7 +171,7 @@
                             <input pInputText pSize="small" autocomplete="off" type="number" class="w-full"
                                 [formField]="brvForm.lines[0].debit">
                             <app-field-errorS [field]="brvForm.lines[0].debit" [submit]="formSubmitted()"
-                                [backendErrors]="backendErrors()">
+                                [backendErrors]="backendErrors()" [fieldPath]="'lines[0].debit'">
                             </app-field-errorS>
                         </td>
 
@@ -250,7 +250,8 @@
                                 appendTo="body" fluid size="small">
                             </p-autoComplete>
                             <app-field-errorS [field]="brvForm.lines[$index].chartOfAccountId"
-                                [submit]="formSubmitted()" [backendErrors]="backendErrors()">
+                                [submit]="formSubmitted()" [backendErrors]="backendErrors()"
+                                [fieldPath]="'lines[' + $index + '].chartOfAccountId'">
                             </app-field-errorS>
                         </td>
 
@@ -265,7 +266,7 @@
                             <input pInputText pSize="small" autocomplete="off" type="number" class="w-full"
                                 [formField]="brvForm.lines[$index].credit">
                             <app-field-errorS [field]="brvForm.lines[$index].credit" [submit]="formSubmitted()"
-                                [backendErrors]="backendErrors()">
+                                [backendErrors]="backendErrors()" [fieldPath]="'lines[' + $index + '].credit'">
                             </app-field-errorS>
                         </td>
 

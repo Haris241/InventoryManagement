@@ -171,7 +171,7 @@
                             <input pInputText pSize="small" autocomplete="off" type="number" class="w-full"
                                 [formField]="bpvForm.lines[0].credit">
                             <app-field-errorS [field]="bpvForm.lines[0].credit" [submit]="formSubmitted()"
-                                [backendErrors]="backendErrors()">
+                                [backendErrors]="backendErrors()" [fieldPath]="'lines[0].credit'">
                             </app-field-errorS>
                         </td>
 
@@ -266,7 +266,7 @@
                             <input pInputText pSize="small" autocomplete="off" type="number" class="w-full"
                                 [formField]="bpvForm.lines[$index].debit">
                             <app-field-errorS [field]="bpvForm.lines[$index].debit" [submit]="formSubmitted()"
-                                [backendErrors]="backendErrors()">
+                                [backendErrors]="backendErrors()" [fieldPath]="'lines[' + $index + '].debit'">
                             </app-field-errorS>
                         </td>
 
