@@ -48,7 +48,6 @@ export class BrvVoucherComponent {
   loadBankUsageAccounts(): void {
     this.dataService.getAll<AutoDropdown[]>("AccountsDropDown/BankUsageAccounts").pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (res) => {
-        console.log("Bank Accounts: ", res);
         this.bankUsageAccounts.set(res);
       },
       error: (err) => {

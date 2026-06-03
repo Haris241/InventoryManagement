@@ -89,7 +89,8 @@
                                 fluid size="small">
                             </p-autoComplete>
                             <app-field-errorS [field]="journalForm.lines[$index].chartOfAccountId"
-                                [submit]="formSubmitted()" [backendErrors]="backendErrors()">
+                                [submit]="formSubmitted()" [backendErrors]="backendErrors()"
+                                [fieldPath]="'lines[' + $index + '].chartOfAccountId'">
                             </app-field-errorS>
                         </td>
 
@@ -100,7 +101,7 @@
                         </td>
 
                         <!-- Debit -->
-                        <td class="p-2">
+                        <td class="p-2 align-top">
                             <input pInputText pSize="small" autocomplete="off" type="number" class="w-full"
                                 [formField]="journalForm.lines[$index].debit">
                             <app-field-errorS [field]="journalForm.lines[$index].debit" [submit]="formSubmitted()"

@@ -155,7 +155,7 @@
                                 [options]="bankUsageAccounts()" optionLabel="name" optionValue="id" class="w-full"
                                 appendTo="body" fluid size="small" />
                             <app-field-errorS [field]="bpvForm.lines[0].chartOfAccountId" [submit]="formSubmitted()"
-                                [backendErrors]="backendErrors()">
+                                [backendErrors]="backendErrors()" [fieldPath]="'lines[0].chartOfAccountId'">
                             </app-field-errorS>
                         </td>
 
@@ -250,7 +250,8 @@
                                 appendTo="body" fluid size="small">
                             </p-autoComplete>
                             <app-field-errorS [field]="bpvForm.lines[$index].chartOfAccountId"
-                                [submit]="formSubmitted()" [backendErrors]="backendErrors()">
+                                [submit]="formSubmitted()" [backendErrors]="backendErrors()"
+                                [fieldPath]="'lines[' + $index + '].chartOfAccountId'">
                             </app-field-errorS>
                         </td>
 
@@ -261,7 +262,7 @@
                         </td>
 
                         <!-- Debit -->
-                        <td class="p-2">
+                        <td class="p-2 align-top">
                             <input pInputText pSize="small" autocomplete="off" type="number" class="w-full"
                                 [formField]="bpvForm.lines[$index].debit">
                             <app-field-errorS [field]="bpvForm.lines[$index].debit" [submit]="formSubmitted()"

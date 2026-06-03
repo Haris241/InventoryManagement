@@ -15,6 +15,8 @@ export class FieldErrorSComponent {
   backendErrors = input.required<Record<string, string[]>>();
   // Signal indicating if the form was submitted
   submit = input<boolean>(false);
+  //for lines Error
+  fieldPath = input<string | null>(null);
 
   frontendError = computed(() => {
     const fieldSignal = this.field();
@@ -48,6 +50,13 @@ export class FieldErrorSComponent {
 
     // 2. Safety check for the field signal
     if (typeof fieldSignal !== 'function') return [];
+
+    //For Lines
+    const path = this.fieldPath();
+
+    if (path) {
+      return errors[path] ?? [];
+    }
 
     // 3. Execute the signal to get the state object
     const state = fieldSignal();
