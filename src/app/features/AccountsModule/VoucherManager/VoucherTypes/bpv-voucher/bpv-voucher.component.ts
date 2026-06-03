@@ -48,6 +48,7 @@ export class BpvVoucherComponent {
   loadBankUsageAccounts(): void {
     this.dataService.getAll<AutoDropdown[]>("AccountsDropDown/BankUsageAccounts").pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (res) => {
+        console.log("Bank Accounts: ", res);
         this.bankUsageAccounts.set(res);
       },
       error: (err) => {
@@ -200,13 +201,12 @@ export class BpvVoucherComponent {
     const line = this.bpvForm.lines[index];
 
     //Mark required field 
-    const isInvalid = line.chartOfAccountId().invalid() || line.debit().invalid() || line.credit().invalid();
+    const isInvalid = line.chartOfAccountId().invalid() || line.debit().invalid();
 
     if (isInvalid) {
       // only mark THIS line
       line.chartOfAccountId().markAsTouched();
       line.debit().markAsTouched();
-      line.credit().markAsTouched();
 
       return;
     }

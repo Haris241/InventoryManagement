@@ -1,4 +1,4 @@
-<!-- JV Create Form -->
+<!-- BPV Create Form -->
 <form (ngSubmit)="createBPV($event)">
     <div class="flex flex-wrap global-div p-5">
         <div class="w-full mb-4">
@@ -149,10 +149,10 @@
 
                         <!-- Account (Banks Dropdown) -->
                         <td class="p-2 align-top">
-                            <p-select [(ngModel)]="bpvForm.lines[0].chartOfAccountId"
+                            <p-select [(ngModel)]="bankbankJournalModel().lines[0].chartOfAccountId"
                                 [ngModelOptions]="{standalone: true}"
                                 (ngModelChange)="updateLineField(0, 'chartOfAccountId', $event)"
-                                [options]="bankUsageAccounts()" optionLabel="name" optionValue="value" class="w-full"
+                                [options]="bankUsageAccounts()" optionLabel="name" optionValue="id" class="w-full"
                                 appendTo="body" fluid size="small" />
                             <app-field-errorS [field]="bpvForm.lines[0].chartOfAccountId" [submit]="formSubmitted()"
                                 [backendErrors]="backendErrors()">
@@ -246,8 +246,8 @@
                             <p-autoComplete [(ngModel)]="line.chartOfAccountId" [ngModelOptions]="{standalone: true}"
                                 (ngModelChange)="updateLineField($index, 'chartOfAccountId', $event)"
                                 (completeMethod)="SearchDropDown($event, nonBankCoa.searchterm)" optionLabel="name"
-                                optionValue="id" [suggestions]="nonBankCoaSearchList()" [showClear]="true" appendTo="body"
-                                fluid size="small">
+                                optionValue="id" [suggestions]="nonBankCoaSearchList()" [showClear]="true"
+                                appendTo="body" fluid size="small">
                             </p-autoComplete>
                             <app-field-errorS [field]="bpvForm.lines[$index].chartOfAccountId"
                                 [submit]="formSubmitted()" [backendErrors]="backendErrors()">
