@@ -1,1 +1,275 @@
-<p>cash-voucher works!</p>
+<!-- CPV Create Form -->
+<form (ngSubmit)="createCPV($event)">
+    <div class="flex flex-wrap global-div p-5">
+        <div class="w-full mb-4">
+            <h3 class="text-2xl font-semibold text-center mb-3">
+                <span class="gradient-heading">Add Cash Payment Voucher</span>
+            </h3>
+            <hr class="second-color">
+        </div>
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <p-select [(ngModel)]="cashJournalModel().voucherType" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('voucherType',$event)" [options]="voucherTypes()"
+                        optionLabel="name" optionValue="value" class="w-full" readonly />
+                    <label for="voucherType">Voucher Type</label>
+                </div>
+            </p-floatLabel>
+        </div>
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <p-datepicker [(ngModel)]="cashJournalModel().postingDateUI" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('postingDateUI',$event)" view="date" dateFormat="dd/mm/yy"
+                        size="small" inputId="postingDateUI" class="w-full" />
+                    <label for="postingDateUI" class="required">Posting Date</label>
+                </div>
+            </p-floatLabel>
+            <app-field-errorS [field]="cpvForm.postingDateUI" [submit]="formSubmitted()"
+                [backendErrors]="backendErrors()">
+            </app-field-errorS>
+        </div>
+
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <input pInputText pSize="small" id="narration" autocomplete="off" type="text" class="w-full"
+                        [formField]="cpvForm.narration">
+                    <label for="narration" class="required">Narration</label>
+                </div>
+            </p-floatLabel>
+            <app-field-errorS [field]="cpvForm.narration" [submit]="formSubmitted()" [backendErrors]="backendErrors()">
+            </app-field-errorS>
+        </div>
+
+
+        <div class="w-full mb-3">
+            <div class="lg:w-1/2 w-full">
+                <p class="note-banner">Enter at least 3 characters to search Account Below</p>
+            </div>
+        </div>
+
+        <!-- Cash Usage Accounts -->
+        <div class="w-full">
+            <div class="w-full mt-3">
+                <h4 class="text-lg font-semibold mb-2 float-left">
+                    <span>Cash Account Line</span>
+                </h4>
+            </div>
+        </div>
+
+        <!-- Cash Account Line table -->
+        <div class="overflow-auto">
+            <table class="w-full border-collapse" style="table-layout: fixed; min-width: 1000px;">
+                <thead>
+                    <tr class="text-left border-b second-color">
+                        <th class="p-2">Account</th>
+                        <th class="p-2">Description</th>
+                        <th class="p-2">Credit</th>
+                        <th class="p-2">Currency</th>
+                        <th class="p-2">Exchange Rate</th>
+                        <th class="p-2">Reference No</th>
+                        <th class="p-2 text-center">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="border-b second-color">
+
+                        <!-- Account (Cash Dropdown) -->
+                        <td class="p-2 align-top">
+                            <p-select [(ngModel)]="cashJournalModel().lines[0].chartOfAccountId"
+                                [ngModelOptions]="{standalone: true}"
+                                (ngModelChange)="updateLineField(0, 'chartOfAccountId', $event)"
+                                [options]="cashUsageAccounts()" optionLabel="name" optionValue="id" class="w-full"
+                                appendTo="body" fluid size="small" />
+                            <app-field-errorS [field]="cashJournalModel().lines[0].chartOfAccountId"
+                                [submit]="formSubmitted()" [backendErrors]="backendErrors()">
+                            </app-field-errorS>
+                        </td>
+
+                        <!-- Description -->
+                        <td class="p-2 align-top">
+                            <input pInputText pSize="small" autocomplete="off" type="text" class="w-full"
+                                [formField]="cpvForm.lines[0].description">
+                        </td>
+
+
+                        <!-- Credit -->
+                        <td class="p-2 align-top">
+                            <input pInputText pSize="small" autocomplete="off" type="number" class="w-full"
+                                [formField]="cpvForm.lines[0].credit">
+                            <app-field-errorS [field]="cpvForm.lines[0].credit" [submit]="formSubmitted()"
+                                [backendErrors]="backendErrors()" [fieldPath]="'lines[0].credit'">
+                            </app-field-errorS>
+                        </td>
+
+                        <!-- Currency -->
+                        <td class="p-2 align-top">
+                            <p-select [ngModel]="cpvForm.lines[0].currencyCode" [ngModelOptions]="{standalone: true}"
+                                (ngModelChange)="updateLineField(0, 'currencyCode', $event)" [options]="currencies()"
+                                optionLabel="name" optionValue="code" [filter]="true" filterBy="name" class="w-full"
+                                appendTo="body" size="small">
+                            </p-select>
+                        </td>
+
+                        <!-- Exchange Rate -->
+                        <td class="p-2 align-top">
+                            <input pInputText pSize="small" autocomplete="off" type="number" class="w-full"
+                                [formField]="cpvForm.lines[0].exchangeRate">
+                        </td>
+
+                        <!-- Reference No -->
+                        <td class="p-2 align-top">
+                            <input pInputText pSize="small" autocomplete="off" type="text" class="w-full"
+                                [formField]="cpvForm.lines[0].referenceNo">
+                        </td>
+
+                        <!-- Empty for allining same design as below lines-->
+                        <td class="p-2 text-center align-top">
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+
+            </table>
+
+        </div>
+
+        <!-- Other Accounts Lines (Debit only for CPV) -->
+        <div class="w-full">
+            <div class="w-full mt-3">
+                <h4 class="text-lg font-semibold mb-2 float-left">
+                    <span>Expense / Payment Lines</span>
+                </h4>
+                <!--add line button -->
+                <button type="button" class="global-button float-right" (click)="addLine()">
+                    <span class="material-symbols-outlined second-color">add</span> Add Line
+                </button>
+            </div>
+        </div>
+
+        <!-- lines table -->
+        <div class="overflow-auto">
+            <table class="w-full border-collapse" style="table-layout: fixed; min-width: 1000px;">
+                <thead>
+                    <tr class="text-left border-b second-color">
+                        <th class="p-2">Account</th>
+                        <th class="p-2">Description</th>
+                        <th class="p-2">Debit</th>
+                        <th class="p-2">Currency</th>
+                        <th class="p-2">Exchange Rate</th>
+                        <th class="p-2">Reference No</th>
+                        <th class="p-2 text-center">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for(line of cashJournalModel().lines; track $index) {
+                    @if($index > 0) {
+                    <tr class="border-b second-color">
+
+                        <!-- Account (AutoComplete) -->
+                        <td class="p-2 align-top">
+                            <p-autoComplete [(ngModel)]="line.chartOfAccountId" [ngModelOptions]="{standalone: true}"
+                                (ngModelChange)="updateLineField($index, 'chartOfAccountId', $event)"
+                                (completeMethod)="SearchDropDown($event, cashCoa.searchterm)" optionLabel="name"
+                                optionValue="id" [suggestions]="cashCoaSearchList()" [showClear]="true" appendTo="body"
+                                fluid size="small">
+                            </p-autoComplete>
+                            <app-field-errorS [field]="cpvForm.lines[$index].chartOfAccountId"
+                                [submit]="formSubmitted()" [backendErrors]="backendErrors()"
+                                [fieldPath]="'lines[' + $index + '].chartOfAccountId'">
+                            </app-field-errorS>
+                        </td>
+
+                        <!-- Description -->
+                        <td class="p-2 align-top">
+                            <input pInputText pSize="small" autocomplete="off" type="text" class="w-full"
+                                [formField]="cpvForm.lines[$index].description">
+                        </td>
+
+                        <!-- Debit -->
+                        <td class="p-2">
+                            <input pInputText pSize="small" autocomplete="off" type="number" class="w-full"
+                                [formField]="cpvForm.lines[$index].debit">
+                            <app-field-errorS [field]="cpvForm.lines[$index].debit" [submit]="formSubmitted()"
+                                [backendErrors]="backendErrors()" [fieldPath]="'lines[' + $index + '].debit'">
+                            </app-field-errorS>
+                        </td>
+
+                        <!-- Currency -->
+                        <td class="p-2 align-top">
+                            <p-select [ngModel]="line.currencyCode" [ngModelOptions]="{standalone: true}"
+                                (ngModelChange)="updateLineField($index, 'currencyCode', $event)"
+                                [options]="currencies()" optionLabel="name" optionValue="code" [filter]="true"
+                                filterBy="name" class="w-full" appendTo="body" size="small">
+                            </p-select>
+                        </td>
+
+                        <!-- Exchange Rate -->
+                        <td class="p-2 align-top">
+                            <input pInputText pSize="small" autocomplete="off" type="number" class="w-full"
+                                [formField]="cpvForm.lines[$index].exchangeRate">
+                        </td>
+
+                        <!-- Reference No -->
+                        <td class="p-2 align-top">
+                            <input pInputText pSize="small" autocomplete="off" type="text" class="w-full"
+                                [formField]="cpvForm.lines[$index].referenceNo">
+                        </td>
+
+                        <!-- Delete -->
+                        <td class="p-2 text-center align-top">
+                            <button type="button" (click)="deleteLine($index)">
+                                <span class="material-symbols-outlined icon-color">delete</span>
+                            </button>
+                        </td>
+
+                    </tr>
+                    }
+                    }
+                </tbody>
+
+
+            </table>
+
+        </div>
+
+        <!-- Totals and Submit -->
+        <div class="mt-3 flex flex-col items-center w-full gap-2">
+
+            <!-- Transaction totals -->
+            <div class="flex gap-6">
+                <div>Debit: <strong>{{ totalDebit() }}</strong></div>
+                <div>Credit: <strong>{{ totalCredit() }}</strong></div>
+            </div>
+
+            <!-- Base totals -->
+            <div class="flex gap-6 text-sm text-gray-500">
+                <div>Base Debit: <strong>{{ baseTotalDebit() }}</strong></div>
+                <div>Base Credit: <strong>{{ baseTotalCredit() }}</strong></div>
+            </div>
+
+        </div>
+
+        <!--Errors -->
+        <div class="w-full mt-3">
+            <ul class="text-red-500 text-sm font-medium pl-4">
+                @if (errors()) {
+                @for (e of errors(); track e) {
+                <li>{{ e }}</li>
+                }
+                }
+            </ul>
+        </div>
+
+        <!--submitting the form  -->
+        <div class="w-full flex justify-center m-3">
+            <button class="global-button" type="submit" [disabled]="submit()">
+                {{ submit() ? 'Processing...' : 'Create Voucher' }}
+            </button>
+        </div>
+    </div>
+</form>

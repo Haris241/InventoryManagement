@@ -110,7 +110,7 @@ export class CrvVoucherComponent {
     isMainLine: false
   };
 
-  //Intialize Main Object..The Lines are Multipe ...one for Bank and one for Other
+  //Intialize Main Object..The Lines are Multipe ...one for Cash and one for Other
   private readonly crvModel: CreateJournalEntry = {
     voucherType: VoucherType.CashReceipt,
     postingDateUI: new Date(),
