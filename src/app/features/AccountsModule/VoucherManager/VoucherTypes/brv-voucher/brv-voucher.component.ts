@@ -70,22 +70,22 @@ export class BrvVoucherComponent {
 
   //Computed Totals
   totalDebit = computed(() =>
-    this.bankbankJournalModel().lines.reduce((sum, line) => sum + (line.debit || 0), 0)
+    this.bankJournalModel().lines.reduce((sum, line) => sum + (line.debit || 0), 0)
   );
 
   totalCredit = computed(() =>
-    this.bankbankJournalModel().lines.reduce((sum, line) => sum + (line.credit || 0), 0)
+    this.bankJournalModel().lines.reduce((sum, line) => sum + (line.credit || 0), 0)
   );
 
   baseTotalDebit = computed(() =>
-    this.bankbankJournalModel().lines.reduce(
+    this.bankJournalModel().lines.reduce(
       (sum, l) => sum + ((l.debit || 0) * (l.exchangeRate || 1)),
       0
     )
   );
 
   baseTotalCredit = computed(() =>
-    this.bankbankJournalModel().lines.reduce(
+    this.bankJournalModel().lines.reduce(
       (sum, l) => sum + ((l.credit || 0) * (l.exchangeRate || 1)),
       0
     )
@@ -131,11 +131,11 @@ export class BrvVoucherComponent {
   };
 
   //Intialize Main Object with Signal
-  bankbankJournalModel = signal<CreateBankVoucher>(this.brvModel);
+  bankJournalModel = signal<CreateBankVoucher>(this.brvModel);
 
 
   //validations
-  brvForm = form(this.bankbankJournalModel, (schema) => {
+  brvForm = form(this.bankJournalModel, (schema) => {
     // Root validations
     required(schema.bankName, { message: 'Bank Name is required' });
     required(schema.bankAccountNumber, { message: 'Bank Account Number is required' });
@@ -179,14 +179,14 @@ export class BrvVoucherComponent {
 
   //Method to Update Fields For Non supporting Primeng Fields
   updateField<K extends keyof CreateBankVoucher>(field: K, value: CreateBankVoucher[K]) {
-    this.bankbankJournalModel.update(prev => ({
+    this.bankJournalModel.update(prev => ({
       ...prev,
       [field]: value
     }));
   }
   // ✅ Update a specific field inside a specific line by index
   updateLineField<K extends keyof CreateJournalEntryLine>(index: number, field: K, value: CreateJournalEntryLine[K]) {
-    this.bankbankJournalModel.update(prev => {
+    this.bankJournalModel.update(prev => {
       const lines = [...prev.lines];           // shallow copy the array
       lines[index] = { ...lines[index], [field]: value }; // copy the line, update field
       return { ...prev, lines };
@@ -196,7 +196,7 @@ export class BrvVoucherComponent {
   // ✅ Add a new empty line
   addLine(): void {
 
-    const index = this.bankbankJournalModel().lines.length - 1;
+    const index = this.bankJournalModel().lines.length - 1;
     const line = this.brvForm.lines[index];
 
     //Mark required field 
@@ -210,7 +210,7 @@ export class BrvVoucherComponent {
       return;
     }
 
-    this.bankbankJournalModel.update(prev => ({
+    this.bankJournalModel.update(prev => ({
       ...prev,
       lines: [...prev.lines, { ...this.jvLines }]
     }));
@@ -224,10 +224,10 @@ export class BrvVoucherComponent {
       return;
     }
 
-    const lines = this.bankbankJournalModel().lines;
+    const lines = this.bankJournalModel().lines;
     //Make sure it is starting from next line
     if (lines.length === 2) {
-      this.bankbankJournalModel.update(prev => ({
+      this.bankJournalModel.update(prev => ({
         ...prev,
         lines: [
           prev.lines[0], // keep bank line
@@ -237,7 +237,7 @@ export class BrvVoucherComponent {
       return;
     }
 
-    this.bankbankJournalModel.update(prev => ({
+    this.bankJournalModel.update(prev => ({
       ...prev,
       lines: prev.lines.filter((_, i) => i !== index)
     }));
@@ -259,7 +259,7 @@ export class BrvVoucherComponent {
     }
 
     //Checking Business Logical Errors
-    const errors = this.voucherMangerService.validate(this.bankbankJournalModel().lines);
+    const errors = this.voucherMangerService.validate(this.bankJournalModel().lines);
     if (errors.length > 0) {
       this.errors.set(errors);
       this.submit.set(false);

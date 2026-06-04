@@ -10,7 +10,7 @@
         <div class="lg:w-1/4 w-full mb-3">
             <p-floatLabel variant="on">
                 <div class="lg:w-8/12 w-full">
-                    <p-select [(ngModel)]="bankbankJournalModel().voucherType" [ngModelOptions]="{standalone: true}"
+                    <p-select [(ngModel)]="bankJournalModel().voucherType" [ngModelOptions]="{standalone: true}"
                         (ngModelChange)="updateField('voucherType',$event)" [options]="voucherTypes()"
                         optionLabel="name" optionValue="value" class="w-full" readonly />
                     <label for="voucherType">Voucher Type</label>
@@ -20,9 +20,9 @@
         <div class="lg:w-1/4 w-full mb-3">
             <p-floatLabel variant="on">
                 <div class="lg:w-8/12 w-full">
-                    <p-datepicker [(ngModel)]="bankbankJournalModel().postingDateUI"
-                        [ngModelOptions]="{standalone: true}" (ngModelChange)="updateField('postingDateUI',$event)"
-                        view="date" dateFormat="dd/mm/yy" size="small" inputId="postingDateUI" class="w-full" />
+                    <p-datepicker [(ngModel)]="bankJournalModel().postingDateUI" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('postingDateUI',$event)" view="date" dateFormat="dd/mm/yy"
+                        size="small" inputId="postingDateUI" class="w-full" />
                     <label for="postingDateUI" class="required">Posting Date</label>
                 </div>
             </p-floatLabel>
@@ -88,9 +88,9 @@
         <div class="lg:w-1/4 w-full mb-3">
             <p-floatLabel variant="on">
                 <div class="lg:w-8/12 w-full">
-                    <p-datepicker [(ngModel)]="bankbankJournalModel().chequeDateUI"
-                        [ngModelOptions]="{standalone: true}" (ngModelChange)="updateField('chequeDateUI',$event)"
-                        view="date" dateFormat="dd/mm/yy" size="small" inputId="chequeDateUI" class="w-full" />
+                    <p-datepicker [(ngModel)]="bankJournalModel().chequeDateUI" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('chequeDateUI',$event)" view="date" dateFormat="dd/mm/yy"
+                        size="small" inputId="chequeDateUI" class="w-full" />
                     <label for="chequeDateUI">Cheque Date</label>
                 </div>
             </p-floatLabel>
@@ -98,7 +98,7 @@
         <div class="lg:w-1/4 w-full mb-3">
             <p-floatLabel variant="on">
                 <div class="lg:w-8/12 w-full">
-                    <p-select [(ngModel)]="bankbankJournalModel().chequeStatus" [ngModelOptions]="{standalone: true}"
+                    <p-select [(ngModel)]="bankJournalModel().chequeStatus" [ngModelOptions]="{standalone: true}"
                         (ngModelChange)="updateField('chequeStatus',$event)" [options]="chequeStatuses()"
                         optionLabel="name" optionValue="value" class="w-full" />
                     <label for="chequeStatus">Cheque Status</label>
@@ -149,7 +149,7 @@
 
                         <!-- Account (Banks Dropdown) -->
                         <td class="p-2 align-top">
-                            <p-select [(ngModel)]="bankbankJournalModel().lines[0].chartOfAccountId"
+                            <p-select [(ngModel)]="bankJournalModel().lines[0].chartOfAccountId"
                                 [ngModelOptions]="{standalone: true}"
                                 (ngModelChange)="updateLineField(0, 'chartOfAccountId', $event)"
                                 [options]="bankUsageAccounts()" optionLabel="name" optionValue="id" class="w-full"
@@ -237,7 +237,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @for(line of bankbankJournalModel().lines; track $index) {
+                    @for(line of bankJournalModel().lines; track $index) {
                     @if($index > 0) {
                     <tr class="border-b second-color">
 
