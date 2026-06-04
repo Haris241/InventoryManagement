@@ -12,13 +12,6 @@ export class voucherMangerService {
             return ['At least 2 lines are required.'];
         }
 
-        const totalDebit = lines.reduce((s, l) => s + (l.debit || 0), 0);
-        const totalCredit = lines.reduce((s, l) => s + (l.credit || 0), 0);
-
-        if (Math.abs(totalDebit - totalCredit) > 0.01) {
-            errors.push('Entry is not balanced.');
-        }
-
         if (lines.some(l => (l.debit || 0) < 0 || (l.credit || 0) < 0)) {
             errors.push('Negative values are not allowed.');
         }
