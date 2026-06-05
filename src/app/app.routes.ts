@@ -88,6 +88,9 @@ export const routes: Routes = [
                         path: 'brv', loadComponent: () => import('./features/AccountsModule/VoucherManager/VoucherTypes/brv-voucher/brv-voucher.component').then(m => m.BrvVoucherComponent)
                     },
                     {
+                        path: 'cv', loadComponent: () => import('./features/AccountsModule/VoucherManager/VoucherTypes/cv-voucher/cv-voucher.component').then(m => m.CvVoucherComponent)
+                    },
+                    {
                         path: '', redirectTo: 'jv', pathMatch: 'full'
                     }
                 ]

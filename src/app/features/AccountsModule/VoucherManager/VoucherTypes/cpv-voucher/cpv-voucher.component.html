@@ -83,8 +83,8 @@
                                 (ngModelChange)="updateLineField(0, 'chartOfAccountId', $event)"
                                 [options]="cashUsageAccounts()" optionLabel="name" optionValue="id" class="w-full"
                                 appendTo="body" fluid size="small" />
-                            <app-field-errorS [field]="cashJournalModel().lines[0].chartOfAccountId"
-                                [submit]="formSubmitted()" [backendErrors]="backendErrors()">
+                            <app-field-errorS [field]="cpvForm.lines[0].chartOfAccountId" [submit]="formSubmitted()"
+                                [backendErrors]="backendErrors()">
                             </app-field-errorS>
                         </td>
 
@@ -191,7 +191,7 @@
                         </td>
 
                         <!-- Debit -->
-                        <td class="p-2">
+                        <td class="p-2 align-top">
                             <input pInputText pSize="small" autocomplete="off" type="number" class="w-full"
                                 [formField]="cpvForm.lines[$index].debit">
                             <app-field-errorS [field]="cpvForm.lines[$index].debit" [submit]="formSubmitted()"
