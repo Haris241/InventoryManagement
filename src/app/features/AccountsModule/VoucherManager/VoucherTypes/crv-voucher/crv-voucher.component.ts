@@ -103,7 +103,7 @@ export class CrvVoucherComponent {
     description: '',
     debit: 0,
     credit: 0,
-    currencyCode: '',
+    currencyCode: null,
     exchangeRate: 1,
     relatedEntityId: null,
     referenceNo: '',
@@ -199,10 +199,13 @@ export class CrvVoucherComponent {
 
       return;
     }
+    //Generate Next Line Smartly
+    const defaults = this.voucherMangerService.generateSmartLines(this.cashJournalModel().lines, VoucherType.CashReceipt);
+    const newLine = { ...this.jvLines, ...defaults };
 
     this.cashJournalModel.update(prev => ({
       ...prev,
-      lines: [...prev.lines, { ...this.jvLines }]
+      lines: [...prev.lines, newLine]
     }));
   }
 

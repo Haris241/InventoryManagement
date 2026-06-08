@@ -96,7 +96,7 @@ export class CvVoucherComponent {
     description: '',
     debit: 0,
     credit: 0,
-    currencyCode: '',
+    currencyCode: null,
     exchangeRate: 1,
     relatedEntityId: null,
     referenceNo: '',

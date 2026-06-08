@@ -3,6 +3,16 @@
   gap: 0;
   border-bottom: 2px solid var(--MainColour);
   background: var(--DivColour);
+
+  /* --- Add these lines for horizontal scrolling --- */
+  overflow-x: auto;
+  /* Enables horizontal scrolling when content overflows */
+  overflow-y: hidden;
+  /* Prevents any accidental vertical scrolling */
+  white-space: nowrap;
+  /* Prevents the text inside tabs from wrapping to a new line */
+  -webkit-overflow-scrolling: touch;
+  /* Ensures smooth momentum scrolling on iOS devices */
 }
 
 .voucher-tabs a {
@@ -15,6 +25,14 @@
   margin-bottom: -2px;
   cursor: pointer;
   transition: color 0.2s, border-color 0.2s;
+  /* --- Add this line --- */
+  flex-shrink: 0;
+  /* Prevents tabs from squeezing together on small screens */
+}
+
+.voucher-tabs::-webkit-scrollbar {
+  display: none;
+  /* Hides scrollbar on Chrome, Safari, and Opera */
 }
 
 .voucher-tabs a:hover {

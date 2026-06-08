@@ -13,11 +13,11 @@ export interface CreateJournalEntryLine {
     description: string;
     debit: number;
     credit: number;
-    currencyCode: string;
+    currencyCode: string | null;
     exchangeRate: number;
     relatedEntityId: string | null;
     referenceNo: string;
-    isMainLine:boolean;
+    isMainLine: boolean;
 }
 export interface CreateBankVoucher extends CreateJournalEntry {
     bankName: string;

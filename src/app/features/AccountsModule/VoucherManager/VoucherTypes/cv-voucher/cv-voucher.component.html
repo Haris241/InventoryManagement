@@ -119,7 +119,7 @@
                             <p-select [ngModel]="line.currencyCode" [ngModelOptions]="{standalone: true}"
                                 (ngModelChange)="updateLineField($index, 'currencyCode', $event)"
                                 [options]="currencies()" optionLabel="name" optionValue="code" [filter]="true"
-                                filterBy="name" class="w-full" appendTo="body" size="small">
+                                filterBy="name" class="w-full" appendTo="body" size="small" [showClear]="true">
                             </p-select>
                         </td>
 

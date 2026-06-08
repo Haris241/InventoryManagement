@@ -87,7 +87,7 @@ export class JvVoucherComponent {
     description: '',
     debit: 0,
     credit: 0,
-    currencyCode: '',
+    currencyCode: null,
     exchangeRate: 1,
     relatedEntityId: null,
     referenceNo: '',
@@ -178,9 +178,14 @@ export class JvVoucherComponent {
       return;
     }
 
+    //Generate Next Line Smartly
+    const defaults = this.voucherMangerService.generateSmartLines(this.journalModel().lines, VoucherType.Journal);
+    const newLine = { ...this.jvLines, ...defaults };
+
+
     this.journalModel.update(prev => ({
       ...prev,
-      lines: [...prev.lines, { ...this.jvLines }]
+      lines: [...prev.lines, { ...newLine }]
     }));
   }
 

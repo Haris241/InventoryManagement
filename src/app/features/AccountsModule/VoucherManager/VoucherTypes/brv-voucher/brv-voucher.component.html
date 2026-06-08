@@ -177,10 +177,11 @@
 
                         <!-- Currency -->
                         <td class="p-2 align-top">
-                            <p-select [ngModel]="brvForm.lines[0].currencyCode" [ngModelOptions]="{standalone: true}"
+                            <p-select [ngModel]="bankJournalModel().lines[0].currencyCode"
+                                [ngModelOptions]="{standalone: true}"
                                 (ngModelChange)="updateLineField(0, 'currencyCode', $event)" [options]="currencies()"
                                 optionLabel="name" optionValue="code" [filter]="true" filterBy="name" class="w-full"
-                                appendTo="body" size="small">
+                                appendTo="body" size="small" [showClear]="true">
                             </p-select>
                         </td>
 
@@ -275,7 +276,7 @@
                             <p-select [ngModel]="line.currencyCode" [ngModelOptions]="{standalone: true}"
                                 (ngModelChange)="updateLineField($index, 'currencyCode', $event)"
                                 [options]="currencies()" optionLabel="name" optionValue="code" [filter]="true"
-                                filterBy="name" class="w-full" appendTo="body" size="small">
+                                filterBy="name" class="w-full" appendTo="body" size="small" [showClear]="true">
                             </p-select>
                         </td>
 

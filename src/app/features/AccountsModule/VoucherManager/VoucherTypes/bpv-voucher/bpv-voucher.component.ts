@@ -103,7 +103,7 @@ export class BpvVoucherComponent {
     description: '',
     debit: 0,
     credit: 0,
-    currencyCode: '',
+    currencyCode: null,
     exchangeRate: 1,
     relatedEntityId: null,
     referenceNo: '',
@@ -210,9 +210,13 @@ export class BpvVoucherComponent {
       return;
     }
 
+    //Generate Next Line Smartly
+    const defaults = this.voucherMangerService.generateSmartLines(this.bankJournalModel().lines, VoucherType.BankPayment);
+    const newLine = { ...this.jvLines, ...defaults };
+
     this.bankJournalModel.update(prev => ({
       ...prev,
-      lines: [...prev.lines, { ...this.jvLines }]
+      lines: [...prev.lines, newLine]
     }));
   }
 
