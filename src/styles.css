@@ -334,6 +334,10 @@ input[type="number"] {
   /* Amber/Orange */
 }
 
+.close-year {
+  background-color: var(--MainColour);
+}
+
 .status-dot {
   display: inline-block;
   width: 10px;

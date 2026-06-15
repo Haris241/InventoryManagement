@@ -33,6 +33,13 @@
       <button class="global-button" type="submit" [disabled]="submit()">Add Fiscal Year</button>
     </div>
   </div>
+  <div class="w-full mt-3">
+    @if(closingMessage().length>0){
+    <div class="w-full p-3 mb-2 text-center">
+      <p class="second-color">{{ closingMessage() }}</p>
+    </div>
+    }
+  </div>
 </form>
 
 
@@ -49,6 +56,7 @@
           <th>Remarks</th>
           <th>Status</th>
           <th>Current Year</th>
+          <th>Actions</th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-fiscal>
@@ -66,7 +74,13 @@
           }@else{
           <td><button (click)="SwitchYear({ id: fiscal.id })" class="status-badge status-closed">Switch</button></td>
           }
-
+          @if (fiscal.status == FiscalYearStatus.Open){
+          <td><button (click)="closeYear({ id: fiscal.id })" class="status-badge close-year">Close Year</button></td>
+          }@else if(fiscal.status == FiscalYearStatus.NeedReClosure){
+          <td><button (click)="closeYear({ id: fiscal.id })" class="status-badge close-year">ReClose Year</button></td>
+          }@else {
+          <td></td>
+          }
         </tr>
       </ng-template>
     </p-table>

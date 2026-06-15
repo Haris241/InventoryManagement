@@ -5,7 +5,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { form, FormField, required } from '@angular/forms/signals';
 import { BaseApiService } from '../../../services/base-api.service';
 import { DataLayerService } from '../../../services/data-layer.service';
-import { CreateFiscalYear, FiscalYearList, FiscalYearStatus, SwitchYearRequest } from '../../../Models/Accouting/FiscalYear.model';
+import { CloseYearRequest, CreateFiscalYear, FiscalYearList, FiscalYearStatus, SwitchYearRequest } from '../../../Models/Accouting/FiscalYear.model';
 import { FormsModule } from '@angular/forms';
 import { FieldErrorSComponent } from '../../../shared/field-error-s/field-error-s.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -31,7 +31,9 @@ export class FiscalyearComponent {
   backendErrors = signal<Record<string, string[]>>({});
   fiscalYears = signal<FiscalYearList[]>([]);
   totalrecords = signal<number>(0);
+  FiscalYearStatus = FiscalYearStatus;
   lastLazyEvent: TableLazyLoadEvent | null = null;
+  closingMessage = signal<string>('');
   private readonly initialModel: CreateFiscalYear = {
     year: 0,
     yearDate: null,
@@ -138,12 +140,25 @@ export class FiscalyearComponent {
     console.log("ID ", requestedId);
     this.dataService.create<SwitchYearRequest>('FiscalYear/SwitchYear', requestedId).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (res) => {
-        this.base.globalMessage('success', 'FiscalYear Changed Successfully');
+        this.base.globalMessage('success', 'FiscalYear Changed Successfully', false);
         const defaulId = res.id;
         this.fiscalYears.update(list =>
           list.map(fy => ({
             ...fy, isDefault: fy.id === defaulId
           })));
+      },
+      error: (err) => {
+        this.base.handleError(err, err.error.message);
+      }
+    });
+  }
+
+  //Close Fiscal Year
+  closeYear(requestedId: CloseYearRequest) {
+    console.log("ID ", requestedId);
+    this.dataService.create<CloseYearRequest>('FiscalYear/CloseYear', requestedId).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: () => {
+        this.closingMessage.set("Fiscal year closing has been started. Check notifications for the final result.");
       },
       error: (err) => {
         this.base.handleError(err, err.error.message);

@@ -8,10 +8,11 @@ import { LoadingService } from '../../../services/loading.service';
 import { DataLayerService } from '../../../services/data-layer.service';
 import { BaseApiService } from '../../../services/base-api.service';
 import { ThemeProvider } from 'primeng/config';
+import { NotificationsComponent } from '../../../shared/notifications/notifications.component';
 
 @Component({
   selector: 'app-accountlayout',
-  imports: [RouterLink, RouterLinkActive, RouterOutlet, CommonModule],
+  imports: [RouterLink, RouterLinkActive, RouterOutlet, CommonModule, NotificationsComponent],
   templateUrl: './accountlayout.component.html',
   styleUrl: './accountlayout.component.css',
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
@@ -28,6 +29,8 @@ export class AccountlayoutComponent {
   isCOADropdown = signal(false);
   isVoucherDropdown = signal(false);
   screenSize = window.matchMedia('(max-width: 768px)');
+  showNotifications = signal(false);
+
   ngOnInit() {
     if (this.screenSize.matches) {
       this.isMobile.set(true);
@@ -109,4 +112,8 @@ export class AccountlayoutComponent {
 
     });
   }
+  toggleNotifications() {
+    this.showNotifications.update(v => !v);
+  }
+
 }

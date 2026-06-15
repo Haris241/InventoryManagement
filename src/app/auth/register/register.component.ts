@@ -41,7 +41,7 @@ export class RegisterComponent {
     phoneNo: '',
     name: '',
     fiscalStartMonth: null!,
-    currencyCode: ''
+    currencyCode: null
   };
   registerModel = signal<Register>(this.initialModel);
 

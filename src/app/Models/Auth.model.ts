@@ -13,7 +13,7 @@ export interface Register {
     phoneNo: string,
     name: string
     fiscalStartMonth: number,
-    currencyCode: string;
+    currencyCode: string | null;
 }
 export interface CurrencyDto {
     code: string,

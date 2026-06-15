@@ -175,12 +175,16 @@
         <img src="/Logo.png" alt="Inventory Management System Logo" class="logo">
       </div>
       <div>
-        <button (click)="ConifmationLogout()"><span class="material-symbols-outlined">logout</span></button>
+        <button (click)="toggleNotifications()">
+          <span class="material-symbols-outlined">notifications</span>
+        </button>
       </div>
     </div>
     <div class="p-4 main-content">
       <router-outlet></router-outlet>
     </div>
-
+    @if (showNotifications()) {
+    <app-notifications (close)="toggleNotifications()"> </app-notifications>
+    }
   </main>
 </div>
