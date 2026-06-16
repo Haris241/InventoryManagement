@@ -4,6 +4,8 @@ export interface GetUserNotifications {
     message: string;
     type: NotificationType;
     status: NotificationStatus;
+    isRead: boolean;
+    link?: string;
     createdAtUtc: Date;
 }
 export enum NotificationType {

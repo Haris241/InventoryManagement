@@ -36,4 +36,10 @@ export class DataLayerService {
   getById<T>(controller: string, id: string): Observable<T> {
     return this.http.get<T>(`${this.baseurl}${controller}/${id}`, { withCredentials: true });
   }
+  deleteAll<T>(controller: string): Observable<T> {
+    return this.http.delete<T>(`${this.baseurl}${controller}`, { withCredentials: true });
+  }
+  updateAll<T>(controller: string): Observable<T> {
+    return this.http.put<T>(`${this.baseurl}${controller}`, { withCredentials: true });
+  }
 }

@@ -106,7 +106,7 @@ export class FiscalyearComponent {
   //Loading Fiscal Year List
   loadFiscalYears(event: TableLazyLoadEvent) {
     this.lastLazyEvent = event;
-    this.pagination.getDataWithoutForm<FiscalYearList>('FiscalYear/GetAll', event).subscribe({
+    this.pagination.getDataWithoutForm<FiscalYearList>('FiscalYear/GetAll', event).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (result) => {
         this.fiscalYears.set(result.data);
         this.totalrecords.set(result.total);
