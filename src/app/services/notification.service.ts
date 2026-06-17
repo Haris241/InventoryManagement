@@ -1,13 +1,22 @@
-import { inject, Injectable, signal } from '@angular/core';
+import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { DataLayerService } from './data-layer.service';
-import { GetUserNotifications } from '../Models/Notification.model';
+import { GetUserNotifications, NotificationEnvelope } from '../Models/Notification.model';
+import { Subject } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Injectable({
   providedIn: 'root',
 })
 export class NotificationService {
   private dataService = inject(DataLayerService);
+  private readonly destroyRef = inject(DestroyRef);
   notifications = signal<GetUserNotifications[]>([]);
+  // Job completion events — components subscribe to specific jobIds
+  private readonly jobCompleted$ = new Subject<NotificationEnvelope>();
+
+  readonly unreadCount = computed(() =>
+    this.notifications().filter(n => !n.isRead).length
+  );
 
   //Get All Notifications
   getUserNotifications(): void {
@@ -47,5 +56,41 @@ export class NotificationService {
         );
       }
     })
+  }
+
+  // Called by SignalR service when push arrives
+  handleIncoming(envelope: NotificationEnvelope): void {
+    // Add to top of list as unread (if it was persisted on backend)
+    if (envelope.persist) {
+      const newNotif: GetUserNotifications = {
+        id: envelope.notificationId,
+        title: envelope.title,
+        message: envelope.message,
+        type: envelope.type,
+        status: envelope.status,
+        isRead: false,
+        createdAtUtc: new Date(envelope.timestamp)
+      };
+      this.notifications.update(current => {
+
+        const exists = current.some(
+          x => x.id === envelope.notificationId
+        );
+
+        if (exists) return current;
+
+        return [newNotif, ...current];
+      });
+    }
+
+    // Emit job completion so any subscriber can react
+    this.jobCompleted$.next(envelope);
+  }
+
+  // Subscribe to a specific job's result
+  onJobComplete(jobId: string, callback: (envelope: NotificationEnvelope) => void) {
+    return this.jobCompleted$.subscribe(envelope => {
+      if (envelope.jobId === jobId) callback(envelope);
+    });
   }
 }

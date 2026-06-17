@@ -22,6 +22,10 @@ export interface CloseYearRequest {
     id: string
 }
 
+export interface CloseYearResponse {
+    jobId: string
+}
+
 export enum FiscalYearStatus {
     Open = 1,
     Closed = 2,

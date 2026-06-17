@@ -9,6 +9,7 @@ import { DataLayerService } from '../../../services/data-layer.service';
 import { BaseApiService } from '../../../services/base-api.service';
 import { ThemeProvider } from 'primeng/config';
 import { NotificationsComponent } from '../../../shared/notifications/notifications.component';
+import { NotificationService } from '../../../services/notification.service';
 
 @Component({
   selector: 'app-accountlayout',
@@ -30,6 +31,7 @@ export class AccountlayoutComponent {
   isVoucherDropdown = signal(false);
   screenSize = window.matchMedia('(max-width: 768px)');
   showNotifications = signal(false);
+  protected readonly notifState = inject(NotificationService);
 
   ngOnInit() {
     if (this.screenSize.matches) {

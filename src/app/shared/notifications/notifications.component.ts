@@ -19,10 +19,6 @@ export class NotificationsComponent {
   /** Output: emits when panel close is requested */
   close = output<void>();
 
-  ngOnInit() {
-    this.notifState.getUserNotifications();
-  }
-
   /** Sorted notifications: unread first, then read */
   sortedNotifications = computed(() => {
     const all = this.notifState.notifications();
@@ -49,8 +45,8 @@ export class NotificationsComponent {
   /** Delete all notifications */
   onDeleteAll(): void {
     this.confirmation.confirm({
-      message: 'Are you sure you want to delete this Product?',
-      header: 'Product Delete Confirmation',
+      message: 'Are you sure you want to delete all?',
+      header: 'Delete All Notifications',
       acceptButtonStyleClass: 'p-button-success',
       rejectButtonStyleClass: 'p-button-danger',
       acceptLabel: 'Yes',

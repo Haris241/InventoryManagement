@@ -175,8 +175,15 @@
         <img src="/Logo.png" alt="Inventory Management System Logo" class="logo">
       </div>
       <div>
-        <button (click)="toggleNotifications()">
+        <button (click)="toggleNotifications()" class="relative">
           <span class="material-symbols-outlined">notifications</span>
+
+          <!-- Badge — only shows when unread count > 0 -->
+          @if (notifState.unreadCount() > 0) {
+          <span class="notif-badge">
+            {{ notifState.unreadCount() > 99 ? '99+' : notifState.unreadCount() }}
+          </span>
+          }
         </button>
       </div>
     </div>

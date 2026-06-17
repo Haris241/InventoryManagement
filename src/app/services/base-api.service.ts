@@ -5,6 +5,7 @@ import { BehaviorSubject, catchError, filter, finalize, map, Observable, take, t
 import { LoginResponse } from '../Models/Auth.model';
 import { MessageService } from 'primeng/api';
 import { DataLayerService } from './data-layer.service';
+import { SignalIrService } from './signal-ir.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +17,7 @@ export class BaseApiService {
   isLoggedIn = signal<boolean>(this.hasToken());
   private isrefeshing = false;
   private refreshTokenSubject = new BehaviorSubject<string | null>(null);
+  private sinalIr = inject(SignalIrService);
   constructor(private routee: Router) { }
 
   private hasToken(): boolean {
@@ -52,6 +54,7 @@ export class BaseApiService {
   }
   logout() {
     localStorage.removeItem('access_token');
+    this.sinalIr.stopConnection();
     this.isLoggedIn.set(false);
     this.routee.navigate(['/login']);
   }

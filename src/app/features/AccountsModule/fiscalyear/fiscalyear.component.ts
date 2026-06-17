@@ -5,13 +5,15 @@ import { InputTextModule } from 'primeng/inputtext';
 import { form, FormField, required } from '@angular/forms/signals';
 import { BaseApiService } from '../../../services/base-api.service';
 import { DataLayerService } from '../../../services/data-layer.service';
-import { CloseYearRequest, CreateFiscalYear, FiscalYearList, FiscalYearStatus, SwitchYearRequest } from '../../../Models/Accouting/FiscalYear.model';
+import { CloseYearRequest, CloseYearResponse, CreateFiscalYear, FiscalYearList, FiscalYearStatus, SwitchYearRequest } from '../../../Models/Accouting/FiscalYear.model';
 import { FormsModule } from '@angular/forms';
 import { FieldErrorSComponent } from '../../../shared/field-error-s/field-error-s.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { PaginationService } from '../../../services/pagination.service';
 import { TableLazyLoadEvent, TableModule } from 'primeng/table';
 import { CommonModule } from '@angular/common';
+import { NotificationService } from '../../../services/notification.service';
+import { NotificationType } from '../../../Models/Notification.model';
 
 @Component({
   selector: 'app-fiscalyear',
@@ -26,6 +28,7 @@ export class FiscalyearComponent {
   private dataService = inject(DataLayerService);
   private destroyRef = inject(DestroyRef);
   private pagination = inject(PaginationService);
+  private notifState = inject(NotificationService);
   submit = signal<boolean>(false);
   formSubmitted = signal<boolean>(false);
   backendErrors = signal<Record<string, string[]>>({});
@@ -34,6 +37,8 @@ export class FiscalyearComponent {
   FiscalYearStatus = FiscalYearStatus;
   lastLazyEvent: TableLazyLoadEvent | null = null;
   closingMessage = signal<string>('');
+  closingJobId = signal<string | null>(null);
+
   private readonly initialModel: CreateFiscalYear = {
     year: 0,
     yearDate: null,
@@ -76,7 +81,6 @@ export class FiscalyearComponent {
     this.backendErrors.set({});
     const formvalue = this.fiscalYearForm().value() as CreateFiscalYear;
     formvalue.year = formvalue.yearDate ? formvalue.yearDate.getFullYear() : new Date().getFullYear();
-    console.log("Form Value: ", formvalue);
 
     //Making Api Call
     this.dataService.createResponse<CreateFiscalYear, FiscalYearList>('FiscalYear', formvalue).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
@@ -155,10 +159,20 @@ export class FiscalyearComponent {
 
   //Close Fiscal Year
   closeYear(requestedId: CloseYearRequest) {
-    console.log("ID ", requestedId);
-    this.dataService.create<CloseYearRequest>('FiscalYear/CloseYear', requestedId).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-      next: () => {
+
+    this.dataService.createResponse<CloseYearRequest, CloseYearResponse>('FiscalYear/CloseYear', requestedId).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: (res) => {
+        this.closingJobId.set(res.jobId);
         this.closingMessage.set("Fiscal year closing has been started. Check notifications for the final result.");
+        // Listen for THIS specific job's result
+        const sub = this.notifState.onJobComplete(res.jobId, (envelope) => {
+          if (envelope.type === NotificationType.Success) {
+            if (this.lastLazyEvent) {
+              this.loadFiscalYears(this.lastLazyEvent);
+            }
+          }
+          sub.unsubscribe(); // stop listening after result arrives
+        });
       },
       error: (err) => {
         this.base.handleError(err, err.error.message);

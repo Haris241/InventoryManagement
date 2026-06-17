@@ -1,10 +1,12 @@
 .active {
     background-color: var(--MainColour);
 }
-.LayoutHeight{
+
+.LayoutHeight {
     height: 100vh;
     height: 100dvh;
 }
+
 .custom {
     margin-left: 10px;
     font-family: sans-serif;
@@ -138,7 +140,22 @@
 }
 
 
-
+.notif-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    background: #ef4444;
+    color: white;
+    font-size: 10px;
+    font-weight: 600;
+    min-width: 18px;
+    height: 18px;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 4px;
+}
 
 
 @media (max-width: 768px) {
