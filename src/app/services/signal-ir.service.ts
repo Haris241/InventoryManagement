@@ -1,15 +1,14 @@
 import { DestroyRef, inject, Injectable } from '@angular/core';
-import { BaseApiService } from './base-api.service';
 import { NotificationService } from './notification.service';
 import { NotificationEnvelope } from '../Models/Notification.model';
 import * as signalR from '@microsoft/signalr';
+import { environment } from '../Enviroments/enviroment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SignalIrService {
   private connection?: signalR.HubConnection;
-  private readonly auth = inject(BaseApiService);
   private readonly notifState = inject(NotificationService);
   private readonly destroyRef = inject(DestroyRef);
 
@@ -21,13 +20,13 @@ export class SignalIrService {
   }
 
   startConnection(): void {
-    if (this.connection) return; // already connected
+    if (this.connection) return;
 
     this.connection = new signalR.HubConnectionBuilder()
-      .withUrl('/hubs/notifications', {
-        accessTokenFactory: () => this.auth.getAccessToken() ?? ''
+      .withUrl(`${environment.hubUrl}/hubs/notifications`, {
+        accessTokenFactory: () => localStorage.getItem('access_token') ?? ''
       })
-      .withAutomaticReconnect([0, 2000, 5000, 10000]) // retry delays in ms
+      .withAutomaticReconnect([0, 2000, 5000, 10000])
       .configureLogging(signalR.LogLevel.Warning)
       .build();
 

@@ -1,13 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from '../Enviroments/enviroment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DataLayerService {
 
-  private baseurl = "https://localhost:8081/api/"
+  private baseurl = environment.apiUrl
   private http = inject(HttpClient)
   getAll<T>(controller: string): Observable<T> {
     return this.http.get<T>(`${this.baseurl}${controller}`, { withCredentials: true });
