@@ -10,6 +10,7 @@ import { BaseApiService } from '../../../services/base-api.service';
 import { ThemeProvider } from 'primeng/config';
 import { NotificationsComponent } from '../../../shared/notifications/notifications.component';
 import { NotificationService } from '../../../services/notification.service';
+import { SignalIrService } from '../../../services/signal-ir.service';
 
 @Component({
   selector: 'app-accountlayout',
@@ -32,8 +33,11 @@ export class AccountlayoutComponent {
   screenSize = window.matchMedia('(max-width: 768px)');
   showNotifications = signal(false);
   protected readonly notifState = inject(NotificationService);
+  protected readonly signalIr = inject(SignalIrService);
 
   ngOnInit() {
+    this.signalIr.startConnection();
+    this.notifState.getUserNotifications();
     if (this.screenSize.matches) {
       this.isMobile.set(true);
       this.isCollapsed.set(true);

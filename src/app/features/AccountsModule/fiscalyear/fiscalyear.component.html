@@ -33,13 +33,15 @@
       <button class="global-button" type="submit" [disabled]="submit()">Add Fiscal Year</button>
     </div>
   </div>
-  <div class="w-full mt-3">
-    @if(closingMessage().length>0){
-    <div class="w-full p-3 mb-2 text-center">
-      <p class="second-color">{{ closingMessage() }}</p>
+  @if(closingMessage().length > 0){
+  <div class="w-full my-4">
+    <div class="rounded-xl second-bgcolor px-4 py-3 shadow-sm">
+      <p class="text-center text-sm font-medium WhiteC">
+        {{ closingMessage() }}
+      </p>
     </div>
-    }
   </div>
+  }
 </form>
 
 

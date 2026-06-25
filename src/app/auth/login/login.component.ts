@@ -24,8 +24,6 @@ export class LoginComponent {
   private dataService = inject(DataLayerService)
   private router = inject(Router)
   private destroyRef = inject(DestroyRef);
-  private signalIr = inject(SignalIrService);
-  private notify = inject(NotificationService);
 
   submit = signal<boolean>(false);
   showPassword = false;
@@ -58,8 +56,6 @@ export class LoginComponent {
         next: (response) => {
           this.submit.set(false);
           this.api.setToken(response.accessToken);
-          this.signalIr.startConnection();
-          this.notify.getUserNotifications();
           this.router.navigate(['/modules']);
         },
         error: (err) => {
