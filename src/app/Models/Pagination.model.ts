@@ -1,5 +1,5 @@
 export interface AutoDropdown {
-    id: string | number,
+    id: string | number | null,
     name: string
 }
 export interface PaginationResult<T> {

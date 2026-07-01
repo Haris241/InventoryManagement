@@ -96,10 +96,12 @@
                     <td>{{voucher.narration}}</td>
                     <td>{{voucher.totalDebit}}</td>
                     <td>{{voucher.totalCredit}}</td>
-                    <!-- <td>
-                        <button class="me-3" (click)="editVoucher(voucher.id)"><span
+                    <td>
+                        @if(isEditableType.has(voucher.voucherType)){
+                        <button class="me-3" (click)="editVoucher(voucher.id,voucher.voucherType)"><span
                                 class="material-symbols-outlined icon-color">edit</span></button>
-                    </td> -->
+                        }
+                    </td>
                 </tr>
             </ng-template>
         </p-table>

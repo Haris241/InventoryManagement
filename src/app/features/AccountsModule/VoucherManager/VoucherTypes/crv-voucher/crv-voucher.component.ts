@@ -104,6 +104,7 @@ export class CrvVoucherComponent {
     debit: 0,
     credit: 0,
     currencyCode: null,
+    accountName: '',
     exchangeRate: 1,
     relatedEntityId: null,
     referenceNo: '',
@@ -264,7 +265,7 @@ export class CrvVoucherComponent {
     this.errors.set([]);
     this.backendErrors.set({});
     const formvalue = this.crvForm().value() as CreateJournalEntry;
-    formvalue.postingDate = toDateOnlyString(formvalue.postingDateUI);
+    formvalue.postingDate = toDateOnlyString(formvalue.postingDateUI) ?? '';
 
     //Making Api Call
     this.dataService.create<CreateJournalEntry>('VoucherManager/crv', formvalue).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({

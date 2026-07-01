@@ -16,6 +16,7 @@ import { AutoDropdown } from '../../../../../Models/Pagination.model';
 import { CurrencyDto } from '../../../../../Models/Auth.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { voucherMangerService } from '../../../../../services/Accounting/voucherManger.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-jv-voucher',
@@ -27,20 +28,6 @@ export class JvVoucherComponent {
 
   //Initial Call
   currencies = signal<CurrencyDto[]>([]);
-  ngOnInit(): void {
-    this.loadCurrencies();
-  }
-
-  loadCurrencies(): void {
-    this.dataService.getAll<CurrencyDto[]>("Dropdowns/Currencies").pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-      next: (res) => {
-        this.currencies.set(res);
-      },
-      error: (err) => {
-        this.base.handleError(err, err.error.message);
-      }
-    });
-  }
 
   //properties
   private dataService = inject(DataLayerService);
@@ -48,11 +35,30 @@ export class JvVoucherComponent {
   private base = inject(BaseApiService);
   private pagination = inject(PaginationService);
   private voucherMangerService = inject(voucherMangerService);
+  private activatedRoute = inject(ActivatedRoute);
+  private router = inject(Router);
+
   submit = signal<boolean>(false);
   formSubmitted = signal<boolean>(false);
   backendErrors = signal<Record<string, string[]>>({});
   errors = signal<string[]>([]);
   voucherTypes = signal(enumToOptions(VoucherType, true));
+  isEditMode = signal<boolean>(false);
+
+  //Load Voucher for Edit Mode
+  ngOnInit() {
+    this.loadCurrencies();
+    this.activatedRoute.paramMap.pipe(
+      takeUntilDestroyed(this.destroyRef)).subscribe(param => {
+        const id = param.get('id');
+        if (id) {
+
+          this.isEditMode.set(true);
+          this.loadJv(id);
+        }
+      });
+  }
+
 
   //Computed Totals
   totalDebit = computed(() =>
@@ -88,6 +94,7 @@ export class JvVoucherComponent {
     debit: 0,
     credit: 0,
     currencyCode: null,
+    accountName: '',
     exchangeRate: 1,
     relatedEntityId: null,
     referenceNo: '',
@@ -236,7 +243,7 @@ export class JvVoucherComponent {
     this.errors.set([]);
     this.backendErrors.set({});
     const formvalue = this.journalForm().value() as CreateJournalEntry;
-    formvalue.postingDate = toDateOnlyString(formvalue.postingDateUI);
+    formvalue.postingDate = toDateOnlyString(formvalue.postingDateUI) ?? '';
 
     //Making Api Call
     this.dataService.create<CreateJournalEntry>('VoucherManager/jv', formvalue).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
@@ -265,6 +272,36 @@ export class JvVoucherComponent {
     if (search.length > 2) {
       searchtermsignal.set(search);
     }
+  }
+
+  loadCurrencies(): void {
+    this.dataService.getAll<CurrencyDto[]>("Dropdowns/Currencies").pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: (res) => {
+        this.currencies.set(res);
+      },
+      error: (err) => {
+        this.base.handleError(err, err.error.message);
+      }
+    });
+  }
+
+  loadJv(id: string) {
+    this.dataService.getById<CreateJournalEntry>('VoucherManager', id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: (data) => {
+        const accounts = data.lines.map(line => ({
+          id: line.chartOfAccountId,
+          name: line.accountName
+        }));
+
+        this.coaSearch.setInitialValue(accounts);
+        data.postingDateUI = new Date(data.postingDate);
+        queueMicrotask(() => this.journalModel.set(data));
+      },
+      error: (err) => {
+        this.base.handleError(err, err.error?.message);
+        this.router.navigate(['Accounts', 'voucherList']);
+      }
+    });
   }
 
 

@@ -1,6 +1,6 @@
 export interface CreateJournalEntry {
     voucherType: VoucherType;
-    postingDate: string | null;
+    postingDate: string;
     postingDateUI: Date;
     narration: string;
     category: JournalCategory;
@@ -14,6 +14,7 @@ export interface CreateJournalEntryLine {
     debit: number;
     credit: number;
     currencyCode: string | null;
+    accountName: string;
     exchangeRate: number;
     relatedEntityId: string | null;
     referenceNo: string;

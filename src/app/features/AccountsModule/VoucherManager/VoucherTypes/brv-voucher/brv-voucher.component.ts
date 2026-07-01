@@ -104,6 +104,7 @@ export class BrvVoucherComponent {
     debit: 0,
     credit: 0,
     currencyCode: null,
+    accountName: '',
     exchangeRate: 1,
     relatedEntityId: null,
     referenceNo: '',
@@ -275,7 +276,7 @@ export class BrvVoucherComponent {
     this.errors.set([]);
     this.backendErrors.set({});
     const formvalue = this.brvForm().value() as CreateBankVoucher;
-    formvalue.postingDate = toDateOnlyString(formvalue.postingDateUI);
+    formvalue.postingDate = toDateOnlyString(formvalue.postingDateUI) ?? '';
 
     //Making Api Call
     this.dataService.create<CreateBankVoucher>('VoucherManager/brv', formvalue).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({

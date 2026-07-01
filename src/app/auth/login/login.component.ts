@@ -10,9 +10,6 @@ import { FormsModule } from '@angular/forms';
 import { form, FormField, required } from '@angular/forms/signals';
 import { FieldErrorSComponent } from '../../shared/field-error-s/field-error-s.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { SignalIrService } from '../../services/signal-ir.service';
-import { NotificationService } from '../../services/notification.service';
-
 @Component({
   selector: 'app-login',
   imports: [InputTextModule, FormsModule, FormField, RouterLink, FloatLabelModule, FieldErrorSComponent],

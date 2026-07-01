@@ -96,6 +96,24 @@ export const routes: Routes = [
                 ]
             },
             {
+                path: 'jvEdit/:id', loadComponent: () => import('./features/AccountsModule/VoucherManager/VoucherTypes/jv-voucher/jv-voucher.component').then(m => m.JvVoucherComponent)
+            },
+            {
+                path: 'cpvEdit/:id', loadComponent: () => import('./features/AccountsModule/VoucherManager/VoucherTypes/cpv-voucher/cpv-voucher.component').then(m => m.CpvVoucherComponent)
+            },
+            {
+                path: 'bpvEdit/:id', loadComponent: () => import('./features/AccountsModule/VoucherManager/VoucherTypes/bpv-voucher/bpv-voucher.component').then(m => m.BpvVoucherComponent)
+            },
+            {
+                path: 'crvEdit/:id', loadComponent: () => import('./features/AccountsModule/VoucherManager/VoucherTypes/crv-voucher/crv-voucher.component').then(m => m.CrvVoucherComponent)
+            },
+            {
+                path: 'brvEdit/:id', loadComponent: () => import('./features/AccountsModule/VoucherManager/VoucherTypes/brv-voucher/brv-voucher.component').then(m => m.BrvVoucherComponent)
+            },
+            {
+                path: 'cvEdit/:id', loadComponent: () => import('./features/AccountsModule/VoucherManager/VoucherTypes/cv-voucher/cv-voucher.component').then(m => m.CvVoucherComponent)
+            },
+            {
                 path: 'voucherList', loadComponent: () => import('./features/AccountsModule/VoucherManager/VoucherList/voucher-list.component').then(m => m.VoucherListComponent)
             },
             {

@@ -38,6 +38,7 @@ export class VoucherListComponent {
   hasPreviousPage = signal<boolean>(false);
   nextCursor = signal<string | null>(null);
   previousCursor = signal<string | null>(null);
+  isEditableType = new Set(['BankPayment', 'BankReceipt', 'Journal', 'Contra', 'CashPayment', 'CashReceipt']);
 
   formSubmitted = signal<boolean>(false);
   backendErrors = signal<Record<string, string[]>>({});
@@ -99,8 +100,32 @@ export class VoucherListComponent {
     this.loadVoucher('fresh');
   }
 
-  editCOA(id: string) {
-    this.router.navigate(['Accounts/coaEdit', id]);
+  editVoucher(id: string, voucherType: string) {
+    switch (voucherType) {
+      case 'Journal':
+        this.router.navigate(['Accounts', 'jvEdit', id]);
+        break;
+
+      case 'CashPayment':
+        this.router.navigate(['Accounts', 'cpvEdit', id]);
+        break;
+
+      case 'BankPayment':
+        this.router.navigate(['Accounts', 'bpvEdit', id]);
+        break;
+
+      case 'CashReceipt':
+        this.router.navigate(['Accounts', 'crvEdit', id]);
+        break;
+
+      case 'BankReceipt':
+        this.router.navigate(['Accounts', 'brvEdit', id]);
+        break;
+
+      case 'Contra':
+        this.router.navigate(['Accounts', 'cvEdit', id]);
+        break;
+    }
   }
   SearchDropDown(event: { query: string }, searchtermsignal: WritableSignal<string>) {
     const search = event.query?.trim() ?? '';
