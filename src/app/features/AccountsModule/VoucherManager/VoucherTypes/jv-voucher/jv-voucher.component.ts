@@ -1,7 +1,8 @@
 import { Component, computed, DestroyRef, inject, signal, WritableSignal } from '@angular/core';
+import { AutoDropdown } from '../../../../../Models/Pagination.model';
 import { DataLayerService } from '../../../../../services/data-layer.service';
 import { BaseApiService } from '../../../../../services/base-api.service';
-import { CreateJournalEntry, CreateJournalEntryLine, JournalCategory, SourceType, VoucherType } from '../../../../../Models/Accouting/VoucherManager.model';
+import { JournalEntryDto, JournalEntryLineDto, JournalCategory, SourceType, VoucherType } from '../../../../../Models/Accouting/VoucherManager.model';
 import { applyEach, form, FormField, min, required, validate } from '@angular/forms/signals';
 import { FloatLabel } from "primeng/floatlabel";
 import { FieldErrorSComponent } from "../../../../../shared/field-error-s/field-error-s.component";
@@ -12,7 +13,7 @@ import { enumToOptions, toDateOnlyString } from '../../../../../shared/Utility';
 import { SelectModule } from 'primeng/select';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { PaginationService } from '../../../../../services/pagination.service';
-import { AutoDropdown } from '../../../../../Models/Pagination.model';
+
 import { CurrencyDto } from '../../../../../Models/Auth.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { voucherMangerService } from '../../../../../services/Accounting/voucherManger.service';
@@ -88,7 +89,7 @@ export class JvVoucherComponent {
   coaSearchList = this.coaSearch.result;
 
   //Initialize Lines
-  private readonly jvLines: CreateJournalEntryLine = {
+  private readonly jvLines: JournalEntryLineDto = {
     chartOfAccountId: null,
     description: '',
     debit: 0,
@@ -102,7 +103,7 @@ export class JvVoucherComponent {
   };
 
   //Intialize Main Object
-  private readonly jvModel: CreateJournalEntry = {
+  private readonly jvModel: JournalEntryDto = {
     voucherType: VoucherType.Journal,
     postingDateUI: new Date(),
     postingDate: '',
@@ -114,7 +115,7 @@ export class JvVoucherComponent {
   };
 
   //Intialize Main Object with Signal
-  journalModel = signal<CreateJournalEntry>(this.jvModel);
+  journalModel = signal<JournalEntryDto>(this.jvModel);
 
   //validations
   journalForm = form(this.journalModel, (schema) => {
@@ -148,17 +149,17 @@ export class JvVoucherComponent {
   });
 
   //Method to Update Fields For Non supporting Primeng Fields
-  updateField<K extends keyof CreateJournalEntry>(field: K, value: CreateJournalEntry[K]) {
+  updateField<K extends keyof JournalEntryDto>(field: K, value: JournalEntryDto[K]) {
     this.journalModel.update(prev => ({
       ...prev,
       [field]: value
     }));
   }
   // ✅ Update a specific field inside a specific line by index
-  updateLineField<K extends keyof CreateJournalEntryLine>(
+  updateLineField<K extends keyof JournalEntryLineDto>(
     index: number,
     field: K,
-    value: CreateJournalEntryLine[K]
+    value: JournalEntryLineDto[K]
   ) {
     this.journalModel.update(prev => {
       const lines = [...prev.lines];           // shallow copy the array
@@ -242,12 +243,30 @@ export class JvVoucherComponent {
     //Accessing Form Value
     this.errors.set([]);
     this.backendErrors.set({});
-    const formvalue = this.journalForm().value() as CreateJournalEntry;
+    const formvalue = this.journalForm().value() as JournalEntryDto;
     formvalue.postingDate = toDateOnlyString(formvalue.postingDateUI) ?? '';
 
+    // Extract raw ID from autocomplete object (since optionValue is no longer used)
+    formvalue.lines = formvalue.lines.map(line => ({
+      ...line,
+      chartOfAccountId: (line.chartOfAccountId as any)?.id ?? line.chartOfAccountId
+    }));
+
+    //for update and create
+    const url = `VoucherManager/jv`;
+    const request$ = this.isEditMode()
+      ? this.dataService.edit<JournalEntryDto>(url, formvalue.id?.toString() ?? '', formvalue)
+      : this.dataService.create<JournalEntryDto>(url, formvalue);
+
     //Making Api Call
-    this.dataService.create<CreateJournalEntry>('VoucherManager/jv', formvalue).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+    request$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
+        //Redirect To List For Edit
+        if (this.isEditMode()) {
+          this.router.navigate(['Accounts', 'voucherList']);
+          this.base.globalMessage('success', 'Voucher Updated Successfully', false);
+          return;
+        }
         this.base.globalMessage('success', 'Voucher Posted Successfully', false);
         //Reset the form
         this.journalForm().reset({ ...this.jvModel, lines: [{ ...this.jvLines }] });
@@ -286,16 +305,25 @@ export class JvVoucherComponent {
   }
 
   loadJv(id: string) {
-    this.dataService.getById<CreateJournalEntry>('VoucherManager', id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+    this.dataService.getById<JournalEntryDto>('VoucherManager', id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (data) => {
-        const accounts = data.lines.map(line => ({
-          id: line.chartOfAccountId,
-          name: line.accountName
-        }));
 
-        this.coaSearch.setInitialValue(accounts);
+        //Bind selected Account Id with Auto complete
+        data.lines.forEach(line => {
+          line.selectedAccounts = {
+            id: line.chartOfAccountId!,
+            name: line.accountName
+          };
+        });
+
+        this.coaSearch.setInitialValue(
+          data.lines.map(x => x.selectedAccounts!)
+        );
+
         data.postingDateUI = new Date(data.postingDate);
-        queueMicrotask(() => this.journalModel.set(data));
+
+        // Set chartOfAccountId to the full object so autocomplete can display the name
+        this.journalModel.set(data)
       },
       error: (err) => {
         this.base.handleError(err, err.error?.message);

@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { AccountingLine, CreateJournalEntryLine, VoucherType } from "../../Models/Accouting/VoucherManager.model";
+import { AccountingLine, JournalEntryLineDto, VoucherType } from "../../Models/Accouting/VoucherManager.model";
 
 @Injectable({
     providedIn: 'root'
@@ -43,7 +43,7 @@ export class voucherMangerService {
 
         return errors;
     }
-    generateSmartLines(lines: CreateJournalEntryLine[], voucherType: VoucherType): Partial<CreateJournalEntryLine> {
+    generateSmartLines(lines: JournalEntryLineDto[], voucherType: VoucherType): Partial<JournalEntryLineDto> {
 
         if (!lines.length) return {};
 

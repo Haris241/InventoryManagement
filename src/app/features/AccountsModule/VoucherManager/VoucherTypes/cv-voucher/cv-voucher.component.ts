@@ -1,7 +1,7 @@
 import { Component, computed, DestroyRef, inject, signal, WritableSignal } from '@angular/core';
 import { DataLayerService } from '../../../../../services/data-layer.service';
 import { BaseApiService } from '../../../../../services/base-api.service';
-import { CreateJournalEntry, CreateJournalEntryLine, JournalCategory, SourceType, VoucherType } from '../../../../../Models/Accouting/VoucherManager.model';
+import { JournalEntryDto, JournalEntryLineDto, JournalCategory, SourceType, VoucherType } from '../../../../../Models/Accouting/VoucherManager.model';
 import { applyEach, form, FormField, min, required, validate } from '@angular/forms/signals';
 import { FloatLabel } from "primeng/floatlabel";
 import { FieldErrorSComponent } from "../../../../../shared/field-error-s/field-error-s.component";
@@ -91,7 +91,7 @@ export class CvVoucherComponent {
 
 
   //Initialize Lines
-  private readonly jvLines: CreateJournalEntryLine = {
+  private readonly jvLines: JournalEntryLineDto = {
     chartOfAccountId: null,
     description: '',
     debit: 0,
@@ -105,7 +105,7 @@ export class CvVoucherComponent {
   };
 
   //Intialize Main Object..The Lines are Multipe ...one for Cash and one for Other
-  private readonly cvModel: CreateJournalEntry = {
+  private readonly cvModel: JournalEntryDto = {
     voucherType: VoucherType.Contra,
     postingDateUI: new Date(),
     postingDate: '',
@@ -117,7 +117,7 @@ export class CvVoucherComponent {
   };
 
   //Intialize Main Object with Signal
-  contraJournalModel = signal<CreateJournalEntry>(this.cvModel);
+  contraJournalModel = signal<JournalEntryDto>(this.cvModel);
 
 
   //validations
@@ -152,14 +152,14 @@ export class CvVoucherComponent {
   });
 
   //Method to Update Fields For Non supporting Primeng Fields
-  updateField<K extends keyof CreateJournalEntry>(field: K, value: CreateJournalEntry[K]) {
+  updateField<K extends keyof JournalEntryDto>(field: K, value: JournalEntryDto[K]) {
     this.contraJournalModel.update(prev => ({
       ...prev,
       [field]: value
     }));
   }
   // ✅ Update a specific field inside a specific line by index
-  updateLineField<K extends keyof CreateJournalEntryLine>(index: number, field: K, value: CreateJournalEntryLine[K]) {
+  updateLineField<K extends keyof JournalEntryLineDto>(index: number, field: K, value: JournalEntryLineDto[K]) {
     this.contraJournalModel.update(prev => {
       const lines = [...prev.lines];           // shallow copy the array
       lines[index] = { ...lines[index], [field]: value }; // copy the line, update field
@@ -199,11 +199,11 @@ export class CvVoucherComponent {
     //Accessing Form Valu.e
     this.errors.set([]);
     this.backendErrors.set({});
-    const formvalue = this.cvForm().value() as CreateJournalEntry;
+    const formvalue = this.cvForm().value() as JournalEntryDto;
     formvalue.postingDate = toDateOnlyString(formvalue.postingDateUI) ?? '';
 
     //Making Api Call
-    this.dataService.create<CreateJournalEntry>('VoucherManager/cv', formvalue).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+    this.dataService.create<JournalEntryDto>('VoucherManager/cv', formvalue).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
         this.base.globalMessage('success', 'Voucher Posted Successfully', false);
         //Reset the form

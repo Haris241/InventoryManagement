@@ -3,7 +3,11 @@
     <div class="flex flex-wrap global-div p-5">
         <div class="w-full mb-4">
             <h3 class="text-2xl font-semibold text-center mb-3">
+                @if(isEditMode()){
+                <span class="gradient-heading">Edit Journal Voucher</span>
+                }@else{
                 <span class="gradient-heading">Add Journal Voucher</span>
+                }
             </h3>
             <hr class="second-color">
         </div>
@@ -82,7 +86,7 @@
 
                         <!-- Account (AutoComplete) -->
                         <td class="p-2 align-top">
-                            <p-autoComplete [(ngModel)]="line.chartOfAccountId" [ngModelOptions]="{standalone: true}"
+                            <p-autoComplete [(ngModel)]="line.selectedAccounts" [ngModelOptions]="{standalone: true}"
                                 (ngModelChange)="updateLineField($index, 'chartOfAccountId', $event)"
                                 (completeMethod)="SearchDropDown($event, coaSearch.searchterm)" optionLabel="name"
                                 optionValue="id" [suggestions]="coaSearchList()" [showClear]="true" appendTo="body"
@@ -185,9 +189,15 @@
 
         <!--submitting the form  -->
         <div class="w-full flex justify-center m-3">
+            @if(isEditMode()){
+            <button class="global-button" type="submit" [disabled]="submit()">
+                {{ submit() ? 'Processing...' : 'Update Voucher' }}
+            </button>
+            }@else{
             <button class="global-button" type="submit" [disabled]="submit()">
                 {{ submit() ? 'Processing...' : 'Create Voucher' }}
             </button>
+            }
         </div>
     </div>
 </form>

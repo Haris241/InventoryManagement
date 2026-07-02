@@ -1,7 +1,7 @@
 import { Component, computed, DestroyRef, inject, signal, WritableSignal } from '@angular/core';
 import { DataLayerService } from '../../../../../services/data-layer.service';
 import { BaseApiService } from '../../../../../services/base-api.service';
-import { ChequeStatus, CreateBankVoucher, CreateJournalEntry, CreateJournalEntryLine, JournalCategory, SourceType, VoucherType } from '../../../../../Models/Accouting/VoucherManager.model';
+import { ChequeStatus, BankVoucherDto, JournalEntryDto, JournalEntryLineDto, JournalCategory, SourceType, VoucherType } from '../../../../../Models/Accouting/VoucherManager.model';
 import { applyEach, form, FormField, min, required, validate } from '@angular/forms/signals';
 import { FloatLabel } from "primeng/floatlabel";
 import { FieldErrorSComponent } from "../../../../../shared/field-error-s/field-error-s.component";
@@ -98,7 +98,7 @@ export class BrvVoucherComponent {
   nonBankCoaSearchList = this.nonBankCoa.result;
 
   //Initialize Lines
-  private readonly jvLines: CreateJournalEntryLine = {
+  private readonly jvLines: JournalEntryLineDto = {
     chartOfAccountId: null,
     description: '',
     debit: 0,
@@ -112,7 +112,7 @@ export class BrvVoucherComponent {
   };
 
   //Intialize Main Object..The Lines are Multipe ...one for Bank and one for Other
-  private readonly brvModel: CreateBankVoucher = {
+  private readonly brvModel: BankVoucherDto = {
     bankName: '',
     bankAccountNumber: '',
     bankBranch: '',
@@ -132,7 +132,7 @@ export class BrvVoucherComponent {
   };
 
   //Intialize Main Object with Signal
-  bankJournalModel = signal<CreateBankVoucher>(this.brvModel);
+  bankJournalModel = signal<BankVoucherDto>(this.brvModel);
 
 
   //validations
@@ -179,14 +179,14 @@ export class BrvVoucherComponent {
   });
 
   //Method to Update Fields For Non supporting Primeng Fields
-  updateField<K extends keyof CreateBankVoucher>(field: K, value: CreateBankVoucher[K]) {
+  updateField<K extends keyof BankVoucherDto>(field: K, value: BankVoucherDto[K]) {
     this.bankJournalModel.update(prev => ({
       ...prev,
       [field]: value
     }));
   }
   // ✅ Update a specific field inside a specific line by index
-  updateLineField<K extends keyof CreateJournalEntryLine>(index: number, field: K, value: CreateJournalEntryLine[K]) {
+  updateLineField<K extends keyof JournalEntryLineDto>(index: number, field: K, value: JournalEntryLineDto[K]) {
     this.bankJournalModel.update(prev => {
       const lines = [...prev.lines];           // shallow copy the array
       lines[index] = { ...lines[index], [field]: value }; // copy the line, update field
@@ -275,11 +275,11 @@ export class BrvVoucherComponent {
     //Accessing Form Value
     this.errors.set([]);
     this.backendErrors.set({});
-    const formvalue = this.brvForm().value() as CreateBankVoucher;
+    const formvalue = this.brvForm().value() as BankVoucherDto;
     formvalue.postingDate = toDateOnlyString(formvalue.postingDateUI) ?? '';
 
     //Making Api Call
-    this.dataService.create<CreateBankVoucher>('VoucherManager/brv', formvalue).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+    this.dataService.create<BankVoucherDto>('VoucherManager/brv', formvalue).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
         this.base.globalMessage('success', 'Voucher Posted Successfully', false);
         //Reset the form

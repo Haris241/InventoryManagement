@@ -1,4 +1,7 @@
-export interface CreateJournalEntry {
+import { AutoDropdown } from "../Pagination.model";
+
+export interface JournalEntryDto {
+    id?: number
     voucherType: VoucherType;
     postingDate: string;
     postingDateUI: Date;
@@ -6,9 +9,9 @@ export interface CreateJournalEntry {
     category: JournalCategory;
     sourceType: SourceType;
     sourceId: string | null;
-    lines: CreateJournalEntryLine[];
+    lines: JournalEntryLineDto[];
 }
-export interface CreateJournalEntryLine {
+export interface JournalEntryLineDto {
     chartOfAccountId: number | null;
     description: string;
     debit: number;
@@ -19,8 +22,10 @@ export interface CreateJournalEntryLine {
     relatedEntityId: string | null;
     referenceNo: string;
     isMainLine: boolean;
+    selectedAccounts?: AutoDropdown;
 }
-export interface CreateBankVoucher extends CreateJournalEntry {
+export interface BankVoucherDto extends JournalEntryDto {
+    bankId?: number;
     bankName: string;
     bankAccountNumber: string;
     bankBranch: string;
