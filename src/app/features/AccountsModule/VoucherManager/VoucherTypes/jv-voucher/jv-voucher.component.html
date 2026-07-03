@@ -87,10 +87,9 @@
                         <!-- Account (AutoComplete) -->
                         <td class="p-2 align-top">
                             <p-autoComplete [(ngModel)]="line.selectedAccounts" [ngModelOptions]="{standalone: true}"
-                                (ngModelChange)="updateLineField($index, 'chartOfAccountId', $event)"
+                                (ngModelChange)="updateLineField($index, 'chartOfAccountId', $event?.id ?? null)"
                                 (completeMethod)="SearchDropDown($event, coaSearch.searchterm)" optionLabel="name"
-                                optionValue="id" [suggestions]="coaSearchList()" [showClear]="true" appendTo="body"
-                                fluid size="small">
+                                [suggestions]="coaSearchList()" [showClear]="true" appendTo="body" fluid size="small">
                             </p-autoComplete>
                             <app-field-errorS [field]="journalForm.lines[$index].chartOfAccountId"
                                 [submit]="formSubmitted()" [backendErrors]="backendErrors()"

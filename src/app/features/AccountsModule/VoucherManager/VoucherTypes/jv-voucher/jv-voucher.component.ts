@@ -246,12 +246,6 @@ export class JvVoucherComponent {
     const formvalue = this.journalForm().value() as JournalEntryDto;
     formvalue.postingDate = toDateOnlyString(formvalue.postingDateUI) ?? '';
 
-    // Extract raw ID from autocomplete object (since optionValue is no longer used)
-    formvalue.lines = formvalue.lines.map(line => ({
-      ...line,
-      chartOfAccountId: (line.chartOfAccountId as any)?.id ?? line.chartOfAccountId
-    }));
-
     //for update and create
     const url = `VoucherManager/jv`;
     const request$ = this.isEditMode()
@@ -322,8 +316,7 @@ export class JvVoucherComponent {
 
         data.postingDateUI = new Date(data.postingDate);
 
-        // Set chartOfAccountId to the full object so autocomplete can display the name
-        this.journalModel.set(data)
+        this.journalModel.set(data);
       },
       error: (err) => {
         this.base.handleError(err, err.error?.message);
