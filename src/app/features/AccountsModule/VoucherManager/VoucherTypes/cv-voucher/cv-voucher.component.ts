@@ -15,6 +15,7 @@ import { AutoDropdown } from '../../../../../Models/Pagination.model';
 import { CurrencyDto } from '../../../../../Models/Auth.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { voucherMangerService } from '../../../../../services/Accounting/voucherManger.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-cv-voucher',
@@ -27,9 +28,33 @@ export class CvVoucherComponent {
   currencies = signal<CurrencyDto[]>([]);
   cashBankUsageAccounts = signal<AutoDropdown[]>([]);
 
+
+  //properties
+  private dataService = inject(DataLayerService);
+  private destroyRef = inject(DestroyRef);
+  private base = inject(BaseApiService);
+  private voucherMangerService = inject(voucherMangerService);
+  private activatedRoute = inject(ActivatedRoute);
+  private router = inject(Router);
+
+  isEditMode = signal<boolean>(false);
+  submit = signal<boolean>(false);
+  formSubmitted = signal<boolean>(false);
+  backendErrors = signal<Record<string, string[]>>({});
+  errors = signal<string[]>([]);
+  voucherTypes = signal(enumToOptions(VoucherType, true));
+
   ngOnInit(): void {
     this.loadCurrencies();
     this.loadCashUsageAccounts();
+    this.activatedRoute.paramMap.pipe(
+      takeUntilDestroyed(this.destroyRef)).subscribe(param => {
+        const id = param.get('id');
+        if (id) {
+          this.isEditMode.set(true);
+          this.loadCv(id);
+        }
+      });
   }
 
   loadCurrencies(): void {
@@ -54,17 +79,6 @@ export class CvVoucherComponent {
       }
     });
   }
-  //properties
-  private dataService = inject(DataLayerService);
-  private destroyRef = inject(DestroyRef);
-  private base = inject(BaseApiService);
-  private voucherMangerService = inject(voucherMangerService);
-  submit = signal<boolean>(false);
-  formSubmitted = signal<boolean>(false);
-  backendErrors = signal<Record<string, string[]>>({});
-  errors = signal<string[]>([]);
-  voucherTypes = signal(enumToOptions(VoucherType, true));
-
 
   //Computed Totals
   totalDebit = computed(() =>
@@ -202,8 +216,14 @@ export class CvVoucherComponent {
     const formvalue = this.cvForm().value() as JournalEntryDto;
     formvalue.postingDate = toDateOnlyString(formvalue.postingDateUI) ?? '';
 
+    //for update and create
+    const url = `VoucherManager/cv`;
+    const request$ = this.isEditMode()
+      ? this.dataService.edit<JournalEntryDto>(url, formvalue.id?.toString() ?? '', formvalue)
+      : this.dataService.create<JournalEntryDto>(url, formvalue);
+
     //Making Api Call
-    this.dataService.create<JournalEntryDto>('VoucherManager/cv', formvalue).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+    request$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
         this.base.globalMessage('success', 'Voucher Posted Successfully', false);
         //Reset the form
@@ -223,4 +243,18 @@ export class CvVoucherComponent {
 
   }
 
+  loadCv(id: string) {
+    this.dataService.getById<JournalEntryDto>('VoucherManager', id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: (data) => {
+
+        data.postingDateUI = new Date(data.postingDate);
+
+        this.contraJournalModel.set(data);
+      },
+      error: (err) => {
+        this.base.handleError(err, err.error?.message);
+        this.router.navigate(['Accounts', 'voucherList']);
+      }
+    });
+  }
 }

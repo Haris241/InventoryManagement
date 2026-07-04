@@ -16,6 +16,7 @@ import { AutoDropdown } from '../../../../../Models/Pagination.model';
 import { CurrencyDto } from '../../../../../Models/Auth.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { voucherMangerService } from '../../../../../services/Accounting/voucherManger.service';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-crv-voucher',
@@ -28,39 +29,18 @@ export class CrvVoucherComponent {
   currencies = signal<CurrencyDto[]>([]);
   cashUsageAccounts = signal<AutoDropdown[]>([]);
 
-  ngOnInit(): void {
-    this.loadCurrencies();
-    this.loadCashUsageAccounts();
-  }
 
-  loadCurrencies(): void {
-    this.dataService.getAll<CurrencyDto[]>("Dropdowns/Currencies").pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-      next: (res) => {
-        this.currencies.set(res);
-      },
-      error: (err) => {
-        this.base.handleError(err, err.error.message);
-      }
-    });
-  }
-
-  //Load Cash Usage Acccounts
-  loadCashUsageAccounts(): void {
-    this.dataService.getAll<AutoDropdown[]>("AccountsDropDown/CashUsageAccounts").pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-      next: (res) => {
-        this.cashUsageAccounts.set(res);
-      },
-      error: (err) => {
-        this.base.handleError(err, err.error.message);
-      }
-    });
-  }
   //properties
   private dataService = inject(DataLayerService);
   private destroyRef = inject(DestroyRef);
   private base = inject(BaseApiService);
   private pagination = inject(PaginationService);
   private voucherMangerService = inject(voucherMangerService);
+  private activatedRoute = inject(ActivatedRoute);
+  private router = inject(Router);
+
+  isEditMode = signal<boolean>(false);
+
   submit = signal<boolean>(false);
   formSubmitted = signal<boolean>(false);
   backendErrors = signal<Record<string, string[]>>({});
@@ -91,7 +71,42 @@ export class CrvVoucherComponent {
     )
   );
 
+  ngOnInit(): void {
+    this.loadCurrencies();
+    this.loadCashUsageAccounts();
+    this.activatedRoute.paramMap.pipe(
+      takeUntilDestroyed(this.destroyRef)).subscribe(param => {
+        const id = param.get('id');
+        if (id) {
 
+          this.isEditMode.set(true);
+          this.loadCRV(id);
+        }
+      });
+  }
+
+  loadCurrencies(): void {
+    this.dataService.getAll<CurrencyDto[]>("Dropdowns/Currencies").pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: (res) => {
+        this.currencies.set(res);
+      },
+      error: (err) => {
+        this.base.handleError(err, err.error.message);
+      }
+    });
+  }
+
+  //Load Cash Usage Acccounts
+  loadCashUsageAccounts(): void {
+    this.dataService.getAll<AutoDropdown[]>("AccountsDropDown/CashUsageAccounts").pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: (res) => {
+        this.cashUsageAccounts.set(res);
+      },
+      error: (err) => {
+        this.base.handleError(err, err.error.message);
+      }
+    });
+  }
 
   //for Global Search
   cashCoa = this.pagination.autoSearchDropdown<AutoDropdown>('AccountsDropDown/NonBankCashAccounts');
@@ -267,8 +282,16 @@ export class CrvVoucherComponent {
     const formvalue = this.crvForm().value() as JournalEntryDto;
     formvalue.postingDate = toDateOnlyString(formvalue.postingDateUI) ?? '';
 
+    //for update and create
+    const url = `VoucherManager/crv`;
+    const request$ = this.isEditMode()
+      ? this.dataService.edit<JournalEntryDto>(url, formvalue.id?.toString() ?? '', formvalue)
+      : this.dataService.create<JournalEntryDto>(url, formvalue);
+
+
+
     //Making Api Call
-    this.dataService.create<JournalEntryDto>('VoucherManager/crv', formvalue).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+    request$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
         this.base.globalMessage('success', 'Voucher Posted Successfully', false);
         //Reset the form
@@ -294,5 +317,31 @@ export class CrvVoucherComponent {
     if (search.length > 2) {
       searchtermsignal.set(search);
     }
+  }
+  loadCRV(id: string) {
+    this.dataService.getById<JournalEntryDto>('VoucherManager', id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: (data) => {
+
+        //Bind selected Account Id with Auto complete
+        data.lines.forEach(line => {
+          line.selectedAccounts = {
+            id: line.chartOfAccountId!,
+            name: line.accountName
+          };
+        });
+
+        this.cashCoa.setInitialValue(
+          data.lines.map(x => x.selectedAccounts!)
+        );
+
+        data.postingDateUI = new Date(data.postingDate);
+
+        this.cashJournalModel.set(data);
+      },
+      error: (err) => {
+        this.base.handleError(err, err.error?.message);
+        this.router.navigate(['Accounts', 'voucherList']);
+      }
+    });
   }
 }

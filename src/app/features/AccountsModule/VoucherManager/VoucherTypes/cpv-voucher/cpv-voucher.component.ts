@@ -16,6 +16,7 @@ import { AutoDropdown } from '../../../../../Models/Pagination.model';
 import { CurrencyDto } from '../../../../../Models/Auth.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { voucherMangerService } from '../../../../../services/Accounting/voucherManger.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-cpv-voucher',
@@ -28,9 +29,35 @@ export class CpvVoucherComponent {
   currencies = signal<CurrencyDto[]>([]);
   cashUsageAccounts = signal<AutoDropdown[]>([]);
 
+
+  //properties
+  private dataService = inject(DataLayerService);
+  private destroyRef = inject(DestroyRef);
+  private base = inject(BaseApiService);
+  private pagination = inject(PaginationService);
+  private voucherMangerService = inject(voucherMangerService);
+  private activatedRoute = inject(ActivatedRoute);
+  private router = inject(Router);
+
+  isEditMode = signal<boolean>(false);
+  submit = signal<boolean>(false);
+  formSubmitted = signal<boolean>(false);
+  backendErrors = signal<Record<string, string[]>>({});
+  errors = signal<string[]>([]);
+  voucherTypes = signal(enumToOptions(VoucherType, true));
+
   ngOnInit(): void {
     this.loadCurrencies();
     this.loadCashUsageAccounts();
+    this.activatedRoute.paramMap.pipe(
+      takeUntilDestroyed(this.destroyRef)).subscribe(param => {
+        const id = param.get('id');
+        if (id) {
+
+          this.isEditMode.set(true);
+          this.loadCPV(id);
+        }
+      });
   }
 
   loadCurrencies(): void {
@@ -55,17 +82,6 @@ export class CpvVoucherComponent {
       }
     });
   }
-  //properties
-  private dataService = inject(DataLayerService);
-  private destroyRef = inject(DestroyRef);
-  private base = inject(BaseApiService);
-  private pagination = inject(PaginationService);
-  private voucherMangerService = inject(voucherMangerService);
-  submit = signal<boolean>(false);
-  formSubmitted = signal<boolean>(false);
-  backendErrors = signal<Record<string, string[]>>({});
-  errors = signal<string[]>([]);
-  voucherTypes = signal(enumToOptions(VoucherType, true));
 
 
   //Computed Totals
@@ -267,8 +283,15 @@ export class CpvVoucherComponent {
     const formvalue = this.cpvForm().value() as JournalEntryDto;
     formvalue.postingDate = toDateOnlyString(formvalue.postingDateUI) ?? '';
 
+    //for update and create
+    const url = `VoucherManager/cpv`;
+    const request$ = this.isEditMode()
+      ? this.dataService.edit<JournalEntryDto>(url, formvalue.id?.toString() ?? '', formvalue)
+      : this.dataService.create<JournalEntryDto>(url, formvalue);
+
+
     //Making Api Call
-    this.dataService.create<JournalEntryDto>('VoucherManager/cpv', formvalue).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+    request$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
         this.base.globalMessage('success', 'Voucher Posted Successfully', false);
         //Reset the form
@@ -295,4 +318,32 @@ export class CpvVoucherComponent {
       searchtermsignal.set(search);
     }
   }
+
+  loadCPV(id: string) {
+    this.dataService.getById<JournalEntryDto>('VoucherManager', id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: (data) => {
+
+        //Bind selected Account Id with Auto complete
+        data.lines.forEach(line => {
+          line.selectedAccounts = {
+            id: line.chartOfAccountId!,
+            name: line.accountName
+          };
+        });
+
+        this.cashCoa.setInitialValue(
+          data.lines.map(x => x.selectedAccounts!)
+        );
+
+        data.postingDateUI = new Date(data.postingDate);
+
+        this.cashJournalModel.set(data);
+      },
+      error: (err) => {
+        this.base.handleError(err, err.error?.message);
+        this.router.navigate(['Accounts', 'voucherList']);
+      }
+    });
+  }
+
 }

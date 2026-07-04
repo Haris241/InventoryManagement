@@ -16,6 +16,7 @@ import { AutoDropdown } from '../../../../../Models/Pagination.model';
 import { CurrencyDto } from '../../../../../Models/Auth.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { voucherMangerService } from '../../../../../services/Accounting/voucherManger.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-brv-voucher',
@@ -28,9 +29,37 @@ export class BrvVoucherComponent {
   currencies = signal<CurrencyDto[]>([]);
   bankUsageAccounts = signal<AutoDropdown[]>([]);
 
+
+  //properties
+  private dataService = inject(DataLayerService);
+  private destroyRef = inject(DestroyRef);
+  private base = inject(BaseApiService);
+  private pagination = inject(PaginationService);
+  private voucherMangerService = inject(voucherMangerService);
+  private router = inject(Router);
+  private activatedRoute = inject(ActivatedRoute);
+
+  isEditMode = signal<boolean>(false);
+  submit = signal<boolean>(false);
+  formSubmitted = signal<boolean>(false);
+  backendErrors = signal<Record<string, string[]>>({});
+  errors = signal<string[]>([]);
+  voucherTypes = signal(enumToOptions(VoucherType, true));
+  chequeStatuses = signal(enumToOptions(ChequeStatus, true));
+
+
   ngOnInit(): void {
     this.loadCurrencies();
     this.loadBankUsageAccounts();
+    this.activatedRoute.paramMap.pipe(
+      takeUntilDestroyed(this.destroyRef)).subscribe(param => {
+        const id = param.get('id');
+        if (id) {
+
+          this.isEditMode.set(true);
+          this.loadBRV(id);
+        }
+      });
   }
 
   loadCurrencies(): void {
@@ -55,18 +84,6 @@ export class BrvVoucherComponent {
       }
     });
   }
-  //properties
-  private dataService = inject(DataLayerService);
-  private destroyRef = inject(DestroyRef);
-  private base = inject(BaseApiService);
-  private pagination = inject(PaginationService);
-  private voucherMangerService = inject(voucherMangerService);
-  submit = signal<boolean>(false);
-  formSubmitted = signal<boolean>(false);
-  backendErrors = signal<Record<string, string[]>>({});
-  errors = signal<string[]>([]);
-  voucherTypes = signal(enumToOptions(VoucherType, true));
-  chequeStatuses = signal(enumToOptions(ChequeStatus, true));
 
   //Computed Totals
   totalDebit = computed(() =>
@@ -277,9 +294,14 @@ export class BrvVoucherComponent {
     this.backendErrors.set({});
     const formvalue = this.brvForm().value() as BankVoucherDto;
     formvalue.postingDate = toDateOnlyString(formvalue.postingDateUI) ?? '';
+    //for update and create
+    const url = `VoucherManager/brv`;
+    const request$ = this.isEditMode()
+      ? this.dataService.edit<BankVoucherDto>(url, formvalue.id?.toString() ?? '', formvalue)
+      : this.dataService.create<BankVoucherDto>(url, formvalue);
 
     //Making Api Call
-    this.dataService.create<BankVoucherDto>('VoucherManager/brv', formvalue).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+    request$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
         this.base.globalMessage('success', 'Voucher Posted Successfully', false);
         //Reset the form
@@ -305,5 +327,32 @@ export class BrvVoucherComponent {
     if (search.length > 2) {
       searchtermsignal.set(search);
     }
+  }
+  loadBRV(id: string) {
+    this.dataService.getById<BankVoucherDto>('VoucherManager/brv', id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: (data) => {
+
+        //Bind selected Account Id with Auto complete
+        data.lines.forEach(line => {
+          line.selectedAccounts = {
+            id: line.chartOfAccountId!,
+            name: line.accountName
+          };
+        });
+
+        this.nonBankCoa.setInitialValue(
+          data.lines.map(x => x.selectedAccounts!)
+        );
+
+
+        data.postingDateUI = new Date(data.postingDate);
+
+        this.bankJournalModel.set(data);
+      },
+      error: (err) => {
+        this.base.handleError(err, err.error?.message);
+        this.router.navigate(['Accounts', 'voucherList']);
+      }
+    });
   }
 }
