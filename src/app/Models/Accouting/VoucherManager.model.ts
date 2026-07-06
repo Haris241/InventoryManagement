@@ -25,7 +25,6 @@ export interface JournalEntryLineDto {
     selectedAccounts?: AutoDropdown;
 }
 export interface BankVoucherDto extends JournalEntryDto {
-    bankId?: number;
     bankName: string;
     bankAccountNumber: string;
     bankBranch: string;

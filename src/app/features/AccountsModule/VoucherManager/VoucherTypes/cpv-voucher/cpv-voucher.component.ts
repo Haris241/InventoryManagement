@@ -322,7 +322,7 @@ export class CpvVoucherComponent {
   loadCPV(id: string) {
     this.dataService.getById<JournalEntryDto>('VoucherManager', id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (data) => {
-
+        console.log(data);
         //Bind selected Account Id with Auto complete
         data.lines.forEach(line => {
           line.selectedAccounts = {

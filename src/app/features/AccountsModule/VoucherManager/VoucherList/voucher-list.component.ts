@@ -6,7 +6,7 @@ import { DataLayerService } from '../../../../services/data-layer.service';
 import { JournalEntryListDto, JournalEntrySearchDto, VoucherType } from '../../../../Models/Accouting/VoucherManager.model';
 import { AutoDropdown } from '../../../../Models/Pagination.model';
 import { enumToOptions, toDateOnlyString } from '../../../../shared/Utility';
-import { form, FormField } from '@angular/forms/signals';
+import { form } from '@angular/forms/signals';
 import { TableModule } from 'primeng/table';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { FormsModule } from '@angular/forms';
@@ -14,6 +14,7 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 import { SelectModule } from 'primeng/select';
 import { CommonModule } from '@angular/common';
 import { DatePickerModule } from 'primeng/datepicker';
+import { ConfirmationService } from 'primeng/api';
 
 @Component({
   selector: 'app-voucher-list',
@@ -26,6 +27,8 @@ export class VoucherListComponent {
   router = inject(Router);
   pagination = inject(PaginationService);
   dataService = inject(DataLayerService);
+  confirmation = inject(ConfirmationService);
+
 
   voucherList = signal<JournalEntryListDto[]>([]);
   coaSearch = this.pagination.autoSearchDropdown<AutoDropdown>('AccountsDropDown/VoucherAccounts');
@@ -39,6 +42,7 @@ export class VoucherListComponent {
   nextCursor = signal<string | null>(null);
   previousCursor = signal<string | null>(null);
   isEditableType = new Set(['BankPayment', 'BankReceipt', 'Journal', 'Contra', 'CashPayment', 'CashReceipt']);
+  isDeleteableType = new Set(['BankPayment', 'BankReceipt', 'Journal', 'Contra', 'CashPayment', 'CashReceipt']);
 
   formSubmitted = signal<boolean>(false);
   backendErrors = signal<Record<string, string[]>>({});
@@ -132,6 +136,32 @@ export class VoucherListComponent {
     if (search.length > 2) {
       searchtermsignal.set(search);
     }
+  }
+
+  deleteVoucher(id: string) {
+    this.confirmation.confirm({
+      message: 'Are you sure you want to delete this Voucher?',
+      header: 'Voucher Delete Confirmation',
+      acceptButtonStyleClass: 'p-button-success',
+      rejectButtonStyleClass: 'p-button-danger',
+      acceptLabel: 'Yes',
+      rejectLabel: 'No',
+      accept: () => {
+        this.dataService.delete<void>('VoucherManager', id).subscribe({
+          next: () => {
+            this.voucherList.update(vouchers => (vouchers.filter(p => p.id !== Number(id))));
+            this.base.globalMessage('success', 'Voucher Deleted Successfully', false);
+          },
+          error: (err) => {
+            this.base.handleError(err, err.error?.message);
+          }
+        });
+      },
+      reject: () => {
+        // Optional: handle rejection
+      }
+
+    });
   }
 
 }

@@ -101,6 +101,11 @@
                         <button class="me-3" (click)="editVoucher(voucher.id,voucher.voucherType)"><span
                                 class="material-symbols-outlined icon-color">edit</span></button>
                         }
+                        @if(isDeleteableType.has(voucher.voucherType)){
+                        <button (click)="deleteVoucher(voucher.id)"><span
+                                class="material-symbols-outlined icon-color">delete</span></button>
+                        }
+
                     </td>
                 </tr>
             </ng-template>

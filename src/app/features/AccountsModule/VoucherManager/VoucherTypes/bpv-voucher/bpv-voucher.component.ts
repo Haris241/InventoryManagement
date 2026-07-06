@@ -337,20 +337,20 @@ export class BpvVoucherComponent {
   }
 
   loadBpv(id: string) {
-    this.dataService.getById<BankVoucherDto>('VoucherManager/bpv', id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+    this.dataService.getById<BankVoucherDto>('VoucherManager', id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (data) => {
 
-        //Bind selected Account Id with Auto complete
-        data.lines.forEach(line => {
-          line.selectedAccounts = {
-            id: line.chartOfAccountId!,
-            name: line.accountName
-          };
-        });
+        // //Bind selected Account Id with Auto complete
+        // data.lines.forEach(line => {
+        //   line.selectedAccounts = {
+        //     id: line.chartOfAccountId!,
+        //     name: line.accountName
+        //   };
+        // });
 
-        this.nonBankCoa.setInitialValue(
-          data.lines.map(x => x.selectedAccounts!)
-        );
+        // this.nonBankCoa.setInitialValue(
+        //   data.lines.map(x => x.selectedAccounts!)
+        // );
 
 
         data.postingDateUI = new Date(data.postingDate);
