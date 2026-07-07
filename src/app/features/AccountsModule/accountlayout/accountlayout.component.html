@@ -28,6 +28,15 @@
           </a>
         </li>
         <li>
+          <a class="flex nav-link" routerLink="/Accounts/accountReports" routerLinkActive="active"
+            [routerLinkActiveOptions]="{exact: true}" (click)="onSelectMobile()">
+            <span class="material-symbols-outlined">assignment</span>
+            @if (!isCollapsed()) {
+            <span class="custom">Reports</span>
+            }
+          </a>
+        </li>
+        <li>
           <a class="nav-link flex justify-between items-center cursor-pointer" (click)="toogleDropdown('COA')"
             [ngClass]="{'active': isCollapsed() && isActiveGroup('COA')}">
             <div class="flex items-center">
