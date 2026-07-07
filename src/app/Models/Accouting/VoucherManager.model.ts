@@ -29,7 +29,7 @@ export interface BankVoucherDto extends JournalEntryDto {
     bankAccountNumber: string;
     bankBranch: string;
     chequeNumber: string;
-    chequeDate: Date | null;
+    chequeDate: string;
     chequeDateUI: Date | null;
     chequeStatus: ChequeStatus | null;
     paymentMode: string;

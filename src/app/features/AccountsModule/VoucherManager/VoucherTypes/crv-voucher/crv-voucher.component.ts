@@ -73,17 +73,19 @@ export class CrvVoucherComponent {
 
   ngOnInit(): void {
     this.loadCurrencies();
-    this.loadCashUsageAccounts();
+
     this.activatedRoute.paramMap.pipe(
       takeUntilDestroyed(this.destroyRef)).subscribe(param => {
         const id = param.get('id');
         if (id) {
-
           this.isEditMode.set(true);
-          this.loadCRV(id);
+          this.loadCashUsageAccounts(id);  // ← pass id here
+        } else {
+          this.loadCashUsageAccounts();    // ← create mode, no id
         }
       });
   }
+
 
   loadCurrencies(): void {
     this.dataService.getAll<CurrencyDto[]>("Dropdowns/Currencies").pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
@@ -97,16 +99,21 @@ export class CrvVoucherComponent {
   }
 
   //Load Cash Usage Acccounts
-  loadCashUsageAccounts(): void {
+  loadCashUsageAccounts(editId?: string): void {
     this.dataService.getAll<AutoDropdown[]>("AccountsDropDown/CashUsageAccounts").pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (res) => {
         this.cashUsageAccounts.set(res);
+        // ── If edit mode, load voucher only after accounts are ready ──
+        if (editId) {
+          this.loadCRV(editId);
+        }
       },
       error: (err) => {
         this.base.handleError(err, err.error.message);
       }
     });
   }
+
 
   //for Global Search
   cashCoa = this.pagination.autoSearchDropdown<AutoDropdown>('AccountsDropDown/NonBankCashAccounts');
@@ -293,6 +300,12 @@ export class CrvVoucherComponent {
     //Making Api Call
     request$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
+        //Redirect To List For Edit
+        if (this.isEditMode()) {
+          this.router.navigate(['Accounts', 'voucherList']);
+          this.base.globalMessage('success', 'Voucher Updated Successfully', false);
+          return;
+        }
         this.base.globalMessage('success', 'Voucher Posted Successfully', false);
         //Reset the form
         this.crvForm().reset({ ...this.crvModel, lines: [{ ...this.jvLines, isMainLine: true }, { ...this.jvLines, isMainLine: false }] });
@@ -322,8 +335,29 @@ export class CrvVoucherComponent {
     this.dataService.getById<JournalEntryDto>('VoucherManager', id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (data) => {
 
-        //Bind selected Account Id with Auto complete
-        data.lines.forEach(line => {
+        // ── Find main line: must be in cashUsageAccounts AND have debit > 0 ──
+        const cashAccountIds = new Set(this.cashUsageAccounts().map(a => a.id));
+
+        const mainLineIndex = data.lines.findIndex(line =>
+          cashAccountIds.has(line.chartOfAccountId!) && line.debit > 0
+        );
+
+        // ── Guard: if no valid main line found, voucher is corrupted ──
+        if (mainLineIndex === -1) {
+          this.base.globalMessage('error', 'This voucher cannot be edited. The cash account may have been reconfigured.', false);
+          this.router.navigate(['Accounts', 'voucherList']);
+          return;
+        }
+
+        // ── Reorder: main line first, rest follow ──
+        const mainLine = data.lines[mainLineIndex];
+        const otherLines = data.lines.filter((_, i) => i !== mainLineIndex);
+        data.lines = [mainLine, ...otherLines];
+
+        // ── Mark isMainLine ──
+        data.lines.forEach((line, index) => {
+          line.isMainLine = index === 0;
+
           line.selectedAccounts = {
             id: line.chartOfAccountId!,
             name: line.accountName
@@ -331,7 +365,7 @@ export class CrvVoucherComponent {
         });
 
         this.cashCoa.setInitialValue(
-          data.lines.map(x => x.selectedAccounts!)
+          data.lines.filter(l => !l.isMainLine).map(l => l.selectedAccounts!)
         );
 
         data.postingDateUI = new Date(data.postingDate);

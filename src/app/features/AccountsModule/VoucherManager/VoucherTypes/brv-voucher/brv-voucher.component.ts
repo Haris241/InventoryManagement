@@ -50,16 +50,18 @@ export class BrvVoucherComponent {
 
   ngOnInit(): void {
     this.loadCurrencies();
-    this.loadBankUsageAccounts();
+
     this.activatedRoute.paramMap.pipe(
       takeUntilDestroyed(this.destroyRef)).subscribe(param => {
         const id = param.get('id');
         if (id) {
-
           this.isEditMode.set(true);
-          this.loadBRV(id);
+          this.loadBankUsageAccounts(id);  // ← pass id here
+        } else {
+          this.loadBankUsageAccounts();    // ← create mode, no id
         }
       });
+
   }
 
   loadCurrencies(): void {
@@ -74,10 +76,14 @@ export class BrvVoucherComponent {
   }
 
   //Load Bank Usage Acccounts
-  loadBankUsageAccounts(): void {
+  loadBankUsageAccounts(editId?: string): void {
     this.dataService.getAll<AutoDropdown[]>("AccountsDropDown/BankUsageAccounts").pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (res) => {
         this.bankUsageAccounts.set(res);
+        // ── If edit mode, load voucher only after accounts are ready ──
+        if (editId) {
+          this.loadBRV(editId);
+        }
       },
       error: (err) => {
         this.base.handleError(err, err.error.message);
@@ -134,7 +140,7 @@ export class BrvVoucherComponent {
     bankAccountNumber: '',
     bankBranch: '',
     chequeNumber: '',
-    chequeDate: null,
+    chequeDate: '',
     chequeDateUI: null,
     chequeStatus: null,
     paymentMode: '',
@@ -294,6 +300,8 @@ export class BrvVoucherComponent {
     this.backendErrors.set({});
     const formvalue = this.brvForm().value() as BankVoucherDto;
     formvalue.postingDate = toDateOnlyString(formvalue.postingDateUI) ?? '';
+    formvalue.chequeDate = toDateOnlyString(formvalue.chequeDateUI) ?? '';
+
     //for update and create
     const url = `VoucherManager/brv`;
     const request$ = this.isEditMode()
@@ -303,6 +311,12 @@ export class BrvVoucherComponent {
     //Making Api Call
     request$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
+        //Redirect To List For Edit
+        if (this.isEditMode()) {
+          this.router.navigate(['Accounts', 'voucherList']);
+          this.base.globalMessage('success', 'Voucher Updated Successfully', false);
+          return;
+        }
         this.base.globalMessage('success', 'Voucher Posted Successfully', false);
         //Reset the form
         this.brvForm().reset({ ...this.brvModel, lines: [{ ...this.jvLines, isMainLine: true }, { ...this.jvLines, isMainLine: false }] });
@@ -329,11 +343,32 @@ export class BrvVoucherComponent {
     }
   }
   loadBRV(id: string) {
-    this.dataService.getById<BankVoucherDto>('VoucherManager/brv', id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+    this.dataService.getById<BankVoucherDto>('VoucherManager', id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (data) => {
 
-        //Bind selected Account Id with Auto complete
-        data.lines.forEach(line => {
+        // ── Find main line: must be in cashUsageAccounts AND have debit > 0 ──
+        const cashAccountIds = new Set(this.bankUsageAccounts().map(a => a.id));
+
+        const mainLineIndex = data.lines.findIndex(line =>
+          cashAccountIds.has(line.chartOfAccountId!) && line.debit > 0
+        );
+
+        // ── Guard: if no valid main line found, voucher is corrupted ──
+        if (mainLineIndex === -1) {
+          this.base.globalMessage('error', 'This voucher cannot be edited. The cash account may have been reconfigured.', false);
+          this.router.navigate(['Accounts', 'voucherList']);
+          return;
+        }
+
+        // ── Reorder: main line first, rest follow ──
+        const mainLine = data.lines[mainLineIndex];
+        const otherLines = data.lines.filter((_, i) => i !== mainLineIndex);
+        data.lines = [mainLine, ...otherLines];
+
+        // ── Mark isMainLine ──
+        data.lines.forEach((line, index) => {
+          line.isMainLine = index === 0;
+
           line.selectedAccounts = {
             id: line.chartOfAccountId!,
             name: line.accountName
@@ -341,11 +376,11 @@ export class BrvVoucherComponent {
         });
 
         this.nonBankCoa.setInitialValue(
-          data.lines.map(x => x.selectedAccounts!)
+          data.lines.filter(l => !l.isMainLine).map(l => l.selectedAccounts!)
         );
 
-
         data.postingDateUI = new Date(data.postingDate);
+        data.chequeDateUI = new Date(data.chequeDate);
 
         this.bankJournalModel.set(data);
       },

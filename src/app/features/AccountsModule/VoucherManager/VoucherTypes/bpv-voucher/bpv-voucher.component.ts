@@ -49,14 +49,15 @@ export class BpvVoucherComponent {
 
   ngOnInit(): void {
     this.loadCurrencies();
-    this.loadBankUsageAccounts();
+
     this.activatedRoute.paramMap.pipe(
       takeUntilDestroyed(this.destroyRef)).subscribe(param => {
         const id = param.get('id');
         if (id) {
-
           this.isEditMode.set(true);
-          this.loadBpv(id);
+          this.loadBankUsageAccounts(id);  // ← pass id here
+        } else {
+          this.loadBankUsageAccounts();    // ← create mode, no id
         }
       });
 
@@ -74,10 +75,14 @@ export class BpvVoucherComponent {
   }
 
   //Load Bank Usage Acccounts
-  loadBankUsageAccounts(): void {
+  loadBankUsageAccounts(editId?: string): void {
     this.dataService.getAll<AutoDropdown[]>("AccountsDropDown/BankUsageAccounts").pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (res) => {
         this.bankUsageAccounts.set(res);
+        // ── If edit mode, load voucher only after accounts are ready ──
+        if (editId) {
+          this.loadBpv(editId);
+        }
       },
       error: (err) => {
         this.base.handleError(err, err.error.message);
@@ -134,7 +139,7 @@ export class BpvVoucherComponent {
     bankAccountNumber: '',
     bankBranch: '',
     chequeNumber: '',
-    chequeDate: null,
+    chequeDate: '',
     chequeDateUI: null,
     chequeStatus: null,
     paymentMode: '',
@@ -294,6 +299,7 @@ export class BpvVoucherComponent {
     this.backendErrors.set({});
     const formvalue = this.bpvForm().value() as BankVoucherDto;
     formvalue.postingDate = toDateOnlyString(formvalue.postingDateUI) ?? '';
+    formvalue.chequeDate = toDateOnlyString(formvalue.chequeDateUI) ?? '';
 
     //for update and create
     const url = `VoucherManager/bpv`;
@@ -340,20 +346,42 @@ export class BpvVoucherComponent {
     this.dataService.getById<BankVoucherDto>('VoucherManager', id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (data) => {
 
-        // //Bind selected Account Id with Auto complete
-        // data.lines.forEach(line => {
-        //   line.selectedAccounts = {
-        //     id: line.chartOfAccountId!,
-        //     name: line.accountName
-        //   };
-        // });
+        // ── Find main line: must be in cashUsageAccounts AND have credit > 0 ──
+        const cashAccountIds = new Set(this.bankUsageAccounts().map(a => a.id));
 
-        // this.nonBankCoa.setInitialValue(
-        //   data.lines.map(x => x.selectedAccounts!)
-        // );
+        const mainLineIndex = data.lines.findIndex(line =>
+          cashAccountIds.has(line.chartOfAccountId!) && line.credit > 0
+        );
+
+        // ── Guard: if no valid main line found, voucher is corrupted ──
+        if (mainLineIndex === -1) {
+          this.base.globalMessage('error', 'This voucher cannot be edited. The cash account may have been reconfigured.', false);
+          this.router.navigate(['Accounts', 'voucherList']);
+          return;
+        }
+
+        // ── Reorder: main line first, rest follow ──
+        const mainLine = data.lines[mainLineIndex];
+        const otherLines = data.lines.filter((_, i) => i !== mainLineIndex);
+        data.lines = [mainLine, ...otherLines];
+
+        // ── Mark isMainLine ──
+        data.lines.forEach((line, index) => {
+          line.isMainLine = index === 0;
+
+          line.selectedAccounts = {
+            id: line.chartOfAccountId!,
+            name: line.accountName
+          };
+        });
+
+        this.nonBankCoa.setInitialValue(
+          data.lines.filter(l => !l.isMainLine).map(l => l.selectedAccounts!)
+        );
 
 
         data.postingDateUI = new Date(data.postingDate);
+        data.chequeDateUI = new Date(data.chequeDate);
 
         this.bankJournalModel.set(data);
       },
