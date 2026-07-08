@@ -1,75 +1,100 @@
 :host {
-
     display: block;
-
 }
 
 .section-heading {
-
     color: var(--White);
-
     font-size: 1.1rem;
-
     font-weight: 600;
-
     margin-bottom: 1rem;
-
     border-left: 4px solid var(--MainColour);
-
     padding-left: .75rem;
-
 }
 
+/* ── Card resting state ───────────────────────────────────────────────────── */
 .report-card {
-
     display: flex;
-
     align-items: center;
-
-    justify-content: center;
-
-    text-align: center;
-
+    gap: 0.85rem;
     text-decoration: none;
-
     min-height: 70px;
-
-    padding: 1rem;
-
+    padding: 0.9rem 1.1rem;
     border-radius: 10px;
-
-    background: var(--DivColour);
-
-    color: var(--White);
-
-    border: 1px solid var(--Outline);
-
+    cursor: pointer;
     transition: .25s;
 
-    cursor: pointer;
+    /* Resting: slightly richer background with a faint left glow */
+    background: var(--DivColour);
+    color: var(--White);
+    border: 1px solid var(--Outline);
 
-    font-weight: 500;
+    /* Subtle left accent — gives each card a grounded anchor */
+    border-left: 3px solid var(--MainColour);
 
+    /* Very faint inner shadow so card feels like a surface, not flat */
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
-.report-card:hover {
-
-    transform: translateY(-3px);
-
-    border-color: var(--MainColour);
-
-    background: var(--divBackgound);
-
+/* ── Icon ─────────────────────────────────────────────────────────────────── */
+.report-card-icon {
+    font-size: 1.3rem;
     color: var(--MainColour);
-
+    opacity: 0.7;
+    flex-shrink: 0;
+    transition: opacity .25s, transform .25s;
 }
 
-@media(max-width:991px) {
+/* ── Title ────────────────────────────────────────────────────────────────── */
+.report-card-title {
+    flex: 1;
+    font-size: 0.88rem;
+    font-weight: 500;
+    line-height: 1.35;
+    letter-spacing: 0.01em;
+}
 
+/* ── Hover ────────────────────────────────────────────────────────────────── */
+.report-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--MainColour);
+    /* overrides all 4 sides incl. left */
+    background: var(--divBackgound);
+    color: var(--MainColour);
+    box-shadow:
+        0 6px 20px rgba(0, 123, 255, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.report-card:hover .report-card-icon {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+/* ── Active (click) ───────────────────────────────────────────────────────── */
+.report-card:active {
+    transform: translateY(-1px);
+}
+
+/* ── Focus (keyboard nav) ─────────────────────────────────────────────────── */
+.report-card:focus-visible {
+    outline: 2px solid var(--MainColour);
+    outline-offset: 2px;
+}
+
+/* ── Responsive ───────────────────────────────────────────────────────────── */
+@media (max-width: 991px) {
     .report-card {
-
         min-height: 60px;
+    }
+}
 
+@media (max-width: 575px) {
+    .report-card {
+        min-height: 52px;
+        padding: 0.75rem 0.9rem;
     }
 
+    .report-card-icon {
+        font-size: 1.15rem;
+    }
 }

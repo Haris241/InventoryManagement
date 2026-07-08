@@ -56,7 +56,7 @@ export const routes: Routes = [
                 path: 'accountdashboard', loadComponent: () => import('./features/AccountsModule/account-dashboard/account-dashboard.component').then(m => m.AccountDashboardComponent)
             },
             {
-                path: 'accountReports', loadComponent: () => import('./shared/report-layout/report-layout.component').then(m => m.ReportLayoutComponent)
+                path: 'accountReports', data: { module: 'Accounts' }, loadComponent: () => import('./shared/report-layout/report-layout.component').then(m => m.ReportLayoutComponent)
             },
             {
                 path: 'fiscalyear', loadComponent: () => import('./features/AccountsModule/fiscalyear/fiscalyear.component').then(m => m.FiscalyearComponent)

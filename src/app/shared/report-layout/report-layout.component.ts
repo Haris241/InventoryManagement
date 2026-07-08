@@ -1,6 +1,8 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { REPORT_CONFIG, ReportSection } from './report.config';
-import { Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'app-report-layout',
@@ -9,22 +11,24 @@ import { Router, RouterLink } from '@angular/router';
   styleUrl: './report-layout.component.css',
 })
 export class ReportLayoutComponent {
-  private router = inject(Router);
+  private route = inject(ActivatedRoute);
+
+  module = toSignal(
+
+    this.route.data.pipe(
+
+      map(data => data['module'])
+
+    ),
+
+    {
+      initialValue: ''
+    }
+
+  );
 
   columns = signal(4);
 
-  module = computed(() => {
-
-    const url = this.router.url.toLowerCase();
-
-    if (url.includes('/accounts/'))
-      return 'Accounts';
-
-    if (url.includes('/inventory/'))
-      return 'Inventory';
-
-    return '';
-  });
 
   sections = computed<ReportSection[]>(() => {
 

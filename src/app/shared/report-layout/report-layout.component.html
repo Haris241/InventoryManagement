@@ -26,13 +26,11 @@
             <div class="w-full {{gridClass()}} p-2">
 
                 <a class="report-card" [routerLink]="[report.route]">
-
-                    {{report.title}}
-
+                    <span class="material-symbols-outlined report-card-icon">description</span>
+                    <span class="report-card-title">{{report.title}}</span>
                 </a>
 
             </div>
-
             }
 
         </div>
