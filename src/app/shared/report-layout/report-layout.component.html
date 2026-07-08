@@ -1,1 +1,44 @@
-<p>report-layout works!</p>
+<div class="flex flex-wrap global-div p-5">
+
+    <div class="w-full">
+
+        <h3 class="text-2xl font-semibold text-center mb-4">
+            <span class="gradient-heading">{{module()}} Reports</span>
+        </h3>
+        <hr class="second-color mb-5">
+
+    </div>
+
+    @for(section of sections(); track section.heading){
+
+    <div class="w-full mb-6">
+
+        <h3 class="section-heading">
+
+            {{section.heading}}
+
+        </h3>
+
+        <div class="flex flex-wrap">
+
+            @for(report of section.reports; track report.route){
+
+            <div class="w-full {{gridClass()}} p-2">
+
+                <a class="report-card" [routerLink]="[report.route]">
+
+                    {{report.title}}
+
+                </a>
+
+            </div>
+
+            }
+
+        </div>
+
+    </div>
+
+    }
+
+</div>

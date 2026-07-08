@@ -56,14 +56,7 @@ export const routes: Routes = [
                 path: 'accountdashboard', loadComponent: () => import('./features/AccountsModule/account-dashboard/account-dashboard.component').then(m => m.AccountDashboardComponent)
             },
             {
-                path: 'accountReports', loadComponent: () => import('./shared/report-layout/report-layout.component').then(m => m.ReportLayoutComponent), children: [
-                    {
-                        path: 'generalLedger', loadComponent: () => import('./features/AccountsModule/AccountsReport/general-ledger/general-ledger.component').then(m => m.GeneralLedgerComponent)
-                    },
-                    {
-                        path: '', redirectTo: 'accountReports', pathMatch: 'full'
-                    }
-                ]
+                path: 'accountReports', loadComponent: () => import('./shared/report-layout/report-layout.component').then(m => m.ReportLayoutComponent)
             },
             {
                 path: 'fiscalyear', loadComponent: () => import('./features/AccountsModule/fiscalyear/fiscalyear.component').then(m => m.FiscalyearComponent)
@@ -125,6 +118,10 @@ export const routes: Routes = [
             },
             {
                 path: 'voucherList', loadComponent: () => import('./features/AccountsModule/VoucherManager/VoucherList/voucher-list.component').then(m => m.VoucherListComponent)
+            },
+            //Report Paths
+            {
+                path: 'accountReports/generalLedger', loadComponent: () => import('./features/AccountsModule/AccountsReport/general-ledger/general-ledger.component').then(m => m.GeneralLedgerComponent)
             },
             {
                 path: '', redirectTo: 'accountdashboard', pathMatch: 'full'
