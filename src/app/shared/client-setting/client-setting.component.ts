@@ -99,32 +99,11 @@ export class ClientSettingComponent {
     });
   }
   onImageSelected(event: Event) {
-    const input = event.target as HTMLInputElement;
-    const file = input.files?.[0];
-    if (!file) {
-      this.selectedImage = null;
-      this.imagePreview.set('');
-      return;
-    }
-    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg'];
-    if (!allowedTypes.includes(file.type)) {
-      this.base.globalMessage('error', 'Invalid file type. Please select JPEG, PNG or WebP Only');
-      this.selectedImage = null;
-      input.value = '';
-      return;
-    }
-    const fileSize = 3 * 1024 * 1024
-    if (file.size > fileSize) {
-      this.base.globalMessage('error', 'File Must be Less than 3 MB.');
-      this.selectedImage = null;
-      input.value = '';
-      return;
-    }
+    this.selectedImage = this.formservice.onImageSelected(event, this.imagePreview);
+  }
 
-    this.selectedImage = file;
-    const reader = new FileReader();
-    reader.onload = (e) => { this.imagePreview.set(e.target?.result as string) };
-    reader.readAsDataURL(file);
-
+  removeImage() {
+    this.selectedImage = this.formservice.removeImage(this.imagePreview, 'clientLogo');
   }
 }
+
