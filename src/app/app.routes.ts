@@ -62,6 +62,9 @@ export const routes: Routes = [
                 path: 'fiscalyear', loadComponent: () => import('./features/AccountsModule/fiscalyear/fiscalyear.component').then(m => m.FiscalyearComponent)
             },
             {
+                path: 'clientSetting', loadComponent: () => import('./shared/client-setting/client-setting.component').then(m => m.ClientSettingComponent)
+            },
+            {
                 path: 'coa', loadComponent: () => import('./features/AccountsModule/COA/ChartOfAccountAdd/chart-of-account.component').then(m => m.ChartOfAccountComponent)
             },
             {

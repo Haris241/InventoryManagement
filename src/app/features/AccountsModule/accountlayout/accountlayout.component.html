@@ -154,6 +154,15 @@
                 }
               </a>
             </li>
+            <li class="ps-3">
+              <a class="nav-link  flex items-center " (click)="onSelectMobile()" routerLink="/Accounts/clientSetting"
+                routerLinkActive="active">
+                <span class="material-symbols-outlined">chevron_right</span>
+                @if (!isCollapsed()) {
+                <span class="custom-dropdown">Client Setting</span>
+                }
+              </a>
+            </li>
           </ul>
           }
         </li>

@@ -52,7 +52,7 @@ export class AccountlayoutComponent {
   isActiveGroup(value: string): boolean {
     const currenturl = this.route.url;
     if (value === 'Settings') {
-      return ['/Accounts/fiscalyear'].some(path => currenturl.startsWith(path));
+      return ['/Accounts/fiscalyear', '/Accounts/clientSetting'].some(path => currenturl.startsWith(path));
     }
     if (value === 'COA') {
       return ['/Accounts/coa', '/Accounts/coaList', '/Accounts/coaTree'].some(path => currenturl.startsWith(path));
