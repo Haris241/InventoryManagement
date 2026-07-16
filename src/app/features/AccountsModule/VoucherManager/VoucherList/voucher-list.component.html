@@ -102,9 +102,14 @@
                                 class="material-symbols-outlined icon-color">edit</span></button>
                         }
                         @if(isDeleteableType.has(voucher.voucherType)){
-                        <button (click)="deleteVoucher(voucher.id)"><span
+                        <button class="me-3" (click)="deleteVoucher(voucher.id)"><span
                                 class="material-symbols-outlined icon-color">delete</span></button>
                         }
+                        <button (click)="getReport(voucher.id)">
+                            <span class="material-symbols-outlined icon-color">
+                                description
+                            </span>
+                        </button>
 
                     </td>
                 </tr>

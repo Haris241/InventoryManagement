@@ -163,5 +163,30 @@ export class VoucherListComponent {
 
     });
   }
+  getReport(id: string) {
 
+    const newTab = window.open('', '_blank');
+
+    this.dataService.getReport('VoucherManager/report', id)
+      .subscribe({
+        next: (blob) => {
+
+          const url = URL.createObjectURL(blob);
+
+          if (newTab) {
+            newTab.location.href = url;
+          }
+
+          setTimeout(() => URL.revokeObjectURL(url), 1000);
+        },
+        error: (err) => {
+
+          if (newTab) {
+            newTab.close();
+          }
+
+          this.base.handleError(err, err.error?.message);
+        }
+      });
+  }
 }

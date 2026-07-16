@@ -43,4 +43,7 @@ export class DataLayerService {
   updateAll<T>(controller: string): Observable<T> {
     return this.http.put<T>(`${this.baseurl}${controller}`, { withCredentials: true });
   }
+  getReport(controller: string, id: number | string): Observable<Blob> {
+    return this.http.get(`${this.baseurl}${controller}/${id}`, { responseType: 'blob', withCredentials: true });
+  }
 }
