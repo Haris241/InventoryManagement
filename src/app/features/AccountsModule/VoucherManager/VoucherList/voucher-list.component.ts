@@ -167,17 +167,33 @@ export class VoucherListComponent {
 
     const newTab = window.open('', '_blank');
 
+    if (newTab) {
+      newTab.document.title = 'Generating Report...';
+      newTab.document.body.innerHTML = `
+        <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;
+          font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:#1a1a2e;color:#e0e0e0;">
+          <div style="width:48px;height:48px;border:4px solid #333;border-top:4px solid #0ea5e9;
+            border-radius:50%;animation:spin 1s linear infinite;margin-bottom:24px;"></div>
+          <h2 style="margin:0 0 8px;font-weight:500;color:#f0f0f0;">Generating Report</h2>
+          <p style="margin:0;color:#999;font-size:14px;">Please wait, your voucher report is being prepared...</p>
+          <style>@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}</style>
+        </div>
+      `;
+    }
+
     this.dataService.getReport('VoucherManager/report', id)
       .subscribe({
         next: (blob) => {
 
-          const url = URL.createObjectURL(blob);
+          const namedBlob = new File([blob], `Voucher-Report-${id}.pdf`, { type: 'application/pdf' });
+          const url = URL.createObjectURL(namedBlob);
 
           if (newTab) {
+            newTab.document.title = `Voucher Report - ${id}`;
             newTab.location.href = url;
           }
 
-          setTimeout(() => URL.revokeObjectURL(url), 1000);
+          setTimeout(() => URL.revokeObjectURL(url), 60000);
         },
         error: (err) => {
 
