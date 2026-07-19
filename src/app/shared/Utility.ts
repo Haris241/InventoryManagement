@@ -89,3 +89,29 @@ export function toDateOnlyString(date: Date | null): string | null {
 
   return `${year}-${month}-${day}`;
 }
+
+export function openLoadingTab(title = 'Generating Report...', message = 'Please wait, your report is being prepared...'): Window | null {
+  const newTab = window.open('', '_blank');
+  if (newTab) {
+    newTab.document.title = title;
+    newTab.document.body.innerHTML = `
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;
+        font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:#1a1a2e;color:#e0e0e0;">
+        <div style="width:48px;height:48px;border:4px solid #333;border-top:4px solid #0ea5e9;
+          border-radius:50%;animation:spin 1s linear infinite;margin-bottom:24px;"></div>
+        <h2 style="margin:0 0 8px;font-weight:500;color:#f0f0f0;">${title}</h2>
+        <p style="margin:0;color:#999;font-size:14px;">${message}</p>
+        <style>@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}</style>
+      </div>
+    `;
+  }
+  return newTab;
+}
+
+export function showBlobInTab(newTab: Window | null, blob: Blob, fileName: string): void {
+  if (!newTab || newTab.closed) return;
+  const namedBlob = new File([blob], fileName, { type: 'application/pdf' });
+  const url = URL.createObjectURL(namedBlob);
+  newTab.location.href = url;
+  setTimeout(() => URL.revokeObjectURL(url), 60000);
+}
