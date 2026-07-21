@@ -1,1 +1,140 @@
-<p>general-ledger works!</p>
+<form (ngSubmit)="OnSearch($event)">
+    <div class="flex flex-wrap global-div p-5">
+        <div class="w-full mb-4">
+            <h3 class="text-2xl font-semibold text-center mb-3">
+                <span class="gradient-heading">General Ledger</span>
+            </h3>
+            <hr class="second-color">
+        </div>
+        <div class="w-full mb-3">
+            <div class="w-full flex justify-end">
+                <button class="global-button flex items-center gap-2" (click)="GeneralLedgerReport()">
+                    <span class="material-symbols-outlined icon-color">
+                        description
+                    </span>Pdf
+                </button>
+            </div>
+        </div>
+        <div class="w-full mb-3">
+            <div class="lg:w-1/2 w-full">
+                <p class="note-banner">Enter at least 3 characters to search globally</p>
+            </div>
+        </div>
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <p-autoComplete [(ngModel)]="generalLedgerModel().accountId" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('accountId',$event)"
+                        (completeMethod)="SearchDropDown($event,coaSearch.searchterm)" inputId="accountId"
+                        optionLabel="name" [dropdown]="true" [suggestions]="coaSearchList()" optionValue="id"
+                        [showClear]="true" class="w-full"></p-autoComplete>
+                    <label for="accountId">Chart of Account</label>
+                </div>
+            </p-floatLabel>
+            <app-field-errorS [field]="generalLedgerForm.accountId" [submit]="formSubmitted()"
+                [backendErrors]="backendErrors()">
+            </app-field-errorS>
+
+        </div>
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <p-datepicker [(ngModel)]="generalLedgerModel().fromDateUI" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('fromDateUI',$event)" view="date" dateFormat="dd/mm/yy"
+                        size="small" inputId="fromDateUI" class="w-full" />
+                    <label for="fromDateUI">From Date</label>
+                </div>
+            </p-floatLabel>
+        </div>
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <p-datepicker [(ngModel)]="generalLedgerModel().toDateUI" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('toDateUI',$event)" view="date" dateFormat="dd/mm/yy" size="small"
+                        inputId="toDateUI" class="w-full" />
+                    <label for="toDateUI">To Date</label>
+                </div>
+            </p-floatLabel>
+        </div>
+
+
+        <!--submitting the form  -->
+        <div class="w-full flex justify-center m-3">
+            <button class="global-button" type="submit" [disabled]="submit()">
+                {{ submit() ? 'Processing...' : 'Search' }}
+            </button>
+        </div>
+    </div>
+</form>
+@if(generalLedgerData()){
+<div class="flex flex-wrap global-div mt-4 p-4">
+    <!-- Summary panel: mirrors the info panel in the PDF report -->
+    @if(generalLedgerData()){
+    <div class="w-full flex flex-wrap justify-between gl-summary-panel mb-3 p-3">
+        <div><span class="label-color">ACCOUNT:</span> {{ generalLedgerData()!.accountName }}</div>
+        <div><span class="label-color">FROM:</span> {{ generalLedgerData()!.fromDate | date:'yyyy-MM-dd' }}</div>
+        <div><span class="label-color">TO:</span> {{ generalLedgerData()!.toDate | date:'yyyy-MM-dd' }}</div>
+        <div><span class="label-color">OPENING BALANCE:</span> {{ generalLedgerData()!.openingBalance | number:'1.2-2'
+            }}</div>
+        <div><span class="label-color">CLOSING BALANCE:</span> {{ generalLedgerData()!.closingBalance | number:'1.2-2'
+            }}</div>
+    </div>
+    }
+
+    <div class="w-full">
+        <p-table #dt [value]="generalLedgerData()?.transactions ?? []" [tableStyle]="{ 'min-width': '60rem' }">
+
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Date</th>
+                    <th>Voucher No</th>
+                    <th>Type</th>
+                    <th>Narration</th>
+                    <th>Reference</th>
+                    <th class="text-right">Debit</th>
+                    <th class="text-right">Credit</th>
+                    <th class="text-right">Balance</th>
+                </tr>
+                <!-- Opening balance row, anchored right under the column headers -->
+                @if(generalLedgerData()){
+                <tr class="gl-balance-row">
+                    <td colspan="7" class="font-semibold">Opening Balance</td>
+                    <td class="text-right font-semibold">{{ generalLedgerData()!.openingBalance | number:'1.2-2' }}</td>
+                </tr>
+                }
+            </ng-template>
+
+            <ng-template pTemplate="body" let-line>
+                <tr>
+                    <td>{{ line.postingDate | date:'yyyy-MM-dd' }}</td>
+                    <td>{{ line.voucherNo }}</td>
+                    <td>{{ line.voucherType }}</td>
+                    <td>{{ line.narration }}</td>
+                    <td>{{ line.referenceNo }}</td>
+                    <td class="text-right">{{ line.baseDebit ? (line.baseDebit | number:'1.2-2') : '-' }}</td>
+                    <td class="text-right">{{ line.baseCredit ? (line.baseCredit | number:'1.2-2') : '-' }}</td>
+                    <td class="text-right">{{ line.runningBalance | number:'1.2-2' }}</td>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="footer">
+                <!-- Closing balance row, anchored at the bottom -->
+                @if(generalLedgerData()){
+                <tr class="gl-balance-row gl-closing-row">
+                    <td colspan="7" class="font-semibold">Closing Balance</td>
+                    <td class="text-right font-semibold">{{ generalLedgerData()!.closingBalance | number:'1.2-2' }}</td>
+                </tr>
+                }
+            </ng-template>
+
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="8" class="text-center">No transactions found for this period.</td>
+                </tr>
+            </ng-template>
+
+        </p-table>
+    </div>
+</div>
+
+}
