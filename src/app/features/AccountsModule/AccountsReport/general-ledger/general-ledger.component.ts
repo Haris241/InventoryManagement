@@ -31,7 +31,7 @@ export class GeneralLedgerComponent {
   destroyRef = inject(DestroyRef);
 
   coaList = signal<COAList[]>([]);
-  coaSearch = this.pagination.autoSearchDropdown<AutoDropdown>('AccountsDropDown/COA');
+  coaSearch = this.pagination.autoSearchDropdown<AutoDropdown>('AccountsDropDown/VoucherAccounts');
   coaSearchList = this.coaSearch.result;
 
   submit = signal<boolean>(false);
@@ -82,27 +82,28 @@ export class GeneralLedgerComponent {
     //Accessing Form Value
     this.backendErrors.set({});
     const formvalue = this.generalLedgerForm().value() as GeneralLederSearch;
-    formvalue.fromDate = toDateOnlyString(formvalue.fromDateUI) ?? '';
-    formvalue.toDate = toDateOnlyString(formvalue.toDateUI) ?? '';
+    formvalue.fromDate = toDateOnlyString(formvalue.fromDateUI) ?? null;
+    formvalue.toDate = toDateOnlyString(formvalue.toDateUI) ?? null;
 
     //for update and create
-    const url = `AccountReports/GeneralLedgerList`;
+    const url = `AccountsReports/GeneralLedgerList`;
     const request$ = this.dataService.createResponse<GeneralLederSearch, GeneralLedgerData>(url, formvalue);
 
     //Making Api Call
     request$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (result) => {
+        console.log(result);
         this.generalLedgerData.set(result);
         this.submit.set(false);
         this.formSubmitted.set(false);
       },
       error: (err) => {
-        if (err.error.errors) {
+        this.submit.set(false);
+        if (err.error?.errors) {
           this.backendErrors.set(err.error.errors);
         } else {
-          this.base.handleError(err, err.error.message);
+          this.base.handleError(err, err.error?.message, false);
         }
-        this.submit.set(false);
       }
     });
   }
@@ -119,11 +120,11 @@ export class GeneralLedgerComponent {
     }
 
     const formvalue = this.generalLedgerForm().value() as GeneralLederSearch;
-    formvalue.fromDate = toDateOnlyString(formvalue.fromDateUI) ?? '';
-    formvalue.toDate = toDateOnlyString(formvalue.toDateUI) ?? '';
+    formvalue.fromDate = toDateOnlyString(formvalue.fromDateUI);
+    formvalue.toDate = toDateOnlyString(formvalue.toDateUI);
 
     const newTab = openLoadingTab();
-    this.dataService.getReportByData('AccountReports/GeneralLedgerReport', formvalue)
+    this.dataService.getReportByData('AccountsReports/GeneralLedgerReport', formvalue)
       .subscribe({
         next: (blob) => {
           showBlobInTab(newTab, blob, `GeneralLedgerReport.pdf`);

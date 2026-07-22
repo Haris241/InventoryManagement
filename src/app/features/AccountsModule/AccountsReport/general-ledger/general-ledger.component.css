@@ -1,21 +1,17 @@
 .gl-summary-panel {
-    background: var(--surface-100, #f5f5f5);
-    border: 1px solid var(--surface-300, #d1d1d1);
+    background: var(--divBackgound);
+    border: 1px solid var(--Outline);
     border-radius: 4px;
     font-size: 0.85rem;
 }
 
 .label-color {
-    color: #616161;
+    color: var(--MainColour);
     font-weight: 600;
     margin-right: 4px;
 }
 
-.gl-balance-row {
-    background: #e8f0fe;
-}
-
-.gl-closing-row td {
-    color: #1a56db;
-    border-top: 1px solid #1a56db;
+:host ::ng-deep .p-datatable-tfoot>tr>td {
+    padding: 0.75rem 0 !important;
+    color: var(--MainColour) !important;
 }

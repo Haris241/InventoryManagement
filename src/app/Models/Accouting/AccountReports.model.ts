@@ -4,20 +4,20 @@ export interface GeneralLedgerData {
     accountName: string;
     fromDate: Date;
     toDate: Date;
-    openingBalance: number;
-    closingBalance: number;
+    openingBalance: BalanceData;
+    closingBalance: BalanceData;
     transactions: GeneralLedgerLineData[];
 }
 
 export interface GeneralLedgerLineData {
     postingDate: Date;
     voucherNo: string;
-    voucherType: VoucherType;
+    voucherType: string;
     narration: string;
     referenceNo: string;
     baseDebit: number;
     baseCredit: number;
-    runningBalance: number;
+    runningBalance: BalanceData;
 }
 
 export interface GeneralLederSearch {
@@ -26,4 +26,8 @@ export interface GeneralLederSearch {
     fromDateUI: Date | null;
     toDate: string | null;
     toDateUI: Date | null;
+}
+export interface BalanceData {
+    amount: number;
+    balanceType: string;
 }
