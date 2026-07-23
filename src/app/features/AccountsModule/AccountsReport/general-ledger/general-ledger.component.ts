@@ -127,8 +127,12 @@ export class GeneralLedgerComponent {
       .subscribe({
         next: (blob) => {
           showBlobInTab(newTab, blob, `GeneralLedgerReport.pdf`);
+          this.submit.set(false);
+          this.formSubmitted.set(false);
+
         },
         error: (err) => {
+          this.submit.set(false);
           if (newTab) newTab.close();
           this.base.handleError(err, err.error?.message);
         }

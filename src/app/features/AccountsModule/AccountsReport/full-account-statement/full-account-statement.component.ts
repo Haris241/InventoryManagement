@@ -13,9 +13,12 @@ import { DataLayerService } from '../../../../services/data-layer.service';
 import { PaginationService } from '../../../../services/pagination.service';
 import { BaseApiService } from '../../../../services/base-api.service';
 import { COAList } from '../../../../Models/Accouting/ChartOfAccount.model';
-import { AutoDropdown, CursorPaginationResult } from '../../../../Models/Pagination.model';
+import { AutoDropdown } from '../../../../Models/Pagination.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FieldErrorSComponent } from "../../../../shared/field-error-s/field-error-s.component";
+import { BackgroundJobResponse } from '../../../../Models/Accouting/FiscalYear.model';
+import { NotificationService } from '../../../../services/notification.service';
+import { NotificationType } from '../../../../Models/Notification.model';
 
 @Component({
   selector: 'app-full-account-statement',
@@ -28,6 +31,8 @@ export class FullAccountStatementComponent {
   pagination = inject(PaginationService);
   dataService = inject(DataLayerService);
   destroyRef = inject(DestroyRef);
+  notifState = inject(NotificationService);
+
 
   coaList = signal<COAList[]>([]);
   coaSearch = this.pagination.autoSearchDropdown<AutoDropdown>('AccountsDropDown/VoucherAccounts');
@@ -92,8 +97,8 @@ export class FullAccountStatementComponent {
     //Accessing Form Value
     this.backendErrors.set({});
     const formvalue = this.accountStatemnetForm().value() as AccountStatemnetSearch;
-    formvalue.fromDate = toDateOnlyString(formvalue.fromDateUI) ?? null;
-    formvalue.toDate = toDateOnlyString(formvalue.toDateUI) ?? null;
+    formvalue.fromDate = toDateOnlyString(formvalue.fromDateUI);
+    formvalue.toDate = toDateOnlyString(formvalue.toDateUI);
     formvalue.nextCursor = direction === 'next' ? this.nextCursor() : null;
     formvalue.previousCursor = direction === 'previous' ? this.previousCursor() : null;
 
@@ -105,9 +110,7 @@ export class FullAccountStatementComponent {
     // 2. Subscribe and map both the top-level data AND the nested pagination data
     request$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (result) => {
-        console.log(result);
 
-        // Set the FULL object into your signal (this fixes your ts(2345) error)
         this.fullAccountStatementData.set(result);
 
         // Extract the pagination state directly from result.transactions
@@ -132,10 +135,62 @@ export class FullAccountStatementComponent {
 
   //On Search
   OnSearch(event: Event) {
+    this.closingMessage.set('');
     this.loadGeneralLedger(event, 'fresh');
   }
   AccountStatementReport() {
+    if (this.accountStatemnetForm().invalid()) {
+      this.accountStatemnetForm().markAsTouched();
+      this.submit.set(false);
+      return;
+    }
 
+    const formvalue = this.accountStatemnetForm().value() as AccountStatemnetSearch;
+    formvalue.fromDate = toDateOnlyString(formvalue.fromDateUI);
+    formvalue.toDate = toDateOnlyString(formvalue.toDateUI);
+
+    this.dataService.getReportOrJob<AccountStatemnetSearch, BackgroundJobResponse>('AccountsReports/FullAccountStatementReport', formvalue)
+      .subscribe({
+        next: (res) => {
+          this.submit.set(false);
+          this.formSubmitted.set(false);
+
+          if (res.type === 'file') {
+            const newTab = openLoadingTab();
+            showBlobInTab(newTab, res.blob, 'FullAccountStatement.pdf');
+            return;
+          }
+
+
+          this.backgroundJobId.set(res.job.jobId);
+          this.closingMessage.set("Account Statement Report generation started. It will open automatically when ready.");
+
+          const sub = this.notifState.onJobComplete(res.job.jobId, (envelope) => {
+            if (envelope.type === NotificationType.Success) {
+              const url = `AccountsReports/DownloadReport/${res.job.jobId}/FullAccountStatement`;
+              this.dataService.downloadReport(url).subscribe({
+                next: (blob) => {
+                  const newTab = openLoadingTab();
+                  showBlobInTab(newTab, blob, `FullAccountStatement.pdf`);
+
+                },
+                error: (err) => {
+                  this.base.handleError(err, err.error?.message);
+                }
+              });
+
+            } else {
+              this.base.handleError(null, envelope.message);
+            }
+            sub.unsubscribe();
+          });
+
+        },
+        error: (err) => {
+          this.submit.set(false);
+          this.base.handleError(err, err.error?.message);
+        }
+      });
 
   }
 

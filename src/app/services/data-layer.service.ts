@@ -1,14 +1,15 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { from, map, Observable, of, switchMap } from 'rxjs';
 import { environment } from '../Enviroments/enviroment';
+import { ReportResponse } from '../shared/Utility';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DataLayerService {
 
-  private baseurl = environment.apiUrl
+  baseurl = environment.apiUrl
   private http = inject(HttpClient)
   getAll<T>(controller: string): Observable<T> {
     return this.http.get<T>(`${this.baseurl}${controller}`, { withCredentials: true });
@@ -48,5 +49,34 @@ export class DataLayerService {
   }
   getReportByData(controller: string, object: any): Observable<Blob> {
     return this.http.post(`${this.baseurl}${controller}`, object, { responseType: 'blob', withCredentials: true });
+  }
+  downloadReport(controller: string): Observable<Blob> {
+    return this.http.get(`${this.baseurl}${controller}`, { responseType: 'blob', withCredentials: true });
+  }
+
+
+  getReportOrJob<TRequest, TJob>(controller: string, data: TRequest): Observable<ReportResponse<TJob>> {
+
+    return this.http.post(`${this.baseurl}${controller}`, data, { observe: 'response', responseType: 'blob', withCredentials: true }).pipe(
+
+      switchMap((response): Observable<ReportResponse<TJob>> => {
+
+        const contentType = response.headers.get('content-type') ?? '';
+
+        // JSON => Background Job
+        if (contentType.includes('application/json')) {
+
+          return from(response.body!.text()).pipe(
+            map((text): ReportResponse<TJob> => ({
+              type: 'job',
+              job: JSON.parse(text) as TJob
+            }))
+          );
+        }
+
+        // Everything else is treated as a downloadable file
+        return of<ReportResponse<TJob>>({ type: 'file', blob: response.body! });
+      })
+    );
   }
 }

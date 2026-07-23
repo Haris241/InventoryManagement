@@ -59,7 +59,31 @@ export interface FullAccountLineData {
     runningBalance: BalanceData;
 }
 
+export interface TrialBalanceSearch {
+    accountId: number | null;
+    fromDate: string | null;
+    fromDateUI: Date | null;
+    toDate: string | null;
+    toDateUI: Date | null;
+}
+export interface TrialBalanceData {
+    fromDate: Date;
+    toDate: Date;
+    totalDebit: number;
+    totalCredit: number;
+    accounts: CursorPaginationResult<TrialBalanceLineData>;
 
+}
+export interface TrialBalanceLineData {
+    createdAt: Date;
+    accountId: number;
+    accountName: string;
+    accountCode: string;
+    accountGroupName: string;
+    baseDebit: number;
+    baseCredit: number;
+
+}
 export interface BalanceData {
     amount: number;
     balanceType: string;

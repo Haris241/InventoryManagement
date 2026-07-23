@@ -115,3 +115,4 @@ export function showBlobInTab(newTab: Window | null, blob: Blob, fileName: strin
   newTab.location.href = url;
   setTimeout(() => URL.revokeObjectURL(url), 60000);
 }
+export type ReportResponse<TJob> = { type: 'file'; blob: Blob; } | { type: 'job'; job: TJob; };
