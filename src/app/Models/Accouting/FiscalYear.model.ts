@@ -22,7 +22,7 @@ export interface CloseYearRequest {
     id: string
 }
 
-export interface CloseYearResponse {
+export interface BackgroundJobResponse {
     jobId: string
 }
 

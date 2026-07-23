@@ -26,8 +26,8 @@ export const REPORT_CONFIG: ModuleReports[] = [
                         route: 'generalLedger'
                     },
                     {
-                        title: 'Trial Balance',
-                        route: 'trialBalance'
+                        title: 'Full Account Statement',
+                        route: 'fullAccountStatement'
                     },
                     {
                         title: 'Chart of Accounts',

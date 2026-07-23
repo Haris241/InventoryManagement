@@ -1,0 +1,17 @@
+.gl-summary-panel {
+    background: var(--divBackgound);
+    border: 1px solid var(--Outline);
+    border-radius: 4px;
+    font-size: 0.85rem;
+}
+
+.label-color {
+    color: var(--MainColour);
+    font-weight: 600;
+    margin-right: 4px;
+}
+
+:host ::ng-deep .p-datatable-tfoot>tr>td {
+    padding: 0.75rem 0 !important;
+    color: var(--MainColour) !important;
+}

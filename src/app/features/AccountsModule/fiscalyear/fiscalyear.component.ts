@@ -5,7 +5,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { form, FormField, required } from '@angular/forms/signals';
 import { BaseApiService } from '../../../services/base-api.service';
 import { DataLayerService } from '../../../services/data-layer.service';
-import { CloseYearRequest, CloseYearResponse, CreateFiscalYear, FiscalYearList, FiscalYearStatus, SwitchYearRequest } from '../../../Models/Accouting/FiscalYear.model';
+import { CloseYearRequest, BackgroundJobResponse, CreateFiscalYear, FiscalYearList, FiscalYearStatus, SwitchYearRequest } from '../../../Models/Accouting/FiscalYear.model';
 import { FormsModule } from '@angular/forms';
 import { FieldErrorSComponent } from '../../../shared/field-error-s/field-error-s.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -160,7 +160,7 @@ export class FiscalyearComponent {
   //Close Fiscal Year
   closeYear(requestedId: CloseYearRequest) {
 
-    this.dataService.createResponse<CloseYearRequest, CloseYearResponse>('FiscalYear/CloseYear', requestedId).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+    this.dataService.createResponse<CloseYearRequest, BackgroundJobResponse>('FiscalYear/CloseYear', requestedId).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (res) => {
         this.closingJobId.set(res.jobId);
         this.closingMessage.set("Fiscal year closing has been started. Check notifications for the final result.");

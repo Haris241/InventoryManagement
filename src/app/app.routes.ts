@@ -127,6 +127,9 @@ export const routes: Routes = [
                 path: 'accountReports/generalLedger', loadComponent: () => import('./features/AccountsModule/AccountsReport/general-ledger/general-ledger.component').then(m => m.GeneralLedgerComponent)
             },
             {
+                path: 'accountReports/fullAccountStatement', loadComponent: () => import('./features/AccountsModule/AccountsReport/full-account-statement/full-account-statement.component').then(m => m.FullAccountStatementComponent)
+            },
+            {
                 path: '', redirectTo: 'accountdashboard', pathMatch: 'full'
             }
         ]

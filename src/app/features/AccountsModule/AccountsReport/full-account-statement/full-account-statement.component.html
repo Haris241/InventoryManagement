@@ -1,0 +1,160 @@
+<form (ngSubmit)="OnSearch($event)">
+    <div class="flex flex-wrap global-div p-5">
+        <div class="w-full mb-4">
+            <h3 class="text-2xl font-semibold text-center mb-3">
+                <span class="gradient-heading">Full Account Statement</span>
+            </h3>
+            <hr class="second-color">
+        </div>
+        <div class="w-full mb-3">
+            <div class="w-full flex justify-end">
+                <button class="global-button flex items-center gap-2" (click)="AccountStatementReport()">
+                    <span class="material-symbols-outlined icon-color">
+                        description
+                    </span>Pdf
+                </button>
+            </div>
+        </div>
+        <div class="w-full mb-3">
+            <div class="lg:w-1/2 w-full">
+                <p class="note-banner">Enter at least 3 characters to search globally</p>
+            </div>
+        </div>
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <p-autoComplete [(ngModel)]="accountStatemnetModel().accountId"
+                        [ngModelOptions]="{standalone: true}" (ngModelChange)="updateField('accountId',$event)"
+                        (completeMethod)="SearchDropDown($event,coaSearch.searchterm)" inputId="accountId"
+                        optionLabel="name" [dropdown]="true" [suggestions]="coaSearchList()" optionValue="id"
+                        [showClear]="true" class="w-full"></p-autoComplete>
+                    <label for="accountId">Chart of Account</label>
+                </div>
+            </p-floatLabel>
+            <app-field-errorS [field]="accountStatemnetForm.accountId" [submit]="formSubmitted()"
+                [backendErrors]="backendErrors()">
+            </app-field-errorS>
+
+        </div>
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <p-datepicker [(ngModel)]="accountStatemnetModel().fromDateUI" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('fromDateUI',$event)" view="date" dateFormat="dd/mm/yy"
+                        size="small" inputId="fromDateUI" class="w-full" />
+                    <label for="fromDateUI">From Date</label>
+                </div>
+            </p-floatLabel>
+        </div>
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <p-datepicker [(ngModel)]="accountStatemnetModel().toDateUI" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('toDateUI',$event)" view="date" dateFormat="dd/mm/yy" size="small"
+                        inputId="toDateUI" class="w-full" />
+                    <label for="toDateUI">To Date</label>
+                </div>
+            </p-floatLabel>
+        </div>
+
+
+        <!--submitting the form  -->
+        <div class="w-full flex justify-center m-3">
+            <button class="global-button" type="submit" [disabled]="submit()">
+                {{ submit() ? 'Processing...' : 'Search' }}
+            </button>
+        </div>
+    </div>
+    @if(closingMessage().length > 0){
+    <div class="w-full my-4">
+        <div class="rounded-xl second-bgcolor px-4 py-3 shadow-sm">
+            <p class="text-center text-sm font-medium WhiteC">
+                {{ closingMessage() }}
+            </p>
+        </div>
+    </div>
+    }
+</form>
+@if(fullAccountStatementData()){
+<div class="flex flex-wrap global-div mt-4 p-4">
+    <!-- Summary panel: mirrors the info panel in the PDF report -->
+    <div class="w-full flex flex-wrap justify-between gl-summary-panel mb-3 p-3">
+        <div><span class="label-color">ACCOUNT:</span> {{ fullAccountStatementData()!.accountName }}</div>
+        <div><span class="label-color">FROM:</span> {{ fullAccountStatementData()!.fromDate | date:'yyyy-MM-dd' }}</div>
+        <div><span class="label-color">TO:</span> {{ fullAccountStatementData()!.toDate | date:'yyyy-MM-dd' }}</div>
+        <div><span class="label-color">OPENING BALANCE:</span>
+            {{ fullAccountStatementData()!.openingBalance.amount|number:'1.2-2'}}
+            {{ fullAccountStatementData()!.openingBalance.balanceType }}</div>
+        <div><span class="label-color">CLOSING BALANCE:</span>
+            {{ fullAccountStatementData()!.closingBalance.amount| number:'1.2-2'}}
+            {{ fullAccountStatementData()!.closingBalance.balanceType }}</div>
+    </div>
+
+
+    <div class="w-full">
+        <p-table #dt [value]="fullAccountStatementData()?.transactions?.items ?? []"
+            [tableStyle]="{ 'min-width': '60rem' }">
+
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Date</th>
+                    <th>Voucher No</th>
+                    <th>Type</th>
+                    <th>Narration</th>
+                    <th>Reference</th>
+                    <th class="text-right">Debit</th>
+                    <th class="text-right">Credit</th>
+                    <th class="text-right">Balance</th>
+                </tr>
+                <!-- Opening balance row, anchored right under the column headers -->
+                <tr>
+                    <td colspan="7" class="font-semibold py-3"><span class="gradient-heading">Opening Balance</span>
+                    </td>
+                    <td class="font-semibold py-3 second-color">
+                        {{ fullAccountStatementData()!.openingBalance.amount| number:'1.2-2'}}
+                        {{ fullAccountStatementData()!.openingBalance.balanceType }}</td>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-line>
+                <tr>
+                    <td>{{ line.postingDate | date:'yyyy-MM-dd' }}</td>
+                    <td>{{ line.voucherNo }}</td>
+                    <td>{{ line.voucherType }}</td>
+                    <td>{{ line.narration }}</td>
+                    <td>{{ line.referenceNo }}</td>
+                    <td>{{ line.baseDebit ? (line.baseDebit | number:'1.2-2') : '-' }}</td>
+                    <td>{{ line.baseCredit ? (line.baseCredit | number:'1.2-2') : '-' }}</td>
+                    <td>{{ line.runningBalance.amount| number:'1.2-2'}}
+                        {{ line.runningBalance.balanceType }}</td>
+                </tr>
+
+            </ng-template>
+
+            <ng-template pTemplate="footer">
+                <!-- Closing balance row, anchored at the bottom -->
+                <tr>
+                    <td colspan="7" class="font-semibold"><span class="gradient-heading">Closing Balance</span>
+                    </td>
+                    <td class="font-semibold">{{ fullAccountStatementData()!.closingBalance.amount| number:'1.2-2'}}
+                        {{ fullAccountStatementData()!.closingBalance.balanceType }}</td>
+                </tr>
+            </ng-template>
+
+
+
+        </p-table>
+        <div class="flex justify-end mt-3">
+            @if(hasPreviousPage()){
+            <button class="pagination-button me-3" (click)="loadGeneralLedger($event,'previous')">Previous</button>
+            }
+            @if(hasNextPage()){
+            <button class="pagination-button me-3" (click)="loadGeneralLedger($event,'next')">Next</button>
+            }
+        </div>
+
+    </div>
+
+</div>
+
+}
