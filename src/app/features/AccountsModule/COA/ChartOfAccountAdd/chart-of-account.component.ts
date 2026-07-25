@@ -20,8 +20,7 @@ import { FieldErrorSComponent } from '../../../../shared/field-error-s/field-err
 })
 export class ChartOfAccountComponent {
 
-  //load COA Lis when user comes to page
-  constructor() {
+  ngOnInit() {
     this.dataService.getAllSimple<COADropdownDto>('AccountsDropDown/COAList').pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (res) => {
         const formatted = res.map(acc => ({ ...acc, displayName: `${' - '.repeat(acc.level)}${acc.name}` }));

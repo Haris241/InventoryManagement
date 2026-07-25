@@ -30,12 +30,12 @@ export const REPORT_CONFIG: ModuleReports[] = [
                         route: 'fullAccountStatement'
                     },
                     {
-                        title: 'Chart of Accounts',
-                        route: 'chartOfAccounts'
+                        title: 'Trial Balance',
+                        route: 'trialBalance'
                     },
                     {
-                        title: 'Bank Reconciliation',
-                        route: 'bankReconciliation'
+                        title: 'Balance Sheet ',
+                        route: 'balanceSheet'
                     }
                 ]
             },

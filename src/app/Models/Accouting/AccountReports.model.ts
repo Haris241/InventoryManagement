@@ -61,10 +61,15 @@ export interface FullAccountLineData {
 
 export interface TrialBalanceSearch {
     accountId: number | null;
+    accountGroupId: number | null;
+    includeZeroBalance: boolean;
     fromDate: string | null;
     fromDateUI: Date | null;
     toDate: string | null;
     toDateUI: Date | null;
+    nextCursor: string | null;
+    previousCursor: string | null;
+
 }
 export interface TrialBalanceData {
     fromDate: Date;

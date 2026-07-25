@@ -8,7 +8,7 @@
         </div>
         <div class="w-full mb-3">
             <div class="w-full flex justify-end">
-                <button class="global-button flex items-center gap-2" (click)="AccountStatementReport()">
+                <button type="button" class="global-button flex items-center gap-2" (click)="AccountStatementReport()">
                     <span class="material-symbols-outlined icon-color">
                         description
                     </span>Pdf
@@ -146,10 +146,10 @@
         </p-table>
         <div class="flex justify-end mt-3">
             @if(hasPreviousPage()){
-            <button class="pagination-button me-3" (click)="loadGeneralLedger($event,'previous')">Previous</button>
+            <button class="pagination-button me-3" (click)="loadAccountStatement($event,'previous')">Previous</button>
             }
             @if(hasNextPage()){
-            <button class="pagination-button me-3" (click)="loadGeneralLedger($event,'next')">Next</button>
+            <button class="pagination-button me-3" (click)="loadAccountStatement($event,'next')">Next</button>
             }
         </div>
 

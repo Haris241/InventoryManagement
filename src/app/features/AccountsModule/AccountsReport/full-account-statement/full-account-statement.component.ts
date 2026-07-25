@@ -73,14 +73,14 @@ export class FullAccountStatementComponent {
   });
 
   //Method to Update Fields For Non supporting Primeng Fields
-  updateField<K extends keyof GeneralLederSearch>(field: K, value: GeneralLederSearch[K]) {
+  updateField<K extends keyof AccountStatemnetSearch>(field: K, value: AccountStatemnetSearch[K]) {
     this.accountStatemnetModel.update(prev => ({
       ...prev,
       [field]: value
     }));
   }
 
-  loadGeneralLedger(event: Event, direction: 'next' | 'previous' | 'fresh' = 'fresh') {
+  loadAccountStatement(event: Event, direction: 'next' | 'previous' | 'fresh' = 'fresh') {
     if (this.submit()) {
       return;
     }
@@ -136,7 +136,7 @@ export class FullAccountStatementComponent {
   //On Search
   OnSearch(event: Event) {
     this.closingMessage.set('');
-    this.loadGeneralLedger(event, 'fresh');
+    this.loadAccountStatement(event, 'fresh');
   }
   AccountStatementReport() {
     if (this.accountStatemnetForm().invalid()) {

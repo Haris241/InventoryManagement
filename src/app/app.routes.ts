@@ -130,6 +130,12 @@ export const routes: Routes = [
                 path: 'accountReports/fullAccountStatement', loadComponent: () => import('./features/AccountsModule/AccountsReport/full-account-statement/full-account-statement.component').then(m => m.FullAccountStatementComponent)
             },
             {
+                path: 'accountReports/trialBalance', loadComponent: () => import('./features/AccountsModule/AccountsReport/trial-balance/trial-balance.component').then(m => m.TrialBalanceComponent)
+            },
+            {
+                path: 'accountReports/balancesheet', loadComponent: () => import('./features/AccountsModule/AccountsReport/balance-sheet/balance-sheet.component').then(m => m.BalanceSheetComponent)
+            },
+            {
                 path: '', redirectTo: 'accountdashboard', pathMatch: 'full'
             }
         ]

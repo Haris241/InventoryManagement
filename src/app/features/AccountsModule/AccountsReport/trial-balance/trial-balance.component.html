@@ -1,1 +1,163 @@
-<p>trial-balance works!</p>
+<form (ngSubmit)="OnSearch($event)">
+    <div class="flex flex-wrap global-div p-5">
+        <div class="w-full mb-4">
+            <h3 class="text-2xl font-semibold text-center mb-3">
+                <span class="gradient-heading">Trial Balance</span>
+            </h3>
+            <hr class="second-color">
+        </div>
+        <div class="w-full mb-3">
+            <div class="w-full flex justify-end">
+                <button type="button" class="global-button flex items-center gap-2" (click)="TrialBalanceReport()">
+                    <span class="material-symbols-outlined icon-color">
+                        description
+                    </span>Pdf
+                </button>
+            </div>
+        </div>
+        <div class="w-full mb-3">
+            <div class="lg:w-1/2 w-full">
+                <p class="note-banner">Search by either Account Group or Account Name</p>
+            </div>
+        </div>
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <p-select [(ngModel)]="trialBalanceModel().accountGroupId" [ngModelOptions]="{standalone: true}"
+                        [options]="accountGroup()" optionLabel="displayName"
+                        (ngModelChange)="updateField('accountGroupId',$event)" optionValue="id" class="w-full"
+                        inputId="accountGroupId" [showClear]="true" [filter]="true" filterBy="displayName" />
+                    <label for="accountGroupId">Select Group</label>
+                </div>
+            </p-floatLabel>
+        </div>
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <p-autoComplete [(ngModel)]="trialBalanceModel().accountId" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('accountId',$event)"
+                        (completeMethod)="SearchDropDown($event,coaSearch.searchterm)" inputId="accountId"
+                        optionLabel="name" [dropdown]="true" [suggestions]="coaSearchList()" optionValue="id"
+                        [showClear]="true" class="w-full"></p-autoComplete>
+                    <label for="accountId">Chart of Account</label>
+                </div>
+            </p-floatLabel>
+        </div>
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <p-datepicker [(ngModel)]="trialBalanceModel().fromDateUI" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('fromDateUI',$event)" view="date" dateFormat="dd/mm/yy"
+                        size="small" inputId="fromDateUI" class="w-full" />
+                    <label for="fromDateUI">From Date</label>
+                </div>
+            </p-floatLabel>
+        </div>
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <p-datepicker [(ngModel)]="trialBalanceModel().toDateUI" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('toDateUI',$event)" view="date" dateFormat="dd/mm/yy" size="small"
+                        inputId="toDateUI" class="w-full" />
+                    <label for="toDateUI">To Date</label>
+                </div>
+            </p-floatLabel>
+        </div>
+        <div class="lg:w-1/4 w-full mb-3 flex items-center gap-2">
+            <input id="includeZeroBalance" type="checkbox" [formField]="trialBalanceForm.includeZeroBalance"
+                class="w-auto" />
+            <label for="includeZeroBalance" class="mb-0 !text-lg font-medium gradient-heading">Include Zero
+                Balance</label>
+        </div>
+
+
+        <!--submitting the form  -->
+        <div class="w-full flex justify-center m-3">
+            <button class="global-button" type="submit" [disabled]="submit()">
+                {{ submit() ? 'Processing...' : 'Search' }}
+            </button>
+        </div>
+        <!--Errors -->
+        <div class="w-full mt-3">
+            <ul class="text-red-500 text-sm font-medium pl-4">
+                @if (errors()) {
+                @for (e of errors(); track e) {
+                <li>{{ e }}</li>
+                }
+                }
+            </ul>
+        </div>
+    </div>
+
+
+
+    @if(closingMessage().length > 0){
+    <div class="w-full my-4">
+        <div class="rounded-xl second-bgcolor px-4 py-3 shadow-sm">
+            <p class="text-center text-sm font-medium WhiteC">
+                {{ closingMessage() }}
+            </p>
+        </div>
+    </div>
+    }
+</form>
+@if(trialBalanceData()){
+<div class="flex flex-wrap global-div mt-4 p-4">
+    <!-- Summary panel: mirrors the info panel in the PDF report -->
+    <div class="w-full flex flex-wrap justify-between items-center gl-summary-panel mb-3 p-3">
+        <div><span class="label-color">FROM:</span> {{ trialBalanceData()!.fromDate | date:'yyyy-MM-dd' }}</div>
+        <div><span class="label-color">TO:</span> {{ trialBalanceData()!.toDate | date:'yyyy-MM-dd' }}</div>
+        <div><span class="label-color">TOTAL DEBIT:</span> {{ trialBalanceData()!.totalDebit | number:'1.2-2' }}</div>
+        <div><span class="label-color">TOTAL CREDIT:</span> {{ trialBalanceData()!.totalCredit | number:'1.2-2' }}</div>
+
+        <!-- Balance status badge -->
+        <div class="tb-status-badge" [class.tb-balanced]="isBalanced()" [class.tb-unbalanced]="!isBalanced()">
+            <span class="material-symbols-outlined tb-status-icon">
+                {{ isBalanced() ? 'check_circle' : 'cancel' }}
+            </span>
+            <span class="font-semibold">{{ isBalanced() ? 'BALANCED' : 'OUT OF BALANCE' }}</span>
+        </div>
+    </div>
+
+    <div class="w-full">
+        <p-table #dt [value]="trialBalanceData()?.accounts?.items ?? []" [tableStyle]="{ 'min-width': '50rem' }"
+            rowGroupMode="subheader" groupRowsBy="accountGroupName">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Code</th>
+                    <th>Account Name</th>
+                    <th class="text-right">Debit</th>
+                    <th class="text-right">Credit</th>
+                </tr>
+            </ng-template>
+
+            <!-- Group header row: standout band, theme-aware via design tokens -->
+            <ng-template pTemplate="groupheader" let-line>
+                <tr class="tb-group-row">
+                    <td colspan="4">
+                        <span class="tb-group-label">{{ line.accountGroupName || 'Ungrouped' }}</span>
+                    </td>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-line>
+                <tr>
+                    <td>{{ line.accountCode }}</td>
+                    <td>{{ line.accountName }}</td>
+                    <td class="text-right">{{ line.baseDebit ? (line.baseDebit | number:'1.2-2') : '-' }}</td>
+                    <td class="text-right">{{ line.baseCredit ? (line.baseCredit | number:'1.2-2') : '-' }}</td>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="footer">
+                <!-- Totals row, colored by balance status -->
+                <tr class="tb-totals-row" [class.tb-balanced]="isBalanced()" [class.tb-unbalanced]="!isBalanced()">
+                    <td colspan="2" class="font-semibold">Total</td>
+                    <td class="text-right font-semibold">{{ trialBalanceData()!.totalDebit | number:'1.2-2' }}</td>
+                    <td class="text-right font-semibold">{{ trialBalanceData()!.totalCredit | number:'1.2-2' }}</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
+}
