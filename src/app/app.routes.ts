@@ -136,6 +136,9 @@ export const routes: Routes = [
                 path: 'accountReports/balancesheet', loadComponent: () => import('./features/AccountsModule/AccountsReport/balance-sheet/balance-sheet.component').then(m => m.BalanceSheetComponent)
             },
             {
+                path: 'accountReports/incomestatement', loadComponent: () => import('./features/AccountsModule/AccountsReport/income-statement/income-statement.component').then(m => m.IncomeStatementComponent)
+            },
+            {
                 path: '', redirectTo: 'accountdashboard', pathMatch: 'full'
             }
         ]

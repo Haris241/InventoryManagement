@@ -90,7 +90,7 @@ export function toDateOnlyString(date: Date | null): string | null {
   return `${year}-${month}-${day}`;
 }
 
-export function openLoadingTab(title = 'Generating Report...', message = 'Please wait, your report is being prepared...'): Window | null {
+export function openLoadingTab(title = 'Generating Report...', message = 'Please wait, your report is being prepared...It can Take Some Time, Do not Close'): Window | null {
   const newTab = window.open('', '_blank');
   if (newTab) {
     newTab.document.title = title;

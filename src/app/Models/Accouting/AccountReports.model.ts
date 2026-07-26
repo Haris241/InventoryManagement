@@ -1,5 +1,4 @@
 import { CursorPaginationResult } from "../Pagination.model";
-import { VoucherType } from "./VoucherManager.model";
 
 export interface GeneralLedgerData {
     accountName: string;
@@ -87,6 +86,42 @@ export interface TrialBalanceLineData {
     accountGroupName: string;
     baseDebit: number;
     baseCredit: number;
+
+}
+export interface BalanceSheetSearch {
+    asOfDate: string | null;
+    asOfDateUI: Date | null;
+    includeZeroBalance: boolean;
+    showLedgerAccounts: boolean;
+}
+export interface BalanceSheetData {
+    asOfDate: Date
+    assets: BalanceSheetSectionData;
+    liabilities: BalanceSheetSectionData;
+    equity: BalanceSheetSectionData;
+    totalAssets: number;
+    totalLiabilities: number;
+    totalEquity: number;
+    totalLiabilitiesAndEquity: number;
+    isBalanced: boolean;
+    difference: number;
+}
+export interface BalanceSheetSectionData {
+    sectionName: string;
+    nodes: BalanceSheetNodeData[];
+    total: number;
+}
+export interface BalanceSheetNodeData {
+    accountId: number;
+    accountCode: string;
+    accountName: string;
+    isLeaf: boolean;
+    balance: number;
+    children: BalanceSheetNodeData[];
+    // UI-only — populated client-side when flattening, never sent by backend
+    id?: string;
+    level?: number;
+    hasChildren?: boolean;
 
 }
 export interface BalanceData {

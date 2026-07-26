@@ -1,1 +1,121 @@
-<p>balance-sheet works!</p>
+<form (ngSubmit)="OnSearch($event)">
+    <div class="flex flex-wrap global-div p-5">
+        <div class="w-full mb-4">
+            <h3 class="text-2xl font-semibold text-center mb-3">
+                <span class="gradient-heading">Balance Sheet</span>
+            </h3>
+            <hr class="second-color">
+        </div>
+        <div class="w-full mb-3">
+            <div class="w-full flex justify-end">
+                <button type="button" class="global-button flex items-center gap-2" (click)="BalanceSheetReport()">
+                    <span class="material-symbols-outlined icon-color">
+                        description
+                    </span>Pdf
+                </button>
+            </div>
+        </div>
+
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <p-datepicker [(ngModel)]="balanceSheetModel().asOfDateUI" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('asOfDateUI',$event)" view="date" dateFormat="dd/mm/yy"
+                        size="small" inputId="asOfDateUI" class="w-full" />
+                    <label for="asOfDateUI">As of Date</label>
+                </div>
+            </p-floatLabel>
+        </div>
+        <div class="lg:w-1/4 w-full mb-3 flex items-center gap-2">
+            <input id="includeZeroBalance" type="checkbox" [formField]="balanceSheetForm.includeZeroBalance"
+                class="w-auto" />
+            <label for="includeZeroBalance" class="mb-0 !text-lg font-medium gradient-heading">Include Zero
+                Balance</label>
+        </div>
+        <div class="lg:w-1/4 w-full mb-3 flex items-center gap-2">
+            <input id="showLedgerAccounts" type="checkbox" [formField]="balanceSheetForm.showLedgerAccounts"
+                class="w-auto" />
+            <label for="showLedgerAccounts" class="mb-0 !text-lg font-medium gradient-heading">Show Ledger
+                Accounts</label>
+        </div>
+        <!--submitting the form  -->
+        <div class="w-full flex justify-center m-3">
+            <button class="global-button" type="submit" [disabled]="submit()">
+                {{ submit() ? 'Processing...' : 'Search' }}
+            </button>
+        </div>
+    </div>
+</form>
+@if (balanceSheetData()) {
+<div class="flex flex-wrap global-div mt-4 p-4">
+
+    <div class="w-full flex flex-wrap justify-between items-center gl-summary-panel mb-3 p-3">
+        <div><span class="label-color">AS OF:</span> {{ balanceSheetData()!.asOfDate | date:'yyyy-MM-dd' }}</div>
+        <div><span class="label-color">TOTAL ASSETS:</span> {{ balanceSheetData()!.totalAssets | number:'1.2-2' }}</div>
+        <div><span class="label-color">TOTAL LIAB + EQUITY:</span> {{ balanceSheetData()!.totalLiabilitiesAndEquity |
+            number:'1.2-2' }}</div>
+        <div class="tb-status-badge" [class.tb-balanced]="balanceSheetData()!.isBalanced"
+            [class.tb-unbalanced]="!balanceSheetData()!.isBalanced">
+            <span class="material-symbols-outlined tb-status-icon">
+                {{ balanceSheetData()!.isBalanced ? 'check_circle' : 'cancel' }}
+            </span>
+            <span class="font-semibold">{{ balanceSheetData()!.isBalanced ? 'BALANCED' : 'OUT OF BALANCE' }}</span>
+        </div>
+    </div>
+
+    <div class="w-full mb-3 flex justify-end gap-3">
+        <button class="global-button" (click)="expandAll()">
+            <span class="material-symbols-outlined">unfold_more</span> Expand All
+        </button>
+        <button class="global-button" (click)="collapseAll()">
+            <span class="material-symbols-outlined">unfold_less</span> Collapse All
+        </button>
+    </div>
+
+    <ng-container
+        *ngTemplateOutlet="section; context: { rows: assetsRows(), name: balanceSheetData()!.assets.sectionName, total: balanceSheetData()!.totalAssets, label: 'Total Assets' }"></ng-container>
+    <ng-container
+        *ngTemplateOutlet="section; context: { rows: liabilitiesRows(), name: balanceSheetData()!.liabilities.sectionName, total: balanceSheetData()!.totalLiabilities, label: 'Total Liabilities' }"></ng-container>
+    <ng-container
+        *ngTemplateOutlet="section; context: { rows: equityRows(), name: balanceSheetData()!.equity.sectionName, total: balanceSheetData()!.totalEquity, label: 'Total Equity', balanced: balanceSheetData()!.isBalanced }"></ng-container>
+
+</div>
+}
+
+<ng-template #section let-rows="rows" let-name="name" let-total="total" let-label="label" let-balanced="balanced">
+    <div class="w-full mb-4">
+        <p-table [value]="rows" [tableStyle]="{ 'min-width': '50rem' }">
+            <ng-template pTemplate="header">
+                <tr class="tb-group-row">
+                    <th colspan="2"><span class="tb-group-label">{{ name }}</span></th>
+                    <th class="text-right">Balance</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-row>
+                <tr class="tree-row" [class.tree-row-parent]="!row.isLeaf" [class.tree-row-leaf]="row.isLeaf"
+                    [class.tree-row-clickable]="row.hasChildren" (click)="toggleExpand(row)">
+                    <td [style.padding-left.px]="16 + row.level * 28">
+                        <span class="tree-toggle">
+                            @if (row.hasChildren) {
+                            <span class="material-symbols-outlined toggle-icon"
+                                [class.rotated]="isExpanded(row.id)">chevron_right</span>
+                            } @else {
+                            <span class="toggle-spacer"></span>
+                            }
+                        </span>
+                        {{ row.accountCode }}
+                    </td>
+                    <td [class.font-semibold]="!row.isLeaf">{{ row.accountName }}</td>
+                    <td class="text-right" [class.font-semibold]="!row.isLeaf">{{ row.balance | number:'1.2-2' }}</td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="footer">
+                <tr class="tb-totals-row" [class.tb-balanced]="balanced !== undefined ? balanced : true"
+                    [class.tb-unbalanced]="balanced === false">
+                    <td colspan="2" class="font-semibold">{{ label }}</td>
+                    <td class="text-right font-semibold">{{ total | number:'1.2-2' }}</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</ng-template>

@@ -35,7 +35,7 @@ export const REPORT_CONFIG: ModuleReports[] = [
                     },
                     {
                         title: 'Balance Sheet ',
-                        route: 'balanceSheet'
+                        route: 'balancesheet'
                     }
                 ]
             },
@@ -43,8 +43,8 @@ export const REPORT_CONFIG: ModuleReports[] = [
                 heading: 'Financial Statements',
                 reports: [
                     {
-                        title: 'Balance Sheet',
-                        route: 'balanceSheet'
+                        title: 'Income Statement',
+                        route: 'incomestatement'
                     },
                     {
                         title: 'Profit & Loss',
