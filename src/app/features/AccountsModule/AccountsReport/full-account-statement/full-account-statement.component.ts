@@ -19,10 +19,11 @@ import { FieldErrorSComponent } from "../../../../shared/field-error-s/field-err
 import { BackgroundJobResponse } from '../../../../Models/Accouting/FiscalYear.model';
 import { NotificationService } from '../../../../services/notification.service';
 import { NotificationType } from '../../../../Models/Notification.model';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-full-account-statement',
-  imports: [TableModule, AutoCompleteModule, FormsModule, FloatLabelModule, SelectModule, CommonModule, DatePickerModule, FieldErrorSComponent],
+  imports: [RouterLink, TableModule, AutoCompleteModule, FormsModule, FloatLabelModule, SelectModule, CommonModule, DatePickerModule, FieldErrorSComponent],
   templateUrl: './full-account-statement.component.html',
   styleUrl: './full-account-statement.component.css',
 })

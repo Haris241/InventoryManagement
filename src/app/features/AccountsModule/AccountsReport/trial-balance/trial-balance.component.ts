@@ -18,9 +18,10 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { BackgroundJobResponse } from '../../../../Models/Accouting/FiscalYear.model';
 import { NotificationService } from '../../../../services/notification.service';
 import { NotificationType } from '../../../../Models/Notification.model';
+import { RouterLink } from '@angular/router';
 @Component({
   selector: 'app-trial-balance',
-  imports: [TableModule, AutoCompleteModule, FormsModule, FormField, FloatLabelModule, SelectModule, CommonModule, DatePickerModule],
+  imports: [RouterLink, TableModule, AutoCompleteModule, FormsModule, FormField, FloatLabelModule, SelectModule, CommonModule, DatePickerModule],
   templateUrl: './trial-balance.component.html',
   styleUrl: './trial-balance.component.css',
 })

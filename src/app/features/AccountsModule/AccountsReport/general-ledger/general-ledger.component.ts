@@ -16,10 +16,11 @@ import { COAList } from '../../../../Models/Accouting/ChartOfAccount.model';
 import { AutoDropdown } from '../../../../Models/Pagination.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FieldErrorSComponent } from "../../../../shared/field-error-s/field-error-s.component";
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-general-ledger',
-  imports: [TableModule, AutoCompleteModule, FormsModule, FloatLabelModule, SelectModule, CommonModule, DatePickerModule, FieldErrorSComponent],
+  imports: [RouterLink, TableModule, AutoCompleteModule, FormsModule, FloatLabelModule, SelectModule, CommonModule, DatePickerModule, FieldErrorSComponent],
   templateUrl: './general-ledger.component.html',
   styleUrl: './general-ledger.component.css',
 })

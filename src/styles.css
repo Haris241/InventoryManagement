@@ -309,6 +309,51 @@ input[type="number"] {
   font-weight: 500;
 }
 
+.redirect-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #7C3AED;
+  /* Blue */
+  color: #fff;
+  padding: 4px 10px;
+  min-width: 90px;
+  border: 2px solid #7C3AED;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.redirect-button:hover {
+  background-color: transparent;
+  color: #7C3AED;
+}
+
+.blog-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #10B981;
+  /* Emerald */
+  color: #fff;
+  padding: 4px 10px;
+  min-width: 90px;
+  border: 2px solid #10B981;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.blog-button:hover {
+  background-color: transparent;
+  color: #10B981;
+}
+
+
 .status-badge {
   padding: 0.25rem 0.5rem;
   display: inline-flex;

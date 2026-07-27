@@ -12,10 +12,11 @@ import { DataLayerService } from '../../../../services/data-layer.service';
 import { PaginationService } from '../../../../services/pagination.service';
 import { BaseApiService } from '../../../../services/base-api.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-balance-sheet',
-  imports: [TableModule, FormsModule, FloatLabelModule, SelectModule, CommonModule, FormField, DatePickerModule],
+  imports: [RouterLink, TableModule, FormsModule, FloatLabelModule, SelectModule, CommonModule, FormField, DatePickerModule],
   templateUrl: './balance-sheet.component.html',
   styleUrl: './balance-sheet.component.css',
 })
