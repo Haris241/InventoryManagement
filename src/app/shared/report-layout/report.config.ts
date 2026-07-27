@@ -43,12 +43,12 @@ export const REPORT_CONFIG: ModuleReports[] = [
                 heading: 'Financial Statements',
                 reports: [
                     {
-                        title: 'Income Statement',
+                        title: 'Income Statement (P&L)',
                         route: 'incomestatement'
                     },
                     {
-                        title: 'Profit & Loss',
-                        route: 'profitLoss'
+                        title: 'Cash Flow Statement',
+                        route: 'cashflowstatement'
                     }
                 ]
             }

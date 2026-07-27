@@ -106,25 +106,51 @@ export interface BalanceSheetData {
     isBalanced: boolean;
     difference: number;
 }
-export interface BalanceSheetSectionData {
-    sectionName: string;
-    nodes: BalanceSheetNodeData[];
-    total: number;
+export interface BalanceSheetNodeData extends ReportNode<BalanceSheetNodeData> { }
+export interface BalanceSheetSectionData extends ReportSection<BalanceSheetNodeData> { }
+
+export interface IncomeStatementSearch {
+    fromDate: string | null;
+    fromDateUI: Date | null;
+    toDate: string | null;
+    toDateUI: Date | null;
+    includeZeroBalance: boolean;
+    showLedgerAccounts: boolean;
 }
-export interface BalanceSheetNodeData {
+export interface IncomeStatementData {
+    fromDate: Date;
+    toDate: Date;
+
+    revenue: IncomeStatementSectionData;
+    expense: IncomeStatementSectionData;
+
+    totalRevenue: number;
+    totalExpense: number;
+    netProfit: number;
+}
+
+export interface IncomeStatementNodeData extends ReportNode<IncomeStatementNodeData> { }
+export interface IncomeStatementSectionData extends ReportSection<IncomeStatementNodeData> { }
+
+export interface BalanceData {
+    amount: number;
+    balanceType: string;
+}
+export interface ReportNode<TNode> {
     accountId: number;
     accountCode: string;
     accountName: string;
     isLeaf: boolean;
     balance: number;
-    children: BalanceSheetNodeData[];
-    // UI-only — populated client-side when flattening, never sent by backend
+    children: TNode[];
+
+    // UI only
     id?: string;
     level?: number;
     hasChildren?: boolean;
-
 }
-export interface BalanceData {
-    amount: number;
-    balanceType: string;
+export interface ReportSection<TNode> {
+    sectionName: string;
+    nodes: TNode[];
+    total: number;
 }

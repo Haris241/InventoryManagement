@@ -1,1 +1,142 @@
-<p>income-statement works!</p>
+<form (ngSubmit)="OnSearch($event)">
+    <div class="flex flex-wrap global-div p-5">
+        <div class="w-full mb-4">
+            <h3 class="text-2xl font-semibold text-center mb-3">
+                <span class="gradient-heading">Income Statement (P&L)</span>
+            </h3>
+            <hr class="second-color">
+        </div>
+        <div class="w-full mb-3">
+            <div class="w-full flex justify-end">
+                <button type="button" class="global-button flex items-center gap-2" (click)="IncomeStatementReport()">
+                    <span class="material-symbols-outlined icon-color">
+                        description
+                    </span>Pdf
+                </button>
+            </div>
+        </div>
+
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <p-datepicker [(ngModel)]="incomeStatementModel().fromDateUI" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('fromDateUI',$event)" view="date" dateFormat="dd/mm/yy"
+                        size="small" inputId="fromDateUI" class="w-full" />
+                    <label for="fromDateUI">From Date</label>
+                </div>
+            </p-floatLabel>
+        </div>
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <p-datepicker [(ngModel)]="incomeStatementModel().toDateUI" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('toDateUI',$event)" view="date" dateFormat="dd/mm/yy" size="small"
+                        inputId="toDateUI" class="w-full" />
+                    <label for="toDateUI">To Date</label>
+                </div>
+            </p-floatLabel>
+        </div>
+        <div class="lg:w-1/4 w-full mb-3 flex items-center gap-2">
+            <input id="includeZeroBalance" type="checkbox" [formField]="incomeStatementForm.includeZeroBalance"
+                class="w-auto" />
+            <label for="includeZeroBalance" class="mb-0 !text-lg font-medium gradient-heading">Include Zero
+                Balance</label>
+        </div>
+        <div class="lg:w-1/4 w-full mb-3 flex items-center gap-2">
+            <input id="showLedgerAccounts" type="checkbox" [formField]="incomeStatementForm.showLedgerAccounts"
+                class="w-auto" />
+            <label for="showLedgerAccounts" class="mb-0 !text-lg font-medium gradient-heading">Show Ledger
+                Accounts</label>
+        </div>
+        <!--submitting the form  -->
+        <div class="w-full flex justify-center m-3">
+            <button class="global-button" type="submit" [disabled]="submit()">
+                {{ submit() ? 'Processing...' : 'Search' }}
+            </button>
+        </div>
+    </div>
+</form>
+@if (incomeStatementData()) {
+<div class="flex flex-wrap global-div mt-4 p-4">
+
+    <div class="w-full flex flex-wrap justify-between items-center gl-summary-panel mb-3 p-3">
+        <div><span class="label-color">FROM:</span> {{ incomeStatementData()!.fromDate | date:'yyyy-MM-dd' }}</div>
+        <div><span class="label-color">TO:</span> {{ incomeStatementData()!.toDate | date:'yyyy-MM-dd' }}</div>
+        <div><span class="label-color">TOTAL REVENUE:</span> {{ incomeStatementData()!.totalRevenue | number:'1.2-2' }}
+        </div>
+        <div><span class="label-color">TOTAL EXPENSE:</span> {{ incomeStatementData()!.totalExpense | number:'1.2-2' }}
+        </div>
+        <div class="tb-status-badge" [class.tb-balanced]="incomeStatementData()!.netProfit >= 0"
+            [class.tb-unbalanced]="incomeStatementData()!.netProfit < 0">
+            <span class="material-symbols-outlined tb-status-icon">
+                {{ incomeStatementData()!.netProfit >= 0 ? 'trending_up' : 'trending_down' }}
+            </span>
+            <span class="font-semibold">
+                {{ incomeStatementData()!.netProfit >= 0 ? 'NET PROFIT' : 'NET LOSS' }}:
+                {{ incomeStatementData()!.netProfit | number:'1.2-2' }}
+            </span>
+        </div>
+    </div>
+
+    <div class="w-full mb-3 flex justify-end gap-3">
+        <button class="global-button" (click)="expandAll()">
+            <span class="material-symbols-outlined">unfold_more</span> Expand All
+        </button>
+        <button class="global-button" (click)="collapseAll()">
+            <span class="material-symbols-outlined">unfold_less</span> Collapse All
+        </button>
+    </div>
+
+    <ng-container
+        *ngTemplateOutlet="section; context: { rows: revenueRows(), name: incomeStatementData()!.revenue.sectionName, total: incomeStatementData()!.totalRevenue, label: 'Total Revenue' }"></ng-container>
+    <ng-container
+        *ngTemplateOutlet="section; context: { rows: expensesRows(), name: incomeStatementData()!.expense.sectionName, total: incomeStatementData()!.totalExpense, label: 'Total Expense' }"></ng-container>
+
+    <div class="w-full mb-4">
+        <div class="tb-totals-row" [class.tb-balanced]="incomeStatementData()!.netProfit >= 0"
+            [class.tb-unbalanced]="incomeStatementData()!.netProfit < 0">
+            <span class="font-semibold gradient-heading">{{ incomeStatementData()!.netProfit >= 0 ? 'Net Profit: '
+                :'NetLoss: ' }}</span>
+            <span class="font-semibold gradient-heading">{{ incomeStatementData()!.netProfit | number:'1.2-2' }}</span>
+        </div>
+    </div>
+
+</div>
+}
+
+<ng-template #section let-rows="rows" let-name="name" let-total="total" let-label="label">
+    <div class="w-full mb-4">
+        <p-table [value]="rows" [tableStyle]="{ 'min-width': '50rem' }">
+            <ng-template pTemplate="header">
+                <tr class="tb-group-row">
+                    <th colspan="2"><span class="tb-group-label">{{ name }}</span></th>
+                    <th class="text-right">Balance</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-row>
+                <tr class="tree-row" [class.tree-row-parent]="!row.isLeaf" [class.tree-row-leaf]="row.isLeaf"
+                    [class.tree-row-clickable]="row.hasChildren" (click)="toggleExpand(row)">
+                    <td [style.padding-left.px]="16 + row.level * 28">
+                        <span class="tree-toggle">
+                            @if (row.hasChildren) {
+                            <span class="material-symbols-outlined toggle-icon"
+                                [class.rotated]="isExpanded(row.id)">chevron_right</span>
+                            } @else {
+                            <span class="toggle-spacer"></span>
+                            }
+                        </span>
+                        {{ row.accountCode }}
+                    </td>
+                    <td [class.font-semibold]="!row.isLeaf">{{ row.accountName }}</td>
+                    <td class="text-right" [class.font-semibold]="!row.isLeaf">{{ row.balance | number:'1.2-2' }}</td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="footer">
+                <tr class="tb-totals-row">
+                    <td colspan="2" class="font-semibold">{{ label }}</td>
+                    <td class="text-right font-semibold">{{ total | number:'1.2-2' }}</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</ng-template>

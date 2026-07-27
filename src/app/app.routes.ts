@@ -139,6 +139,9 @@ export const routes: Routes = [
                 path: 'accountReports/incomestatement', loadComponent: () => import('./features/AccountsModule/AccountsReport/income-statement/income-statement.component').then(m => m.IncomeStatementComponent)
             },
             {
+                path: 'accountReports/cashflowstatement', loadComponent: () => import('./features/AccountsModule/AccountsReport/cash-flow-statement/cash-flow-statement.component').then(m => m.CashFlowStatementComponent)
+            },
+            {
                 path: '', redirectTo: 'accountdashboard', pathMatch: 'full'
             }
         ]

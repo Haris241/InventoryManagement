@@ -153,7 +153,6 @@ export class BalanceSheetComponent {
     //Making Api Call
     request$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (result) => {
-        console.log(result)
         this.balanceSheetData.set(result);
         this.submit.set(false);
         this.formSubmitted.set(false);
