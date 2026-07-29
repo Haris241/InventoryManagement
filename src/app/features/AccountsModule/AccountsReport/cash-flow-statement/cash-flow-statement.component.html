@@ -1,1 +1,160 @@
-<p>cash-flow-statement works!</p>
+<!-- Redirect Back to Reports -->
+<div class="w-full flex mb-4">
+    <button type="button" class="redirect-button flex items-center" routerLink="/Accounts/accountReports">
+        Back
+    </button>
+</div>
+<form (ngSubmit)="OnSearch($event)">
+    <div class="flex flex-wrap global-div p-5">
+        <div class="w-full mb-4">
+            <h3 class="text-2xl font-semibold text-center mb-3">
+                <span class="gradient-heading">Cash Flow Statement</span>
+            </h3>
+            <hr class="second-color">
+        </div>
+        <div class="w-full mb-3">
+            <div class="w-full flex justify-end">
+                <button type="button" class="global-button flex items-center gap-2" (click)="CashFlowReport()">
+                    <span class="material-symbols-outlined icon-color">
+                        description
+                    </span> Pdf
+                </button>
+            </div>
+        </div>
+
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <p-datepicker [(ngModel)]="cashFlowModel().fromDateUI" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('fromDateUI',$event)" view="date" dateFormat="dd/mm/yy"
+                        size="small" inputId="fromDateUI" class="w-full" />
+                    <label for="fromDateUI">From Date</label>
+                </div>
+            </p-floatLabel>
+        </div>
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <p-datepicker [(ngModel)]="cashFlowModel().toDateUI" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('toDateUI',$event)" view="date" dateFormat="dd/mm/yy" size="small"
+                        inputId="toDateUI" class="w-full" />
+                    <label for="toDateUI">To Date</label>
+                </div>
+            </p-floatLabel>
+        </div>
+        <div class="lg:w-1/4 w-full mb-3 flex items-center gap-2">
+            <input id="includeZeroBalance" type="checkbox" [formField]="cashFlowForm.includeZeroBalance"
+                class="w-auto" />
+            <label for="includeZeroBalance" class="mb-0 !text-lg font-medium gradient-heading">Include Zero
+                Balance</label>
+        </div>
+        <!--submitting the form  -->
+        <div class="w-full flex justify-center m-3">
+            <button class="global-button" type="submit" [disabled]="submit()">
+                {{ submit() ? 'Processing...' : 'Search' }}
+            </button>
+        </div>
+    </div>
+</form>
+@if (cashFlowData()) {
+<div class="flex flex-wrap global-div mt-4 p-4">
+
+    <div class="w-full flex flex-wrap justify-between items-center gl-summary-panel mb-3 p-3">
+        <div><span class="label-color">FROM:</span> {{ cashFlowData()!.fromDate | date:'yyyy-MM-dd' }}</div>
+        <div><span class="label-color">TO:</span> {{ cashFlowData()!.toDate | date:'yyyy-MM-dd' }}</div>
+        <div><span class="label-color">OPENING CASH:</span> {{ cashFlowData()!.openingCashBalance.amount |
+            number:'1.2-2' }} {{ cashFlowData()!.openingCashBalance.balanceType }}</div>
+        <div><span class="label-color">CLOSING CASH:</span> {{ cashFlowData()!.closingCashBalance.amount |
+            number:'1.2-2' }} {{ cashFlowData()!.closingCashBalance.balanceType }}</div>
+        <div class="tb-status-badge" [class.tb-balanced]="cashFlowData()!.netIncreaseInCash >= 0"
+            [class.tb-unbalanced]="cashFlowData()!.netIncreaseInCash < 0">
+            <span class="material-symbols-outlined tb-status-icon">
+                {{ cashFlowData()!.netIncreaseInCash >= 0 ? 'trending_up' : 'trending_down' }}
+            </span>
+            <span class="font-semibold">
+                {{ cashFlowData()!.netIncreaseInCash >= 0 ? 'NET INCREASE' : 'NET DECREASE' }}:
+                {{ cashFlowData()!.netIncreaseInCash | number:'1.2-2' }}
+            </span>
+        </div>
+    </div>
+
+    <div class="w-full mb-3 flex justify-end gap-3">
+        <button class="global-button" (click)="expandAll()">
+            <span class="material-symbols-outlined">unfold_more</span> Expand All
+        </button>
+        <button class="global-button" (click)="collapseAll()">
+            <span class="material-symbols-outlined">unfold_less</span> Collapse All
+        </button>
+    </div>
+
+    <ng-container
+        *ngTemplateOutlet="section; context: { rows: operatingRows(), name: cashFlowData()!.operatingActivities.sectionName, total: cashFlowData()!.netCashFromOperating, label: 'Net Cash from Operating Activities' }"></ng-container>
+    <ng-container
+        *ngTemplateOutlet="section; context: { rows: investingRows(), name: cashFlowData()!.investingActivities.sectionName, total: cashFlowData()!.netCashFromInvesting, label: 'Net Cash from Investing Activities' }"></ng-container>
+    <ng-container
+        *ngTemplateOutlet="section; context: { rows: financingRows(), name: cashFlowData()!.financingActivities.sectionName, total: cashFlowData()!.netCashFromFinancing, label: 'Net Cash from Financing Activities' }"></ng-container>
+
+    <div class="w-full mb-4">
+        <div class="tb-totals-row net-profit-row flex justify-between items-center p-3">
+            <span class="font-semibold gradient-heading">Opening Cash Balance</span>
+            <span class="font-semibold gradient-heading">
+                {{ cashFlowData()!.openingCashBalance.amount | number:'1.2-2' }}
+                {{ cashFlowData()!.openingCashBalance.balanceType }}
+            </span>
+        </div>
+        <div class="tb-totals-row net-profit-row flex justify-between items-center p-3"
+            [class.tb-balanced]="cashFlowData()!.netIncreaseInCash >= 0"
+            [class.tb-unbalanced]="cashFlowData()!.netIncreaseInCash < 0">
+            <span class="font-semibold gradient-heading">
+                {{ cashFlowData()!.netIncreaseInCash >= 0 ? 'Net Increase in Cash' : 'Net Decrease in Cash' }}
+            </span>
+            <span class="font-semibold gradient-heading">{{ cashFlowData()!.netIncreaseInCash | number:'1.2-2' }}</span>
+        </div>
+        <div class="tb-totals-row net-profit-row flex justify-between items-center p-3">
+            <span class="font-semibold gradient-heading">Closing Cash Balance</span>
+            <span class="font-semibold gradient-heading">
+                {{ cashFlowData()!.closingCashBalance.amount | number:'1.2-2' }}
+                {{ cashFlowData()!.closingCashBalance.balanceType }}
+            </span>
+        </div>
+    </div>
+
+</div>
+}
+
+<ng-template #section let-rows="rows" let-name="name" let-total="total" let-label="label">
+    <div class="w-full mb-4">
+        <p-table [value]="rows" [tableStyle]="{ 'min-width': '50rem' }">
+            <ng-template pTemplate="header">
+                <tr class="tb-group-row">
+                    <th colspan="2"><span class="tb-group-label">{{ name }}</span></th>
+                    <th class="text-right">Balance</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-row>
+                <tr class="tree-row" [class.tree-row-parent]="!row.isLeaf" [class.tree-row-leaf]="row.isLeaf"
+                    [class.tree-row-clickable]="row.hasChildren" (click)="toggleExpand(row)">
+                    <td [style.padding-left.px]="16 + row.level * 28">
+                        <span class="tree-toggle">
+                            @if (row.hasChildren) {
+                            <span class="material-symbols-outlined toggle-icon"
+                                [class.rotated]="isExpanded(row.id)">chevron_right</span>
+                            } @else {
+                            <span class="toggle-spacer"></span>
+                            }
+                        </span>
+                        {{ row.accountCode }}
+                    </td>
+                    <td [class.font-semibold]="!row.isLeaf">{{ row.accountName }}</td>
+                    <td class="text-right" [class.font-semibold]="!row.isLeaf">{{ row.balance | number:'1.2-2' }}</td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="footer">
+                <tr class="tb-totals-row">
+                    <td colspan="2" class="font-semibold">{{ label }}</td>
+                    <td class="text-right font-semibold">{{ total | number:'1.2-2' }}</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</ng-template>

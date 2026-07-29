@@ -49,6 +49,10 @@ export const REPORT_CONFIG: ModuleReports[] = [
                     {
                         title: 'Cash Flow Statement',
                         route: 'cashflowstatement'
+                    },
+                    {
+                        title: 'Cash Bank Book',
+                        route: 'cashbankbook'
                     }
                 ]
             }

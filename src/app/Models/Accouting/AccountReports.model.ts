@@ -131,6 +131,60 @@ export interface IncomeStatementData {
 
 export interface IncomeStatementNodeData extends ReportNode<IncomeStatementNodeData> { }
 export interface IncomeStatementSectionData extends ReportSection<IncomeStatementNodeData> { }
+export interface CashFlowSearch {
+    fromDate: string | null;
+    fromDateUI: Date | null;
+    toDate: string | null;
+    toDateUI: Date | null;
+    includeZeroBalance: boolean;
+}
+
+export interface CashFlowData {
+    fromDate: Date;
+    toDate: Date;
+    openingCashBalance: BalanceData;
+    closingCashBalance: BalanceData;
+    netProfit: number;
+
+    operatingActivities: CashFlowSectionData;
+    investingActivities: CashFlowSectionData;
+    financingActivities: CashFlowSectionData;
+
+    netCashFromOperating: number;
+    netCashFromInvesting: number;
+    netCashFromFinancing: number;
+    netIncreaseInCash: number;
+}
+export interface CashFlowNodeData extends ReportNode<CashFlowNodeData> { }
+export interface CashFlowSectionData extends ReportSection<CashFlowNodeData> { }
+export interface CashBankBookSearch {
+    cashBankAccountId: number | null;
+    showCashBook: boolean;
+    showBankBook: boolean;
+    fromDate: string | null;
+    fromDateUI: Date | null;
+    toDate: string | null;
+    toDateUI: Date | null;
+}
+export interface CashBankBookData {
+    accountName: string;
+    fromDate: Date;
+    toDate: Date;
+    openingBalance: BalanceData;
+    closingBalance: BalanceData;
+    transactions: CashBankBookLineData[];
+}
+
+export interface CashBankBookLineData {
+    postingDate: Date;
+    voucherNo: string;
+    voucherType: string;
+    narration: string;
+    referenceNo: string;
+    baseDebit: number;
+    baseCredit: number;
+    runningBalance: BalanceData;
+}
 
 export interface BalanceData {
     amount: number;

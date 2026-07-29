@@ -1,0 +1,54 @@
+.gl-summary-panel {
+    background: var(--divBackgound);
+    border: 1px solid var(--Outline);
+    border-radius: 4px;
+    font-size: 0.85rem;
+}
+
+.tb-status-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.85rem;
+
+    &.tb-balanced {
+        color: var(--p-green-600, var(--p-green-500));
+    }
+
+    &.tb-unbalanced {
+        color: var(--p-red-600, var(--p-red-500));
+    }
+}
+
+.label-color {
+    color: var(--MainColour);
+    font-weight: 600;
+    margin-right: 4px;
+}
+
+.tb-status-icon {
+    font-size: 1.1rem;
+    line-height: 1;
+}
+
+.tree-row-clickable {
+    cursor: pointer;
+
+    &:hover {
+        background: var(--divBackgound);
+    }
+}
+
+.tree-row:not(.tree-row-clickable) {
+    cursor: default;
+}
+
+.toggle-spacer {
+    display: inline-block;
+    width: 1.1rem;
+    /* match .tb-status-icon / toggle-icon font-size */
+}
+
+:host ::ng-deep .p-datatable-tfoot>tr>td {
+    color: var(--MainColour) !important;
+}

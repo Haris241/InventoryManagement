@@ -1,0 +1,71 @@
+<!-- Redirect Back to Reports -->
+
+<div class="w-full flex mb-4">
+    <button type="button" class="redirect-button flex items-center" routerLink="/Accounts/accountReports">
+        Back
+    </button>
+</div>
+
+<form (ngSubmit)="OnSearch($event)">
+    <div class="flex flex-wrap global-div p-5">
+        <div class="w-full mb-4">
+            <h3 class="text-2xl font-semibold text-center mb-3">
+                <span class="gradient-heading">Cash Bank Book</span>
+            </h3>
+            <hr class="second-color">
+        </div>
+        <div class="w-full mb-3">
+            <div class="w-full flex justify-end">
+                <button type="button" class="global-button flex items-center gap-2" (click)="CashBankBookReport()">
+                    <span class="material-symbols-outlined icon-color">
+                        description
+                    </span>Pdf
+                </button>
+            </div>
+        </div>
+        <div class="w-full mb-3">
+            <div class="lg:w-1/2 w-full">
+                <p class="note-banner">Enter at least 3 characters to search globally</p>
+            </div>
+        </div>
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <p-select [(ngModel)]="cashBankBookModel().cashBankAccountId" [ngModelOptions]="{standalone: true}"
+                        [options]="cashBankUsageAccounts()" optionLabel="name"
+                        (ngModelChange)="updateField('cashBankAccountId',$event)" optionValue="id" class="w-full"
+                        inputId="cashBankAccountId" [showClear]="true" [filter]="true" filterBy="name" />
+                    <label for="cashBankAccountId">Cash/Bank Accounts</label>
+                </div>
+            </p-floatLabel>
+        </div>
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <p-datepicker [(ngModel)]="cashBankBookModel().fromDateUI" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('fromDateUI',$event)" view="date" dateFormat="dd/mm/yy"
+                        size="small" inputId="fromDateUI" class="w-full" />
+                    <label for="fromDateUI">From Date</label>
+                </div>
+            </p-floatLabel>
+        </div>
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <p-datepicker [(ngModel)]="cashBankBookModel().toDateUI" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('toDateUI',$event)" view="date" dateFormat="dd/mm/yy" size="small"
+                        inputId="toDateUI" class="w-full" />
+                    <label for="toDateUI">To Date</label>
+                </div>
+            </p-floatLabel>
+        </div>
+
+
+        <!--submitting the form  -->
+        <div class="w-full flex justify-center m-3">
+            <button class="global-button" type="submit" [disabled]="submit()">
+                {{ submit() ? 'Processing...' : 'Search' }}
+            </button>
+        </div>
+    </div>
+</form>
