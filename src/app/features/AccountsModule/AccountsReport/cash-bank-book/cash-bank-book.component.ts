@@ -1,6 +1,6 @@
-import { Component, DestroyRef, inject, signal, WritableSignal } from '@angular/core';
+import { Component, computed, DestroyRef, inject, signal, WritableSignal } from '@angular/core';
 import { CashBankBookData, CashBankBookSearch, GeneralLederSearch, GeneralLedgerData } from '../../../../Models/Accouting/AccountReports.model';
-import { form, required } from '@angular/forms/signals';
+import { form, FormField, required } from '@angular/forms/signals';
 import { TableModule } from 'primeng/table';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { FormsModule } from '@angular/forms';
@@ -15,11 +15,12 @@ import { BaseApiService } from '../../../../services/base-api.service';
 import { AutoDropdown } from '../../../../Models/Pagination.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
+import { AccountUsageType } from '../../../../Models/Accouting/ChartOfAccount.model';
 
 
 @Component({
   selector: 'app-cash-bank-book',
-  imports: [RouterLink, TableModule, AutoCompleteModule, FormsModule, FloatLabelModule, SelectModule, CommonModule, DatePickerModule],
+  imports: [RouterLink, FormField, TableModule, AutoCompleteModule, FormsModule, FloatLabelModule, SelectModule, CommonModule, DatePickerModule],
   templateUrl: './cash-bank-book.component.html',
   styleUrl: './cash-bank-book.component.css',
 })
@@ -51,6 +52,19 @@ export class CashBankBookComponent {
       }
     });
   }
+
+  //Hide Show Book and Show Cash Filters if CashBankAccountId is not null
+  hideShowCashBook = computed(() => {
+    return this.cashBankBookForm().value()?.cashBankAccountId == null;
+  });
+  //Detemine wheteher to show cash lines
+  showCashBook = computed(() => {
+    return this.cashBankBookForm().value()?.showCashBook == true;
+  });
+  //Detemine wheteher to show bank lines
+  showBankBook = computed(() => {
+    return this.cashBankBookForm().value()?.showBankBook == true;
+  });
 
   //Model For FormData
   private readonly initialModel: CashBankBookSearch = {
@@ -96,6 +110,12 @@ export class CashBankBookComponent {
     formvalue.fromDate = toDateOnlyString(formvalue.fromDateUI) ?? null;
     formvalue.toDate = toDateOnlyString(formvalue.toDateUI) ?? null;
 
+    //Mark filters to null if acccount id is selected
+    if (formvalue.cashBankAccountId != null) {
+      formvalue.showBankBook = false;
+      formvalue.showCashBook = false;
+    }
+
     //for update and create
     const url = `AccountsReports/CashBankBookList`;
     const request$ = this.dataService.createResponse<CashBankBookSearch, CashBankBookData>(url, formvalue);
@@ -106,6 +126,15 @@ export class CashBankBookComponent {
         this.cashBankBookData.set(result);
         this.submit.set(false);
         this.formSubmitted.set(false);
+        //Determine on AccountusageType which to shoe
+        if (result.usageType == AccountUsageType.Bank) {
+          this.updateField("showBankBook", true);
+          this.updateField("showCashBook", false);
+        }
+        if (result.usageType == AccountUsageType.Cash) {
+          this.updateField("showCashBook", true);
+          this.updateField("showBankBook", false);
+        }
       },
       error: (err) => {
         this.submit.set(false);

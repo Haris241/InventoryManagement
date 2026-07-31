@@ -1,4 +1,6 @@
 import { CursorPaginationResult } from "../Pagination.model";
+import { AccountUsageType } from "./ChartOfAccount.model";
+import { VoucherType } from "./VoucherManager.model";
 
 export interface GeneralLedgerData {
     accountName: string;
@@ -172,6 +174,7 @@ export interface CashBankBookData {
     toDate: Date;
     openingBalance: BalanceData;
     closingBalance: BalanceData;
+    usageType: AccountUsageType;
     transactions: CashBankBookLineData[];
 }
 
@@ -180,12 +183,37 @@ export interface CashBankBookLineData {
     voucherNo: string;
     voucherType: string;
     narration: string;
-    referenceNo: string;
-    baseDebit: number;
-    baseCredit: number;
+    cashBaseDebit: number;
+    cashBaseCredit: number;
+    bankBaseDebit: number;
+    bankBaseCredit: number;
     runningBalance: BalanceData;
 }
-
+export interface DayBookSearch {
+    fromDate: string | null;
+    fromDateUI: Date | null;
+    toDate: string | null;
+    toDateUI: Date | null;
+    voucherType: VoucherType | null;
+    nextCursor: string | null;
+    previousCursor: string | null;
+}
+export interface DayBookData {
+    fromDate: Date;
+    toDate: Date;
+    totalDebit: number;
+    totalCredit: number;
+    transactions: CursorPaginationResult<DayBookLineData>;
+}
+export interface DayBookLineData {
+    postingDate: Date;
+    createdAt: Date;
+    voucherNo: string;
+    voucherType: string;
+    narration: string;
+    baseDebit: number;
+    baseCredit: number;
+}
 export interface BalanceData {
     amount: number;
     balanceType: string;

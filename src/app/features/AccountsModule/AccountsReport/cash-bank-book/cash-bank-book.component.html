@@ -23,11 +23,7 @@
                 </button>
             </div>
         </div>
-        <div class="w-full mb-3">
-            <div class="lg:w-1/2 w-full">
-                <p class="note-banner">Enter at least 3 characters to search globally</p>
-            </div>
-        </div>
+
         <div class="lg:w-1/4 w-full mb-3">
             <p-floatLabel variant="on">
                 <div class="lg:w-8/12 w-full">
@@ -59,7 +55,17 @@
                 </div>
             </p-floatLabel>
         </div>
+        @if(hideShowCashBook()){
 
+        <div class="lg:w-1/4 w-full mb-3 flex items-center gap-2">
+            <input id="showBankBook" type="checkbox" [formField]="cashBankBookForm.showBankBook" class="w-auto" />
+            <label for="showBankBook" class="mb-0 !text-lg font-medium gradient-heading">Show Bank Book</label>
+        </div>
+        <div class="lg:w-1/4 w-full mb-3 flex items-center gap-2">
+            <input id="showCashBook" type="checkbox" [formField]="cashBankBookForm.showCashBook" class="w-auto" />
+            <label for="showCashBook" class="mb-0 !text-lg font-medium gradient-heading">Show Cash Book</label>
+        </div>
+        }
 
         <!--submitting the form  -->
         <div class="w-full flex justify-center m-3">
@@ -69,3 +75,85 @@
         </div>
     </div>
 </form>
+@if(cashBankBookData()){
+<div class="flex flex-wrap global-div mt-4 p-4">
+    <!-- Summary panel: mirrors the info panel in the PDF report -->
+    <div class="w-full flex flex-wrap justify-between gl-summary-panel mb-3 p-3">
+        <div><span class="label-color">ACCOUNT:</span> {{ cashBankBookData()!.accountName }}</div>
+        <div><span class="label-color">FROM:</span> {{ cashBankBookData()!.fromDate | date:'yyyy-MM-dd' }}</div>
+        <div><span class="label-color">TO:</span> {{ cashBankBookData()!.toDate | date:'yyyy-MM-dd' }}</div>
+        <div><span class="label-color">OPENING BALANCE:</span>
+            {{ cashBankBookData()!.openingBalance.amount|number:'1.2-2'}}
+            {{ cashBankBookData()!.openingBalance.balanceType }}</div>
+        <div><span class="label-color">CLOSING BALANCE:</span>
+            {{ cashBankBookData()!.closingBalance.amount| number:'1.2-2'}}
+            {{ cashBankBookData()!.closingBalance.balanceType }}</div>
+    </div>
+
+
+    <div class="w-full">
+        <p-table #dt [value]="cashBankBookData()?.transactions ?? []" [tableStyle]="{ 'min-width': '60rem' }">
+
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Date</th>
+                    <th>Voucher No</th>
+                    <th>Type</th>
+                    <th>Narration</th>
+                    @if(showCashBook() || (!showCashBook() && !showBankBook())){
+                    <th class="text-right">Cash Debit</th>
+                    <th class="text-right">Cash Credit</th>
+                    }
+                    @if(showBankBook() || (!showCashBook() && !showBankBook())){
+                    <th class="text-right">Bank Debit</th>
+                    <th class="text-right">Bank Credit</th>
+                    }
+                    <th class="text-right">Balance</th>
+                </tr>
+                <!-- Opening balance row, anchored right under the column headers -->
+                <tr>
+                    <td colspan="7" class="font-semibold py-3"><span class="gradient-heading">Opening Balance</span>
+                    </td>
+                    <td class="font-semibold py-3 second-color">
+                        {{ cashBankBookData()!.openingBalance.amount| number:'1.2-2'}}
+                        {{ cashBankBookData()!.openingBalance.balanceType }}</td>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-line>
+                <tr>
+                    <td>{{ line.postingDate | date:'yyyy-MM-dd' }}</td>
+                    <td>{{ line.voucherNo }}</td>
+                    <td>{{ line.voucherType }}</td>
+                    <td>{{ line.narration }}</td>
+                    @if(showCashBook() || (!showCashBook() && !showBankBook())){
+                    <td>{{ line.cashBaseDebit ? (line.cashBaseDebit | number:'1.2-2') : '-' }}</td>
+                    <td>{{ line.cashBaseCredit ? (line.cashBaseCredit | number:'1.2-2') : '-' }}</td>
+                    }
+                    @if(showBankBook() || (!showCashBook() && !showBankBook())){
+                    <td>{{ line.bankBaseDebit ? (line.bankBaseDebit | number:'1.2-2') : '-' }}</td>
+                    <td>{{ line.bankBaseCredit ? (line.bankBaseCredit | number:'1.2-2') : '-' }}</td>
+                    }
+                    <td>{{ line.runningBalance.amount| number:'1.2-2'}}
+                        {{ line.runningBalance.balanceType }}</td>
+                </tr>
+
+            </ng-template>
+
+            <ng-template pTemplate="footer">
+                <!-- Closing balance row, anchored at the bottom -->
+                <tr>
+                    <td colspan="7" class="font-semibold"><span class="gradient-heading">Closing Balance</span>
+                    </td>
+                    <td class="font-semibold">{{ cashBankBookData()!.closingBalance.amount| number:'1.2-2'}}
+                        {{ cashBankBookData()!.closingBalance.balanceType }}</td>
+                </tr>
+            </ng-template>
+
+
+
+        </p-table>
+    </div>
+</div>
+
+}

@@ -13,7 +13,6 @@ import { PaginationService } from '../../../../services/pagination.service';
 import { BaseApiService } from '../../../../services/base-api.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
-import { AutoDropdown } from '../../../../Models/Pagination.model';
 
 @Component({
   selector: 'app-cash-flow-statement',

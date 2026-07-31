@@ -145,6 +145,9 @@ export const routes: Routes = [
                 path: 'accountReports/cashbankbook', loadComponent: () => import('./features/AccountsModule/AccountsReport/cash-bank-book/cash-bank-book.component').then(m => m.CashBankBookComponent)
             },
             {
+                path: 'accountReports/daybook', loadComponent: () => import('./features/AccountsModule/AccountsReport/day-book/day-book.component').then(m => m.DayBookComponent)
+            },
+            {
                 path: '', redirectTo: 'accountdashboard', pathMatch: 'full'
             }
         ]
