@@ -2,7 +2,6 @@ import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core'
 import { DataLayerService } from './data-layer.service';
 import { GetUserNotifications, NotificationEnvelope } from '../Models/Notification.model';
 import { Subject } from 'rxjs';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Injectable({
   providedIn: 'root',

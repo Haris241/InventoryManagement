@@ -160,8 +160,14 @@ export class CashBankBookComponent {
     }
 
     const formvalue = this.cashBankBookForm().value() as CashBankBookSearch;
-    formvalue.fromDate = toDateOnlyString(formvalue.fromDateUI);
-    formvalue.toDate = toDateOnlyString(formvalue.toDateUI);
+    formvalue.fromDate = toDateOnlyString(formvalue.fromDateUI) ?? null;
+    formvalue.toDate = toDateOnlyString(formvalue.toDateUI) ?? null;
+
+    //Mark filters to null if acccount id is selected
+    if (formvalue.cashBankAccountId != null) {
+      formvalue.showBankBook = false;
+      formvalue.showCashBook = false;
+    }
 
     const newTab = openLoadingTab();
     this.dataService.getReportByData('AccountsReports/CashBankBookReport', formvalue)

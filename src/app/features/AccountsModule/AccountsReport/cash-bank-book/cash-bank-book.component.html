@@ -112,7 +112,7 @@
                 </tr>
                 <!-- Opening balance row, anchored right under the column headers -->
                 <tr>
-                    <td colspan="7" class="font-semibold py-3"><span class="gradient-heading">Opening Balance</span>
+                    <td colspan="6" class="font-semibold py-3"><span class="gradient-heading">Opening Balance</span>
                     </td>
                     <td class="font-semibold py-3 second-color">
                         {{ cashBankBookData()!.openingBalance.amount| number:'1.2-2'}}
@@ -143,7 +143,7 @@
             <ng-template pTemplate="footer">
                 <!-- Closing balance row, anchored at the bottom -->
                 <tr>
-                    <td colspan="7" class="font-semibold"><span class="gradient-heading">Closing Balance</span>
+                    <td colspan="6" class="font-semibold"><span class="gradient-heading">Closing Balance</span>
                     </td>
                     <td class="font-semibold">{{ cashBankBookData()!.closingBalance.amount| number:'1.2-2'}}
                         {{ cashBankBookData()!.closingBalance.balanceType }}</td>

@@ -19,7 +19,7 @@ export const REPORT_CONFIG: ModuleReports[] = [
         module: 'Accounts',
         sections: [
             {
-                heading: 'Ledger Reports',
+                heading: 'Ledger & Transaction Reports',
                 reports: [
                     {
                         title: 'General Ledger',
@@ -30,27 +30,6 @@ export const REPORT_CONFIG: ModuleReports[] = [
                         route: 'fullAccountStatement'
                     },
                     {
-                        title: 'Trial Balance',
-                        route: 'trialBalance'
-                    },
-                    {
-                        title: 'Balance Sheet ',
-                        route: 'balancesheet'
-                    }
-                ]
-            },
-            {
-                heading: 'Financial Statements',
-                reports: [
-                    {
-                        title: 'Income Statement (P&L)',
-                        route: 'incomestatement'
-                    },
-                    {
-                        title: 'Cash Flow Statement',
-                        route: 'cashflowstatement'
-                    },
-                    {
                         title: 'Cash Bank Book',
                         route: 'cashbankbook'
                     },
@@ -59,10 +38,31 @@ export const REPORT_CONFIG: ModuleReports[] = [
                         route: 'daybook'
                     }
                 ]
+            },
+            {
+                heading: 'Financial Reports',
+                reports: [
+                    {
+                        title: 'Trial Balance',
+                        route: 'trialBalance'
+                    },
+                    {
+                        title: 'Income Statement (P&L)',
+                        route: 'incomestatement'
+                    },
+                    {
+                        title: 'Balance Sheet',
+                        route: 'balancesheet'
+                    },
+                    {
+                        title: 'Cash Flow Statement',
+                        route: 'cashflowstatement'
+                    }
+                ]
             }
+
         ]
     },
-
     {
         module: 'Inventory',
         sections: [
