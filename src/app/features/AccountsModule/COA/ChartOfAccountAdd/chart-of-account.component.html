@@ -1,4 +1,13 @@
-<!-- COA Create Form -->
+<!-- Bulk Import template Button -->
+
+<div class="w-full flex justify-end items-center mb-4">
+    <div class="flex gap-2">
+        <button type="button" class="blog-button flex items-center" (click)="downloadTemplate()">
+            <span class="material-symbols-outlined mr-1">download</span>
+            Download Template
+        </button>
+    </div>
+</div>
 <form (ngSubmit)="createCOA($event)">
     <div class="flex flex-wrap global-div p-5">
         <div class="w-full mb-4">

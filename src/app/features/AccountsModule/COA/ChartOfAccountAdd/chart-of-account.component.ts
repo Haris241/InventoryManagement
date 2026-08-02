@@ -167,4 +167,16 @@ export class ChartOfAccountComponent {
 
   }
 
+  //Downloading Excel Template
+  downloadTemplate(): void {
+    const fileUrl = `${this.dataService.baseurl}/StaticTemplates/ChartOfAccountsTemplate.xlsx`;
+
+    const link = document.createElement('a');
+    link.href = fileUrl;
+    link.download = 'ChartOfAccountsTemplate.xlsx'; // suggested filename on save
+    link.target = '_blank';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
 }

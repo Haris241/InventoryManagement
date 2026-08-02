@@ -353,6 +353,13 @@ input[type="number"] {
   color: #10B981;
 }
 
+/* Force the Material icon to use the button's text color */
+.blog-button .material-symbols-outlined {
+  color: inherit;
+  font-size: 20px;
+  /* optional */
+  transition: color 0.2s ease;
+}
 
 .status-badge {
   padding: 0.25rem 0.5rem;
