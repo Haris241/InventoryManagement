@@ -13,6 +13,10 @@ export class NotificationService {
   // Job completion events — components subscribe to specific jobIds
   private readonly jobCompleted$ = new Subject<NotificationEnvelope>();
 
+  // Notification sound — debounce timer prevents stacking on rapid bursts
+  private readonly notifAudio = new Audio('/NotificationSound.mp3');
+  private soundLocked = signal<boolean>(false);
+
   readonly unreadCount = computed(() =>
     this.notifications().filter(n => !n.isRead).length
   );
@@ -82,6 +86,9 @@ export class NotificationService {
       });
     }
 
+    // Play sound — debounced so a burst of notifications rings once per 300 ms
+    this.playNotificationSound();
+
     // Emit job completion so any subscriber can react
     this.jobCompleted$.next(envelope);
   }
@@ -91,5 +98,16 @@ export class NotificationService {
     return this.jobCompleted$.subscribe(envelope => {
       if (envelope.jobId === jobId) callback(envelope);
     });
+  }
+
+  private playNotificationSound(): void {
+    if (this.soundLocked())
+      return;
+    this.soundLocked.set(true);
+    this.notifAudio.currentTime = 0;
+    this.notifAudio.play().catch(() => { })
+    setTimeout(() => {
+      this.soundLocked.set(false);
+    }, 300);
   }
 }
