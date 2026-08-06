@@ -7,7 +7,6 @@ import { Token } from '../../../Models/Auth.model';
 import { LoadingService } from '../../../services/loading.service';
 import { DataLayerService } from '../../../services/data-layer.service';
 import { BaseApiService } from '../../../services/base-api.service';
-import { ThemeProvider } from 'primeng/config';
 import { NotificationsComponent } from '../../../shared/notifications/notifications.component';
 import { NotificationService } from '../../../services/notification.service';
 import { SignalIrService } from '../../../services/signal-ir.service';
