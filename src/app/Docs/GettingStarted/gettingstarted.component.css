@@ -1,31 +1,3 @@
-/* Only styles that Tailwind cannot handle:
-   - var() colour tokens
-   - auto-fill grid columns
-   - custom gradients
-   - border using --Outline token
-*/
-
-/* Shared card surface */
-.gs-card {
-  padding: 14px 16px;
-  border-radius: 12px;
-  border: 1px solid var(--Outline);
-  background-color: rgba(255, 255, 255, 0.03);
-}
-
-/* Section heading divider */
-.gs-section-title {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin: 0 0 14px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid var(--Outline);
-}
-
-/* Pill chips in hero */
 .gs-chip {
   display: inline-flex;
   align-items: center;
@@ -35,45 +7,61 @@
   padding: 4px 12px;
   border-radius: 20px;
   border: 1px solid var(--Outline);
-  color: rgba(255, 255, 255, 0.8);
   background-color: rgba(255, 255, 255, 0.04);
 }
 
-/* Step number circle — gradient uses var() so can't be Tailwind */
-.gs-step-num {
-  flex-shrink: 0;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #6366f1, var(--MainColour));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: white;
+.gs-chip .material-symbols-outlined {
+  font-size: 16px;
 }
 
-/* Module card — hover border & icon colour use var() */
-.gs-module-card {
+.gs-section-title {
   display: flex;
-  flex-direction: column;
+  align-items: center;
   gap: 8px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 0 0 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--Outline);
+}
+
+.gs-section-title .material-symbols-outlined {
+  font-size: 20px;
+}
+
+/* one grid, reused for modules + features */
+.gs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 14px;
+}
+
+/* one card, reused for audience list items, module cards, feature items */
+.gs-card {
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid var(--Outline);
+  background-color: rgba(255, 255, 255, 0.03);
   transition: border-color 0.2s ease;
 }
 
-.gs-module-card:hover {
+.gs-card:hover {
   border-color: var(--MainColour);
+}
+
+/* module card only needs a vertical layout + relative positioning for the tag */
+.gs-module {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .gs-module-icon {
   font-size: 26px !important;
-  color: var(--MainColour) !important;
 }
 
-/* Status tags */
-.gs-tag-available,
-.gs-tag-soon {
+.gs-tag {
   display: inline-block;
   width: fit-content;
   font-size: 10px;
@@ -96,17 +84,43 @@
   border: 1px solid rgba(245, 158, 11, 0.25);
 }
 
-/* Auto-fill responsive grid — no Tailwind equivalent */
-.gs-auto-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
-  gap: 14px;
+.gs-step {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  padding: 16px 0;
+  border-bottom: 1px solid var(--Outline);
 }
 
-/* CTA section */
+.gs-step:last-child {
+  border-bottom: none;
+}
+
+.gs-step-num {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6366f1, var(--MainColour));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #fff;
+}
+
 .gs-cta {
+  text-align: center;
   padding: 36px 24px;
   border-radius: 16px;
   border: 1px solid var(--Outline);
   background: linear-gradient(135deg, rgba(99, 102, 241, 0.08), rgba(0, 123, 255, 0.06));
+  margin-top: 16px;
+}
+
+@media (max-width: 600px) {
+  .gs-grid {
+    grid-template-columns: 1fr;
+  }
 }
