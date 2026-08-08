@@ -1,4 +1,4 @@
-import { Component, computed, DestroyRef, inject, signal } from '@angular/core';
+import { Component, computed, DestroyRef, inject, signal, viewChild, ViewChild } from '@angular/core';
 import { AccountKind, AccountType, AccountUsageType, COADropdownDto, CreateCOA } from '../../../../Models/Accouting/ChartOfAccount.model';
 import { form, FormField, required, min } from '@angular/forms/signals';
 import { FormsModule } from '@angular/forms';
@@ -10,16 +10,34 @@ import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
 import { enumToOptions } from '../../../../shared/Utility';
 import { FieldErrorSComponent } from '../../../../shared/field-error-s/field-error-s.component';
+import { RouterLink } from "@angular/router";
+import { BulkimportComponent } from '../../../../shared/bulkimport/bulkimport.component';
 
 
 @Component({
   selector: 'app-chart-of-account',
-  imports: [FormField, FormsModule, FieldErrorSComponent, FloatLabelModule, InputTextModule, SelectModule],
+  imports: [RouterLink, FormField, FormsModule, FieldErrorSComponent, FloatLabelModule, InputTextModule, SelectModule, BulkimportComponent],
   templateUrl: './chart-of-account.component.html',
   styleUrl: './chart-of-account.component.css',
 })
 export class ChartOfAccountComponent {
 
+  private readonly bulkImport = viewChild.required<BulkimportComponent>('bulkImport');
+
+  openBulkImport(): void {
+    this.bulkImport().open();
+  }
+
+  onBulkImportSuccess(): void {
+    this.dataService.getAllSimple<COADropdownDto>('AccountsDropDown/COAList')
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (res) => {
+          const formatted = res.map(acc => ({ ...acc, displayName: `${' - '.repeat(acc.level)}${acc.name}` }));
+          this.coaList.set(formatted);
+        }
+      });
+  }
   ngOnInit() {
     this.dataService.getAllSimple<COADropdownDto>('AccountsDropDown/COAList').pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (res) => {

@@ -1,16 +1,22 @@
 <!-- Bulk Import template Button -->
 
 <div class="w-full flex justify-end items-center mb-4">
-    <div class="flex gap-2">
-        <button type="button" class="blog-button flex items-center">
-            <span class="material-symbols-outlined mr-1">read</span>
+    <div class="flex gap-2 mx-2">
+        <button type="button" class="blog-button flex items-center" routerLink="/Docs/importCOA">
+            <span class="material-symbols-outlined mr-1">article</span>
             Read Instructions
         </button>
     </div>
-    <div class="flex gap-2">
+    <div class="flex gap-2 mx-2">
         <button type="button" class="blog-button flex items-center" (click)="downloadTemplate()">
             <span class="material-symbols-outlined mr-1">download</span>
             Download Template
+        </button>
+    </div>
+    <div class="flex gap-2 mx-2">
+        <button type="button" class="blog-button flex items-center" (click)="openBulkImport()">
+            <span class="material-symbols-outlined mr-1">upload</span>
+            Upload File
         </button>
     </div>
 </div>
@@ -109,3 +115,6 @@
         </div>
     </div>
 </form>
+
+<!-- Shared Bulk Import Modal -->
+<app-bulkimport #bulkImport [controller]="'COA'" (uploadSuccess)="onBulkImportSuccess()"></app-bulkimport>
