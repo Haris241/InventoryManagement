@@ -39,7 +39,7 @@
   background-color: rgba(255, 255, 255, 0.04);
 }
 
-/* Step number circle — gradient can't be a Tailwind utility */
+/* Step number circle — gradient uses var() so can't be Tailwind */
 .gs-step-num {
   flex-shrink: 0;
   width: 32px;
@@ -54,7 +54,7 @@
   color: white;
 }
 
-/* Module card extra — icon colour & hover border */
+/* Module card — hover border & icon colour use var() */
 .gs-module-card {
   display: flex;
   flex-direction: column;
@@ -96,7 +96,7 @@
   border: 1px solid rgba(245, 158, 11, 0.25);
 }
 
-/* Auto-fill responsive grid */
+/* Auto-fill responsive grid — no Tailwind equivalent */
 .gs-auto-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
