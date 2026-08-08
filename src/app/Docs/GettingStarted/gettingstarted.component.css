@@ -1,0 +1,112 @@
+/* Only styles that Tailwind cannot handle:
+   - var() colour tokens
+   - auto-fill grid columns
+   - custom gradients
+   - border using --Outline token
+*/
+
+/* Shared card surface */
+.gs-card {
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--Outline);
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+/* Section heading divider */
+.gs-section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--Outline);
+}
+
+/* Pill chips in hero */
+.gs-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 4px 12px;
+  border-radius: 20px;
+  border: 1px solid var(--Outline);
+  color: rgba(255, 255, 255, 0.8);
+  background-color: rgba(255, 255, 255, 0.04);
+}
+
+/* Step number circle — gradient can't be a Tailwind utility */
+.gs-step-num {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6366f1, var(--MainColour));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: white;
+}
+
+/* Module card extra — icon colour & hover border */
+.gs-module-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: border-color 0.2s ease;
+}
+
+.gs-module-card:hover {
+  border-color: var(--MainColour);
+}
+
+.gs-module-icon {
+  font-size: 26px !important;
+  color: var(--MainColour) !important;
+}
+
+/* Status tags */
+.gs-tag-available,
+.gs-tag-soon {
+  display: inline-block;
+  width: fit-content;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.gs-tag-available {
+  background-color: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.gs-tag-soon {
+  background-color: rgba(245, 158, 11, 0.12);
+  color: #f59e0b;
+  border: 1px solid rgba(245, 158, 11, 0.25);
+}
+
+/* Auto-fill responsive grid */
+.gs-auto-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 14px;
+}
+
+/* CTA section */
+.gs-cta {
+  padding: 36px 24px;
+  border-radius: 16px;
+  border: 1px solid var(--Outline);
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.08), rgba(0, 123, 255, 0.06));
+}
