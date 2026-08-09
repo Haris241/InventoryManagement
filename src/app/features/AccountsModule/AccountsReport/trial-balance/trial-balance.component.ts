@@ -199,8 +199,6 @@ export class TrialBalanceComponent {
                 }
               });
 
-            } else {
-              this.base.handleError(null, envelope.message);
             }
             sub.unsubscribe();
           });

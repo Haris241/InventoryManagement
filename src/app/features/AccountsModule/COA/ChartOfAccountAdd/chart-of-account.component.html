@@ -1,24 +1,23 @@
 <!-- Bulk Import template Button -->
 
-<div class="w-full flex justify-end items-center mb-4">
-    <div class="flex gap-2 mx-2">
-        <button type="button" class="blog-button flex items-center" routerLink="/Docs/importCOA">
-            <span class="material-symbols-outlined mr-1">article</span>
-            Read Instructions
-        </button>
-    </div>
-    <div class="flex gap-2 mx-2">
-        <button type="button" class="blog-button flex items-center" (click)="downloadTemplate()">
-            <span class="material-symbols-outlined mr-1">download</span>
-            Download Template
-        </button>
-    </div>
-    <div class="flex gap-2 mx-2">
-        <button type="button" class="blog-button flex items-center" (click)="openBulkImport()">
-            <span class="material-symbols-outlined mr-1">upload</span>
-            Upload File
-        </button>
-    </div>
+<div class="w-full grid grid-cols-2 lg:flex lg:justify-end lg:items-center mb-4 gap-2">
+    <button type="button" class="blog-button flex items-center justify-center whitespace-nowrap"
+        routerLink="/Docs/importCOA">
+        <span class="material-symbols-outlined mr-1">article</span>
+        Read Instructions
+    </button>
+
+    <button type="button" class="blog-button flex items-center justify-center whitespace-nowrap"
+        (click)="downloadTemplate()">
+        <span class="material-symbols-outlined mr-1">download</span>
+        Download Template
+    </button>
+
+    <button type="button" class="blog-button flex items-center justify-center whitespace-nowrap"
+        (click)="openBulkImport()">
+        <span class="material-symbols-outlined mr-1">upload</span>
+        Upload File
+    </button>
 </div>
 <form (ngSubmit)="createCOA($event)">
     <div class="flex flex-wrap global-div p-5">
@@ -114,7 +113,17 @@
             </button>
         </div>
     </div>
+    @if(closingMessage().length > 0){
+    <div class="w-full my-4">
+        <div class="rounded-xl second-bgcolor px-4 py-3 shadow-sm">
+            <p class="text-center text-sm font-medium WhiteC">
+                {{ closingMessage() }}
+            </p>
+        </div>
+    </div>
+    }
 </form>
 
 <!-- Shared Bulk Import Modal -->
-<app-bulkimport #bulkImport [controller]="'COA'" (uploadSuccess)="onBulkImportSuccess()"></app-bulkimport>
+<app-bulkimport #bulkImport [controller]="'COA/ImportBulk'" [importType]="'coa'" (uploadSuccess)="setClosingMessage()"
+    (importComplete)="refreshData()"></app-bulkimport>

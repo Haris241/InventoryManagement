@@ -28,17 +28,12 @@ export class ChartOfAccountComponent {
     this.bulkImport().open();
   }
 
-  onBulkImportSuccess(): void {
-    this.dataService.getAllSimple<COADropdownDto>('AccountsDropDown/COAList')
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (res) => {
-          const formatted = res.map(acc => ({ ...acc, displayName: `${' - '.repeat(acc.level)}${acc.name}` }));
-          this.coaList.set(formatted);
-        }
-      });
-  }
+
   ngOnInit() {
+    this.GetDropDownList();
+  }
+  //Get DropDown List
+  GetDropDownList() {
     this.dataService.getAllSimple<COADropdownDto>('AccountsDropDown/COAList').pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (res) => {
         const formatted = res.map(acc => ({ ...acc, displayName: `${' - '.repeat(acc.level)}${acc.name}` }));
@@ -79,6 +74,8 @@ export class ChartOfAccountComponent {
   accountType = signal(enumToOptions(AccountType, true));
   accountUsage = signal(enumToOptions(AccountUsageType, true));
   coaList = signal<COADropdownDto[]>([]);
+  closingMessage = signal<string>('');
+
 
   private readonly initialModel: CreateCOA = {
     name: '',
@@ -187,14 +184,25 @@ export class ChartOfAccountComponent {
 
   //Downloading Excel Template
   downloadTemplate(): void {
-    const fileUrl = `${this.dataService.baseurl}/StaticTemplates/ChartOfAccountsTemplate.xlsx`;
+    const fileUrl = `${this.dataService.huburl}/StaticTemplates/COA_Bulk_Import_Template.xlsx`;
 
     const link = document.createElement('a');
     link.href = fileUrl;
-    link.download = 'ChartOfAccountsTemplate.xlsx'; // suggested filename on save
-    link.target = '_blank';
+    link.download = 'ChartOfAccountsTemplate.xlsx';
+
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+  }
+
+  //Set Closing Message
+  setClosingMessage() {
+    this.closingMessage.set("Chart of Account are importing. It will take some time. You can check the status in notification.");
+  }
+
+  //reload the dropdown and set closing message to empty
+  refreshData() {
+    this.GetDropDownList();
+    this.closingMessage.set("");
   }
 }
