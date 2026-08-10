@@ -180,8 +180,6 @@ export class FullAccountStatementComponent {
                 }
               });
 
-            } else {
-              this.base.handleError(null, envelope.message);
             }
             sub.unsubscribe();
           });

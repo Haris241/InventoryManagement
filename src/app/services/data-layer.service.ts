@@ -9,7 +9,8 @@ import { ReportResponse } from '../shared/Utility';
 })
 export class DataLayerService {
 
-  baseurl = environment.apiUrl
+  baseurl = environment.apiUrl;
+  huburl = environment.hubUrl;
   private http = inject(HttpClient)
   getAll<T>(controller: string): Observable<T> {
     return this.http.get<T>(`${this.baseurl}${controller}`, { withCredentials: true });

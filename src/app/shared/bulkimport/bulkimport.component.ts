@@ -3,6 +3,9 @@ import { CommonModule } from '@angular/common';
 import { DataLayerService } from '../../services/data-layer.service';
 import { BaseApiService } from '../../services/base-api.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { NotificationService } from '../../services/notification.service';
+import { BackgroundJobResponse } from '../../Models/Accouting/FiscalYear.model';
+import { NotificationType } from '../../Models/Notification.model';
 
 @Component({
   selector: 'app-bulkimport',
@@ -13,9 +16,15 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 export class BulkimportComponent {
   // Input: API controller name passed from parent component
   controller = input.required<string>();
+  // Input: Import Type name passed from parent component
+  importType = input.required<string>();
 
   // Output: emits when upload succeeds so parent can refresh data
   uploadSuccess = output<void>();
+  // Output: emits when upload succeeds so parent can refresh data
+  importComplete = output<void>();
+
+
 
   // Modal visibility
   isOpen = signal<boolean>(false);
@@ -26,19 +35,22 @@ export class BulkimportComponent {
   fileSize = signal<string>('');
   uploading = signal<boolean>(false);
   dragOver = signal<boolean>(false);
+  backgroundJobId = signal<string | null>(null);
+
 
   private readonly fileInput = viewChild<ElementRef<HTMLInputElement>>('fileInput');
   private readonly dataService = inject(DataLayerService);
   private readonly base = inject(BaseApiService);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly notifState = inject(NotificationService);
+
 
   private readonly allowedTypes = [
     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // .xlsx
-    'application/vnd.ms-excel', // .xls
     'text/csv', // .csv
   ];
 
-  private readonly allowedExtensions = ['.xlsx', '.xls', '.csv'];
+  private readonly allowedExtensions = ['.xlsx', '.csv'];
 
   // Open / Close modal
   open(): void {
@@ -94,12 +106,12 @@ export class BulkimportComponent {
     const extension = '.' + file.name.split('.').pop()?.toLowerCase();
 
     if (!this.allowedExtensions.includes(extension)) {
-      this.base.globalMessage('error', 'Invalid file type. Only Excel (.xlsx, .xls) and CSV (.csv) files are accepted.', false);
+      this.base.globalMessage('error', 'Invalid file type. Only Excel (.xlsx) and CSV (.csv) files are accepted.', false);
       this.resetFile();
       return;
     }
 
-    const maxSizeMB = 10;
+    const maxSizeMB = 5;
     if (file.size > maxSizeMB * 1024 * 1024) {
       this.base.globalMessage('error', `File size must be less than ${maxSizeMB} MB.`, false);
       this.resetFile();
@@ -132,14 +144,34 @@ export class BulkimportComponent {
     const formData = new FormData();
     formData.append('file', file);
 
-    this.dataService.create<any>(this.controller() + '/BulkImport', formData)
+    this.dataService.create<BackgroundJobResponse>(this.controller(), formData)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        next: () => {
-          this.base.globalMessage('success', 'File uploaded and imported successfully!', false);
+        next: (res) => {
           this.uploading.set(false);
           this.uploadSuccess.emit();
           this.close();
+
+          //On error Return the File to User 
+          this.backgroundJobId.set(res.jobId);
+          const sub = this.notifState.onJobComplete(res.jobId, (envelope) => {
+            if (envelope.type === NotificationType.Info) {
+              const url = `AccountsReports/DownloadBulkErrorSheet/${res.jobId}/${this.importType()}`;
+              this.dataService.downloadReport(url).subscribe({
+                next: (blob) => {
+                  this.downloadBlob(blob, `${this.importType()}_Errors.xlsx`);
+                },
+                error: (err) => {
+                  this.base.handleError(err, err.error?.message);
+                }
+              });
+            }
+            //if sucess tell the parent
+            if (envelope.type === NotificationType.Success) {
+              this.importComplete.emit();
+            }
+            sub.unsubscribe();
+          });
         },
         error: (err) => {
           if (err.error?.message) {
@@ -166,5 +198,15 @@ export class BulkimportComponent {
     if ((event.target as HTMLElement).classList.contains('bulk-import-overlay')) {
       this.close();
     }
+  }
+  private downloadBlob(blob: Blob, filename: string): void {
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
   }
 }

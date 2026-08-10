@@ -5,67 +5,77 @@
         <!-- Header -->
         <div class="flex items-center justify-between mb-4">
             <div class="flex items-center gap-2">
-                <span class="material-symbols-outlined" style="color: var(--MainColour); font-size: 24px;">upload_file</span>
+                <span class="material-symbols-outlined icon-color">upload_file</span>
                 <h3 class="m-0 text-lg font-semibold gradient-heading">Bulk Import</h3>
             </div>
-            <button type="button" class="flex items-center justify-center w-8 h-8 rounded-lg border border-white/10 bg-transparent cursor-pointer hover:bg-red-500/15" (click)="close()" [disabled]="uploading()">
-                <span class="material-symbols-outlined" style="font-size: 18px; color: rgba(255,255,255,0.5);">close</span>
+            <button type="button"
+                class="flex items-center justify-center w-8 h-8 rounded-lg border border-white/10 bg-transparent cursor-pointer hover:bg-red-500/15"
+                (click)="close()" [disabled]="uploading()">
+                <span class="material-symbols-outlined"
+                    style="font-size: 18px; color: rgba(255,255,255,0.5);">close</span>
             </button>
         </div>
 
         <!-- Instructions -->
-        <div class="rounded-xl border border-indigo-500/20 mb-4 overflow-hidden" style="background: rgba(99,102,241,0.05);">
-            <div class="flex items-center gap-2 px-3 py-2 text-xs font-semibold" style="color: #818cf8; background: rgba(99,102,241,0.08); border-bottom: 1px solid rgba(99,102,241,0.15);">
-                <span class="material-symbols-outlined" style="font-size: 16px; color: #818cf8;">info</span>
+        <div class="rounded-xl border border-indigo-500/20 mb-4 overflow-hidden"
+            style="background: rgba(99,102,241,0.05);">
+            <div class="flex items-center gap-2 px-3 py-2 text-xs font-semibold"
+                style="color: #818cf8; background: rgba(99,102,241,0.08); border-bottom: 1px solid rgba(99,102,241,0.15);">
+                <span class="material-symbols-outlined icon-color">info</span>
                 Read Before Uploading
             </div>
             <ul class="list-none m-0 p-3 flex flex-col gap-2">
-                <li class="flex items-start gap-2 text-xs" style="color: rgba(255,255,255,0.6);">
-                    <span class="material-symbols-outlined" style="font-size: 14px; color: #10b981;">check_circle</span>
-                    Only <strong class="mx-1" style="color: rgba(255,255,255,0.85);">Excel (.xlsx, .xls)</strong> and <strong class="mx-1" style="color: rgba(255,255,255,0.85);">CSV (.csv)</strong> files are accepted
+                <li class="flex items-start gap-2 text-xs">
+                    <span class="material-symbols-outlined icon-color">check_circle</span>
+                    Only <strong class="mx-1">Excel (.xlsx)</strong> and
+                    <strong class="mx-1">CSV (.csv)</strong> files are accepted
                 </li>
-                <li class="flex items-start gap-2 text-xs" style="color: rgba(255,255,255,0.6);">
-                    <span class="material-symbols-outlined" style="font-size: 14px; color: #10b981;">check_circle</span>
+                <li class="flex items-start gap-2 text-xs">
+                    <span class="material-symbols-outlined icon-color">check_circle</span>
                     Download the template first and fill data in the exact format
                 </li>
-                <li class="flex items-start gap-2 text-xs" style="color: rgba(255,255,255,0.6);">
-                    <span class="material-symbols-outlined" style="font-size: 14px; color: #10b981;">check_circle</span>
+                <li class="flex items-start gap-2 text-xs">
+                    <span class="material-symbols-outlined icon-color">check_circle</span>
                     Do not modify, rename, or delete column headers
                 </li>
-                <li class="flex items-start gap-2 text-xs" style="color: rgba(255,255,255,0.6);">
-                    <span class="material-symbols-outlined" style="font-size: 14px; color: #10b981;">check_circle</span>
-                    Maximum file size: <strong class="ml-1" style="color: rgba(255,255,255,0.85);">10 MB</strong>
+                <li class="flex items-start gap-2 text-xs">
+                    <span class="material-symbols-outlined icon-color">check_circle</span>
+                    Maximum file size: <strong class="ml-1">5 MB</strong>
                 </li>
             </ul>
         </div>
 
         <!-- Drop Zone -->
-        <div class="drop-zone p-6 text-center mb-4 cursor-pointer" [class.drag-over]="dragOver()" [class.has-file]="selectedFile()"
-            (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)" (drop)="onDrop($event)">
+        <div class="drop-zone p-6 text-center mb-4 cursor-pointer" [class.drag-over]="dragOver()"
+            [class.has-file]="selectedFile()" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)"
+            (drop)="onDrop($event)">
 
             @if (!selectedFile()) {
             <div class="flex flex-col items-center gap-2">
                 <div class="upload-icon-circle flex items-center justify-center mb-1">
-                    <span class="material-symbols-outlined" style="font-size: 28px; color: #818cf8;">cloud_upload</span>
+                    <span class="material-symbols-outlined icon-color" style="font-size: 28px;">cloud_upload</span>
                 </div>
-                <p class="m-0 text-sm font-medium" style="color: rgba(255,255,255,0.7);">Drag & drop your file here</p>
-                <p class="m-0 text-xs uppercase tracking-wide" style="color: rgba(255,255,255,0.3);">or</p>
+                <p class="m-0 text-sm font-medium">Drag & drop your file here</p>
+                <p class="m-0 text-xs uppercase tracking-wide">or</p>
                 <button type="button" class="blog-button flex items-center text-xs px-3 py-1" (click)="browseFiles()">
-                    <span class="material-symbols-outlined mr-1" style="font-size: 16px;">folder_open</span>
+                    <span class="material-symbols-outlined mr-1 icon-color">folder_open</span>
                     Browse Files
                 </button>
-                <p class="m-0 text-xs" style="color: rgba(255,255,255,0.3);">Accepted: .xlsx, .xls, .csv</p>
+                <p class="m-0 text-xs">Accepted: .xlsx, .csv</p>
             </div>
             } @else {
             <div class="flex items-center gap-3 text-left">
-                <div class="flex items-center justify-center w-11 h-11 rounded-xl shrink-0" style="background: rgba(16,185,129,0.12);">
+                <div class="flex items-center justify-center w-11 h-11 rounded-xl shrink-0"
+                    style="background: rgba(16,185,129,0.12);">
                     <span class="material-symbols-outlined" style="font-size: 24px; color: #10b981;">description</span>
                 </div>
                 <div class="flex-1 min-w-0">
-                    <p class="m-0 text-sm font-medium truncate" style="color: rgba(255,255,255,0.85);">{{ fileName() }}</p>
-                    <p class="m-0 text-xs mt-0.5" style="color: rgba(255,255,255,0.4);">{{ fileSize() }}</p>
+                    <p class="m-0 text-sm font-medium truncate">{{ fileName() }}
+                    </p>
+                    <p class="m-0 text-xs mt-0.5">{{ fileSize() }}</p>
                 </div>
-                <button type="button" class="flex items-center justify-center w-9 h-9 rounded-lg border border-red-500/25 bg-transparent cursor-pointer shrink-0 hover:bg-red-500/10"
+                <button type="button"
+                    class="flex items-center justify-center w-9 h-9 rounded-lg border border-red-500/25 bg-transparent cursor-pointer shrink-0 hover:bg-red-500/10"
                     (click)="resetFile()" [disabled]="uploading()">
                     <span class="material-symbols-outlined" style="font-size: 18px; color: #ef4444;">delete</span>
                 </button>
@@ -73,15 +83,14 @@
             }
         </div>
 
-        <input #fileInput type="file" accept=".xlsx,.xls,.csv" class="hidden" (change)="onFileSelected($event)">
+        <input #fileInput type="file" accept=".xlsx,.csv" class="hidden" (change)="onFileSelected($event)">
 
         <!-- Footer -->
         <div class="flex justify-end gap-3">
-            <button type="button" class="px-4 py-2 rounded-lg border border-white/10 bg-transparent text-sm cursor-pointer hover:bg-white/5"
-                style="color: rgba(255,255,255,0.6);" (click)="close()" [disabled]="uploading()">
+            <button type="button" class="cancelButton" (click)="close()" [disabled]="uploading()">
                 Cancel
             </button>
-            <button type="button" class="global-buttonS flex items-center gap-1 text-sm px-4 py-2"
+            <button type="button" class="global-buttonS flex items-center gap-1 px-4 py-2"
                 [disabled]="!selectedFile() || uploading()" (click)="upload()">
                 @if (uploading()) {
                 <span class="spinner"></span>
