@@ -1,1 +1,295 @@
-<p>import-coa works!</p>
+<article class="px-4 pb-12 pt-3 WhiteC global-div" aria-label="Bulk Import Chart of Accounts Guide">
+
+    <!-- Hero -->
+    <header class="mb-10">
+        <div class="second-color flex items-center gap-2 mb-4 text-xs font-semibold uppercase tracking-widest">
+            <span class="material-symbols-outlined icon-color" aria-hidden="true">upload_file</span>
+            Import Guide
+        </div>
+
+        <h1 class="text-4xl font-bold leading-tight mb-3">
+            <span class="gradient-heading">Bulk Import Chart of Accounts</span>
+        </h1>
+
+        <p class="text-sm leading-relaxed mb-4 max-w-xl opacity-85">
+            Use the Excel template to create multiple accounts at once — ideal for migration, initial
+            setup, or any time creating accounts one by one is too slow.
+        </p>
+
+        <!-- Link to "what is COA" -->
+        <a routerLink="/Docs/coa" class="ci-inline-link">
+            <span class="material-symbols-outlined icon-color" aria-hidden="true">help</span>
+            New to Chart of Accounts? See what it is and how it's structured
+            <span class="material-symbols-outlined icon-color" aria-hidden="true">arrow_forward</span>
+        </a>
+    </header>
+
+    <!-- 1. Workbook Structure -->
+    <section class="mb-10" aria-labelledby="workbook-structure">
+        <h2 id="workbook-structure" class="ci-section-title">
+            <span class="material-symbols-outlined icon-color" aria-hidden="true">table_chart</span>
+            Workbook Structure
+        </h2>
+        <p class="ci-text">The workbook has two sheets. Only one of them is actually imported.</p>
+
+        <div class="ci-grid">
+            <div class="ci-card">
+                <span class="material-symbols-outlined icon-color" aria-hidden="true">description</span>
+                <h3 class="text-sm font-semibold mb-1">Import Sheet</h3>
+                <p class="text-xs opacity-80 m-0 leading-relaxed">Enter the accounts you want to import. This is the
+                    only sheet the system processes.</p>
+                <span class="ci-tag ci-tag--available">Processed</span>
+            </div>
+            <div class="ci-card">
+                <span class="material-symbols-outlined icon-color" aria-hidden="true">menu_book</span>
+                <h3 class="text-sm font-semibold mb-1">Instructions Sheet</h3>
+                <p class="text-xs opacity-80 m-0 leading-relaxed">Explains the columns and rules. Reference only — not
+                    imported.</p>
+                <span class="ci-tag ci-tag--soon">Reference Only</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. Before You Start -->
+    <section class="mb-10" aria-labelledby="before-start">
+        <h2 id="before-start" class="ci-section-title">
+            <span class="material-symbols-outlined icon-color" aria-hidden="true">rule</span>
+            Before You Start
+        </h2>
+        <ul class="ci-checklist" role="list">
+            <li>Use the latest template supplied by the system.</li>
+            <li>Do not rename the <strong>Import</strong> sheet.</li>
+            <li>Do not change, rename, add, or remove the expected column headers.</li>
+            <li>Do not enter database Account IDs.</li>
+            <li>Enter one account per row.</li>
+            <li>Remove any sample rows before uploading if they're not meant to be imported.</li>
+        </ul>
+    </section>
+
+    <!-- 3. Import Columns -->
+    <section class="mb-10" aria-labelledby="import-columns">
+        <h2 id="import-columns" class="ci-section-title">
+            <span class="material-symbols-outlined icon-color" aria-hidden="true">view_column</span>
+            Import Columns
+        </h2>
+        <div class="ci-table-wrap">
+            <table class="ci-table">
+                <thead>
+                    <tr>
+                        <th>Column</th>
+                        <th>Required</th>
+                        <th>Purpose</th>
+                        <th>Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>RowRef</code></td>
+                        <td>When referenced by another row</td>
+                        <td>Unique reference to identify a row inside this import.</td>
+                        <td>A001</td>
+                    </tr>
+                    <tr>
+                        <td><code>Name</code></td>
+                        <td>Yes</td>
+                        <td>Name of the account.</td>
+                        <td>Raw Material</td>
+                    </tr>
+                    <tr>
+                        <td><code>ParentCode</code></td>
+                        <td>When parent already exists</td>
+                        <td>Code of an existing Group account.</td>
+                        <td>100001</td>
+                    </tr>
+                    <tr>
+                        <td><code>ParentRef</code></td>
+                        <td>When parent is in this file</td>
+                        <td>RowRef of the parent row being created in this import.</td>
+                        <td>A001</td>
+                    </tr>
+                    <tr>
+                        <td><code>Kind</code></td>
+                        <td>Yes</td>
+                        <td>Group or Ledger.</td>
+                        <td>Ledger</td>
+                    </tr>
+                    <tr>
+                        <td><code>Category</code></td>
+                        <td>Yes</td>
+                        <td>Asset, Liability, Equity, Revenue, or Expense.</td>
+                        <td>Asset</td>
+                    </tr>
+                    <tr>
+                        <td><code>AccountUsage</code></td>
+                        <td>Optional</td>
+                        <td>Special usage of a ledger account.</td>
+                        <td>Cash</td>
+                    </tr>
+                    <tr>
+                        <td><code>OpeningBalance</code></td>
+                        <td>Optional</td>
+                        <td>Opening balance for an eligible ledger account.</td>
+                        <td>25000</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- 4. RowRef / ParentRef / ParentCode -->
+    <section class="mb-10" aria-labelledby="rowref-explained">
+        <h2 id="rowref-explained" class="ci-section-title">
+            <span class="material-symbols-outlined icon-color" aria-hidden="true">account_tree</span>
+            RowRef, ParentRef &amp; ParentCode
+        </h2>
+        <p class="ci-text">
+            Account codes are generated automatically. RowRef and ParentRef let you build a hierarchy
+            even when the parent doesn't have a generated code yet.
+        </p>
+        <div class="ci-example">
+            <div class="ci-example-row"><code>A001</code> · Inventory · ParentCode <code>100001</code> · Group · Asset
+            </div>
+            <div class="ci-example-row"><code>A002</code> · Raw Material · ParentRef <code>A001</code> · Ledger · Asset
+            </div>
+            <div class="ci-example-row"><code>A003</code> · Finished Goods · ParentRef <code>A001</code> · Ledger ·
+                Asset</div>
+        </div>
+        <p class="ci-text ci-text--small">
+            Inventory is created under existing account 100001. Raw Material and Finished Goods use
+            ParentRef <code>A001</code>, so the system links them to the newly created Inventory account.
+        </p>
+    </section>
+
+    <!-- 5. Which Parent Field -->
+    <section class="mb-10" aria-labelledby="which-parent">
+        <h2 id="which-parent" class="ci-section-title">
+            <span class="material-symbols-outlined icon-color" aria-hidden="true">alt_route</span>
+            Which Parent Field Should I Use?
+        </h2>
+        <ul class="ci-checklist" role="list">
+            <li>Use <code>ParentCode</code> when the parent account already exists in the Chart of Accounts.</li>
+            <li>Use <code>ParentRef</code> when the parent account is another row in the same file.</li>
+            <li>Never provide both <code>ParentCode</code> and <code>ParentRef</code> for the same row.</li>
+            <li>The parent must be a Group account, and it must share the child's Category.</li>
+        </ul>
+    </section>
+
+    <!-- 6. Allowed Values -->
+    <section class="mb-10" aria-labelledby="allowed-values">
+        <h2 id="allowed-values" class="ci-section-title">
+            <span class="material-symbols-outlined icon-color" aria-hidden="true">tune</span>
+            Allowed Values
+        </h2>
+
+        <div class="ci-value-group">
+            <span class="ci-value-label">Kind</span>
+            <div class="flex flex-wrap gap-2">
+                <span class="ci-chip">Group — parent/folder, not postable</span>
+                <span class="ci-chip">Ledger — postable, receives transactions</span>
+            </div>
+        </div>
+
+        <div class="ci-value-group">
+            <span class="ci-value-label">Category</span>
+            <div class="flex flex-wrap gap-2">
+                <span class="ci-chip">Asset</span>
+                <span class="ci-chip">Liability</span>
+                <span class="ci-chip">Equity</span>
+                <span class="ci-chip">Revenue</span>
+                <span class="ci-chip">Expense</span>
+            </div>
+        </div>
+
+        <div class="ci-value-group">
+            <span class="ci-value-label">Account Usage (optional)</span>
+            <div class="flex flex-wrap gap-2">
+                <span class="ci-chip">None</span>
+                <span class="ci-chip">Cash</span>
+                <span class="ci-chip">Bank</span>
+                <span class="ci-chip">Customer</span>
+                <span class="ci-chip">Supplier</span>
+                <span class="ci-chip">Tax</span>
+            </div>
+            <p class="ci-text ci-text--small mt-2">
+                Cash and Bank must be Asset accounts. Customer and Supplier must be Asset or Liability
+                accounts. Group accounts shouldn't use a special usage.
+            </p>
+        </div>
+    </section>
+
+    <!-- 7. Opening Balance & Account Codes -->
+    <section class="mb-10" aria-labelledby="opening-balance">
+        <h2 id="opening-balance" class="ci-section-title">
+            <span class="material-symbols-outlined icon-color" aria-hidden="true">payments</span>
+            Opening Balance &amp; Account Codes
+        </h2>
+        <ul class="ci-checklist" role="list">
+            <li>Opening Balance is optional and must not be negative.</li>
+            <li>Enter a plain numeric value with no currency symbol — e.g. <code>25000</code>.</li>
+            <li>The system posts the opening balance entry for you.</li>
+            <li>Never enter a final account code — codes are generated automatically by category and configured range.
+            </li>
+        </ul>
+    </section>
+
+    <!-- 8. What Happens After Upload -->
+    <section class="mb-10" aria-labelledby="after-upload">
+        <h2 id="after-upload" class="ci-section-title">
+            <span class="material-symbols-outlined icon-color" aria-hidden="true">sync</span>
+            What Happens After Upload?
+        </h2>
+        <ol class="list-none p-0 m-0" role="list">
+            <li class="ci-step"><span class="ci-step-num">1</span>
+                <p class="ci-step-text">The system reads the Import sheet — the Instructions sheet is ignored.</p>
+            </li>
+            <li class="ci-step"><span class="ci-step-num">2</span>
+                <p class="ci-step-text">Workbook structure and column headers are checked.</p>
+            </li>
+            <li class="ci-step"><span class="ci-step-num">3</span>
+                <p class="ci-step-text">Rows are parsed and validated.</p>
+            </li>
+            <li class="ci-step"><span class="ci-step-num">4</span>
+                <p class="ci-step-text">Existing parents are resolved through ParentCode; new parents through
+                    RowRef/ParentRef.</p>
+            </li>
+            <li class="ci-step"><span class="ci-step-num">5</span>
+                <p class="ci-step-text">Account codes are generated automatically.</p>
+            </li>
+            <li class="ci-step"><span class="ci-step-num">6</span>
+                <p class="ci-step-text">If validation passes, accounts are created. If it fails, nothing is imported and
+                    errors are returned for correction.</p>
+            </li>
+        </ol>
+    </section>
+
+    <!-- 9. Important Rules -->
+    <section class="mb-10" aria-labelledby="important-rules">
+        <h2 id="important-rules" class="ci-section-title">
+            <span class="material-symbols-outlined icon-color" aria-hidden="true">warning</span>
+            Important Rules
+        </h2>
+        <div class="ci-warning">
+            <ul class="ci-checklist ci-checklist--warning" role="list">
+                <li>Never enter database Account IDs or manually assign account codes.</li>
+                <li>Keep every RowRef unique.</li>
+                <li>Don't rename the Import sheet or change column names.</li>
+                <li>Remove example/sample rows before uploading if they're not meant to be imported.</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="gs-cta text-center" aria-labelledby="cta-heading">
+        <h2 id="cta-heading" class="text-2xl font-bold mb-2">Ready to Let Your Business Flow?</h2>
+        <p class="text-sm opacity-70 mb-6 leading-relaxed">
+            Join businesses already running on Harvora ERP. Register for free today —
+            no credit card, no commitment.
+        </p>
+        <a id="getting-started-register-btn" routerLink="/register" class="global-button" role="button"
+            aria-label="Register for Harvora ERP — free account">
+            <span class="material-symbols-outlined icon-color" aria-hidden="true">person_add</span>
+            &nbsp;Register Free
+        </a>
+    </section>
+
+</article>
