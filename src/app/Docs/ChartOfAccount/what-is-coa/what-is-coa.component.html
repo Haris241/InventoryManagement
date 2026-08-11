@@ -1,1 +1,335 @@
-<p>what-is-coa works!</p>
+<article class="px-4 pb-12 pt-3 WhiteC global-div" aria-label="What is a Chart of Accounts">
+
+    <!-- Hero -->
+    <header class="mb-10">
+        <div class="second-color flex items-center gap-2 mb-4 text-xs font-semibold uppercase tracking-widest">
+            <span class="material-symbols-outlined icon-color" aria-hidden="true">account_tree</span>
+            Accounting Basics
+        </div>
+
+        <h1 class="text-4xl font-bold leading-tight mb-3">
+            <span class="gradient-heading">What Is a Chart of Accounts?</span>
+        </h1>
+
+        <p class="text-sm leading-relaxed mb-4 max-w-xl opacity-75">
+            The Chart of Accounts (COA) is the master list of every account your business uses to
+            record money moving in, out, and around it. Every invoice, payment, and journal entry in
+            Harvora ERP ultimately posts to one of these accounts.
+        </p>
+
+        <a routerLink="/Docs/importCOA" class="coa-inline-link">
+            <span class="material-symbols-outlined icon-color" aria-hidden="true">upload_file</span>
+            Setting up accounts in bulk? See the Bulk Import guide
+            <span class="material-symbols-outlined icon-color" aria-hidden="true">arrow_forward</span>
+        </a>
+    </header>
+
+    <!-- Why it matters -->
+    <section class="mb-10" aria-labelledby="why-coa">
+        <h2 id="why-coa" class="coa-section-title">
+            <span class="material-symbols-outlined icon-color" aria-hidden="true">lightbulb</span>
+            Why the Chart of Accounts Matters
+        </h2>
+        <p class="coa-text">
+            Every financial report your business relies on — the Trial Balance, Profit &amp; Loss,
+            Balance Sheet — is really just the Chart of Accounts summarized in different ways. Getting
+            its structure right early saves you from re-mapping years of transactions later.
+        </p>
+        <div class="coa-grid">
+            <div class="coa-card">
+                <span class="material-symbols-outlined icon-color" aria-hidden="true">insights</span>
+                <h3 class="text-sm font-semibold mb-1">Accurate Reporting</h3>
+                <p class="text-xs opacity-60 m-0 leading-relaxed">Clean categorization means your financial statements
+                    are correct without manual cleanup.</p>
+            </div>
+            <div class="coa-card">
+                <span class="material-symbols-outlined icon-color" aria-hidden="true">account_tree</span>
+                <h3 class="text-sm font-semibold mb-1">Organized Hierarchy</h3>
+                <p class="text-xs opacity-60 m-0 leading-relaxed">Related accounts roll up under parent groups, so
+                    summaries stay readable as you grow.</p>
+            </div>
+            <div class="coa-card">
+                <span class="material-symbols-outlined icon-color" aria-hidden="true">verified</span>
+                <h3 class="text-sm font-semibold mb-1">Consistent Posting</h3>
+                <p class="text-xs opacity-60 m-0 leading-relaxed">Every transaction lands in exactly one account, so
+                    nothing is double-counted or lost.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Group vs Ledger -->
+    <section class="mb-10" aria-labelledby="group-vs-ledger">
+        <h2 id="group-vs-ledger" class="coa-section-title">
+            <span class="material-symbols-outlined icon-color" aria-hidden="true">folder_open</span>
+            Group Accounts &amp; Ledger Accounts
+        </h2>
+        <p class="coa-text">
+            Every account in Harvora ERP is one of two kinds. Understanding the difference is the key
+            to reading your Chart of Accounts.
+        </p>
+        <div class="coa-grid">
+            <div class="coa-card">
+                <span class="material-symbols-outlined icon-color" aria-hidden="true">folder</span>
+                <h3 class="text-sm font-semibold mb-1">Group Account</h3>
+                <p class="text-xs opacity-60 m-0 leading-relaxed">
+                    A folder that organizes related accounts underneath it, like "Current Assets" or
+                    "Current Liabilities." Groups summarize their children on reports but never receive
+                    transactions directly.
+                </p>
+                <span class="coa-tag coa-tag--group">Not Postable</span>
+            </div>
+            <div class="coa-card">
+                <span class="material-symbols-outlined icon-color" aria-hidden="true">receipt_long</span>
+                <h3 class="text-sm font-semibold mb-1">Ledger Account</h3>
+                <p class="text-xs opacity-60 m-0 leading-relaxed">
+                    The actual "leaf" account that transactions post to — like "Cash in Hand" or "Sales
+                    Revenue." Every voucher and journal entry lands on a Ledger account, never a Group.
+                </p>
+                <span class="coa-tag coa-tag--ledger">Postable</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- The 5 categories & normal balance -->
+    <section class="mb-10" aria-labelledby="categories">
+        <h2 id="categories" class="coa-section-title">
+            <span class="material-symbols-outlined icon-color" aria-hidden="true">category</span>
+            The Five Account Categories
+        </h2>
+        <p class="coa-text">
+            Every account belongs to exactly one category, and each category has a natural "normal
+            balance" — the side (debit or credit) where it usually grows.
+        </p>
+        <div class="coa-table-wrap">
+            <table class="coa-table">
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>Normal Balance</th>
+                        <th>Grows With</th>
+                        <th>Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Asset</td>
+                        <td>Debit</td>
+                        <td>Debit</td>
+                        <td>Cash, Inventory, Equipment</td>
+                    </tr>
+                    <tr>
+                        <td>Liability</td>
+                        <td>Credit</td>
+                        <td>Credit</td>
+                        <td>Loans Payable, Accounts Payable</td>
+                    </tr>
+                    <tr>
+                        <td>Equity</td>
+                        <td>Credit</td>
+                        <td>Credit</td>
+                        <td>Owner's Capital, Retained Earnings</td>
+                    </tr>
+                    <tr>
+                        <td>Revenue</td>
+                        <td>Credit</td>
+                        <td>Credit</td>
+                        <td>Sales, Service Income</td>
+                    </tr>
+                    <tr>
+                        <td>Expense</td>
+                        <td>Debit</td>
+                        <td>Debit</td>
+                        <td>Rent, Salaries, Utilities</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <p class="coa-text coa-text--small mt-3">
+            In practice: you rarely need to think about debit and credit directly — Harvora applies the
+            correct side automatically based on the account's category whenever you record a
+            transaction.
+        </p>
+    </section>
+
+    <!-- Account Usage -->
+    <section class="mb-10" aria-labelledby="account-usage">
+        <h2 id="account-usage" class="coa-section-title">
+            <span class="material-symbols-outlined icon-color" aria-hidden="true">label</span>
+            Account Usage Tags
+        </h2>
+        <p class="coa-text">
+            Some Ledger accounts play a special role in the system — Harvora uses these tags to know
+            which accounts to offer when you're recording a cash sale, a bank transfer, or a customer
+            invoice.
+        </p>
+        <div class="flex flex-wrap gap-2 mb-3">
+            <span class="coa-chip">None</span>
+            <span class="coa-chip">Cash</span>
+            <span class="coa-chip">Bank</span>
+            <span class="coa-chip">Customer</span>
+            <span class="coa-chip">Supplier</span>
+            <span class="coa-chip">Tax</span>
+        </div>
+        <p class="coa-text coa-text--small">
+            Cash and Bank accounts must be Asset accounts. Customer and Supplier accounts must be Asset
+            or Liability accounts. Group accounts never carry a usage tag.
+        </p>
+    </section>
+
+    <!-- Numbering convention -->
+    <section class="mb-10" aria-labelledby="numbering">
+        <h2 id="numbering" class="coa-section-title">
+            <span class="material-symbols-outlined icon-color" aria-hidden="true">tag</span>
+            Account Numbering
+        </h2>
+        <p class="coa-text">
+            Account codes are generated automatically, grouped by category into predictable number
+            ranges so related accounts always sit near each other.
+        </p>
+        <div class="coa-table-wrap">
+            <table class="coa-table">
+                <thead>
+                    <tr>
+                        <th>Range</th>
+                        <th>Category</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>100000 series</td>
+                        <td>Assets</td>
+                    </tr>
+                    <tr>
+                        <td>200000 series</td>
+                        <td>Liabilities</td>
+                    </tr>
+                    <tr>
+                        <td>300000 series</td>
+                        <td>Equity</td>
+                    </tr>
+                    <tr>
+                        <td>400000 series</td>
+                        <td>Revenue</td>
+                    </tr>
+                    <tr>
+                        <td>500000 series</td>
+                        <td>Expenses</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Starter accounts -->
+    <section class="mb-10" aria-labelledby="starter-accounts">
+        <h2 id="starter-accounts" class="coa-section-title">
+            <span class="material-symbols-outlined icon-color" aria-hidden="true">rocket_launch</span>
+            You Don't Start From Scratch
+        </h2>
+        <p class="coa-text">
+            When you register your business on Harvora, a starter Chart of Accounts is created for you
+            automatically — the five root categories plus a few essential accounts every business
+            needs. You build on top of this rather than starting from a blank sheet.
+        </p>
+        <div class="coa-table-wrap">
+            <table class="coa-table">
+                <thead>
+                    <tr>
+                        <th>Account</th>
+                        <th>Code</th>
+                        <th>Kind</th>
+                        <th>Why It's There</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Assets</td>
+                        <td>100000</td>
+                        <td>Group</td>
+                        <td>Root category for everything your business owns.</td>
+                    </tr>
+                    <tr>
+                        <td>Liabilities</td>
+                        <td>200000</td>
+                        <td>Group</td>
+                        <td>Root category for everything your business owes.</td>
+                    </tr>
+                    <tr>
+                        <td>Equity</td>
+                        <td>300000</td>
+                        <td>Group</td>
+                        <td>Root category for the owner's stake in the business.</td>
+                    </tr>
+                    <tr>
+                        <td>Revenue</td>
+                        <td>400000</td>
+                        <td>Group</td>
+                        <td>Root category for income earned.</td>
+                    </tr>
+                    <tr>
+                        <td>Expenses</td>
+                        <td>500000</td>
+                        <td>Group</td>
+                        <td>Root category for costs incurred.</td>
+                    </tr>
+                    <tr>
+                        <td>Current Assets</td>
+                        <td>100001</td>
+                        <td>Group</td>
+                        <td>Groups assets you'll use or convert to cash within a year.</td>
+                    </tr>
+                    <tr>
+                        <td>Non-Current Assets</td>
+                        <td>100002</td>
+                        <td>Group</td>
+                        <td>Groups longer-term assets like equipment or property.</td>
+                    </tr>
+                    <tr>
+                        <td>Current Liabilities</td>
+                        <td>200001</td>
+                        <td>Group</td>
+                        <td>Groups obligations due within a year.</td>
+                    </tr>
+                    <tr>
+                        <td>Non-Current Liabilities</td>
+                        <td>200002</td>
+                        <td>Group</td>
+                        <td>Groups longer-term obligations like loans.</td>
+                    </tr>
+                    <tr>
+                        <td>Opening Balance Equity</td>
+                        <td>300001</td>
+                        <td>Ledger</td>
+                        <td>Balances out the opening figures you enter when you first set up an account.</td>
+                    </tr>
+                    <tr>
+                        <td>Retained Earnings</td>
+                        <td>300002</td>
+                        <td>Ledger</td>
+                        <td>Carries forward your accumulated profit or loss year over year.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <p class="coa-text coa-text--small mt-3">
+            These starter accounts are protected — you can't rename or delete them — since your reports
+            depend on them always being present. Everything else you add sits alongside or underneath
+            them.
+        </p>
+    </section>
+
+    <!-- CTA -->
+    <section class="gs-cta text-center" aria-labelledby="cta-heading">
+        <h2 id="cta-heading" class="text-2xl font-bold mb-2">Ready to Let Your Business Flow?</h2>
+        <p class="text-sm opacity-70 mb-6 leading-relaxed">
+            Join businesses already running on Harvora ERP. Register for free today —
+            no credit card, no commitment.
+        </p>
+        <a id="getting-started-register-btn" routerLink="/register" class="global-button" role="button"
+            aria-label="Register for Harvora ERP — free account">
+            <span class="material-symbols-outlined" aria-hidden="true">person_add</span>
+            &nbsp;Register Free
+        </a>
+    </section>
+
+</article>

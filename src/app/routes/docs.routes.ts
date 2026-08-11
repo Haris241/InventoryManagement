@@ -18,6 +18,10 @@ export const docsRoutes: Routes = [
                 loadComponent: () => import('../Docs/ChartOfAccount/import-coa/import-coa.component').then(m => m.ImportCoaComponent)
             },
             {
+                path: 'vouchersGuide',
+                loadComponent: () => import('../Docs/Vouchers/voucher-blog.component').then(m => m.VoucherBlogComponent)
+            },
+            {
                 path: '',
                 redirectTo: 'gettingStarted',
                 pathMatch: 'full'

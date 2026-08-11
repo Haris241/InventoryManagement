@@ -1,0 +1,142 @@
+.coa-inline-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.82rem;
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--Outline);
+    background-color: rgba(255, 255, 255, 0.03);
+    text-decoration: none;
+    color: inherit;
+}
+
+.coa-section-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 0 0 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--Outline);
+}
+
+.coa-text {
+    font-size: 0.92rem;
+    line-height: 1.75;
+    opacity: 0.8;
+    margin: 0 0 14px;
+}
+
+.coa-text--small {
+    font-size: 0.82rem;
+    margin: 0;
+}
+
+.coa-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 14px;
+}
+
+.coa-card {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 16px;
+    border-radius: 10px;
+    border: 1px solid var(--Outline);
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+.coa-tag {
+    display: inline-block;
+    width: fit-content;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 20px;
+}
+
+.coa-tag--group {
+    color: #f59e0b;
+    background-color: rgba(245, 158, 11, 0.12);
+    border: 1px solid rgba(245, 158, 11, 0.25);
+}
+
+.coa-tag--ledger {
+    color: #22c55e;
+    background-color: rgba(34, 197, 94, 0.15);
+    border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.coa-chip {
+    display: inline-flex;
+    align-items: center;
+    font-size: 0.78rem;
+    padding: 5px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--Outline);
+    background-color: rgba(255, 255, 255, 0.04);
+}
+
+.coa-table-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--Outline);
+    border-radius: 10px;
+}
+
+.coa-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+}
+
+.coa-table th,
+.coa-table td {
+    text-align: left;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--Outline);
+    vertical-align: top;
+}
+
+.coa-table th {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    background-color: var(--MainColour);
+}
+
+.coa-table tr:last-child td {
+    border-bottom: none;
+}
+
+.coa-secondary-button {
+    display: inline-flex;
+    align-items: center;
+    padding: 10px 18px;
+    border-radius: 8px;
+    border: 1px solid var(--Outline);
+    text-decoration: none;
+    color: inherit;
+    font-size: 0.86rem;
+    font-weight: 500;
+}
+
+.coa-cta {
+    text-align: center;
+    padding: 36px 24px;
+    border-radius: 16px;
+    border: 1px solid var(--Outline);
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.08), rgba(0, 123, 255, 0.06));
+    margin-top: 16px;
+}
+
+@media (max-width: 600px) {
+    .coa-grid {
+        grid-template-columns: 1fr;
+    }
+}
