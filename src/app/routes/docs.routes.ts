@@ -22,6 +22,10 @@ export const docsRoutes: Routes = [
                 loadComponent: () => import('../Docs/Vouchers/voucher-blog.component').then(m => m.VoucherBlogComponent)
             },
             {
+                path: 'fiscalyearGuide',
+                loadComponent: () => import('../Docs/FiscalYear/fiscal-year-blog.component').then(m => m.FiscalYearBlogComponent)
+            },
+            {
                 path: '',
                 redirectTo: 'gettingStarted',
                 pathMatch: 'full'

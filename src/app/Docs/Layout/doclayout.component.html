@@ -68,6 +68,24 @@
                     }
 
                 </li>
+                <li>
+                    <a class="flex nav-link" routerLink="/Docs/vouchersGuide" routerLinkActive="active"
+                        [routerLinkActiveOptions]="{exact: true}" (click)="onSelectMobile()">
+                        <span class="material-symbols-outlined">receipt_long</span>
+                        @if (!isCollapsed()) {
+                        <span class="custom">Vouchers Guide</span>
+                        }
+                    </a>
+                </li>
+                <li>
+                    <a class="flex nav-link" routerLink="/Docs/fiscalyearGuide" routerLinkActive="active"
+                        [routerLinkActiveOptions]="{exact: true}" (click)="onSelectMobile()">
+                        <span class="material-symbols-outlined">date_range</span>
+                        @if (!isCollapsed()) {
+                        <span class="custom">Fiscal Year Guide</span>
+                        }
+                    </a>
+                </li>
             </ul>
         </nav>
         }

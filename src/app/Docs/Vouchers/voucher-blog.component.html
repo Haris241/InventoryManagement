@@ -1,1 +1,262 @@
-<p>voucher-blog works!</p>
+<article class="px-4 pb-12 pt-3 WhiteC global-div" aria-label="Voucher Manager Guide">
+
+    <!-- Hero -->
+    <header class="mb-8">
+        <div class="second-color flex items-center gap-2 mb-4 text-xs font-semibold uppercase tracking-widest">
+            <span class="material-symbols-outlined icon-color" aria-hidden="true">receipt_long</span>
+            Accounting Basics
+        </div>
+
+        <h1 class="text-4xl font-bold leading-tight mb-3">
+            <span class="gradient-heading">Voucher Manager Guide</span>
+        </h1>
+
+        <p class="text-sm leading-relaxed mb-5 max-w-xl opacity-75">
+            A voucher is how every transaction gets recorded in Harvora ERP — it's the source document
+            behind every entry in your Chart of Accounts. Some vouchers you post yourself; others are
+            created automatically when a purchase or sale happens.
+        </p>
+
+        <a routerLink="/Docs/coa" class="vm-inline-link">
+            <span class="material-symbols-outlined icon-color" aria-hidden="true">account_tree</span>
+            New here? See what the Chart of Accounts is first
+            <span class="material-symbols-outlined icon-color" aria-hidden="true">arrow_forward</span>
+        </a>
+    </header>
+
+    <!-- Quick nav -->
+    <nav class="vm-nav mb-10" aria-label="Jump to a voucher type">
+        <span class="vm-nav-label">Jump to a voucher type</span>
+        <div class="flex flex-wrap gap-2">
+            <button type="button" class="vm-nav-chip" (click)="scrollTo('voucher-journal')">Journal</button>
+            <button type="button" class="vm-nav-chip" (click)="scrollTo('voucher-opening')">Opening</button>
+            <button type="button" class="vm-nav-chip" (click)="scrollTo('voucher-cash-payment')">Cash Payment</button>
+            <button type="button" class="vm-nav-chip" (click)="scrollTo('voucher-cash-receipt')">Cash Receipt</button>
+            <button type="button" class="vm-nav-chip" (click)="scrollTo('voucher-bank-payment')">Bank Payment</button>
+            <button type="button" class="vm-nav-chip" (click)="scrollTo('voucher-bank-receipt')">Bank Receipt</button>
+            <button type="button" class="vm-nav-chip" (click)="scrollTo('voucher-contra')">Contra</button>
+            <button type="button" class="vm-nav-chip vm-nav-chip--auto"
+                (click)="scrollTo('voucher-purchase')">Purchase</button>
+            <button type="button" class="vm-nav-chip vm-nav-chip--auto"
+                (click)="scrollTo('voucher-sales')">Sales</button>
+        </div>
+    </nav>
+
+    <!-- Core balancing rule -->
+    <section class="mb-10" aria-labelledby="core-rule">
+        <h2 id="core-rule" class="vm-section-title">
+            <span class="material-symbols-outlined icon-color" aria-hidden="true">balance</span>
+            The One Rule Every Voucher Follows
+        </h2>
+        <div class="vm-callout">
+            <p class="vm-text m-0">
+                Harvora ERP supports multi-currency transactions, so two lines on the same voucher can be
+                entered in different currencies with different exchange rates — their transaction-currency
+                Debit and Credit amounts won't always match line to line. What must always match, on every
+                voucher without exception, is the total <strong>Base Debit</strong> and total
+                <strong>Base Credit</strong> — both converted into your organisation's base currency. If
+                those two totals aren't equal, the voucher can't be posted.
+            </p>
+        </div>
+    </section>
+
+    <!-- Journal -->
+    <section id="voucher-journal" class="mb-10" aria-labelledby="h-journal">
+        <h2 id="h-journal" class="vm-section-title">
+            <span class="material-symbols-outlined icon-color" aria-hidden="true">edit_note</span>
+            Journal Voucher
+            <span class="vm-tag vm-tag--manual">User-Posted</span>
+        </h2>
+        <p class="vm-text">
+            The most flexible voucher type. Use it for adjustments, accruals, corrections, and any
+            transaction that doesn't fit a cash, bank, or contra entry. A Journal Voucher can have any
+            number of lines, each debiting or crediting a different account, in any currency.
+        </p>
+        <div class="vm-rules">
+            <div class="vm-rule"><span class="material-symbols-outlined icon-color" aria-hidden="true">check</span>Add
+                as many
+                lines as the transaction needs.</div>
+            <div class="vm-rule"><span class="material-symbols-outlined icon-color" aria-hidden="true">check</span>Each
+                line can
+                debit or credit any account and any currency.</div>
+            <div class="vm-rule"><span class="material-symbols-outlined icon-color" aria-hidden="true">check</span>Base
+                Debit total
+                must equal Base Credit total before posting.</div>
+        </div>
+    </section>
+
+    <!-- Opening -->
+    <section id="voucher-opening" class="mb-10" aria-labelledby="h-opening">
+        <h2 id="h-opening" class="vm-section-title">
+            <span class="material-symbols-outlined icon-color" aria-hidden="true">flag</span>
+            Opening Voucher
+            <span class="vm-tag vm-tag--manual">User-Posted</span>
+        </h2>
+        <p class="vm-text">
+            Used once, when you're setting up your accounts — to bring in balances carried over from
+            your previous system or bookkeeping method. It behaves like a Journal Voucher: multiple
+            lines, free-form debits and credits, balanced in base currency.
+        </p>
+        <div class="vm-rules">
+            <div class="vm-rule"><span class="material-symbols-outlined icon-color" aria-hidden="true">check</span>Same
+                multi-line,
+                multi-currency structure as a Journal Voucher.</div>
+            <div class="vm-rule"><span class="material-symbols-outlined icon-color"
+                    aria-hidden="true">check</span>Typically used
+                during setup or migration, not day-to-day operations.</div>
+            <div class="vm-rule"><span class="material-symbols-outlined icon-color" aria-hidden="true">check</span>Still
+                must
+                balance in base currency like every other voucher.</div>
+        </div>
+    </section>
+
+    <!-- Cash Payment -->
+    <section id="voucher-cash-payment" class="mb-10" aria-labelledby="h-cpv">
+        <h2 id="h-cpv" class="vm-section-title">
+            <span class="material-symbols-outlined icon-color" aria-hidden="true">payments</span>
+            Cash Payment Voucher
+            <span class="vm-tag vm-tag--manual">User-Posted</span>
+        </h2>
+        <p class="vm-text">
+            Records cash leaving the business — paying an expense, a supplier, or anything else out of
+            hand cash. The first line is always the cash account, and Harvora automatically credits it
+            since a payment reduces your cash balance. Every other line is a debit — the accounts the
+            money went toward.
+        </p>
+        <div class="vm-line-map">
+            <div class="vm-line-row"><span class="vm-line-badge vm-line-badge--credit">Credit</span>Line 1 — Cash
+                account (fixed, reduces on payment)</div>
+            <div class="vm-line-row"><span class="vm-line-badge vm-line-badge--debit">Debit</span>All other lines —
+                expense or other accounts</div>
+        </div>
+    </section>
+
+    <!-- Cash Receipt -->
+    <section id="voucher-cash-receipt" class="mb-10" aria-labelledby="h-crv">
+        <h2 id="h-crv" class="vm-section-title">
+            <span class="material-symbols-outlined icon-color" aria-hidden="true">savings</span>
+            Cash Receipt Voucher
+            <span class="vm-tag vm-tag--manual">User-Posted</span>
+        </h2>
+        <p class="vm-text">
+            Records cash coming into the business. The first line is the cash account and is
+            automatically debited, since a receipt increases your cash balance. Every other line is a
+            credit — where the money came from.
+        </p>
+        <div class="vm-line-map">
+            <div class="vm-line-row"><span class="vm-line-badge vm-line-badge--debit">Debit</span>Line 1 — Cash account
+                (fixed, increases on receipt)</div>
+            <div class="vm-line-row"><span class="vm-line-badge vm-line-badge--credit">Credit</span>All other lines —
+                income or other source accounts</div>
+        </div>
+    </section>
+
+    <!-- Bank Payment -->
+    <section id="voucher-bank-payment" class="mb-10" aria-labelledby="h-bpv">
+        <h2 id="h-bpv" class="vm-section-title">
+            <span class="material-symbols-outlined icon-color" aria-hidden="true">account_balance</span>
+            Bank Payment Voucher
+            <span class="vm-tag vm-tag--manual">User-Posted</span>
+        </h2>
+        <p class="vm-text">
+            The bank equivalent of a Cash Payment Voucher — for money leaving through a bank account
+            instead of cash in hand. The first line is the bank account and is automatically credited,
+            since a payment reduces the bank balance. Every other line is a debit.
+        </p>
+        <div class="vm-line-map">
+            <div class="vm-line-row"><span class="vm-line-badge vm-line-badge--credit">Credit</span>Line 1 — Bank
+                account (fixed, reduces on payment)</div>
+            <div class="vm-line-row"><span class="vm-line-badge vm-line-badge--debit">Debit</span>All other lines —
+                expense or other accounts</div>
+        </div>
+    </section>
+
+    <!-- Bank Receipt -->
+    <section id="voucher-bank-receipt" class="mb-10" aria-labelledby="h-brv">
+        <h2 id="h-brv" class="vm-section-title">
+            <span class="material-symbols-outlined icon-color" aria-hidden="true">account_balance_wallet</span>
+            Bank Receipt Voucher
+            <span class="vm-tag vm-tag--manual">User-Posted</span>
+        </h2>
+        <p class="vm-text">
+            For money received into a bank account. The first line is the bank account and is
+            automatically debited, since a receipt increases the bank balance. Every other line is a
+            credit.
+        </p>
+        <div class="vm-line-map">
+            <div class="vm-line-row"><span class="vm-line-badge vm-line-badge--debit">Debit</span>Line 1 — Bank account
+                (fixed, increases on receipt)</div>
+            <div class="vm-line-row"><span class="vm-line-badge vm-line-badge--credit">Credit</span>All other lines —
+                income or other source accounts</div>
+        </div>
+    </section>
+
+    <!-- Contra -->
+    <section id="voucher-contra" class="mb-10" aria-labelledby="h-contra">
+        <h2 id="h-contra" class="vm-section-title">
+            <span class="material-symbols-outlined icon-color" aria-hidden="true">swap_horiz</span>
+            Contra Voucher
+            <span class="vm-tag vm-tag--manual">User-Posted</span>
+        </h2>
+        <p class="vm-text">
+            For moving money between your own cash and bank accounts — depositing cash into the bank,
+            or withdrawing cash from it. Because it only ever moves money within the same business, a
+            Contra Voucher is always exactly two lines, and the account dropdown only offers Cash and
+            Bank accounts.
+        </p>
+        <div class="vm-rules">
+            <div class="vm-rule"><span class="material-symbols-outlined icon-color"
+                    aria-hidden="true">check</span>Exactly two
+                lines — no more, no fewer.</div>
+            <div class="vm-rule"><span class="material-symbols-outlined icon-color"
+                    aria-hidden="true">check</span>Account choices
+                are restricted to Cash and Bank accounts only.</div>
+            <div class="vm-rule"><span class="material-symbols-outlined icon-color" aria-hidden="true">check</span>One
+                line debits,
+                the other credits — money simply moves between the two.</div>
+        </div>
+    </section>
+
+    <!-- Purchase (auto) -->
+    <section id="voucher-purchase" class="mb-10" aria-labelledby="h-purchase">
+        <h2 id="h-purchase" class="vm-section-title">
+            <span class="material-symbols-outlined icon-color" aria-hidden="true">shopping_cart</span>
+            Purchase Voucher
+            <span class="vm-tag vm-tag--auto">Auto-Posted</span>
+        </h2>
+        <p class="vm-text">
+            Created automatically whenever you record a purchase — you won't find a "new voucher"
+            option for this type in Voucher Manager. It exists here so you can review, search, and
+            trace purchase transactions alongside every other voucher in your books.
+        </p>
+    </section>
+
+    <!-- Sales (auto) -->
+    <section id="voucher-sales" class="mb-10" aria-labelledby="h-sales">
+        <h2 id="h-sales" class="vm-section-title">
+            <span class="material-symbols-outlined icon-color" aria-hidden="true">sell</span>
+            Sales Voucher
+            <span class="vm-tag vm-tag--auto">Auto-Posted</span>
+        </h2>
+        <p class="vm-text">
+            Created automatically whenever a sale is recorded, the same way a Purchase Voucher is
+            generated from a purchase. It appears in Voucher Manager for review and reporting, not for
+            manual entry.
+        </p>
+    </section>
+
+    <!-- CTA -->
+    <section class="gs-cta text-center" aria-labelledby="cta-heading">
+        <h2 id="cta-heading" class="text-2xl font-bold mb-2">Ready to Let Your Business Flow?</h2>
+        <p class="text-sm opacity-70 mb-6 leading-relaxed">
+            Join businesses already running on Harvora ERP. Register for free today —
+            no credit card, no commitment.
+        </p>
+        <a id="getting-started-register-btn" routerLink="/register" class="global-button" role="button"
+            aria-label="Register for Harvora ERP — free account">
+            <span class="material-symbols-outlined icon-color" aria-hidden="true">person_add</span>
+            &nbsp;Register Free
+        </a>
+    </section>
+
+</article>
