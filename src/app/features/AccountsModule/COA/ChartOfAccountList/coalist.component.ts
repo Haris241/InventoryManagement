@@ -68,6 +68,8 @@ export class COAListComponent {
 
   loadCOA(direction: 'next' | 'previous' | 'fresh' = 'fresh') {
     const formValue = this.coaForm().value();
+    this.formSubmitted.set(true);
+
 
     // attach cursors based on direction
     const payload = { ...formValue, nextCursor: direction === 'next' ? this.nextCursor() : null, previousCursor: direction === 'previous' ? this.previousCursor() : null };
@@ -78,9 +80,13 @@ export class COAListComponent {
         this.hasPreviousPage.set(result.hasPreviousPage);
         this.nextCursor.set(result.nextCursor ?? null);
         this.previousCursor.set(result.previousCursor ?? null);
+        this.formSubmitted.set(false);
+
       },
       error: (err) => {
         this.base.handleError(err, err.error.message);
+        this.formSubmitted.set(false);
+
       }
     })
   }

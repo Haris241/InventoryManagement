@@ -1,1 +1,195 @@
-<p>fiscal-year-blog works!</p>
+<article class="px-4 pb-12 pt-3 WhiteC global-div" aria-label="Fiscal Year Guide">
+
+    <!-- Hero -->
+    <header class="mb-10">
+        <div class="second-color flex items-center gap-2 mb-4 text-xs font-semibold uppercase tracking-widest">
+            <span class="material-symbols-outlined icon-color" aria-hidden="true">event_repeat</span>
+            Accounting Basics
+        </div>
+
+        <h1 class="text-4xl font-bold leading-tight mb-3">
+            <span class="gradient-heading">What Is a Fiscal Year?</span>
+        </h1>
+
+        <p class="text-sm leading-relaxed mb-4 max-w-xl opacity-75">
+            A fiscal year is the twelve-month window your business reports on — it doesn't have to
+            match the calendar year, and in Harvora ERP, it's set once at registration and reused every
+            year after.
+        </p>
+
+        <a routerLink="/Docs/coa" class="fy-inline-link">
+            <span class="material-symbols-outlined icon-color" aria-hidden="true">account_tree</span>
+            New here? See what the Chart of Accounts is first
+            <span class="material-symbols-outlined icon-color" aria-hidden="true">arrow_forward</span>
+        </a>
+    </header>
+
+    <!-- What is a fiscal year -->
+    <section class="mb-10" aria-labelledby="what-is-fy">
+        <h2 id="what-is-fy" class="fy-section-title">
+            <span class="material-symbols-outlined icon-color" aria-hidden="true">info</span>
+            Why Fiscal Years Exist
+        </h2>
+        <p class="fy-text">
+            Every accounting report — Trial Balance, Profit &amp; Loss, Balance Sheet — has to cover a
+            defined period, not "all time." A fiscal year is that period: exactly twelve months, after
+            which your books close, profit or loss is calculated, and a fresh period begins.
+        </p>
+        <p class="fy-text">
+            Not every business runs January to December. A retailer might close its year around its
+            slow season; a farm might align with harvest; some countries set a standard fiscal year by
+            law that's different from the calendar year. Because of this, Harvora lets each business
+            choose its own starting month instead of forcing January.
+        </p>
+        <div class="fy-grid">
+            <div class="fy-card">
+                <span class="material-symbols-outlined icon-color" aria-hidden="true">bar_chart</span>
+                <h3 class="text-sm font-semibold mb-1">Clean Reporting Periods</h3>
+                <p class="text-xs opacity-60 m-0 leading-relaxed">Profit &amp; Loss and Balance Sheet figures are only
+                    meaningful when tied to a fixed period.</p>
+            </div>
+            <div class="fy-card">
+                <span class="material-symbols-outlined icon-color" aria-hidden="true">public</span>
+                <h3 class="text-sm font-semibold mb-1">Matches Your Business Calendar</h3>
+                <p class="text-xs opacity-60 m-0 leading-relaxed">Different countries and industries expect different
+                    fiscal year starts — Harvora adapts to yours.</p>
+            </div>
+            <div class="fy-card">
+                <span class="material-symbols-outlined icon-color" aria-hidden="true">history</span>
+                <h3 class="text-sm font-semibold mb-1">Historical Comparison</h3>
+                <p class="text-xs opacity-60 m-0 leading-relaxed">Consistent year boundaries make it possible to compare
+                    this year against last year, accurately.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- How Harvora sets it up -->
+    <section class="mb-10" aria-labelledby="setup-flow">
+        <h2 id="setup-flow" class="fy-section-title">
+            <span class="material-symbols-outlined icon-color" aria-hidden="true">calendar_month</span>
+            How Your Fiscal Year Is Set Up
+        </h2>
+        <p class="fy-text">
+            You choose your starting month once, during registration. Every fiscal year you create
+            afterward — this one and every future one — follows that same starting month automatically.
+        </p>
+        <div class="fy-example">
+            <div class="fy-example-row"><strong>You choose at registration:</strong> Starting month — e.g. July</div>
+            <div class="fy-example-row"><strong>Harvora sets:</strong> Fiscal Year 2026 = 1 Jul 2026 → 30 Jun 2027</div>
+            <div class="fy-example-row"><strong>Next year, automatically:</strong> Fiscal Year 2027 = 1 Jul 2027 → 30
+                Jun 2028</div>
+        </div>
+        <ul class="fy-checklist" role="list">
+            <li>Start and end dates are calculated for you — you never enter them manually.</li>
+            <li>When creating a new fiscal year, you only provide a <strong>Name</strong> and optional
+                <strong>Remarks</strong>.
+            </li>
+            <li>Once created, a fiscal year's details can't be edited — only closed, switched to, or deleted.</li>
+        </ul>
+    </section>
+
+    <!-- Multiple active years -->
+    <section class="mb-10" aria-labelledby="multi-year">
+        <h2 id="multi-year" class="fy-section-title">
+            <span class="material-symbols-outlined icon-color" aria-hidden="true">layers</span>
+            More Than One Active Year
+        </h2>
+        <p class="fy-text">
+            You're not limited to a single open year. Harvora allows more than one fiscal year to stay
+            Active at the same time — useful when you're closing out one year's books while already
+            posting transactions in the next.
+        </p>
+    </section>
+
+    <!-- Statuses -->
+    <section class="mb-10" aria-labelledby="fy-status">
+        <h2 id="fy-status" class="fy-section-title">
+            <span class="material-symbols-outlined icon-color" aria-hidden="true">flag</span>
+            Fiscal Year Status
+        </h2>
+        <p class="fy-text">
+            The fiscal year list shows the status of every year you've created, so you always know
+            which ones are open for posting and which are locked down.
+        </p>
+        <div class="fy-grid">
+            <div class="fy-card">
+                <span class="material-symbols-outlined icon-color" aria-hidden="true">check_circle</span>
+                <h3 class="text-sm font-semibold mb-1">Active</h3>
+                <p class="text-xs opacity-60 m-0 leading-relaxed">Open for posting. You can record vouchers and
+                    transactions against this year.</p>
+                <span class="fy-tag fy-tag--active">Open</span>
+            </div>
+            <div class="fy-card">
+                <span class="material-symbols-outlined icon-color" aria-hidden="true">lock</span>
+                <h3 class="text-sm font-semibold mb-1">Closed</h3>
+                <p class="text-xs opacity-60 m-0 leading-relaxed">Books are locked for this year. No new vouchers should
+                    be posted here.</p>
+                <span class="fy-tag fy-tag--closed">Locked</span>
+            </div>
+            <div class="fy-card">
+                <span class="material-symbols-outlined icon-color" aria-hidden="true">warning</span>
+                <h3 class="text-sm font-semibold mb-1">Needs Reclosure</h3>
+                <p class="text-xs opacity-60 m-0 leading-relaxed">A voucher was posted into a year that was already
+                    closed. Close it again to lock in the change.</p>
+                <span class="fy-tag fy-tag--warning">Action Needed</span>
+            </div>
+        </div>
+        <p class="fy-text fy-text--small mt-3">
+            Posting into a Closed year doesn't fail — but it does flip that year's status to
+            <strong>Needs Reclosure</strong>, since its previously "final" totals have now changed.
+            Close it again once you're done to clear the flag.
+        </p>
+    </section>
+
+    <!-- Switching / logged-in year -->
+    <section class="mb-10" aria-labelledby="switch-year">
+        <h2 id="switch-year" class="fy-section-title">
+            <span class="material-symbols-outlined icon-color" aria-hidden="true">sync_alt</span>
+            Switching Your Logged-In Year
+        </h2>
+        <p class="fy-text">
+            The fiscal year you're logged into controls two things: which year new vouchers post to,
+            and which year's data your dashboard shows. This is separate from the calendar date — your
+            logged-in year is whatever you last switched to here, regardless of today's actual date.
+        </p>
+        <div class="fy-example">
+            <div class="fy-example-row">Today's date: <strong>2026</strong></div>
+            <div class="fy-example-row">Want to review or post into <strong>2022</strong>? Switch your logged-in year to
+                2022 from this list.</div>
+            <div class="fy-example-row">Dashboard and new vouchers now reflect <strong>2022</strong> until you switch
+                back.</div>
+        </div>
+    </section>
+
+    <!-- Rules -->
+    <section class="mb-10" aria-labelledby="fy-rules">
+        <h2 id="fy-rules" class="fy-section-title">
+            <span class="material-symbols-outlined icon-color" aria-hidden="true">rule</span>
+            Rules to Remember
+        </h2>
+        <div class="fy-warning">
+            <ul class="fy-checklist fy-checklist--warning" role="list">
+                <li>A fiscal year can be deleted only if it has zero transactions posted against it.</li>
+                <li>Once created, a fiscal year's name and remarks can't be edited.</li>
+                <li>Posting into a Closed year sets its status to Needs Reclosure until you close it again.</li>
+                <li>Always confirm which year you're logged into before posting — it determines where your entry lands.
+                </li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="gs-cta text-center" aria-labelledby="cta-heading">
+        <h2 id="cta-heading" class="text-2xl font-bold mb-2">Ready to Let Your Business Flow?</h2>
+        <p class="text-sm opacity-70 mb-6 leading-relaxed">
+            Join businesses already running on Harvora ERP. Register for free today —
+            no credit card, no commitment.
+        </p>
+        <a id="getting-started-register-btn" routerLink="/register" class="global-button" role="button"
+            aria-label="Register for Harvora ERP — free account">
+            <span class="material-symbols-outlined icon-color" aria-hidden="true">person_add</span>
+            &nbsp;Register Free
+        </a>
+    </section>
+
+</article>

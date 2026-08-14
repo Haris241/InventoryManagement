@@ -27,7 +27,7 @@ export interface CategoryBreakdownItem {
 }
 
 export interface AccountsDashBoardSearch {
-    filterType?: AccountDashboardFilterType;
+    filterType?: AccountDashboardFilterType | null;
     refresh: boolean;
 }
 export enum AccountDashboardFilterType {

@@ -78,6 +78,8 @@ export class VoucherListComponent {
 
   loadVoucher(direction: 'next' | 'previous' | 'fresh' = 'fresh') {
     const formValue = this.journalEntryForm().value();
+    this.formSubmitted.set(true);
+
     const payload = {
       ...formValue,
       fromDate: toDateOnlyString(formValue.fromDateUI),
@@ -92,9 +94,13 @@ export class VoucherListComponent {
         this.hasPreviousPage.set(result.hasPreviousPage);
         this.nextCursor.set(result.nextCursor ?? null);
         this.previousCursor.set(result.previousCursor ?? null);
+        this.formSubmitted.set(false);
+
       },
       error: (err) => {
         this.base.handleError(err, err.error.message, false);
+        this.formSubmitted.set(false);
+
       }
     })
   }
@@ -165,7 +171,7 @@ export class VoucherListComponent {
   }
   getReport(id: string) {
     const newTab = openLoadingTab();
-  
+
     this.dataService.getReport('VoucherManager/report', id)
       .subscribe({
         next: (blob) => showBlobInTab(newTab, blob, `Voucher-Report-${id}.pdf`),
