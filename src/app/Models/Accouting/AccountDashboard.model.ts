@@ -16,7 +16,7 @@ export interface AccountBalanceData {
     balance: BalanceData;
 }
 export interface RevenueExpenseTrendPoint {
-    period: Date;
+    period: string;
     revenue: number;
     expense: number;
 }
@@ -29,7 +29,7 @@ export interface CategoryBreakdownItem {
 export interface AccountsDashBoardSearch {
     filterType?: AccountDashboardFilterType | null;
     refresh?: boolean;
-}``
+}
 export enum AccountDashboardFilterType {
     Today = 1,
     ThisWeek = 2,

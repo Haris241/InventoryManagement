@@ -49,7 +49,7 @@ export class AccountDashboardComponent implements OnDestroy {
   private destroyRef = inject(DestroyRef);
   private base = inject(BaseApiService);
   dashboardData = signal<AccountDashBoardData | null>(null);
-  submit = signal<boolean>(true);
+  submit = signal<boolean>(false);
   dashboardFilter = signal(enumToOptions(AccountDashboardFilterType, true));
 
   // Canvas references
@@ -122,10 +122,14 @@ export class AccountDashboardComponent implements OnDestroy {
       next: (data) => {
         this.dashboardData.set(data);
         this.submit.set(false);
+        this.updateField("refresh", false);
+
       },
       error: (err) => {
         this.base.handleError(err, err.error.message);
         this.submit.set(false);
+        this.updateField("refresh", false);
+
       }
     });
   }
@@ -282,10 +286,10 @@ export class AccountDashboardComponent implements OnDestroy {
     });
   }
 
-  private formatPeriod(date: Date): string {
-    const d = new Date(date);
+  private formatPeriod(period: string): string {
+    const [year, month] = period.split('-').map(Number);
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    return `${months[d.getMonth()]} ${d.getFullYear().toString().slice(-2)}`;
+    return `${months[month - 1]} ${year.toString().slice(-2)}`;
   }
 
   ngOnDestroy(): void {
