@@ -15,9 +15,9 @@
 .summary-card {
   background:
     linear-gradient(135deg,
-      color-mix(in srgb, var(--card-accent, var(--MainColour)) 8%, var(--DivColour)),
+      color-mix(in srgb, var(--card-accent, var(--MainColour)) 12%, var(--DivColour)),
       var(--DivColour) 60%,
-      color-mix(in srgb, var(--card-accent, var(--MainColour)) 5%, var(--DivColour)));
+      color-mix(in srgb, var(--card-accent, var(--MainColour)) 12%, var(--DivColour)));
   border: 1px solid color-mix(in srgb, var(--card-accent, var(--MainColour)) 18%, var(--Outline));
   border-radius: 14px;
   padding: 20px;

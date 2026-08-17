@@ -56,6 +56,7 @@ export class LoginComponent {
           this.router.navigate(['/modules']);
         },
         error: (err) => {
+          debugger;
           if (err.error.errors) {
             this.backendErrors.set(err.error.errors);
             this.submit.set(false);
