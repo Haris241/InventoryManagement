@@ -21,7 +21,7 @@
                 <div class="lg:w-8/12 w-full">
                     <p-select [(ngModel)]="dashboardModel().filterType" [ngModelOptions]="{standalone: true}"
                         (ngModelChange)="updateField('filterType',$event)" [options]="dashboardFilter()"
-                        optionLabel="name" optionValue="value" class="w-full" />
+                        optionLabel="name" optionValue="value" class="w-full" showClear="true" />
                     <label for="filterType">Search Type</label>
                 </div>
             </p-floatLabel>
