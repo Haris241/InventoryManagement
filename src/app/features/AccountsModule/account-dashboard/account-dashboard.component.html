@@ -37,3 +37,119 @@
     </div>
 
 </form>
+
+<!-- Dashboard Content -->
+@if (dashboardData()) {
+<!-- Summary Cards -->
+<div class="dashboard-cards-grid" style="margin-top: 20px;">
+    @for (card of summaryCards(); track card.title) {
+    <div class="summary-card" [class]="card.accent">
+        <div class="card-header">
+            <div class="card-icon">
+                <span class="material-symbols-outlined">{{ card.icon }}</span>
+            </div>
+            <span class="card-title">{{ card.title }}</span>
+        </div>
+        <div class="card-amount">{{ card.amount | number:'1.2-2' }}</div>
+        <span class="card-badge" [class.badge-dr]="card.balanceType === 'Dr'"
+            [class.badge-cr]="card.balanceType === 'Cr'">
+            {{ card.balanceType }}
+        </span>
+    </div>
+    }
+</div>
+
+<!-- Net Profit -->
+<div class="profit-card" [class.profit]="isProfit()" [class.loss]="!isProfit()">
+    <div class="profit-inner">
+        <div class="profit-label">
+            <div class="profit-icon">
+                <span class="material-symbols-outlined">
+                    {{ isProfit() ? 'trending_up' : 'trending_down' }}
+                </span>
+            </div>
+            <span class="profit-title">{{ isProfit() ? 'Net Profit' : 'Net Loss' }}</span>
+        </div>
+        <div class="profit-value">
+            <span class="profit-amount">{{ dashboardData()!.netProfit.amount | number:'1.2-2' }}</span>
+            <span class="card-badge" [class.badge-cr]="isProfit()" [class.badge-dr]="!isProfit()">
+                {{ dashboardData()!.netProfit.balanceType }}
+            </span>
+        </div>
+    </div>
+</div>
+
+<!-- Top Accounts -->
+<div class="two-col-grid">
+    <!-- Receivable -->
+    <div class="accounts-panel">
+        <div class="panel-title">
+            <span class="material-symbols-outlined">arrow_downward</span>
+            Top Accounts Receivable
+        </div>
+        @if (dashboardData()!.topAccountsReceivable.length > 0) {
+        @for (acc of dashboardData()!.topAccountsReceivable; track acc.name; let i = $index) {
+        <div class="account-row">
+            <span class="account-rank">{{ i + 1 }}</span>
+            <span class="account-name">{{ acc.name }}</span>
+            <span class="account-amount">{{ acc.balance.amount | number:'1.2-2' }}</span>
+            <span class="account-type" [class.type-dr]="acc.balance.balanceType === 'Dr'"
+                [class.type-cr]="acc.balance.balanceType === 'Cr'">
+                {{ acc.balance.balanceType }}
+            </span>
+        </div>
+        }
+        } @else {
+        <div class="empty-list">No receivable accounts found</div>
+        }
+    </div>
+
+    <!-- Payable -->
+    <div class="accounts-panel">
+        <div class="panel-title">
+            <span class="material-symbols-outlined">arrow_upward</span>
+            Top Accounts Payable
+        </div>
+        @if (dashboardData()!.topAccountsPayable.length > 0) {
+        @for (acc of dashboardData()!.topAccountsPayable; track acc.name; let i = $index) {
+        <div class="account-row">
+            <span class="account-rank">{{ i + 1 }}</span>
+            <span class="account-name">{{ acc.name }}</span>
+            <span class="account-amount">{{ acc.balance.amount | number:'1.2-2' }}</span>
+            <span class="account-type" [class.type-dr]="acc.balance.balanceType === 'Dr'"
+                [class.type-cr]="acc.balance.balanceType === 'Cr'">
+                {{ acc.balance.balanceType }}
+            </span>
+        </div>
+        }
+        } @else {
+        <div class="empty-list">No payable accounts found</div>
+        }
+    </div>
+</div>
+
+<!-- Charts -->
+<div class="two-col-grid">
+    <!-- Revenue vs Expense Trend -->
+    <div class="chart-panel">
+        <div class="panel-title">
+            <span class="material-symbols-outlined">show_chart</span>
+            Revenue vs Expense Trend
+        </div>
+        <div class="chart-container">
+            <canvas #trendChart></canvas>
+        </div>
+    </div>
+
+    <!-- Expense Breakdown -->
+    <div class="chart-panel">
+        <div class="panel-title">
+            <span class="material-symbols-outlined">donut_large</span>
+            Expense Breakdown
+        </div>
+        <div class="chart-container">
+            <canvas #breakdownChart></canvas>
+        </div>
+    </div>
+</div>
+}
