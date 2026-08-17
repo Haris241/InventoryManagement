@@ -14,6 +14,7 @@ import { TableLazyLoadEvent, TableModule } from 'primeng/table';
 import { CommonModule } from '@angular/common';
 import { NotificationService } from '../../../services/notification.service';
 import { NotificationType } from '../../../Models/Notification.model';
+import { ConfirmationService } from 'primeng/api';
 
 @Component({
   selector: 'app-fiscalyear',
@@ -29,6 +30,8 @@ export class FiscalyearComponent {
   private destroyRef = inject(DestroyRef);
   private pagination = inject(PaginationService);
   private notifState = inject(NotificationService);
+  private confirmation = inject(ConfirmationService);
+
   submit = signal<boolean>(false);
   formSubmitted = signal<boolean>(false);
   backendErrors = signal<Record<string, string[]>>({});
@@ -179,4 +182,32 @@ export class FiscalyearComponent {
       }
     });
   }
+
+  //Delete Fiscal Year
+  deleteFiscalYear(id: string) {
+    this.confirmation.confirm({
+      message: 'Fiscal Year with No Transactions can only be deleted. Are you sure you want to delete this Fiscal Year?',
+      header: 'Fiscal Year Delete Confirmation',
+      acceptButtonStyleClass: 'p-button-success',
+      rejectButtonStyleClass: 'p-button-danger',
+      acceptLabel: 'Ok',
+      rejectLabel: 'Cancel',
+      accept: () => {
+        this.dataService.delete<void>('FiscalYear', id).subscribe({
+          next: () => {
+            this.fiscalYears.update(fiscalYears => (fiscalYears.filter(p => p.id !== id)));
+            this.base.globalMessage('success', 'Fiscal Year Deleted Successfully', false);
+          },
+          error: (err) => {
+            this.base.handleError(err, err.error?.message);
+          }
+        });
+      },
+      reject: () => {
+        // Optional: handle rejection
+      }
+
+    });
+  }
+
 }

@@ -1,13 +1,17 @@
 import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { DataLayerService } from '../../../services/data-layer.service';
 import { BaseApiService } from '../../../services/base-api.service';
-import { AccountDashBoardData, AccountsDashBoardSearch } from '../../../Models/Accouting/AccountDashboard.model';
+import { AccountDashBoardData, AccountDashboardFilterType, AccountsDashBoardSearch } from '../../../Models/Accouting/AccountDashboard.model';
 import { form } from '@angular/forms/signals';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { FloatLabelModule } from 'primeng/floatlabel';
+import { SelectModule } from 'primeng/select';
+import { enumToOptions } from '../../../shared/Utility';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-account-dashboard',
-  imports: [],
+  imports: [FloatLabelModule, SelectModule, FormsModule],
   templateUrl: './account-dashboard.component.html',
   styleUrl: './account-dashboard.component.css',
 })
@@ -16,7 +20,9 @@ export class AccountDashboardComponent {
   private destroyRef = inject(DestroyRef);
   private base = inject(BaseApiService);
   dashboardData = signal<AccountDashBoardData | null>(null);
-  formSubmitted = signal<boolean>(false);
+  submit = signal<boolean>(false);
+  dashboardFilter = signal(enumToOptions(AccountDashboardFilterType, true));
+
 
 
   ngOnInit(): void {
@@ -45,17 +51,28 @@ export class AccountDashboardComponent {
     //Making Api Call
     const formValue = this.dashboardForm().value();
 
-    this.formSubmitted.set(true);
+    this.submit.set(true);
 
-    this.dataService.getAllPost<AccountDashBoardData, AccountsDashBoardSearch>('Dashboard/AccountDashboard', formValue).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+    this.dataService.getAllPost<AccountDashBoardData, AccountsDashBoardSearch>('Dashboard/GetAccountsDashboardData', formValue).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (data) => {
         this.dashboardData.set(data);
-        this.formSubmitted.set(false);
+        this.submit.set(false);
       },
       error: (err) => {
         this.base.handleError(err, err.error.message);
-        this.formSubmitted.set(false);
+        this.submit.set(false);
       }
     });
+  }
+
+  //Search Method
+  OnSearch(event: Event) {
+    this.loadDasboardData();
+  }
+
+  //Refresh Method
+  refreshData() {
+    this.updateField("refresh", true);
+    this.loadDasboardData();
   }
 }

@@ -1,0 +1,39 @@
+<form (ngSubmit)="OnSearch($event)">
+    <div class="flex flex-wrap global-div p-5">
+        <div class="w-full mb-4">
+            <h3 class="text-2xl font-semibold text-center mb-3">
+                <span class="gradient-heading">Account Dashboard</span>
+            </h3>
+            <hr class="second-color">
+        </div>
+        <div class="w-full mb-3">
+            <div class="w-full flex justify-end">
+                <button type="button" class="blog-button flex items-center gap-2" (click)="refreshData()">
+                    <span class="material-symbols-outlined icon-color">
+                        refresh
+                    </span>Refresh
+                </button>
+            </div>
+        </div>
+
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <p-select [(ngModel)]="dashboardModel().filterType" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('filterType',$event)" [options]="dashboardFilter()"
+                        optionLabel="name" optionValue="value" class="w-full" />
+                    <label for="filterType">Search Type</label>
+                </div>
+            </p-floatLabel>
+        </div>
+
+
+        <!--submitting the form  -->
+        <div class="lg:w-1/4 w-full mb-3">
+            <button class="global-button" type="submit" [disabled]="submit()">
+                {{ submit() ? 'Processing...' : 'Search' }}
+            </button>
+        </div>
+    </div>
+
+</form>

@@ -28,8 +28,8 @@ export interface CategoryBreakdownItem {
 
 export interface AccountsDashBoardSearch {
     filterType?: AccountDashboardFilterType | null;
-    refresh: boolean;
-}
+    refresh?: boolean;
+}``
 export enum AccountDashboardFilterType {
     Today = 1,
     ThisWeek = 2,

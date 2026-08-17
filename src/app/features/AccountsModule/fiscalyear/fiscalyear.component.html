@@ -59,6 +59,7 @@
           <th>Status</th>
           <th>Current Year</th>
           <th>Actions</th>
+          <th>Delete</th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-fiscal>
@@ -83,6 +84,10 @@
           }@else {
           <td></td>
           }
+          <td>
+            <button class="me-3" (click)="deleteFiscalYear(fiscal.id)"><span
+                class="material-symbols-outlined icon-color">delete</span></button>
+          </td>
         </tr>
       </ng-template>
     </p-table>
