@@ -289,6 +289,26 @@
   border: 1px solid var(--Outline);
   border-radius: 14px;
   padding: 20px;
+  position: relative;
+  overflow: hidden;
+  transition: box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+/* Gradient accent line at the top */
+.accounts-panel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--MainColour), #8b5cf6, #06b6d4);
+  border-radius: 14px 14px 0 0;
+}
+
+.accounts-panel:hover {
+  border-color: color-mix(in srgb, var(--MainColour) 30%, var(--Outline));
+  box-shadow: 0 6px 28px color-mix(in srgb, var(--MainColour) 10%, transparent);
 }
 
 .panel-title {
@@ -304,6 +324,34 @@
 .panel-title .material-symbols-outlined {
   font-size: 18px;
   color: var(--MainColour);
+}
+
+/* Receivable panel: green accent */
+.accounts-panel.receivable::before {
+  background: linear-gradient(90deg, #10b981, #34d399, #6ee7b7);
+}
+
+.accounts-panel.receivable .panel-title .material-symbols-outlined {
+  color: #10b981;
+}
+
+.accounts-panel.receivable:hover {
+  border-color: color-mix(in srgb, #10b981 30%, var(--Outline));
+  box-shadow: 0 6px 28px color-mix(in srgb, #10b981 12%, transparent);
+}
+
+/* Payable panel: rose accent */
+.accounts-panel.payable::before {
+  background: linear-gradient(90deg, #f43f5e, #fb7185, #fda4af);
+}
+
+.accounts-panel.payable .panel-title .material-symbols-outlined {
+  color: #f43f5e;
+}
+
+.accounts-panel.payable:hover {
+  border-color: color-mix(in srgb, #f43f5e 30%, var(--Outline));
+  box-shadow: 0 6px 28px color-mix(in srgb, #f43f5e 12%, transparent);
 }
 
 .account-row {
@@ -377,12 +425,69 @@
   padding: 20px 0;
 }
 
+/* ── Charts scroll wrapper (mobile fix) ── */
+.charts-scroll-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  /* Custom scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--MainColour) 40%, transparent) transparent;
+}
+
+.charts-scroll-wrapper::-webkit-scrollbar {
+  height: 4px;
+}
+
+.charts-scroll-wrapper::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.charts-scroll-wrapper::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--MainColour) 40%, transparent);
+  border-radius: 2px;
+}
+
+/* On mobile, give the inner grid a min-width so charts have room */
+@media (max-width: 1023px) {
+  .charts-scroll-wrapper .two-col-grid {
+    min-width: 700px;
+  }
+}
+
 /* ── Chart Panel ── */
 .chart-panel {
   background-color: var(--DivColour);
   border: 1px solid var(--Outline);
   border-radius: 14px;
   padding: 20px;
+  position: relative;
+  overflow: hidden;
+  transition: box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+/* Gradient accent line at top of chart panel */
+.chart-panel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #6366f1, var(--MainColour), #06b6d4);
+  border-radius: 14px 14px 0 0;
+}
+
+.chart-panel:hover {
+  border-color: color-mix(in srgb, var(--MainColour) 25%, var(--Outline));
+  box-shadow: 0 6px 28px color-mix(in srgb, var(--MainColour) 10%, transparent);
+}
+
+.chart-panel .panel-title {
+  color: var(--White);
+}
+
+.chart-panel .panel-title .material-symbols-outlined {
+  color: #6366f1;
 }
 
 .chart-container {

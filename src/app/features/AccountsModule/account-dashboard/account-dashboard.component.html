@@ -82,7 +82,7 @@
 <!-- Top Accounts -->
 <div class="two-col-grid">
     <!-- Receivable -->
-    <div class="accounts-panel">
+    <div class="accounts-panel receivable">
         <div class="panel-title">
             <span class="material-symbols-outlined">arrow_downward</span>
             Top Accounts Receivable
@@ -105,7 +105,7 @@
     </div>
 
     <!-- Payable -->
-    <div class="accounts-panel">
+    <div class="accounts-panel payable">
         <div class="panel-title">
             <span class="material-symbols-outlined">arrow_upward</span>
             Top Accounts Payable
@@ -129,27 +129,29 @@
 </div>
 
 <!-- Charts -->
-<div class="two-col-grid">
-    <!-- Revenue vs Expense Trend -->
-    <div class="chart-panel">
-        <div class="panel-title">
-            <span class="material-symbols-outlined">show_chart</span>
-            Revenue vs Expense Trend
-        </div>
-        <div class="chart-container">
-            <canvas #trendChart></canvas>
-        </div>
-    </div>
+<div class="charts-scroll-wrapper">
+  <div class="two-col-grid">
+      <!-- Revenue vs Expense Trend -->
+      <div class="chart-panel">
+          <div class="panel-title">
+              <span class="material-symbols-outlined">show_chart</span>
+              Revenue vs Expense Trend
+          </div>
+          <div class="chart-container">
+              <canvas #trendChart></canvas>
+          </div>
+      </div>
 
-    <!-- Expense Breakdown -->
-    <div class="chart-panel">
-        <div class="panel-title">
-            <span class="material-symbols-outlined">donut_large</span>
-            Expense Breakdown
-        </div>
-        <div class="chart-container">
-            <canvas #breakdownChart></canvas>
-        </div>
-    </div>
+      <!-- Expense Breakdown -->
+      <div class="chart-panel">
+          <div class="panel-title">
+              <span class="material-symbols-outlined">donut_large</span>
+              Expense Breakdown
+          </div>
+          <div class="chart-container">
+              <canvas #breakdownChart></canvas>
+          </div>
+      </div>
+  </div>
 </div>
 }
