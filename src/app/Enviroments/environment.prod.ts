@@ -1,5 +1,5 @@
 export const environment = {
     production: true,
-    apiUrl: 'https://yourdomain.com/api/',
-    hubUrl: 'https://yourdomain.com'
+    apiUrl: 'https://inventoryapi-production-9e6e.up.railway.app/api/',
+    hubUrl: 'https://inventoryapi-production-9e6e.up.railway.app'
 };
