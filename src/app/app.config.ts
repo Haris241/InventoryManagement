@@ -2,7 +2,6 @@ import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import Aura from '@primeuix/themes/aura';
 import { providePrimeNG } from 'primeng/config';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { refreshtokenInterceptor } from './auth/Guards/refreshtoken.interceptor';
