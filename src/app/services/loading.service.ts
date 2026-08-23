@@ -44,6 +44,13 @@ export class LoadingService {
   }
   private loadFromStorage(): boolean {
     const value = localStorage.getItem('isDark');
+
+    // Default theme for new users
+    if (value === null) {
+      return true;
+    }
+
+    // Respect the user's previously selected theme
     return value === 'true';
   }
   private applyTheme(isDark: boolean): void {

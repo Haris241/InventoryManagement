@@ -105,8 +105,9 @@ export class RegisterComponent {
         error: (err) => {
           if (err.status !== 0 && err.status < 500) {
             this.err = err.error.errors;
-            this.submit.set(false);
           }
+          this.submit.set(false);
+          this.formSubmitted.set(false);
         }
       });
   }
