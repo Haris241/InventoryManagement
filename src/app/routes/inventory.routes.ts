@@ -30,6 +30,22 @@ export const inventoryRoutes: Routes = [
                 loadComponent: () => import('../features/InventoryModule/SupplierTab/add-supplier/add-supplier.component').then(m => m.AddSupplierComponent)
             },
             {
+                path: 'productcategorieslist',
+                loadComponent: () => import('../features/InventoryModule/ProductCategories/ProductCategoriesList/product-categories-list.component').then(m => m.ProductCategoriesListComponent)
+            },
+            {
+                path: 'productcategoriestree',
+                loadComponent: () => import('../features/InventoryModule/ProductCategories/ProductCategoriesTree/product-categories-tree.component').then(m => m.ProductCategoriesTreeComponent)
+            },
+            {
+                path: 'addproductcategory',
+                loadComponent: () => import('../features/InventoryModule/ProductCategories/ProductCategories/product-categories.component').then(m => m.ProductCategoriesComponent)
+            },
+            {
+                path: 'editproductcategory/:id',
+                loadComponent: () => import('../features/InventoryModule/ProductCategories/ProductCategories/product-categories.component').then(m => m.ProductCategoriesComponent)
+            },
+            {
                 path: '',
                 redirectTo: 'dashboard',
                 pathMatch: 'full'

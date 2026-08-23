@@ -7,12 +7,15 @@ import { Token } from '../../../Models/Auth.model';
 import { LoadingService } from '../../../services/loading.service';
 import { DataLayerService } from '../../../services/data-layer.service';
 import { BaseApiService } from '../../../services/base-api.service';
+import { NotificationService } from '../../../services/notification.service';
+import { SignalIrService } from '../../../services/signal-ir.service';
+import { NotificationsComponent } from '../../../shared/notifications/notifications.component';
 
 
 
 @Component({
   selector: 'app-layout',
-  imports: [RouterLink, RouterLinkActive, RouterOutlet, CommonModule],
+  imports: [RouterLink, RouterLinkActive, RouterOutlet, CommonModule, NotificationsComponent],
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.css',
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
@@ -23,12 +26,18 @@ export class LayoutComponent {
   base = inject(BaseApiService);
   dataService = inject(DataLayerService);
   confirmation = inject(ConfirmationService);
+  showNotifications = signal(false);
   isCollapsed = signal(false);
   isMobile = signal(false);
   isProductDropdown = signal(false);
   isSupplierDropdown = signal(false);
   screenSize = window.matchMedia('(max-width: 768px)');
+  notifState = inject(NotificationService);
+  signalIr = inject(SignalIrService);
+
   ngOnInit() {
+    this.signalIr.startConnection();
+    this.notifState.getUserNotifications();
     if (this.screenSize.matches) {
       this.isMobile.set(true);
       this.isCollapsed.set(true);
@@ -98,5 +107,8 @@ export class LayoutComponent {
       }
 
     });
+  }
+  toggleNotifications() {
+    this.showNotifications.update(v => !v);
   }
 }

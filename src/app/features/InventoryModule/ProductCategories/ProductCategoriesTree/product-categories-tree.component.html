@@ -1,0 +1,48 @@
+<div class="flex flex-wrap global-div p-5">
+    <!-- Header -->
+    <div class="w-full mb-4">
+        <h3 class="text-2xl font-semibold text-center mb-3">
+            <span class="gradient-heading">Product Categories - Tree View</span>
+        </h3>
+        <hr class="second-color">
+    </div>
+
+    <!-- Toolbar -->
+    <div class="w-full mb-4 flex justify-center gap-3">
+        <button class="global-button" (click)="expandAll()">
+            <span class="material-symbols-outlined">unfold_more</span>
+            Expand All
+        </button>
+        <button class="global-button" (click)="collapseAll()">
+            <span class="material-symbols-outlined">unfold_less</span>
+            Collapse All
+        </button>
+    </div>
+
+    <!-- Tree -->
+    <div class="w-full">
+        @for (node of visibleNodes(); track node.id) {
+        <div class="tree-row" [class.tree-row-parent]="node.hasChildren" [class.tree-row-leaf]="!node.hasChildren"
+            [style.padding-left.px]="16 + node.level * 28" (click)="toggleExpand(node)">
+            <!-- Expand/Collapse Icon -->
+            <span class="tree-toggle">
+                @if (node.hasChildren) {
+                <span class="material-symbols-outlined toggle-icon"
+                    [class.rotated]="isExpanded(node.id)">chevron_right</span>
+                } @else {
+                <span class="toggle-spacer"></span>
+                }
+            </span>
+
+            <!-- Node Active -->
+            <span class="status-dot" [class.active]="node.isActive" [class.inactive]="!node.isActive"></span>
+
+            <!-- Code -->
+            <span class="tree-code">{{ node.code }}</span>
+
+            <!-- Name -->
+            <span>{{ node.name }}</span>
+        </div>
+        }
+    </div>
+</div>

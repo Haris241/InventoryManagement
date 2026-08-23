@@ -61,6 +61,33 @@
                 }
               </a>
             </li>
+            <li class="ps-3">
+              <a class="nav-link  flex items-center " (click)="onSelectMobile()"
+                routerLink="/Inventory/addproductcategory" routerLinkActive="active">
+                <span class="material-symbols-outlined">chevron_right</span>
+                @if (!isCollapsed()) {
+                <span class="custom-dropdown">Add Product Categories</span>
+                }
+              </a>
+            </li>
+            <li class="ps-3">
+              <a class="nav-link  flex items-center " (click)="onSelectMobile()"
+                routerLink="/Inventory/productcategorieslist" routerLinkActive="active">
+                <span class="material-symbols-outlined">chevron_right</span>
+                @if (!isCollapsed()) {
+                <span class="custom-dropdown">Product Categories List</span>
+                }
+              </a>
+            </li>
+            <li class="ps-3">
+              <a class="nav-link  flex items-center " (click)="onSelectMobile()"
+                routerLink="/Inventory/productcategoriestree" routerLinkActive="active">
+                <span class="material-symbols-outlined">chevron_right</span>
+                @if (!isCollapsed()) {
+                <span class="custom-dropdown">Product Categories Tree</span>
+                }
+              </a>
+            </li>
           </ul>
           }
         </li>
@@ -128,12 +155,23 @@
         <img src="/Logo.png" alt="Inventory Management System Logo" class="logo">
       </div>
       <div>
-        <button (click)="ConifmationLogout()"><span class="material-symbols-outlined">logout</span></button>
+        <button (click)="toggleNotifications()" class="relative">
+          <span class="material-symbols-outlined">notifications</span>
+
+          <!-- Badge — only shows when unread count > 0 -->
+          @if (notifState.unreadCount() > 0) {
+          <span class="notif-badge">
+            {{ notifState.unreadCount() > 99 ? '99+' : notifState.unreadCount() }}
+          </span>
+          }
+        </button>
       </div>
     </div>
     <div class="p-4 main-content">
       <router-outlet></router-outlet>
     </div>
-
+    @if (showNotifications()) {
+    <app-notifications (close)="toggleNotifications()"> </app-notifications>
+    }
   </main>
 </div>
