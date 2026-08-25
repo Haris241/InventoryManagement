@@ -431,4 +431,11 @@ input[type="number"] {
     z-index: 9999 !important;
     top: 15% !important;
   }
+
+  .global-button {
+    padding: 4px 10px;
+    min-width: 80px;
+    font-size: 12px;
+  }
+
 }
