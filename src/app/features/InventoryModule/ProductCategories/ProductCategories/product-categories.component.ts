@@ -1,5 +1,5 @@
 import { Component, DestroyRef, inject, signal, WritableSignal } from '@angular/core';
-import { ProductCategoriesDropdownDto, ProductCategoriesDto } from '../../../../Models/Inventory/ProductCategories.model';
+import { ProductCategoriesDropdownDto, ProductCategoriesDto, ProductCategoriesGetDto } from '../../../../Models/Inventory/ProductCategories.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { BaseApiService } from '../../../../services/base-api.service';
 import { DataLayerService } from '../../../../services/data-layer.service';
@@ -181,7 +181,7 @@ export class ProductCategoriesComponent {
           return updated;
         });
 
-        this.productCategoriesForm().reset({ ...this.productCategoriesModel() });
+        this.productCategoriesForm().reset(this.initialModel);
         this.submit.set(false);
         this.formSubmitted.set(false);
       },
@@ -198,8 +198,38 @@ export class ProductCategoriesComponent {
   }
 
   loadProductCategories(id: string) {
-    this.dataService.getById<ProductCategoriesDto>('ProductCategories', id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+    this.dataService.getById<ProductCategoriesGetDto>('ProductCategories', id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (data) => {
+        // Bind selected Account values with AutoComplete
+        data.selectedInventoryAccount = data.inventoryAccountId ? {
+          id: data.inventoryAccountId,
+          name: data.inventoryAccountName ?? ''
+        } : undefined;
+
+        data.selectedSalesAccount = data.salesAccountId ? {
+          id: data.salesAccountId,
+          name: data.salesAccountName
+        } : undefined;
+
+        data.selectedCostOfGoodsSoldAccount = data.costOfGoodsSoldAccountId ? {
+          id: data.costOfGoodsSoldAccountId,
+          name: data.costOfGoodsSoldAccountName
+        } : undefined;
+
+        // Initialize Global Search / AutoComplete values
+        this.inventoryAccountSearch.setInitialValue(
+          data.selectedInventoryAccount ? [data.selectedInventoryAccount] : []
+        );
+
+        this.salesAccountSearch.setInitialValue(
+          data.selectedSalesAccount ? [data.selectedSalesAccount] : []
+        );
+
+        this.costOfGoodsSoldAccountSearch.setInitialValue(
+          data.selectedCostOfGoodsSoldAccount
+            ? [data.selectedCostOfGoodsSoldAccount]
+            : []
+        );
         this.productCategoriesModel.set(data);
       },
       error: (err) => {

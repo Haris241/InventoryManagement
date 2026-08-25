@@ -87,12 +87,12 @@
         <div class="lg:w-1/4 w-full mb-3">
             <p-floatLabel variant="on">
                 <div class="lg:w-10/12 w-full">
-                    <p-autoComplete [(ngModel)]="productCategoriesModel().inventoryAccountId"
-                        [ngModelOptions]="{standalone: true}" (ngModelChange)="updateField('inventoryAccountId',$event)"
+                    <p-autoComplete [(ngModel)]="productCategoriesModel().selectedInventoryAccount"
+                        [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('inventoryAccountId',$event?.id ?? null)"
                         (completeMethod)="SearchDropDown($event,inventoryAccountSearch.searchterm)"
                         inputId="inventoryAccountId" optionLabel="name" [dropdown]="true"
-                        [suggestions]="inventoryAccountList()" optionValue="id" [showClear]="true"
-                        class="w-full"></p-autoComplete>
+                        [suggestions]="inventoryAccountList()" [showClear]="true" class="w-full"></p-autoComplete>
                     <label for="inventoryAccountId">Inventory Account</label>
                 </div>
             </p-floatLabel>
@@ -100,8 +100,9 @@
         <div class="lg:w-1/4 w-full mb-3">
             <p-floatLabel variant="on">
                 <div class="lg:w-10/12 w-full">
-                    <p-autoComplete [(ngModel)]="productCategoriesModel().salesAccountId"
-                        [ngModelOptions]="{standalone: true}" (ngModelChange)="updateField('salesAccountId',$event)"
+                    <p-autoComplete [(ngModel)]="productCategoriesModel().selectedSalesAccount"
+                        [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('salesAccountId',$event?.id ?? null)"
                         (completeMethod)="SearchDropDown($event,salesAccountSearch.searchterm)" inputId="salesAccountId"
                         optionLabel="name" [dropdown]="true" [suggestions]="salesAccountList()" optionValue="id"
                         [showClear]="true" class="w-full"></p-autoComplete>
@@ -112,13 +113,12 @@
         <div class="lg:w-1/4 w-full mb-3">
             <p-floatLabel variant="on">
                 <div class="lg:w-10/12 w-full">
-                    <p-autoComplete [(ngModel)]="productCategoriesModel().costOfGoodsSoldAccountId"
+                    <p-autoComplete [(ngModel)]="productCategoriesModel().selectedCostOfGoodsSoldAccount"
                         [ngModelOptions]="{standalone: true}"
-                        (ngModelChange)="updateField('costOfGoodsSoldAccountId',$event)"
+                        (ngModelChange)="updateField('costOfGoodsSoldAccountId',$event?.id ?? null)"
                         (completeMethod)="SearchDropDown($event,costOfGoodsSoldAccountSearch.searchterm)"
                         inputId="costOfGoodsSoldAccountId" optionLabel="name" [dropdown]="true"
-                        [suggestions]="costOfGoodsSoldAccountList()" optionValue="id" [showClear]="true"
-                        class="w-full"></p-autoComplete>
+                        [suggestions]="costOfGoodsSoldAccountList()" [showClear]="true" class="w-full"></p-autoComplete>
                     <label for="costOfGoodsSoldAccountId">COGS Account</label>
                 </div>
             </p-floatLabel>

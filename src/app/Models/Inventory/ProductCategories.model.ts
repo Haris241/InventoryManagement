@@ -1,3 +1,5 @@
+import { AutoDropdown } from "../Pagination.model";
+
 export interface ProductCategoriesDropdownDto {
     id: number;
     name: string;
@@ -15,7 +17,29 @@ export interface ProductCategoriesDto {
     inventoryAccountId: number | null;
     salesAccountId: number | null;
     costOfGoodsSoldAccountId: number | null;
+    //For Edit dropdown Binding
+    selectedInventoryAccount?: AutoDropdown;
+    selectedSalesAccount?: AutoDropdown;
+    selectedCostOfGoodsSoldAccount?: AutoDropdown;
+
 }
+export interface ProductCategoriesGetDto {
+    name: string;
+    description: string;
+    code: string;
+    isActive: boolean;
+    parentCategoryId: number | null;
+    inventoryAccountId: number | null;
+    salesAccountId: number | null;
+    costOfGoodsSoldAccountId: number | null;
+    selectedInventoryAccount?: AutoDropdown;
+    selectedSalesAccount?: AutoDropdown;
+    selectedCostOfGoodsSoldAccount?: AutoDropdown;
+    inventoryAccountName: string;
+    salesAccountName: string;
+    costOfGoodsSoldAccountName: string;
+}
+
 export interface ProductCategoriesTreeView {
     id: number;
     name: string;
