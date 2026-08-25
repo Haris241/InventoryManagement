@@ -66,7 +66,7 @@ export class ProductCategoriesTreeComponent {
   }
 
   loadCOATree(): void {
-    this.dataService.getAll<ProductCategoriesTreeView[]>('COA').pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+    this.dataService.getAll<ProductCategoriesTreeView[]>('ProductCategories').pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (res) => {
         this.productCategoryTreeData.set(res);
       },
