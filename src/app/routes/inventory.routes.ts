@@ -46,6 +46,19 @@ export const inventoryRoutes: Routes = [
                 loadComponent: () => import('../features/InventoryModule/ProductCategories/ProductCategories/product-categories.component').then(m => m.ProductCategoriesComponent)
             },
             {
+                path: 'warehouselist',
+                loadComponent: () => import('../features/InventoryModule/WareHouse/warehous-list/warehous-list.component').then(m => m.WarehousListComponent)
+            },
+            {
+                path: 'addwarehouse',
+                loadComponent: () => import('../features/InventoryModule/WareHouse/WareHouseAddUpdate/warehouse.component').then(m => m.WarehouseComponent)
+            },
+            {
+                path: 'editwarehouse/:id',
+                loadComponent: () => import('../features/InventoryModule/WareHouse/WareHouseAddUpdate/warehouse.component').then(m => m.WarehouseComponent)
+            },
+
+            {
                 path: '',
                 redirectTo: 'dashboard',
                 pathMatch: 'full'

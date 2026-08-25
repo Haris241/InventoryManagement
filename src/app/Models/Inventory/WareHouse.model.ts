@@ -18,3 +18,21 @@ export interface WarehouseLocationDto {
     description: string;
     isActive: boolean;
 }
+export interface WareHouseList {
+    id: number;
+    name: string;
+    description: string;
+    code: string;
+    isActive: boolean;
+    city: string;
+    country: string;
+    managerName: string;
+    phone: string;
+    createdAt: Date;
+}
+export interface WareHouseSearch {
+    id: number | null;
+    isActive: boolean;
+    nextCursor: string | null;
+    previousCursor: string | null;
+}

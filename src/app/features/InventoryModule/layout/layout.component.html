@@ -91,6 +91,42 @@
           </ul>
           }
         </li>
+        <li>
+          <a class="nav-link flex justify-between cursor-pointer" (click)="toogleDropdown('Warehouse')"
+            [ngClass]="{'active': isCollapsed() && isActiveGroup('Warehouse')}">
+            <div class="flex items-center">
+              <span class="material-symbols-outlined">store</span>
+              @if (!isCollapsed()) {
+              <span class="custom">Warehouse</span>
+              }
+            </div>
+            @if (!isCollapsed()) {
+            <span class="material-symbols-outlined">{{isWarehouseDropdown()?'expand_less':'expand_more'}}</span>
+            }
+          </a>
+          @if (!isCollapsed() && isWarehouseDropdown()) {
+          <ul style="list-style: none; padding: 0; margin: 0;">
+            <li class="ps-3">
+              <a class="nav-link flex items-center " (click)="onSelectMobile()" routerLink="/Inventory/addwarehouse"
+                routerLinkActive="active">
+                <span class="material-symbols-outlined">chevron_right</span>
+                @if (!isCollapsed()) {
+                <span class="custom-dropdown">Add Warehouse</span>
+                }
+              </a>
+            </li>
+            <li class="ps-3">
+              <a class="nav-link flex items-center " (click)="onSelectMobile()" routerLink="/Inventory/warehouselist"
+                routerLinkActive="active">
+                <span class="material-symbols-outlined">chevron_right</span>
+                @if (!isCollapsed()) {
+                <span class="custom-dropdown">Warehouse List</span>
+                }
+              </a>
+            </li>
+          </ul>
+          }
+        </li>
 
         <li>
           <a class="nav-link flex justify-between cursor-pointer" (click)="toogleDropdown('Supplier')"

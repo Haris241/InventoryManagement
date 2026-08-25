@@ -1,1 +1,208 @@
-<p>warehouse works!</p>
+<!-- Create Form -->
+<form (ngSubmit)="createWareHouse($event)">
+    <div class="flex flex-wrap global-div p-5">
+        <div class="w-full mb-4">
+            <h3 class="text-2xl font-semibold text-center mb-3">
+                @if(isEditMode()){
+                <span class="gradient-heading">Edit Ware House</span>
+                }@else{
+                <span class="gradient-heading">Add WareHouse</span>
+                }
+            </h3>
+            <hr class="second-color">
+        </div>
+
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <input pInputText pSize="small" id="name" autocomplete="off" type="text" class="w-full"
+                        [formField]="warehouseForm.name">
+                    <label for="name" class="required">Name</label>
+                </div>
+            </p-floatLabel>
+            <app-field-errorS [field]="warehouseForm.name" [submit]="formSubmitted()" [backendErrors]="backendErrors()">
+            </app-field-errorS>
+        </div>
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <input pInputText pSize="small" id="code" autocomplete="off" type="text" class="w-full"
+                        [formField]="warehouseForm.code">
+                    <label for="code" class="required">Code</label>
+                </div>
+            </p-floatLabel>
+            <app-field-errorS [field]="warehouseForm.code" [submit]="formSubmitted()" [backendErrors]="backendErrors()">
+            </app-field-errorS>
+        </div>
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <input pInputText pSize="small" id="description" autocomplete="off" type="text" class="w-full"
+                        [formField]="warehouseForm.description">
+                    <label for="description">Description</label>
+                </div>
+            </p-floatLabel>
+        </div>
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <input pInputText pSize="small" id="address" autocomplete="off" type="text" class="w-full"
+                        [formField]="warehouseForm.address">
+                    <label for="address">Address</label>
+                </div>
+            </p-floatLabel>
+        </div>
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <input pInputText pSize="small" id="city" autocomplete="off" type="text" class="w-full"
+                        [formField]="warehouseForm.city">
+                    <label for="city">City</label>
+                </div>
+            </p-floatLabel>
+        </div>
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <input pInputText pSize="small" id="country" autocomplete="off" type="text" class="w-full"
+                        [formField]="warehouseForm.country">
+                    <label for="country">Country</label>
+                </div>
+            </p-floatLabel>
+        </div>
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <input pInputText pSize="small" id="managerName" autocomplete="off" type="text" class="w-full"
+                        [formField]="warehouseForm.managerName">
+                    <label for="managerName">Manager Name</label>
+                </div>
+            </p-floatLabel>
+        </div>
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <input pInputText pSize="small" id="phone" autocomplete="off" type="text" class="w-full"
+                        [formField]="warehouseForm.phone">
+                    <label for="phone">Phone</label>
+                </div>
+            </p-floatLabel>
+        </div>
+        @if(isEditMode()){
+        <div class="lg:w-1/4 w-full mb-3 flex items-center gap-2">
+            <input id="isActive" type="checkbox" [formField]="warehouseForm.isActive" class="w-auto" />
+            <label for="isActive" class="mb-0 !text-lg font-medium gradient-heading">Active</label>
+        </div>
+        }
+
+        <div class="w-full">
+            <div class="w-full mt-3">
+                <h4 class="text-base sm:text-lg font-semibold mb-2 float-left">
+                    <span>Warehouse Locations</span>
+                </h4>
+
+                <!--add line button -->
+                <button type="button" class="global-button float-right" (click)="addLine()">
+                    <span class="material-symbols-outlined second-color">add</span> Add Line
+                </button>
+            </div>
+        </div>
+
+        <!-- lines table -->
+        <div class="overflow-auto">
+            <table class="w-full border-collapse" style="table-layout: fixed; min-width: 1000px;">
+                <thead>
+                    <tr class="text-left border-b second-color">
+                        <th class="p-2 text-center">Sr No.</th>
+                        <th class=" p-2">Location Name</th>
+                        <th class="p-2">Code</th>
+                        <th class="p-2">Description</th>
+                        <th class="p-2 text-center">Active</th>
+                        <th class="p-2 text-center">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (warehouseModel().locations.length === 0) {
+                    <tr>
+                        <td colspan="6" class="p-6 text-center text-gray-500">
+                            No locations added yet.
+                            Click <strong>Add Line</strong> to add a warehouse location.
+                        </td>
+                    </tr>
+                    } @else {
+                    @for(line of warehouseModel().locations; track $index) {
+                    <tr class="border-b second-color">
+                        <!-- Sr No. -->
+                        <td class="p-2 text-center align-top">
+                            {{ $index + 1 }}
+                        </td>
+
+                        <!-- Name -->
+                        <td class="p-2 align-top">
+                            <input pInputText pSize="small" autocomplete="off" type="text" class="w-full"
+                                [formField]="warehouseForm.locations[$index].name">
+                            <app-field-errorS [field]="warehouseForm.locations[$index].name" [submit]="formSubmitted()"
+                                [backendErrors]="backendErrors()" [fieldPath]="'locations[' + $index + '].name'">
+                            </app-field-errorS>
+                        </td>
+                        <!-- Code -->
+                        <td class="p-2 align-top">
+                            <input pInputText pSize="small" autocomplete="off" type="text" class="w-full"
+                                [formField]="warehouseForm.locations[$index].code">
+                            <app-field-errorS [field]="warehouseForm.locations[$index].code" [submit]="formSubmitted()"
+                                [backendErrors]="backendErrors()" [fieldPath]="'locations[' + $index + '].code'">
+                            </app-field-errorS>
+                        </td>
+                        <!-- Description -->
+                        <td class="p-2 align-top">
+                            <input pInputText pSize="small" autocomplete="off" type="text" class="w-full"
+                                [formField]="warehouseForm.locations[$index].description">
+                        </td>
+                        <!-- Active -->
+                        <td class="p-2 text-center align-top">
+                            <input type="checkbox" class="w-full"
+                                [formField]="warehouseForm.locations[$index].isActive">
+                        </td>
+
+                        <!-- Delete -->
+                        <td class="p-2 text-center align-top">
+                            <button type="button" (click)="deleteLine($index)">
+                                <span class="material-symbols-outlined icon-color">delete</span>
+                            </button>
+                        </td>
+
+                    </tr>
+                    }
+                    }
+                </tbody>
+
+
+            </table>
+
+        </div>
+
+        <!--Errors -->
+        <div class="w-full mt-3">
+            <ul class="text-red-500 text-sm font-medium pl-4">
+                @if (errors()) {
+                @for (e of errors(); track e) {
+                <li>{{ e }}</li>
+                }
+                }
+            </ul>
+        </div>
+
+        <!--submitting the form  -->
+        <div class="w-full flex justify-center m-3">
+            @if(isEditMode()){
+            <button class="global-button" type="submit" [disabled]="submit()">
+                {{ submit() ? 'Processing...' : 'Update Warehouse' }}
+            </button>
+            }@else{
+            <button class="global-button" type="submit" [disabled]="submit()">
+                {{ submit() ? 'Processing...' : 'Create Warehouse' }}
+            </button>
+            }
+        </div>
+    </div>
+</form>

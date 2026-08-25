@@ -1,1 +1,87 @@
-<p>warehous-list works!</p>
+<form (ngSubmit)="OnSearch()">
+    <div class="flex flex-wrap global-div p-5">
+        <div class="w-full mb-4">
+            <h3 class="text-2xl font-semibold text-center mb-3">
+                <span class="gradient-heading">WareHouse List</span>
+            </h3>
+            <hr class="second-color">
+        </div>
+        <div class="w-full mb-3">
+            <div class="lg:w-1/2 w-full">
+                <p class="note-banner">Enter at least 3 characters to search globally</p>
+            </div>
+        </div>
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-10/12 w-full">
+                    <p-autoComplete [(ngModel)]="warehouseModel().id" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('id',$event)"
+                        (completeMethod)="SearchDropDown($event,warehouseSearch.searchterm)" inputId="id"
+                        optionLabel="name" [dropdown]="true" [suggestions]="warehouseSearchList()" optionValue="id"
+                        [showClear]="true" class="w-full"></p-autoComplete>
+                    <label for="id">Search by Name or Code</label>
+                </div>
+
+            </p-floatLabel>
+
+        </div>
+        <div class="lg:w-1/4 w-full mb-3 flex items-center gap-2">
+            <input id="isActive" type="checkbox" [formField]="warehouseForm.isActive" class="w-auto" />
+            <label for="isActive" class="mb-0 !text-lg font-medium gradient-heading">Active</label>
+        </div>
+        <div class="w-full flex justify-center m-3">
+            <button class="global-button">Search</button>
+        </div>
+    </div>
+</form>
+@if(warehouseList().length > 0){
+<div class="flex flex-wrap global-div mt-4 p-4">
+    <div class="w-full">
+        <p-table #dt [value]="warehouseList()" [rows]="20" [tableStyle]="{ 'min-width': '50rem' }">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Code</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>City</th>
+                    <th>Country</th>
+                    <th>Manager</th>
+                    <th>Phone</th>
+                    <th>IsActive</th>
+                    <th>CreatedAt</th>
+                    <th>Actions</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-warehouse>
+                <tr>
+                    <td>{{warehouse.code}}</td>
+                    <td>{{warehouse.name}}</td>
+                    <td>{{warehouse.description}}</td>
+                    <td>{{warehouse.city}}</td>
+                    <td>{{warehouse.country}}</td>
+                    <td>{{warehouse.managerName}}</td>
+                    <td>{{warehouse.phone}}</td>
+                    <td>
+                        <span class="status-dot" [ngClass]="warehouse.isActive ? 'active' : 'inactive'"></span>
+                    </td>
+                    <td>{{ warehouse.createdAt | date:'yyyy-MM-dd' }}</td>
+                    <td>
+                        <button class="me-3" (click)="editWareHouse(warehouse.id)"><span
+                                class="material-symbols-outlined icon-color">edit</span></button>
+                    </td>
+
+                </tr>
+            </ng-template>
+        </p-table>
+        <div class="flex justify-end mt-3">
+            @if(hasPreviousPage()){
+            <button class="pagination-button me-3" (click)="loadWarehouses('previous')">Previous</button>
+            }
+            @if(hasNextPage()){
+            <button class="pagination-button me-3" (click)="loadWarehouses('next')">Next</button>
+            }
+        </div>
+
+    </div>
+</div>
+}

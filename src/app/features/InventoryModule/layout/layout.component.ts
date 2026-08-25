@@ -31,6 +31,7 @@ export class LayoutComponent {
   isMobile = signal(false);
   isProductDropdown = signal(false);
   isSupplierDropdown = signal(false);
+  isWarehouseDropdown = signal(false);
   screenSize = window.matchMedia('(max-width: 768px)');
   notifState = inject(NotificationService);
   signalIr = inject(SignalIrService);
@@ -52,10 +53,13 @@ export class LayoutComponent {
   isActiveGroup(value: string): boolean {
     const currenturl = this.route.url;
     if (value === 'Product') {
-      return ['/Inventory/addproduct', '/Inventory/products'].some(path => currenturl.startsWith(path));
+      return ['/Inventory/addproduct', '/Inventory/products', '/Inventory/addproductcategory', '/Inventory/productcategorieslist', '/Inventory/productcategoriestree'].some(path => currenturl.startsWith(path));
     }
     if (value === 'Supplier') {
       return ['/Inventory/addsupplier', '/Inventory/suppliers'].some(path => currenturl.startsWith(path));
+    }
+    if (value === 'Warehouse') {
+      return ['/Inventory/addwarehouse', '/Inventory/warehouselist'].some(path => currenturl.startsWith(path));
     }
     return false;
   }
@@ -63,10 +67,17 @@ export class LayoutComponent {
     if (value === 'Product') {
       this.isProductDropdown.update(v => !v);
       this.isSupplierDropdown.set(false);
+      this.isWarehouseDropdown.set(false);
     }
     if (value === 'Supplier') {
       this.isSupplierDropdown.update(v => !v);
       this.isProductDropdown.set(false);
+      this.isWarehouseDropdown.set(false);
+    }
+    if (value === 'Warehouse') {
+      this.isWarehouseDropdown.update(v => !v);
+      this.isProductDropdown.set(false);
+      this.isSupplierDropdown.set(false);
     }
   }
   toogleSidebar() {
