@@ -90,7 +90,7 @@ export class ProductCategoriesListComponent {
   }
 
   editProductCategories(id: string) {
-    this.router.navigate(['Inventory/productcategoriesedit', id]);
+    this.router.navigate(['Inventory/editproductcategory', id]);
   }
   SearchDropDown(event: { query: string }, searchtermsignal: WritableSignal<string>) {
     const search = event.query?.trim() ?? '';
