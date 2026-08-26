@@ -1,0 +1,106 @@
+<!-- Create Form -->
+<form (ngSubmit)="createBrand($event)">
+    <div class="flex flex-wrap global-div p-5">
+        <div class="w-full mb-4">
+            <h3 class="text-2xl font-semibold text-center mb-3">
+                @if(isEditMode()){
+                <span class="gradient-heading">Edit Brand</span>
+                }@else{
+                <span class="gradient-heading">Add Brand</span>
+                }
+            </h3>
+            <hr class="second-color">
+        </div>
+
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <input pInputText pSize="small" id="name" autocomplete="off" type="text" class="w-full"
+                        [formField]="brandForm.name">
+                    <label for="name" class="required">Name</label>
+                </div>
+            </p-floatLabel>
+            <app-field-errorS [field]="brandForm.name" [submit]="formSubmitted()" [backendErrors]="backendErrors()">
+            </app-field-errorS>
+        </div>
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <input pInputText pSize="small" id="slug" autocomplete="off" type="text" class="w-full"
+                        [formField]="brandForm.slug">
+                    <label for="slug">Slug</label>
+                </div>
+            </p-floatLabel>
+        </div>
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <input pInputText pSize="small" id="description" autocomplete="off" type="text" class="w-full"
+                        [formField]="brandForm.description">
+                    <label for="description">Description</label>
+                </div>
+            </p-floatLabel>
+        </div>
+        @if(isEditMode()){
+        <div class="lg:w-1/4 w-full mb-3 flex items-center gap-2">
+            <input id="isActive" type="checkbox" [formField]="brandForm.isActive" class="w-auto" />
+            <label for="isActive" class="mb-0 !text-lg font-medium gradient-heading">Active</label>
+        </div>
+        }
+        <div class="w-full mb-3">
+            <!-- Company Logo Section — Standout Card -->
+            <div class="lg:w-1/2 w-full mb-3">
+                <div class="logo-section-header">
+                    <span class="material-symbols-outlined">image</span>
+                    Company Logo
+                </div>
+                <div class="logo-section">
+                    <!-- Preview Box (fixed size) -->
+                    <div class="logo-preview-box">
+                        @if (imagePreview()) {
+                        <img [src]="imagePreview()" alt="Company Logo" />
+                        } @else {
+                        <!-- CSS Placeholder -->
+                        <div class="logo-placeholder">
+                            <span class="material-symbols-outlined placeholder-icon">apartment</span>
+                            <span class="placeholder-text">No Logo</span>
+                        </div>
+                        }
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="logo-actions">
+                        <label for="clientLogo" class="uploadImage">
+                            <span class="material-symbols-outlined">upload</span>
+                            <span>Select Image</span>
+                        </label>
+                        <input id="clientLogo" type="file" accept="image/jpeg,image/png,image/webp" class="hidden"
+                            (change)="onImageSelected($event)">
+
+                        @if (imagePreview()) {
+                        <button type="button" class="btn-remove-image" (click)="removeImage()">
+                            <span class="material-symbols-outlined">close</span>
+                            Remove
+                        </button>
+                        }
+
+                        <p class="logo-hint">Accepted: JPEG, PNG, WebP · Max 3 MB</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!--submitting the form  -->
+        <div class="w-full flex justify-center m-3">
+            @if(isEditMode()){
+            <button class="global-button" type="submit" [disabled]="submit()">
+                {{ submit() ? 'Processing...' : 'Update Brand' }}
+            </button>
+            }@else{
+            <button class="global-button" type="submit" [disabled]="submit()">
+                {{ submit() ? 'Processing...' : 'Create Brand' }}
+            </button>
+            }
+        </div>
+    </div>
+</form>

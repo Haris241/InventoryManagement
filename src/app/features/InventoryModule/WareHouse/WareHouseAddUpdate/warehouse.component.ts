@@ -1,7 +1,6 @@
 import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { DataLayerService } from '../../../../services/data-layer.service';
 import { BaseApiService } from '../../../../services/base-api.service';
-import { PaginationService } from '../../../../services/pagination.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { WareHouseDto, WarehouseLocationDto } from '../../../../Models/Inventory/WareHouse.model';

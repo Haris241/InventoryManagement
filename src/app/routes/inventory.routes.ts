@@ -57,6 +57,18 @@ export const inventoryRoutes: Routes = [
                 path: 'editwarehouse/:id',
                 loadComponent: () => import('../features/InventoryModule/WareHouse/WareHouseAddUpdate/warehouse.component').then(m => m.WarehouseComponent)
             },
+            {
+                path: 'brandslist',
+                loadComponent: () => import('../features/InventoryModule/Brands/BrandsList/brands-list.component').then(m => m.BrandsListComponent)
+            },
+            {
+                path: 'addbrand',
+                loadComponent: () => import('../features/InventoryModule/Brands/BrandAddUpdate/brand-add-update.component').then(m => m.BrandAddUpdateComponent)
+            },
+            {
+                path: 'editbrand/:id',
+                loadComponent: () => import('../features/InventoryModule/Brands/BrandAddUpdate/brand-add-update.component').then(m => m.BrandAddUpdateComponent)
+            },
 
             {
                 path: '',

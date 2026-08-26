@@ -27,7 +27,8 @@
               }
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.css",
+              "src/app/shared/SharedImageUploadCSS/shared-image-upload.component.css"
             ],
             "scripts": []
           },
@@ -91,7 +92,8 @@
               }
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.css",
+              "src/app/shared/SharedImageUploadCSS/shared-image-upload.component.css"
             ],
             "scripts": []
           }

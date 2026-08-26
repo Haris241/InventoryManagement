@@ -127,6 +127,42 @@
           </ul>
           }
         </li>
+        <li>
+          <a class="nav-link flex justify-between cursor-pointer" (click)="toogleDropdown('ProductSetup')"
+            [ngClass]="{'active': isCollapsed() && isActiveGroup('ProductSetup')}">
+            <div class="flex items-center">
+              <span class="material-symbols-outlined">category</span>
+              @if (!isCollapsed()) {
+              <span class="custom">Product Setup</span>
+              }
+            </div>
+            @if (!isCollapsed()) {
+            <span class="material-symbols-outlined">{{isProductSetupDropdown()?'expand_less':'expand_more'}}</span>
+            }
+          </a>
+          @if (!isCollapsed() && isProductSetupDropdown()) {
+          <ul style="list-style: none; padding: 0; margin: 0;">
+            <li class="ps-3">
+              <a class="nav-link flex items-center " (click)="onSelectMobile()" routerLink="/Inventory/addbrand"
+                routerLinkActive="active">
+                <span class="material-symbols-outlined">chevron_right</span>
+                @if (!isCollapsed()) {
+                <span class="custom-dropdown">Add Brand</span>
+                }
+              </a>
+            </li>
+            <li class="ps-3">
+              <a class="nav-link flex items-center " (click)="onSelectMobile()" routerLink="/Inventory/brandslist"
+                routerLinkActive="active">
+                <span class="material-symbols-outlined">chevron_right</span>
+                @if (!isCollapsed()) {
+                <span class="custom-dropdown">Brands List</span>
+                }
+              </a>
+            </li>
+          </ul>
+          }
+        </li>
 
         <li>
           <a class="nav-link flex justify-between cursor-pointer" (click)="toogleDropdown('Supplier')"
