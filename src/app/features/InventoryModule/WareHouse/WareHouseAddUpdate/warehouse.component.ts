@@ -4,7 +4,7 @@ import { BaseApiService } from '../../../../services/base-api.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { WareHouseDto, WarehouseLocationDto } from '../../../../Models/Inventory/WareHouse.model';
-import { applyEach, form, FormField, required } from '@angular/forms/signals';
+import { applyEach, form, FormField, required, validate } from '@angular/forms/signals';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
@@ -71,17 +71,47 @@ export class WarehouseComponent {
   //Intialize Main Object with Signal
   warehouseModel = signal<WareHouseDto>(this.wareHouseModel);
 
-  //validations
+  // Validations
   warehouseForm = form(this.warehouseModel, (schema) => {
+
     // Root validations
     required(schema.name, { message: 'Name is required' });
     required(schema.code, { message: 'Code is required' });
 
-
-    // Nested lines validation
+    // Nested locations validation
     applyEach(schema.locations, (line) => {
+
       required(line.name, { message: 'Name is required' });
       required(line.code, { message: 'Code is required' });
+
+      // Unique location code
+      validate(line.code, ({ value }) => {
+        const code = value();
+
+        if (typeof code !== 'string' || !code.trim()) {
+          return null;
+        }
+
+        const locations = this.warehouseModel().locations;
+
+        const duplicateCount = locations.filter((location) => {
+          const locationCode = location.code;
+
+          return (
+            typeof locationCode === 'string' &&
+            locationCode.trim().toLowerCase() === code.trim().toLowerCase()
+          );
+        }).length;
+
+        if (duplicateCount > 1) {
+          return {
+            kind: 'uniqueCode',
+            message: 'Location code must be unique'
+          };
+        }
+
+        return null;
+      });
     });
   });
 
