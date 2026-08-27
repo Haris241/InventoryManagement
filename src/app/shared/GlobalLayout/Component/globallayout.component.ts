@@ -46,6 +46,7 @@ export class GloballayoutComponent {
   isCollapsed = signal(false);
   isMobile = signal(false);
   openDropdown = signal<string | null>(null); // replaces isCOADropdown/isVoucherDropdown/isSettingDropdown
+  isMobileSidebarOpen = computed(() => this.isMobile() && !this.isCollapsed());
   screenSize = window.matchMedia('(max-width: 768px)');
   showNotifications = signal(false);
 
@@ -77,15 +78,17 @@ export class GloballayoutComponent {
 
   toogleSidebar() {
     this.isCollapsed.update(v => !v);
-    if (this.screenSize.matches) {
-      this.isMobile.update(v => !v);
+  }
+
+  closeMobileSidebar() {
+    if (this.isMobile()) {
+      this.isCollapsed.set(true);
     }
   }
 
   onSelectMobile() {
-    if (this.screenSize.matches) {
+    if (this.isMobile()) {
       this.isCollapsed.set(true);
-      this.isMobile.set(true);
     }
   }
 

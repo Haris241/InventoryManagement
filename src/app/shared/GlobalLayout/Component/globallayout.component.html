@@ -1,4 +1,9 @@
 <div class="flex LayoutHeight">
+    <!-- Mobile backdrop overlay -->
+    @if (isMobileSidebarOpen()) {
+    <div class="sidebar-backdrop" (click)="closeMobileSidebar()"></div>
+    }
+
     <aside class="px-2 sidebar" [ngClass]="{collapsed: isCollapsed()}">
         <div class="sidebar-header">
             @if (!isCollapsed()) {
@@ -8,15 +13,13 @@
                 </h5>
             </a>
             }
-            <a class="btnhover nav-link second-color block lg:hidden" (click)="toogleSidebar()">
-                <span class="material-symbols-outlined">menu</span>
-            </a>
+            <!-- Desktop-only hamburger inside sidebar -->
             <a class="btnhover nav-link hidden lg:block" style="cursor: pointer;" (click)="toogleSidebar()">
                 <span class="material-symbols-outlined">menu</span>
             </a>
         </div>
 
-        @if (!isMobile()) {
+        @if (!isCollapsed()) {
         <nav class="mt-4 sidebar-menu">
             <ul style="list-style: none; padding: 0; margin: 0;">
                 @for (group of visibleMenuGroups(); track group.key) {
@@ -79,7 +82,11 @@
 
     <main class="flex-grow-1 main" [ngClass]="{collapsed: isCollapsed()}">
         <div class="mainbar flex items-center justify-between">
-            <div>
+            <div class="flex items-center">
+                <!-- Mobile-only hamburger in navbar -->
+                <a class="btnhover nav-link mobile-menu-btn lg:hidden" (click)="toogleSidebar()">
+                    <span class="material-symbols-outlined">menu</span>
+                </a>
                 <button (click)="ChangeTheme()">
                     <span class="material-symbols-outlined">{{ themeService.isDark() ? 'light_mode' : 'dark_mode'
                         }}</span>

@@ -24,17 +24,20 @@
     width: 230px;
     height: 100vh;
     height: 100dvh;
-    transition: width 0.5s ease;
+    transition: width 0.3s ease;
     color: var(--White);
     display: flex;
     flex-direction: column;
     border-right: 1px solid var(--Outline);
     background-color: var(--DivColour);
     z-index: 2;
+    flex-shrink: 0;
+    overflow: hidden;
 }
 
 .sidebar-header {
     height: 60px;
+    min-height: 60px;
     border-bottom: 1px solid var(--White);
     display: flex;
     justify-content: space-between;
@@ -62,7 +65,8 @@
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    transition: margin-left 0.5s ease;
+    flex: 1;
+    min-width: 0;
 }
 
 .mainbar {
@@ -96,6 +100,17 @@
 
 .sidebar.collapsed .material-symbols-outlined {
     padding-left: 6px;
+}
+
+/* Mobile menu button - hidden on desktop via lg:hidden utility */
+.mobile-menu-btn {
+    cursor: pointer;
+    margin-right: 4px;
+}
+
+/* Mobile backdrop overlay */
+.sidebar-backdrop {
+    display: none;
 }
 
 /* WebKit browsers */
@@ -145,6 +160,7 @@
         position: fixed;
         width: 200px;
         transition: 0.3s ease;
+        z-index: 100;
     }
 
     .sidebar .nav-link {
@@ -154,17 +170,17 @@
         border-radius: 10px;
     }
 
+    /* Fully hide sidebar when collapsed on mobile */
     .sidebar.collapsed {
-        height: 60px;
-        width: 60px;
-        background-color: initial;
+        width: 0;
         border-right: none;
+        overflow: hidden;
+        padding: 0;
     }
 
     .sidebar.collapsed .sidebar-header {
-        border-bottom: none;
+        display: none;
     }
-
 
     .main {
         z-index: 1;
@@ -174,13 +190,24 @@
         padding-left: 0px;
     }
 
-
     .btnhover:hover {
         background-color: initial;
     }
 
+    /* Center logo properly on mobile */
     .mainbar {
-        padding: 0px 60px 0px 80px;
+        padding: 0px 16px;
     }
 
+    /* Backdrop overlay for click-outside-to-close */
+    .sidebar-backdrop {
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.4);
+        z-index: 99;
+    }
 }
