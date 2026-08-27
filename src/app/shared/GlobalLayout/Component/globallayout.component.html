@@ -13,13 +13,17 @@
                 </h5>
             </a>
             }
-            <!-- Desktop-only hamburger inside sidebar -->
+            <!-- Mobile hamburger inside sidebar (visible when sidebar is open on mobile) -->
+            <a class="btnhover nav-link lg:hidden" style="cursor: pointer;" (click)="toogleSidebar()">
+                <span class="material-symbols-outlined">menu</span>
+            </a>
+            <!-- Desktop hamburger inside sidebar -->
             <a class="btnhover nav-link hidden lg:block" style="cursor: pointer;" (click)="toogleSidebar()">
                 <span class="material-symbols-outlined">menu</span>
             </a>
         </div>
 
-        @if (!isCollapsed()) {
+        @if (!isCollapsed() || !isMobile()) {
         <nav class="mt-4 sidebar-menu">
             <ul style="list-style: none; padding: 0; margin: 0;">
                 @for (group of visibleMenuGroups(); track group.key) {
