@@ -26,6 +26,21 @@ export const BLOGS_LAYOUT_CONFIG: ModuleLayoutConfig = {
                 }
             ]
         },
+        {
+            key: 'products',
+            icon: 'category',
+            label: 'Products',
+            children: [
+                {
+                    label: 'Product Categories',
+                    route: '/Docs/productcategoriesGuide'
+                },
+                {
+                    label: 'Product Guide',
+                    route: '/Docs/productGuide'
+                }
+            ]
+        },
 
         {
             key: 'vouchersGuide',

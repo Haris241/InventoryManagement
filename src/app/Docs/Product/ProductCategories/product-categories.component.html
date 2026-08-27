@@ -1,1 +1,221 @@
-<p>product-categories works!</p>
+<article class="px-4 pb-12 pt-3 WhiteC global-div" aria-label="Product Categories Guide">
+
+    <!-- Hero -->
+    <header class="mb-10">
+        <div class="pc-badge second-color">
+            <span class="material-symbols-outlined icon-color" aria-hidden="true">category</span>
+            Inventory Basics
+        </div>
+
+        <h1 class="text-4xl font-bold leading-tight mb-3">
+            <span class="gradient-heading">What Are Product Categories?</span>
+        </h1>
+
+        <p class="text-sm leading-relaxed mb-4 max-w-xl opacity-75">
+            Product categories organize your catalogue into a hierarchy — so instead of scrolling
+            through thousands of individual items, you can browse, report, and even post accounting
+            entries at whatever level makes sense: broad group or specific leaf.
+        </p>
+
+        <a routerLink="/Docs/productGuide" class="pc-inline-link">
+            <span class="material-symbols-outlined icon-color" aria-hidden="true">category</span>
+            New here? See what the Product is first
+            <span class="material-symbols-outlined icon-color" aria-hidden="true">arrow_forward</span>
+        </a>
+    </header>
+
+    <!-- Why categories matter -->
+    <section class="mb-10" aria-labelledby="why-categories">
+        <h2 id="why-categories" class="pc-section-title">
+            <span class="material-symbols-outlined icon-color" aria-hidden="true">lightbulb</span>
+            Why Product Categories Matter
+        </h2>
+        <p class="pc-text">
+            As a product catalogue grows, flat lists stop working — finding, reporting on, and pricing
+            items becomes slow and error-prone. Categories solve this by grouping related products
+            under a shared structure, the same way folders organize files. A well-built category tree
+            makes browsing faster, keeps reporting meaningful, and lets you apply rules — like which
+            accounts a sale or purchase should post to — at a group level instead of item by item.
+        </p>
+        <div class="pc-grid">
+            <div class="pc-card">
+                <span class="material-symbols-outlined icon-color" aria-hidden="true">search</span>
+                <h3 class="text-sm font-semibold mb-1">Faster to Navigate</h3>
+                <p class="text-xs opacity-60 m-0 leading-relaxed">Find and filter products by category instead of
+                    scrolling an entire catalogue.</p>
+            </div>
+            <div class="pc-card">
+                <span class="material-symbols-outlined icon-color" aria-hidden="true">insights</span>
+                <h3 class="text-sm font-semibold mb-1">Category-Wise Reporting</h3>
+                <p class="text-xs opacity-60 m-0 leading-relaxed">See sales, stock, and cost performance broken down by
+                    category, not just by item.</p>
+            </div>
+            <div class="pc-card">
+                <span class="material-symbols-outlined icon-color" aria-hidden="true">account_tree</span>
+                <h3 class="text-sm font-semibold mb-1">Structured Accounting</h3>
+                <p class="text-xs opacity-60 m-0 leading-relaxed">Attach accounts to a category once, instead of
+                    configuring every product individually.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Hierarchy -->
+    <section class="mb-10" aria-labelledby="hierarchy">
+        <h2 id="hierarchy" class="pc-section-title">
+            <span class="material-symbols-outlined icon-color" aria-hidden="true">account_tree</span>
+            A Hierarchical Structure
+        </h2>
+        <p class="pc-text">
+            Categories in Harvora ERP nest under one another to any depth — "Garments" can contain
+            "Menswear," which can contain "Shirts." Every category is one of two kinds, and Harvora
+            tracks which one automatically as your tree changes.
+        </p>
+        <div class="pc-grid">
+            <div class="pc-card">
+                <span class="material-symbols-outlined icon-color" aria-hidden="true">folder</span>
+                <h3 class="text-sm font-semibold mb-1">Group Category</h3>
+                <p class="text-xs opacity-60 m-0 leading-relaxed">
+                    Has at least one child category underneath it. Once a category gets its first child, it
+                    automatically becomes a group and can no longer be deactivated or moved directly.
+                </p>
+            </div>
+            <div class="pc-card">
+                <span class="material-symbols-outlined icon-color" aria-hidden="true">label</span>
+                <h3 class="text-sm font-semibold mb-1">Leaf Category</h3>
+                <p class="text-xs opacity-60 m-0 leading-relaxed">
+                    Has no children — the end of a branch. Only leaf categories can be activated,
+                    deactivated, or moved to a new parent.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Naming & codes -->
+    <section class="mb-10" aria-labelledby="naming">
+        <h2 id="naming" class="pc-section-title">
+            <span class="material-symbols-outlined icon-color" aria-hidden="true">badge</span>
+            Name &amp; Code
+        </h2>
+        <ul class="pc-checklist" role="list">
+            <li>Every category needs a <strong>Name</strong> and a <strong>Code</strong> — both required.</li>
+            <li>Codes must be unique across your entire catalogue, not just within a parent.</li>
+            <li>Codes are stored in uppercase, so <code>fab-01</code> and <code>FAB-01</code> are treated as the same
+                code.</li>
+        </ul>
+    </section>
+
+    <!-- Moving & deactivating -->
+    <section class="mb-10" aria-labelledby="move-deactivate">
+        <h2 id="move-deactivate" class="pc-section-title">
+            <span class="material-symbols-outlined icon-color" aria-hidden="true">rule</span>
+            Moving &amp; Deactivating Categories
+        </h2>
+        <p class="pc-text">
+            Because reports and account rules can depend on a category's position in the tree, changing
+            that structure is restricted to leaf categories only.
+        </p>
+        <div class="pc-warning">
+            <ul class="pc-checklist pc-checklist--warning" role="list">
+                <li>A category with children can't be moved to a new parent — only leaf categories can be moved.</li>
+                <li>A category with children can't be deactivated — only leaf categories can be activated or
+                    deactivated.</li>
+                <li>Activating a category requires its parent to already be active.</li>
+                <li>An active category can never be moved under an inactive parent.</li>
+                <li>A category can never be set as its own parent.</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Chart of Accounts linkage -->
+    <section class="mb-10" aria-labelledby="coa-linkage">
+        <h2 id="coa-linkage" class="pc-section-title">
+            <span class="material-symbols-outlined icon-color" aria-hidden="true">link</span>
+            Attaching Chart of Accounts
+        </h2>
+        <p class="pc-text">
+            By default, GRNs and sales invoices post to the accounts set in your global inventory
+            settings. If you want certain categories to post to their own accounts instead — useful
+            once you're tracking inventory value or cost of goods sold category by category — you can
+            attach up to three accounts to any category. This is entirely optional.
+        </p>
+        <div class="pc-grid">
+            <div class="pc-card">
+                <span class="material-symbols-outlined icon-color" aria-hidden="true">inventory_2</span>
+                <h3 class="text-sm font-semibold mb-1">Inventory Account</h3>
+                <p class="text-xs opacity-60 m-0 leading-relaxed">Must be an Asset account. Used when goods in this
+                    category are received.</p>
+            </div>
+            <div class="pc-card">
+                <span class="material-symbols-outlined icon-color" aria-hidden="true">sell</span>
+                <h3 class="text-sm font-semibold mb-1">Sales Account</h3>
+                <p class="text-xs opacity-60 m-0 leading-relaxed">Must be a Revenue account. Used when goods in this
+                    category are sold.</p>
+            </div>
+            <div class="pc-card">
+                <span class="material-symbols-outlined icon-color" aria-hidden="true">local_shipping</span>
+                <h3 class="text-sm font-semibold mb-1">Cost of Goods Sold Account</h3>
+                <p class="text-xs opacity-60 m-0 leading-relaxed">Must be an Expense account. Used to record the cost
+                    side of a sale.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Resolution order -->
+    <section class="mb-10" aria-labelledby="resolution-order">
+        <h2 id="resolution-order" class="pc-section-title">
+            <span class="material-symbols-outlined icon-color" aria-hidden="true">low_priority</span>
+            How Harvora Picks the Account
+        </h2>
+        <p class="pc-text">
+            When a GRN or sales invoice is posted, Harvora looks for an account in this order and uses
+            the first one it finds:
+        </p>
+        <div class="pc-table-wrap">
+            <table class="pc-table">
+                <thead>
+                    <tr>
+                        <th>Priority</th>
+                        <th>Source</th>
+                        <th>When It Applies</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Leaf Category</td>
+                        <td>The product's own category has this account attached.</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Parent Category</td>
+                        <td>The leaf category doesn't have it, but a parent up the tree does.</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Global Settings</td>
+                        <td>No category in the chain has it — the system-wide default account is used.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <p class="pc-text pc-text--small mt-3">
+            This means you only need to attach accounts where you actually want category-specific
+            posting — everything else falls back to your global defaults with no extra setup.
+        </p>
+    </section>
+
+    <!-- CTA -->
+    <section class="gs-cta text-center" aria-labelledby="cta-heading">
+        <h2 id="cta-heading" class="text-2xl font-bold mb-2">Ready to Let Your Business Flow?</h2>
+        <p class="text-sm opacity-70 mb-6 leading-relaxed">
+            Join businesses already running on Harvora ERP. Register for free today —
+            no credit card, no commitment.
+        </p>
+        <a id="getting-started-register-btn" routerLink="/register" class="global-button" role="button"
+            aria-label="Register for Harvora ERP — free account">
+            <span class="material-symbols-outlined" aria-hidden="true">person_add</span>
+            &nbsp;Register Free
+        </a>
+    </section>
+
+</article>

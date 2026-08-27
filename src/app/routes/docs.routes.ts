@@ -28,6 +28,14 @@ export const docsRoutes: Routes = [
                 loadComponent: () => import('../Docs/FiscalYear/fiscal-year-blog.component').then(m => m.FiscalYearBlogComponent)
             },
             {
+                path: 'productcategoriesGuide',
+                loadComponent: () => import('../Docs/Product/ProductCategories/product-categories.component').then(m => m.ProductCategoriesComponent)
+            },
+            {
+                path: 'productGuide',
+                loadComponent: () => import('../Docs/Product/ProductGuide/product-guide.component').then(m => m.ProductGuideComponent)
+            },
+            {
                 path: '',
                 redirectTo: 'gettingStarted',
                 pathMatch: 'full'
