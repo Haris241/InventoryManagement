@@ -1,9 +1,10 @@
 import { Routes } from '@angular/router';
-
+import { ACCOUNTS_LAYOUT_CONFIG } from '../shared/GlobalLayout/ConfigFiles/accounts-layout.config';
 export const accountsRoutes: Routes = [
     {
         path: 'Accounts',
-        loadComponent: () => import('../features/AccountsModule/accountlayout/accountlayout.component').then(m => m.AccountlayoutComponent),
+        data: { layoutConfig: ACCOUNTS_LAYOUT_CONFIG },
+        loadComponent: () => import('../shared/GlobalLayout/Component/globallayout.component').then(m => m.GloballayoutComponent),
         children: [
             {
                 path: 'accountdashboard',

@@ -1,9 +1,11 @@
 import { Routes } from '@angular/router';
+import { BLOGS_LAYOUT_CONFIG } from '../shared/GlobalLayout/ConfigFiles/docs-layout.config';
 
 export const docsRoutes: Routes = [
     {
         path: 'Docs',
-        loadComponent: () => import('../Docs/Layout/doclayout.component').then(m => m.DoclayoutComponent),
+        data: { layoutConfig: BLOGS_LAYOUT_CONFIG },
+        loadComponent: () => import('../shared/GlobalLayout/Component/globallayout.component').then(m => m.GloballayoutComponent),
         children: [
             {
                 path: 'gettingStarted',

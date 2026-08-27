@@ -1,0 +1,108 @@
+<div class="flex LayoutHeight">
+    <aside class="px-2 sidebar" [ngClass]="{collapsed: isCollapsed()}">
+        <div class="sidebar-header">
+            @if (!isCollapsed()) {
+            <a routerLink="/modules">
+                <h5 class="font-bold">
+                    <span class="gradient-heading">{{ moduleLabel() }}</span>
+                </h5>
+            </a>
+            }
+            <a class="btnhover nav-link second-color block lg:hidden" (click)="toogleSidebar()">
+                <span class="material-symbols-outlined">menu</span>
+            </a>
+            <a class="btnhover nav-link hidden lg:block" style="cursor: pointer;" (click)="toogleSidebar()">
+                <span class="material-symbols-outlined">menu</span>
+            </a>
+        </div>
+
+        @if (!isMobile()) {
+        <nav class="mt-4 sidebar-menu">
+            <ul style="list-style: none; padding: 0; margin: 0;">
+                @for (group of visibleMenuGroups(); track group.key) {
+                <li>
+                    @if (group.directRoute) {
+                    <a class="flex nav-link" [routerLink]="group.directRoute" routerLinkActive="active"
+                        [routerLinkActiveOptions]="{exact: true}" (click)="onSelectMobile()">
+                        <span class="material-symbols-outlined">{{ group.icon }}</span>
+                        @if (!isCollapsed()) {
+                        <span class="custom">{{ group.label }}</span>
+                        }
+                    </a>
+                    } @else {
+                    <a class="nav-link flex justify-between items-center cursor-pointer"
+                        (click)="toggleDropdown(group.key)"
+                        [ngClass]="{'active': isCollapsed() && isActiveGroup(group)}">
+                        <div class="flex items-center">
+                            <span class="material-symbols-outlined">{{ group.icon }}</span>
+                            @if (!isCollapsed()) {
+                            <span class="custom">{{ group.label }}</span>
+                            }
+                        </div>
+                        @if (!isCollapsed()) {
+                        <span class="material-symbols-outlined">{{ isDropdownOpen(group.key) ? 'expand_less' :
+                            'expand_more' }}</span>
+                        }
+                    </a>
+                    @if (!isCollapsed() && isDropdownOpen(group.key)) {
+                    <ul style="list-style: none; padding: 0; margin: 0;">
+                        @for (child of group.children; track child.route) {
+                        <li class="ps-3">
+                            <a class="nav-link flex items-center" (click)="onSelectMobile()" [routerLink]="child.route"
+                                routerLinkActive="active">
+                                <span class="material-symbols-outlined">chevron_right</span>
+                                @if (!isCollapsed()) {
+                                <span class="custom-dropdown">{{ child.label }}</span>
+                                }
+                            </a>
+                        </li>
+                        }
+                    </ul>
+                    }
+                    }
+                </li>
+                }
+            </ul>
+        </nav>
+        <div class="sidebar-footer">
+            <div class="nav-link">
+                <button (click)="ConifmationLogout()">
+                    <span class="material-symbols-outlined ps-3">logout</span>
+                    @if (!isCollapsed()) {
+                    <span class="custom">Logout</span>
+                    }
+                </button>
+            </div>
+        </div>
+        }
+    </aside>
+
+    <main class="flex-grow-1 main" [ngClass]="{collapsed: isCollapsed()}">
+        <div class="mainbar flex items-center justify-between">
+            <div>
+                <button (click)="ChangeTheme()">
+                    <span class="material-symbols-outlined">{{ themeService.isDark() ? 'light_mode' : 'dark_mode'
+                        }}</span>
+                </button>
+            </div>
+            <div>
+                <img src="/Logo.png" alt="Inventory Management System Logo" class="logo">
+            </div>
+            <div>
+                <button (click)="toggleNotifications()" class="relative">
+                    <span class="material-symbols-outlined">notifications</span>
+                    @if (notifState.unreadCount() > 0) {
+                    <span class="notif-badge">{{ notifState.unreadCount() > 99 ? '99+' : notifState.unreadCount()
+                        }}</span>
+                    }
+                </button>
+            </div>
+        </div>
+        <div class="p-4 main-content">
+            <router-outlet></router-outlet>
+        </div>
+        @if (showNotifications()) {
+        <app-notifications (close)="toggleNotifications()"></app-notifications>
+        }
+    </main>
+</div>

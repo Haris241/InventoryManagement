@@ -1,9 +1,11 @@
 import { Routes } from '@angular/router';
+import { INVENTORY_LAYOUT_CONFIG } from '../shared/GlobalLayout/ConfigFiles/inventory-layout.config';
 
 export const inventoryRoutes: Routes = [
     {
         path: 'Inventory',
-        loadComponent: () => import('../features/InventoryModule/layout/layout.component').then(m => m.LayoutComponent),
+        data: { layoutConfig: INVENTORY_LAYOUT_CONFIG },
+        loadComponent: () => import('../shared/GlobalLayout/Component/globallayout.component').then(m => m.GloballayoutComponent),
         children: [
             {
                 path: 'dashboard',
