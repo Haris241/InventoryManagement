@@ -3,6 +3,12 @@ import { LoginComponent } from '../auth/login/login.component';
 import { AuthComponent } from '../auth/auth/auth.component';
 
 export const authRoutes: Routes = [
+    // Home page — the public landing page (entry point)
+    {
+        path: '',
+        loadComponent: () => import('../home/home.component').then(m => m.HomeComponent)
+    },
+    // Login page — nested inside AuthComponent layout
     {
         path: '',
         component: AuthComponent,
@@ -10,8 +16,7 @@ export const authRoutes: Routes = [
             {
                 path: 'login',
                 component: LoginComponent
-            },
-            { path: '', redirectTo: 'login', pathMatch: 'full' }
+            }
         ]
     },
     {

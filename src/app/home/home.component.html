@@ -1,0 +1,386 @@
+<!-- ============================================================
+     Harvora ERP — Public Home Page
+     SEO: meta description & title are handled in index.html / Angular title service
+     ============================================================ -->
+
+<!-- ── NAV ──────────────────────────────────────────────────── -->
+<nav class="hp-nav" role="navigation" aria-label="Main navigation">
+  <a class="hp-logo" routerLink="/" aria-label="Harvora ERP Home">
+    <img src="/Logo.png" alt="Harvora ERP Logo" class="hp-logo-img">
+    <span class="gradient-heading hp-logo-text">Harvora ERP</span>
+  </a>
+
+  <!-- Desktop links -->
+  <div class="hp-nav-links" role="menubar">
+    <button class="hp-nav-link" (click)="scrollTo('features')" role="menuitem">Features</button>
+    <button class="hp-nav-link" (click)="scrollTo('modules')"  role="menuitem">Modules</button>
+    <button class="hp-nav-link" (click)="scrollTo('about')"   role="menuitem">About</button>
+    <button class="hp-nav-link" (click)="scrollTo('contact')" role="menuitem">Contact</button>
+  </div>
+
+  <div class="hp-nav-actions">
+    <a id="hp-nav-login-btn" routerLink="/login" class="hp-btn-outline" aria-label="Login to Harvora ERP">Login</a>
+    <a id="hp-nav-register-btn" routerLink="/register" class="global-button" aria-label="Register for Harvora ERP">Get Started</a>
+  </div>
+
+  <!-- Hamburger (mobile) -->
+  <button class="hp-burger" (click)="toggleMenu()" aria-label="Toggle navigation menu" [attr.aria-expanded]="menuOpen">
+    <span class="material-symbols-outlined">{{ menuOpen ? 'close' : 'menu' }}</span>
+  </button>
+</nav>
+
+<!-- Mobile drawer -->
+<div class="hp-drawer" [class.hp-drawer-open]="menuOpen" role="dialog" aria-label="Mobile navigation">
+  <button class="hp-nav-link" (click)="scrollTo('features')">Features</button>
+  <button class="hp-nav-link" (click)="scrollTo('modules')">Modules</button>
+  <button class="hp-nav-link" (click)="scrollTo('about')">About</button>
+  <button class="hp-nav-link" (click)="scrollTo('contact')">Contact</button>
+  <a routerLink="/login"    class="hp-btn-outline w-full text-center" (click)="menuOpen=false">Login</a>
+  <a routerLink="/register" class="global-button w-full text-center" (click)="menuOpen=false">Get Started Free</a>
+</div>
+
+
+<!-- ── HERO ─────────────────────────────────────────────────── -->
+<section class="hp-hero" id="hero" aria-labelledby="hero-heading">
+
+  <div class="hp-hero-badge">
+    <span class="material-symbols-outlined icon-color" aria-hidden="true">rocket_launch</span>
+    Cloud ERP — Fast, Modern &amp; Multi-Tenant
+  </div>
+
+  <h1 id="hero-heading">
+    <span class="gradient-heading">Where Business Flows.</span>
+  </h1>
+
+  <p class="hp-hero-sub">
+    Harvora ERP is the all-in-one cloud platform built for textile, garment, retail &amp; general
+    businesses. Manage inventory, accounting, and operations — all from one lightning-fast dashboard.
+  </p>
+
+  <div class="hp-hero-cta">
+    <a id="hp-hero-register-btn" routerLink="/register" class="global-button" aria-label="Register for free on Harvora ERP">
+      <span class="material-symbols-outlined" aria-hidden="true">person_add</span>&nbsp;Register Free
+    </a>
+    <a id="hp-hero-login-btn" routerLink="/login" class="hp-btn-outline" aria-label="Login to Harvora ERP">
+      <span class="material-symbols-outlined" aria-hidden="true">login</span>&nbsp;Login
+    </a>
+  </div>
+
+  <!-- Stat chips -->
+  <div class="hp-stats" role="list" aria-label="Platform highlights">
+    <div class="hp-stat" role="listitem">
+      <span class="material-symbols-outlined icon-color" aria-hidden="true">bolt</span>
+      <span>Lightning Fast</span>
+    </div>
+    <div class="hp-stat" role="listitem">
+      <span class="material-symbols-outlined icon-color" aria-hidden="true">cloud</span>
+      <span>SaaS / Cloud</span>
+    </div>
+    <div class="hp-stat" role="listitem">
+      <span class="material-symbols-outlined icon-color" aria-hidden="true">groups</span>
+      <span>Multi-Tenant</span>
+    </div>
+    <div class="hp-stat" role="listitem">
+      <span class="material-symbols-outlined icon-color" aria-hidden="true">verified</span>
+      <span>No Credit Card</span>
+    </div>
+  </div>
+
+  <!-- ── HERO BANNER IMAGE ─────────────────────────────────────
+       TODO: Replace the placeholder below with your actual hero
+       banner / dashboard screenshot.
+       Recommended size: 1200 × 680 px  (16:9 or wider)
+       Place the file in: /public/  (e.g. /hero-banner.png)
+       Then update the src attribute accordingly.
+  ──────────────────────────────────────────────────────────── -->
+  <div class="hp-hero-img-wrap" aria-hidden="true">
+    <div class="hp-hero-img-placeholder">
+      <span class="material-symbols-outlined" style="font-size:56px;opacity:.4;">image</span>
+      <p style="opacity:.5;font-size:13px;margin:8px 0 0;">
+        Dashboard / hero image — replace this placeholder<br>
+        (e.g. src="/hero-banner.png" — 1200×680 recommended)
+      </p>
+    </div>
+  </div>
+
+</section>
+
+
+<!-- ── FEATURES ──────────────────────────────────────────────── -->
+<section class="hp-section" id="features" aria-labelledby="features-heading">
+  <div class="hp-section-label">
+    <span class="material-symbols-outlined icon-color" aria-hidden="true">star</span>
+    Why Harvora
+  </div>
+  <h2 id="features-heading" class="hp-section-title">Built for Real Businesses</h2>
+  <p class="hp-section-sub">
+    No bloated menus, no steep learning curve — just the tools you need to run your business smarter.
+  </p>
+
+  <div class="hp-grid" role="list">
+    <div class="gs-card hp-feature-card" role="listitem">
+      <span class="material-symbols-outlined second-color" aria-hidden="true">bolt</span>
+      <strong>Lightning Fast</strong>
+      <p>Modern tech stack delivers a UI speed that legacy ERPs simply cannot match.</p>
+    </div>
+    <div class="gs-card hp-feature-card" role="listitem">
+      <span class="material-symbols-outlined second-color" aria-hidden="true">cloud_sync</span>
+      <strong>Cloud-Native SaaS</strong>
+      <p>Access your data from anywhere, anytime — zero installation needed.</p>
+    </div>
+    <div class="gs-card hp-feature-card" role="listitem">
+      <span class="material-symbols-outlined second-color" aria-hidden="true">domain</span>
+      <strong>Multi-Tenant</strong>
+      <p>Each business gets its own isolated, secure workspace with full data privacy.</p>
+    </div>
+    <div class="gs-card hp-feature-card" role="listitem">
+      <span class="material-symbols-outlined second-color" aria-hidden="true">trending_up</span>
+      <strong>Scales With You</strong>
+      <p>From a single user to a full enterprise — Harvora grows as you grow.</p>
+    </div>
+    <div class="gs-card hp-feature-card" role="listitem">
+      <span class="material-symbols-outlined second-color" aria-hidden="true">palette</span>
+      <strong>Modern UI/UX</strong>
+      <p>An intuitive interface your team adopts on day one — no training required.</p>
+    </div>
+    <div class="gs-card hp-feature-card" role="listitem">
+      <span class="material-symbols-outlined second-color" aria-hidden="true">extension</span>
+      <strong>Expanding Modules</strong>
+      <p>Production, Export, and Role Rights are actively being built and released.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ── MODULES ───────────────────────────────────────────────── -->
+<section class="hp-section hp-section-alt" id="modules" aria-labelledby="modules-heading">
+  <div class="hp-section-label">
+    <span class="material-symbols-outlined icon-color" aria-hidden="true">view_module</span>
+    Platform
+  </div>
+  <h2 id="modules-heading" class="hp-section-title">Available Modules</h2>
+  <p class="hp-section-sub">
+    Harvora is continuously evolving. Start with what you need and activate more as your business grows.
+  </p>
+
+  <div class="hp-grid" role="list">
+    <!-- Inventory -->
+    <div class="gs-card gs-module" role="listitem" aria-label="Inventory module — Available">
+      <span class="material-symbols-outlined second-color gs-module-icon" aria-hidden="true">inventory_2</span>
+      <div>
+        <h3>Inventory</h3>
+        <p>Manage products, suppliers, purchase orders, and stock levels with real-time tracking.</p>
+      </div>
+      <span class="gs-tag gs-tag-available" aria-label="Status: Available">Available</span>
+    </div>
+
+    <!-- Accounting -->
+    <div class="gs-card gs-module" role="listitem" aria-label="Accounting module — Available">
+      <span class="material-symbols-outlined second-color gs-module-icon" aria-hidden="true">account_balance</span>
+      <div>
+        <h3>Accounting</h3>
+        <p>Double-entry bookkeeping, chart of accounts, vouchers, trial balance, P&amp;L, and reports.</p>
+      </div>
+      <span class="gs-tag gs-tag-available" aria-label="Status: Available">Available</span>
+    </div>
+
+    <!-- Role & Rights -->
+    <div class="gs-card gs-module" role="listitem" style="opacity:.6;" aria-label="Role and Rights module — Coming Soon">
+      <span class="material-symbols-outlined second-color gs-module-icon" aria-hidden="true">security</span>
+      <div>
+        <h3>Role &amp; Rights</h3>
+        <p>Fine-grained user permissions, role management, and access control across all modules.</p>
+      </div>
+      <span class="gs-tag gs-tag-soon" aria-label="Status: Coming Soon">Coming Soon</span>
+    </div>
+
+    <!-- Export -->
+    <div class="gs-card gs-module" role="listitem" style="opacity:.6;" aria-label="Export module — Coming Soon">
+      <span class="material-symbols-outlined second-color gs-module-icon" aria-hidden="true">local_shipping</span>
+      <div>
+        <h3>Export</h3>
+        <p>Export documentation, shipment tracking, and customs management for trade businesses.</p>
+      </div>
+      <span class="gs-tag gs-tag-soon" aria-label="Status: Coming Soon">Coming Soon</span>
+    </div>
+
+    <!-- Production -->
+    <div class="gs-card gs-module" role="listitem" style="opacity:.6;" aria-label="Production module — Coming Soon">
+      <span class="material-symbols-outlined second-color gs-module-icon" aria-hidden="true">precision_manufacturing</span>
+      <div>
+        <h3>Production</h3>
+        <p>Bill of materials, work orders, and production planning for manufacturing businesses.</p>
+      </div>
+      <span class="gs-tag gs-tag-soon" aria-label="Status: Coming Soon">Coming Soon</span>
+    </div>
+  </div>
+</section>
+
+
+<!-- ── ABOUT ─────────────────────────────────────────────────── -->
+<section class="hp-section" id="about" aria-labelledby="about-heading">
+  <div class="hp-section-label">
+    <span class="material-symbols-outlined icon-color" aria-hidden="true">info</span>
+    About Harvora
+  </div>
+  <h2 id="about-heading" class="hp-section-title">What is Harvora ERP?</h2>
+
+  <div class="hp-about-grid">
+    <div>
+      <p class="hp-about-text">
+        <strong>Harvora ERP</strong> is a web-based, multi-tenant SaaS enterprise resource planning platform
+        designed to help businesses of all sizes — from small textile shops to large garment manufacturers —
+        manage their entire operations in one place.
+      </p>
+      <p class="hp-about-text">
+        Built with a modern, lightning-fast UI, Harvora removes the complexity traditionally associated with
+        ERP software. Our tagline says it best:
+      </p>
+      <div class="note-banner" role="note">
+        <strong>Where Business Flows</strong> — because managing your business should feel
+        effortless, not overwhelming.
+      </div>
+
+      <ul class="hp-about-list" role="list">
+        <li role="listitem">
+          <span class="material-symbols-outlined second-color" aria-hidden="true">store</span>
+          <div>
+            <strong>Small &amp; Medium Businesses</strong>
+            <p>Retail shops, wholesalers, and traders looking for a simple yet powerful system.</p>
+          </div>
+        </li>
+        <li role="listitem">
+          <span class="material-symbols-outlined second-color" aria-hidden="true">factory</span>
+          <div>
+            <strong>Textile &amp; Garment Industry</strong>
+            <p>Manufacturers, exporters, and distributors managing complex product inventories.</p>
+          </div>
+        </li>
+        <li role="listitem">
+          <span class="material-symbols-outlined second-color" aria-hidden="true">corporate_fare</span>
+          <div>
+            <strong>Large Enterprises</strong>
+            <p>Multi-branch organisations needing multi-tenant isolation and role-based access.</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Steps -->
+    <div class="hp-steps-wrap">
+      <h3 class="hp-steps-title">
+        <span class="material-symbols-outlined second-color" aria-hidden="true">checklist</span>
+        How to Get Started
+      </h3>
+      <ol class="hp-steps" role="list">
+        <li class="gs-step" role="listitem">
+          <span class="gs-step-num" aria-label="Step 1">1</span>
+          <div>
+            <strong>Create Your Free Account</strong>
+            <p>Sign up with your business email — no credit card required.</p>
+          </div>
+        </li>
+        <li class="gs-step" role="listitem">
+          <span class="gs-step-num" aria-label="Step 2">2</span>
+          <div>
+            <strong>Set Up Your Organisation</strong>
+            <p>Enter your business name, industry type, and fiscal year. Workspace created instantly.</p>
+          </div>
+        </li>
+        <li class="gs-step" role="listitem">
+          <span class="gs-step-num" aria-label="Step 3">3</span>
+          <div>
+            <strong>Choose Your Modules</strong>
+            <p>Activate Inventory or Accounting and add more as your business grows.</p>
+          </div>
+        </li>
+        <li class="gs-step" role="listitem">
+          <span class="gs-step-num" aria-label="Step 4">4</span>
+          <div>
+            <strong>Start Operating</strong>
+            <p>Record transactions, manage stock, and generate real-time reports from day one.</p>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+
+<!-- ── CONTACT ───────────────────────────────────────────────── -->
+<section class="hp-section hp-section-alt" id="contact" aria-labelledby="contact-heading">
+  <div class="hp-section-label">
+    <span class="material-symbols-outlined icon-color" aria-hidden="true">mail</span>
+    Get in Touch
+  </div>
+  <h2 id="contact-heading" class="hp-section-title">Contact Us</h2>
+  <p class="hp-section-sub">
+    Have a question or need help getting started? We're here for you.
+  </p>
+
+  <div class="hp-contact-grid">
+    <div class="gs-card hp-contact-card" role="article">
+      <span class="material-symbols-outlined second-color" aria-hidden="true">email</span>
+      <strong>Email</strong>
+      <a href="mailto:support@harvora.com" class="hp-contact-link">support&#64;harvora.com</a>
+    </div>
+    <div class="gs-card hp-contact-card" role="article">
+      <span class="material-symbols-outlined second-color" aria-hidden="true">phone</span>
+      <strong>Phone</strong>
+      <a href="tel:+923001234567" class="hp-contact-link">+92 300 123 4567</a>
+    </div>
+    <div class="gs-card hp-contact-card" role="article">
+      <span class="material-symbols-outlined second-color" aria-hidden="true">location_on</span>
+      <strong>Location</strong>
+      <span class="hp-contact-link">Pakistan</span>
+    </div>
+  </div>
+</section>
+
+
+<!-- ── CTA BANNER ────────────────────────────────────────────── -->
+<section class="gs-cta" aria-labelledby="cta-heading">
+  <h2 id="cta-heading">Ready to Let Your Business Flow?</h2>
+  <p>
+    Join businesses already running on Harvora ERP. Register for free today —
+    no credit card, no commitment.
+  </p>
+  <div class="hp-hero-cta">
+    <a id="hp-cta-register-btn" routerLink="/register" class="global-button" aria-label="Register for Harvora ERP for free">
+      <span class="material-symbols-outlined" aria-hidden="true">person_add</span>&nbsp;Register Free
+    </a>
+    <a id="hp-cta-login-btn" routerLink="/login" class="hp-btn-outline" aria-label="Login to Harvora ERP">
+      <span class="material-symbols-outlined" aria-hidden="true">login</span>&nbsp;Login
+    </a>
+  </div>
+</section>
+
+
+<!-- ── FOOTER ────────────────────────────────────────────────── -->
+<footer class="hp-footer" role="contentinfo">
+  <div class="hp-footer-inner">
+    <div class="hp-footer-brand">
+      <img src="/Logo.png" alt="Harvora ERP Logo" class="hp-logo-img">
+      <span class="gradient-heading" style="font-size:1.1rem;font-weight:700;">Harvora ERP</span>
+      <p>Where Business Flows — the modern cloud ERP for textile, garment &amp; general trade.</p>
+    </div>
+
+    <div class="hp-footer-links" role="navigation" aria-label="Footer navigation">
+      <strong>Quick Links</strong>
+      <button class="hp-footer-link" (click)="scrollTo('features')">Features</button>
+      <button class="hp-footer-link" (click)="scrollTo('modules')">Modules</button>
+      <button class="hp-footer-link" (click)="scrollTo('about')">About</button>
+      <button class="hp-footer-link" (click)="scrollTo('contact')">Contact</button>
+    </div>
+
+    <div class="hp-footer-links" role="navigation" aria-label="Account navigation">
+      <strong>Account</strong>
+      <a routerLink="/login"    class="hp-footer-link">Login</a>
+      <a routerLink="/register" class="hp-footer-link">Register</a>
+    </div>
+  </div>
+
+  <div class="hp-footer-bottom">
+    <p>&copy; {{ currentYear }} Harvora ERP. All rights reserved.</p>
+  </div>
+</footer>
