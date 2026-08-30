@@ -5,37 +5,45 @@
 <!-- ── NAV ──────────────────────────────────────────────────── -->
 <nav class="hp-nav" role="navigation" aria-label="Main navigation">
 
-  <!-- LEFT: Theme toggle (always visible) -->
-  <button class="hp-icon-btn" id="hp-theme-btn" (click)="toggleTheme()"
+  <!-- Mobile-only theme toggle (left slot, hidden on desktop) -->
+  <button class="hp-theme-btn hp-theme-btn-mobile" (click)="toggleTheme()"
     [attr.aria-label]="themeService.isDark() ? 'Switch to light mode' : 'Switch to dark mode'">
     <span class="material-symbols-outlined" aria-hidden="true">
       {{ themeService.isDark() ? 'light_mode' : 'dark_mode' }}
     </span>
   </button>
 
-  <!-- CENTRE: Logo -->
+  <!-- Logo -->
   <a class="hp-logo" routerLink="/" aria-label="Harvora ERP Home">
     <img src="/Logo.png" alt="Harvora ERP Logo" class="hp-logo-img">
     <span class="gradient-heading hp-logo-text">Harvora ERP</span>
   </a>
 
-  <!-- RIGHT: Desktop nav links + auth buttons -->
+  <!-- Desktop nav links + theme toggle + auth buttons, all right-aligned -->
   <div class="hp-nav-right">
     <div class="hp-nav-links" role="menubar">
       <button class="hp-nav-link" (click)="scrollTo('features')" role="menuitem">Features</button>
-      <button class="hp-nav-link" (click)="scrollTo('modules')"  role="menuitem">Modules</button>
-      <a class="hp-nav-link" routerLink="/about"   role="menuitem">About</a>
+      <button class="hp-nav-link" (click)="scrollTo('modules')" role="menuitem">Modules</button>
+      <a class="hp-nav-link" routerLink="/about" role="menuitem">About</a>
       <a class="hp-nav-link" routerLink="/contact" role="menuitem">Contact</a>
     </div>
+
+    <!-- Desktop-only theme toggle, grouped with auth actions -->
+    <button class="hp-theme-btn hp-theme-btn-desktop" (click)="toggleTheme()"
+      [attr.aria-label]="themeService.isDark() ? 'Switch to light mode' : 'Switch to dark mode'">
+      <span class="material-symbols-outlined" aria-hidden="true">
+        {{ themeService.isDark() ? 'light_mode' : 'dark_mode' }}
+      </span>
+    </button>
+
     <div class="hp-nav-actions">
-      <a id="hp-nav-login-btn"    routerLink="/login"    class="hp-btn-outline">Login</a>
-      <a id="hp-nav-register-btn" routerLink="/register" class="global-button">Get Started</a>
+      <a id="hp-nav-login-btn" routerLink="/login" class="hp-btn-outline">Login</a>
+      <a id="hp-nav-register-btn" routerLink="/register" class="hp-btn-outline">Get Started</a>
     </div>
   </div>
 
-  <!-- RIGHT (mobile only): Hamburger -->
-  <button class="hp-burger" (click)="toggleMenu()"
-    aria-label="Toggle navigation menu" [attr.aria-expanded]="menuOpen">
+  <!-- Mobile hamburger -->
+  <button class="hp-burger" (click)="toggleMenu()" aria-label="Toggle navigation menu" [attr.aria-expanded]="menuOpen">
     <span class="material-symbols-outlined" aria-hidden="true">{{ menuOpen ? 'close' : 'menu' }}</span>
   </button>
 
@@ -45,11 +53,11 @@
 <div class="hp-drawer" [class.hp-drawer-open]="menuOpen" role="dialog" aria-label="Mobile navigation">
   <button class="hp-nav-link" (click)="scrollTo('features')">Features</button>
   <button class="hp-nav-link" (click)="scrollTo('modules')">Modules</button>
-  <a class="hp-nav-link" routerLink="/about"   (click)="menuOpen=false">About</a>
+  <a class="hp-nav-link" routerLink="/about" (click)="menuOpen=false">About</a>
   <a class="hp-nav-link" routerLink="/contact" (click)="menuOpen=false">Contact</a>
   <div class="hp-drawer-divider"></div>
-  <a routerLink="/login"    class="hp-btn-outline" (click)="menuOpen=false">Login</a>
-  <a routerLink="/register" class="global-button"  (click)="menuOpen=false">Get Started Free</a>
+  <a routerLink="/login" class="hp-btn-outline" (click)="menuOpen=false">Login</a>
+  <a routerLink="/register" class="hp-btn-outline" (click)="menuOpen=false">Get Started</a>
 </div>
 
 
@@ -72,11 +80,10 @@
 
   <div class="hp-hero-cta">
     <a id="hp-hero-register-btn" routerLink="/register" class="global-button"
-       aria-label="Register for free on Harvora ERP">
+      aria-label="Register for free on Harvora ERP">
       <span class="material-symbols-outlined" aria-hidden="true">person_add</span>&nbsp;Register Free
     </a>
-    <a id="hp-hero-login-btn" routerLink="/login" class="hp-btn-outline"
-       aria-label="Login to Harvora ERP">
+    <a id="hp-hero-login-btn" routerLink="/login" class="hp-btn-outline" aria-label="Login to Harvora ERP">
       <span class="material-symbols-outlined" aria-hidden="true">login</span>&nbsp;Login
     </a>
   </div>
@@ -101,19 +108,12 @@
     </div>
   </div>
 
-  <!-- ── HERO BANNER IMAGE ────────────────────────────────────────
-       TODO: Replace the placeholder below with your actual hero
-       banner / dashboard screenshot.
-       Recommended size: 1200 × 680 px (16:9 or wider)
-       Place the file in /public/ e.g. /hero-banner.png
-       Then change the div to: <img src="/hero-banner.png" …>
-  ──────────────────────────────────────────────────────────── -->
-  <div class="hp-hero-img-wrap" aria-hidden="true">
-    <div class="hp-hero-img-placeholder">
-      <span class="material-symbols-outlined" style="font-size:52px;opacity:.3;">image</span>
-      <p>Dashboard screenshot — replace this placeholder<br>
-         (e.g. <code>src="/hero-banner.png"</code>, 1200×680 recommended)</p>
-    </div>
+  <!-- Hero banner image — height-capped, see .hp-hero-img-wrap -->
+  <div class="hp-hero-img-wrap">
+    <picture>
+      <source media="(max-width: 768px)" srcset="/hero-banner-mobile.png">
+      <img src="/hero-banner-desktop.png" alt="Harvora ERP dashboard" class="hp-hero-banner">
+    </picture>
   </div>
 
 </section>
@@ -326,13 +326,13 @@
       <strong>Quick Links</strong>
       <button class="hp-footer-link" (click)="scrollTo('features')">Features</button>
       <button class="hp-footer-link" (click)="scrollTo('modules')">Modules</button>
-      <a routerLink="/about"   class="hp-footer-link">About</a>
+      <a routerLink="/about" class="hp-footer-link">About</a>
       <a routerLink="/contact" class="hp-footer-link">Contact</a>
     </nav>
 
     <nav class="hp-footer-links" aria-label="Account links">
       <strong>Account</strong>
-      <a routerLink="/login"    class="hp-footer-link">Login</a>
+      <a routerLink="/login" class="hp-footer-link">Login</a>
       <a routerLink="/register" class="hp-footer-link">Register</a>
     </nav>
 
