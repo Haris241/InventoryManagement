@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { LoadingService } from '../services/loading.service';
 
 @Component({
   selector: 'app-home',
@@ -11,10 +12,16 @@ import { CommonModule } from '@angular/common';
 })
 export class HomeComponent {
 
+  themeService = inject(LoadingService);
+
   menuOpen = false;
 
   toggleMenu() {
     this.menuOpen = !this.menuOpen;
+  }
+
+  toggleTheme() {
+    this.themeService.toggleTheme();
   }
 
   scrollTo(sectionId: string) {

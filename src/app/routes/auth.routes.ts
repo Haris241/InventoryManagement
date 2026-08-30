@@ -26,5 +26,14 @@ export const authRoutes: Routes = [
     {
         path: 'modules',
         loadComponent: () => import('../auth/modules-layout/modules-layout.component').then(m => m.ModulesLayoutComponent)
+    },
+    // Public pages — implement content when ready
+    {
+        path: 'about',
+        loadComponent: () => import('../about/about.component').then(m => m.AboutComponent)
+    },
+    {
+        path: 'contact',
+        loadComponent: () => import('../contact/contact.component').then(m => m.ContactComponent)
     }
 ];
