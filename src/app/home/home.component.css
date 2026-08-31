@@ -110,6 +110,7 @@
 .hp-btn-outline {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 4px;
   padding: 7px 18px;
   border: 1px solid var(--Outline);
@@ -251,6 +252,8 @@
   justify-content: center;
   overflow: hidden;
   border-radius: 20px;
+  background-color: var(--divBackgound);
+  /* blends any letterboxing into the page */
 }
 
 .hp-hero-img-wrap picture {
@@ -258,17 +261,7 @@
   width: 100%;
 }
 
-.hp-hero-img-wrap {
-  width: 100%;
-  max-width: 1000px;
-  margin-top: 2.5rem;
-  display: flex;
-  justify-content: center;
-  overflow: hidden;
-  border-radius: 20px;
-  background-color: var(--divBackgound);
-  /* blends any letterboxing into the page */
-}
+
 
 /* ── SECTION SHELL ────────────────────────────────────────── */
 .hp-section {
@@ -594,14 +587,14 @@
 }
 
 @media (max-width: 768px) {
-  .hp-hero-img-wrap {
-    margin-top: 2rem;
-    padding: 0 1rem;
-  }
-
   .hp-hero-banner {
-    max-height: 240px;
-    border-radius: 16px;
+    display: block;
+    width: 100%;
+    max-width: 320px;
+    /* control size via width, not height */
+    height: auto;
+    /* let it grow tall — that's the image's real shape */
+    margin: 0 auto;
   }
 }
 
