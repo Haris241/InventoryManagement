@@ -5,7 +5,8 @@ export interface BrandDto {
     isActive: boolean;
     description: string;
     logoUrl?: File;
-    logoUrlString?: string;
+    logoUrlString: string;
+    removeLogo: boolean
 }
 export interface BrandList {
     id: number;

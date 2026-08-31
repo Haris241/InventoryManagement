@@ -54,7 +54,8 @@ export class BrandAddUpdateComponent {
     description: '',
     slug: '',
     isActive: true,
-    logoUrlString: ''
+    logoUrlString: '',
+    removeLogo: false
   };
 
   //Intialize Main Object with Signal
@@ -138,6 +139,8 @@ export class BrandAddUpdateComponent {
     this.dataService.getById<BrandDto>('Brands', id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (data) => {
         this.brandModel.set(data);
+        this.imagePreview.set(data.logoUrlString);
+
       },
       error: (err) => {
         this.base.handleError(err, err.error?.message);
@@ -150,7 +153,10 @@ export class BrandAddUpdateComponent {
   }
 
   removeImage() {
-    this.selectedImage = this.formservice.removeImage(this.imagePreview, 'clientLogo');
+    this.selectedImage = this.formservice.removeImage(this.imagePreview, 'brandLogo');
+    if (this.isEditMode()) {
+      this.updateField('removeLogo', true);
+    }
   }
 
 

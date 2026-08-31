@@ -67,6 +67,14 @@ export const INVENTORY_LAYOUT_CONFIG: ModuleLayoutConfig = {
                 {
                     label: 'Brands List',
                     route: '/Inventory/brandslist'
+                },
+                {
+                    label: 'Add Product Attributes',
+                    route: '/Inventory/addproductattribute'
+                },
+                {
+                    label: 'Product Attributes List',
+                    route: '/Inventory/productattributelist'
                 }
             ]
         },

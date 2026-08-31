@@ -71,6 +71,18 @@ export const inventoryRoutes: Routes = [
                 path: 'editbrand/:id',
                 loadComponent: () => import('../features/InventoryModule/Brands/BrandAddUpdate/brand-add-update.component').then(m => m.BrandAddUpdateComponent)
             },
+            {
+                path: 'productattributelist',
+                loadComponent: () => import('../features/InventoryModule/ProductAttributeValue/ProductAttributeValueList/product-attribute-value-list.component').then(m => m.ProductAttributeValueListComponent)
+            },
+            {
+                path: 'addproductattribute',
+                loadComponent: () => import('../features/InventoryModule/ProductAttributeValue/ProductAttributeValueAddUpdate/product-attribute-value.component').then(m => m.ProductAttributeValueComponent)
+            },
+            {
+                path: 'editproductattribute/:id',
+                loadComponent: () => import('../features/InventoryModule/ProductAttributeValue/ProductAttributeValueAddUpdate/product-attribute-value.component').then(m => m.ProductAttributeValueComponent)
+            },
 
             {
                 path: '',

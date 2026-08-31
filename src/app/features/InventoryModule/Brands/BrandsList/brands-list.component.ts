@@ -66,7 +66,7 @@ export class BrandsListComponent {
 
     // attach cursors based on direction
     const payload = { ...formValue, nextCursor: direction === 'next' ? this.nextCursor() : null, previousCursor: direction === 'previous' ? this.previousCursor() : null };
-    this.pagination.getDataCursor<BrandList, BrandSearch>('Brands', payload).subscribe({
+    this.pagination.getDataCursor<BrandList, BrandSearch>('Brands/GetAll', payload).subscribe({
       next: (result) => {
         this.brandList.set(result.data);
         this.hasNextPage.set(result.hasNextPage);
