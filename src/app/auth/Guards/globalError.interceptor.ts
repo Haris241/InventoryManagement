@@ -11,19 +11,22 @@ export function globalError(req: HttpRequest<unknown>, next: HttpHandlerFn): Obs
                 msg.add({
                     severity: 'error',
                     summary: 'Network Error',
-                    detail: 'Unable to connect to the server. Please check your internet or try again later.'
+                    detail: 'Unable to connect to the server. Please check your internet or try again later.',
+                    sticky: false
                 });
             } else if (error.status === 403) {
                 msg.add({
                     severity: 'error',
                     summary: 'Forbidden',
-                    detail: 'You do not have Permission to perform this action.'
+                    detail: 'You do not have Permission to perform this action.',
+                    sticky: false
                 });
             } else if (error.status >= 500) {
                 msg.add({
                     severity: 'error',
                     summary: 'Server Error',
-                    detail: 'Please try again later.'
+                    detail: 'Please try again later.',
+                    sticky: false
                 });
             }
             return throwError(() =>

@@ -23,7 +23,7 @@ function handleRefreshFailure(auth: BaseApiService, msg: MessageService, err: un
         severity: 'error',
         summary: 'UnAuthorized',
         detail: 'UnAuthorized or Token Expired - Login Again!',
-        sticky: true
+        sticky: false
     });
     return throwError(() => err);
 }
