@@ -1,5 +1,5 @@
-import { Component, WritableSignal, inject, signal, ViewChild } from '@angular/core';
-import { Table, TableModule } from 'primeng/table';
+import { Component, WritableSignal, inject, signal } from '@angular/core';
+import { TableModule } from 'primeng/table';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { FormsModule } from '@angular/forms';
 import { BaseApiService } from '../../../../services/base-api.service';

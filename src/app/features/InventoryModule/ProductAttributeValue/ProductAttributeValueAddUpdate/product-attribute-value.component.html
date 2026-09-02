@@ -1,1 +1,76 @@
-<p>product-attribute-value works!</p>
+<form (ngSubmit)="createProductAttributeValue($event)">
+    <div class="flex flex-wrap global-div p-5">
+        <div class="w-full mb-4">
+            @if(isEditMode()){
+            <h3 class="text-2xl font-semibold text-center mb-3">
+                <span class="gradient-heading">Edit Product Attribute Value</span>
+            </h3>
+            }@else{
+            <h3 class="text-2xl font-semibold text-center mb-3">
+                <span class="gradient-heading">Add Product Attribute Value</span>
+            </h3>
+            }
+            <hr class="second-color">
+        </div>
+
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <input pInputText pSize="small" id="value" autocomplete="off" type="text" class="w-full"
+                        [formField]="productAttributeValueForm.value">
+                    <label for="value">Value</label>
+                </div>
+            </p-floatLabel>
+            <app-field-errorS [field]="productAttributeValueForm.value" [submit]="formSubmitted()"
+                [backendErrors]="backendErrors()">
+            </app-field-errorS>
+        </div>
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <input pInputText pSize="small" id="code" autocomplete="off" type="text" class="w-full"
+                        [formField]="productAttributeValueForm.code">
+                    <label for="code">Code</label>
+                </div>
+            </p-floatLabel>
+            <app-field-errorS [field]="productAttributeValueForm.code" [submit]="formSubmitted()"
+                [backendErrors]="backendErrors()">
+            </app-field-errorS>
+        </div>
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <p-select [(ngModel)]="productAttributeValueModel().attributeDefinitionId"
+                        [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('attributeDefinitionId',$event)"
+                        [options]="attributeDefinitionList()" optionLabel="name" optionValue="id" class="w-full"
+                        inputId="attributeDefinitionId" [showClear]="true" [filter]="true" filterBy="name" />
+                    <label for="attributeDefinitionId">Attribute Definition</label>
+                </div>
+            </p-floatLabel>
+            <app-field-errorS [field]="productAttributeValueForm.attributeDefinitionId" [submit]="formSubmitted()"
+                [backendErrors]="backendErrors()">
+            </app-field-errorS>
+        </div>
+        @if(isEditMode()){
+        <div class="lg:w-1/4 w-full mb-3 flex items-center gap-2">
+            <input id="isActive" type="checkbox" [formField]="productAttributeValueForm.isActive" class="w-auto" />
+            <label for="isActive" class="mb-0 !text-lg font-medium gradient-heading">Active</label>
+        </div>
+        }
+
+
+        <div class="w-full flex justify-center m-3">
+            @if(isEditMode()){
+            <button class="global-button" type="submit" [disabled]="submit()">
+                {{ submit() ? 'Processing...' : 'Update Product Attribute Value' }}
+            </button>
+            }@else{
+            <button class="global-button" type="submit" [disabled]="submit()">
+                {{ submit() ? 'Processing...' : 'Create Product Attribute Value' }}
+            </button>
+            }
+        </div>
+    </div>
+
+</form>
