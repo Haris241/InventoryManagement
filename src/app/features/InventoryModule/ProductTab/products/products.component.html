@@ -1,64 +1,87 @@
-<h2 class="text-center text-semibold text-3xl WhiteC mb-4">Products List</h2>
-<form [formGroup]="producSearchForm" (ngSubmit)="OnSearch()">
+<form (ngSubmit)="OnSearch()">
     <div class="flex flex-wrap global-div p-5">
-        <div class="lg:w-1/2 w-full mb-3">
-            <span class="WhiteC">Search Product Name</span>
-            <div>
-                <p-autoComplete (completeMethod)="SearchDropDown($event,productsearch.searchterm)" inputId="productId"
-                    optionLabel="name" formControlName="productId" [dropdown]="true" [suggestions]="productByName()"
-                    optionValue="id" placeholder="Write 3 Characters " [showClear]="true"></p-autoComplete>
+        <div class="w-full mb-4">
+            <h3 class="text-2xl font-semibold text-center mb-3">
+                <span class="gradient-heading">Product List</span>
+            </h3>
+            <hr class="second-color">
+        </div>
+        <div class="w-full mb-3">
+            <div class="lg:w-1/2 w-full">
+                <p class="note-banner">Enter at least 3 characters to search globally</p>
             </div>
         </div>
-        <div class="lg:w-1/2 w-full mb-3">
-            <span class="WhiteC">Search Supplier</span>
-            <div>
-                <p-autoComplete (completeMethod)="SearchDropDown($event,suppliersearch.searchterm)" inputId="supplierId"
-                    optionLabel="name" formControlName="supplierId" [dropdown]="true" [suggestions]="suppliers()"
-                    optionValue="id" placeholder="Write 3 Characters " [showClear]="true"></p-autoComplete>
-            </div>
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-10/12 w-full">
+                    <p-autoComplete [(ngModel)]="productModel().productId" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('productId',$event)"
+                        (completeMethod)="SearchDropDown($event,productSearch.searchterm)" inputId="id"
+                        optionLabel="name" [dropdown]="true" [suggestions]="productSearchList()" optionValue="id"
+                        [showClear]="true" class="w-full"></p-autoComplete>
+                    <label for="id">Search by Name or Number</label>
+                </div>
+
+            </p-floatLabel>
+
         </div>
-        <div class="lg:w-1/2 w-full mb-3">
+        <div class="lg:w-1/4 w-full mb-3 flex items-center gap-2">
+            <input id="isActive" type="checkbox" [formField]="productForm.isActive" class="w-auto" />
+            <label for="isActive" class="mb-0 !text-lg font-medium gradient-heading">Active</label>
+        </div>
+        <div class="w-full flex justify-center m-3">
             <button class="global-button">Search</button>
         </div>
     </div>
 </form>
+@if(productList().length > 0){
 <div class="flex flex-wrap global-div mt-4 p-4">
     <div class="w-full">
-        <div class="flex justify-center">
-            <div class="global-search m-3">
-                <i class="pi pi-search"></i>
-                <input type="text" (input)="dt?.filterGlobal($any($event.target).value, 'contains')"
-                    placeholder="Search" />
-            </div>
-        </div>
-        <p-table #dt [value]="products()"  [globalFilterFields]="['name']" [paginator]="true" [rows]="20" [lazy]="true"
-            (onLazyLoad)="loadProducts($event)" [totalRecords]="totalrecords()" [tableStyle]="{ 'min-width': '50rem' }">
+        <p-table #dt [value]="productList()" [rows]="20" [tableStyle]="{ 'min-width': '50rem' }">
             <ng-template pTemplate="header">
                 <tr>
-                    <th>Product Number</th>
+                    <th>Serial No</th>
                     <th>Product Name</th>
-                    <th>Price</th>
-                    <th>Quantity</th>
-                    <th>Supplier Name</th>
+                    <th>Product Number</th>
+                    <th>Product Type</th>
+                    <th>UOM</th>
+                    <th>Category</th>
+                    <th>Brand</th>
+                    <th>IsActive</th>
+                    <th>CreatedAt</th>
                     <th>Actions</th>
                 </tr>
             </ng-template>
-            <ng-template pTemplate="body" let-product>
+            <ng-template pTemplate="body" let-products>
                 <tr>
-                    <td>{{product.productNumber}}</td>
-                    <td>{{product.name}}</td>
-                    <td>{{product.price}}</td>
-                    <td>{{product.quantity}}</td>
-                    <td>{{product.supplierName}}</td>
+                    <td>{{products.productNumberInteger}}</td>
+                    <td>{{products.productName}}</td>
+                    <td>{{products.productNumber}}</td>
+                    <td>{{products.productType}}</td>
+                    <td>{{products.uom}}</td>
+                    <td>{{products.category}}</td>
+                    <td>{{products.brand}}</td>
                     <td>
-                        <!-- use same component for edit  -->
-                        <button class="me-3" (click)="editProduct(product.id)"><span
-                                class="material-symbols-outlined second-color">edit</span></button>
-                        <button (click)="deleteProduct(product.id)"><span
-                                class="material-symbols-outlined second-color">delete</span></button>
+                        <span class="status-dot" [ngClass]="products.isActive ? 'active' : 'inactive'"></span>
                     </td>
+                    <td>{{ products.createdAt | date:'yyyy-MM-dd' }}</td>
+                    <td>
+                        <button class="me-3" (click)="editProduct(products.id)"><span
+                                class="material-symbols-outlined icon-color">edit</span></button>
+                    </td>
+
                 </tr>
             </ng-template>
         </p-table>
+        <div class="flex justify-end mt-3">
+            @if(hasPreviousPage()){
+            <button class="pagination-button me-3" (click)="loadProducts('previous')">Previous</button>
+            }
+            @if(hasNextPage()){
+            <button class="pagination-button me-3" (click)="loadProducts('next')">Next</button>
+            }
+        </div>
+
     </div>
 </div>
+}

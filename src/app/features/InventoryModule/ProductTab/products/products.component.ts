@@ -1,92 +1,105 @@
 import { Component, inject, signal, ViewChild, WritableSignal } from '@angular/core';
-import { Table, TableLazyLoadEvent, TableModule } from 'primeng/table';
+import { TableModule } from 'primeng/table';
 import { Router } from '@angular/router';
-import { ConfirmationService, MessageService } from 'primeng/api';
 import { AutoCompleteModule } from 'primeng/autocomplete';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { BaseApiService } from '../../../../services/base-api.service';
 import { PaginationService } from '../../../../services/pagination.service';
 import { DataLayerService } from '../../../../services/data-layer.service';
-import { ProductList, ProductSearch } from '../../../../Models/product.model';
 import { AutoDropdown } from '../../../../Models/Pagination.model';
+import { ProductListDTO, ProductSearchDTO, ProductType } from '../../../../Models/Inventory/Product.model';
+import { enumToOptions } from '../../../../shared/Utility';
+import { form, FormField } from '@angular/forms/signals';
+import { FormsModule } from '@angular/forms';
+import { FloatLabelModule } from 'primeng/floatlabel';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-products',
-  imports: [TableModule,AutoCompleteModule,ReactiveFormsModule],
+  imports: [TableModule, AutoCompleteModule, FormsModule, FloatLabelModule, FormField, CommonModule],
   templateUrl: './products.component.html',
   styleUrl: './products.component.css',
 })
 export class ProductsComponent {
-  constructor() { }
-  confirmation = inject(ConfirmationService);
-  base=inject(BaseApiService);
-  msg = inject(MessageService);
+  base = inject(BaseApiService);
   router = inject(Router);
   pagination = inject(PaginationService);
-  fb = inject(FormBuilder);
   dataService = inject(DataLayerService);
 
-  totalrecords=signal<number>(0);
-  products = signal<ProductList[]>([]);
-  suppliersearch = this.pagination.autoSearchDropdown<AutoDropdown>('Dropdowns/Suppliers');
-  suppliers = this.suppliersearch.result;
-  productsearch = this.pagination.autoSearchDropdown<AutoDropdown>('Dropdowns/Products');
-  productByName= this.productsearch.result;
-  @ViewChild('dt') dt!: Table;
+  productList = signal<ProductListDTO[]>([]);
+  productSearch = this.pagination.autoSearchDropdown<AutoDropdown>('DropDowns/Products');
+  productSearchList = this.productSearch.result;
+  productCategory = this.pagination.autoSearchDropdown<AutoDropdown>('DropDowns/ProductCategories');
+  productCategoryList = this.productCategory.result;
+  brand = this.pagination.autoSearchDropdown<AutoDropdown>('DropDowns/Brands');
+  brandList = this.brand.result;
+  productTypes = signal(enumToOptions(ProductType, true));
 
-  producSearchForm: FormGroup= this.fb.group({
-    productId: [null],
-    supplierId: [null]
-  });
 
-  loadProducts(event: TableLazyLoadEvent){
-    console.log("Lazy Loading Triggered");
-    const formValue = this.producSearchForm.value;
-    this.pagination.getData<ProductList,ProductSearch>('Products/GetAll',event,formValue).subscribe({
-      next:(result)=>{
-        this.products.set(result.data);
-        this.totalrecords.set(result.total);
+  //pagination signals
+  hasNextPage = signal<boolean>(false);
+  hasPreviousPage = signal<boolean>(false);
+  nextCursor = signal<string | null>(null);
+  previousCursor = signal<string | null>(null);
+
+  formSubmitted = signal<boolean>(false);
+  backendErrors = signal<Record<string, string[]>>({});
+
+  //Model For FormData
+  private readonly initialModel: ProductSearchDTO = {
+    productId: null,
+    productCategoryId: null,
+    brandId: null,
+    productType: null,
+    isActive: true,
+    nextCursor: null,
+    previousCursor: null,
+  };
+  //Signal Model For FormData
+  productModel = signal<ProductSearchDTO>({ ...this.initialModel });
+
+  // Signal form with validation schema
+  productForm = form(this.productModel);
+
+  //Method to Update Fields For Non supporting Primeng Fields
+  updateField<K extends keyof ProductSearchDTO>(field: K, value: ProductSearchDTO[K]) {
+    this.productModel.update(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  }
+
+  loadProducts(direction: 'next' | 'previous' | 'fresh' = 'fresh') {
+    const formValue = this.productForm().value();
+    this.formSubmitted.set(true);
+
+
+    // attach cursors based on direction
+    const payload = { ...formValue, nextCursor: direction === 'next' ? this.nextCursor() : null, previousCursor: direction === 'previous' ? this.previousCursor() : null };
+    this.pagination.getDataCursor<ProductListDTO, ProductSearchDTO>('Products/GetAll', payload).subscribe({
+      next: (result) => {
+        this.productList.set(result.data);
+        this.hasNextPage.set(result.hasNextPage);
+        this.hasPreviousPage.set(result.hasPreviousPage);
+        this.nextCursor.set(result.nextCursor ?? null);
+        this.previousCursor.set(result.previousCursor ?? null);
+        this.formSubmitted.set(false);
+
       },
       error: (err) => {
-          this.base.handleError(err, err.error.message);
-        }
+        this.base.handleError(err, err.error.message);
+        this.formSubmitted.set(false);
+
+      }
     })
   }
-  OnSearch(){
-    console.log("Event Triggered");
-    this.dt.reset();
+  OnSearch() {
+    this.nextCursor.set(null);
+    this.previousCursor.set(null);
+    this.loadProducts('fresh');
   }
-  deleteProduct(id: string) {
-    this.confirmation.confirm({
-      message: 'Are you sure you want to delete this Product?',
-      header: 'Product Delete Confirmation',
-      acceptButtonStyleClass: 'p-button-success',
-      rejectButtonStyleClass: 'p-button-danger',
-      acceptLabel: 'Yes',
-      rejectLabel: 'No',
-      accept: () => {
-        this.dataService.delete<void>('Products', id).subscribe({
-          next: () => {
-            this.products.update(products=>(products.filter(p=>p.id!==id)));
-            this.msg.add({
-              severity: 'success',
-              summary: 'Success',
-              detail: 'Product Deleted Successfully'
-            });
-          },
-          error: (err) => {
-            this.base.handleError(err, err.error?.message);
-          }
-        });
-      },
-      reject: () => {
-        // Optional: handle rejection
-      }
 
-    });
-  }
-  editProduct(id: string){
-    this.router.navigate(['Inventory/editproduct',id]);
+  editProduct(id: string) {
+    this.router.navigate(['Inventory/editproduct', id]);
   }
   SearchDropDown(event: { query: string }, searchtermsignal: WritableSignal<string>) {
     const search = event.query?.trim() ?? '';
@@ -94,6 +107,5 @@ export class ProductsComponent {
       searchtermsignal.set(search);
     }
   }
-
 
 }
