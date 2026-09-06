@@ -164,12 +164,15 @@
                                 [formField]="warehouseForm.locations[$index].isActive">
                         </td>
 
-                        <!-- Delete -->
+
+                        <!-- Delete Only On Create -->
+                        @if (!isEditMode()) {
                         <td class="p-2 text-center align-top">
                             <button type="button" (click)="deleteLine($index)">
                                 <span class="material-symbols-outlined icon-color">delete</span>
                             </button>
                         </td>
+                        }
 
                     </tr>
                     }

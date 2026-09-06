@@ -12,7 +12,7 @@ export const inventoryRoutes: Routes = [
                 loadComponent: () => import('../features/InventoryModule/dashboard/dashboard.component').then(m => m.DashboardComponent)
             },
             {
-                path: 'products',
+                path: 'productlist',
                 loadComponent: () => import('../features/InventoryModule/ProductTab/products/products.component').then(m => m.ProductsComponent)
             },
             {
