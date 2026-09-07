@@ -3,32 +3,59 @@ import { WritableSignal } from "@angular/core";
 import { BaseApiService } from "./base-api.service";
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class FormDataService {
     private base = inject(BaseApiService);
 
     private readonly allowedImageTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg'];
 
-    buildFormData(formvalue: any, image?: File): FormData {
-        const formdata = new FormData();
-        Object.keys(formvalue).forEach(Key => {
-            const value = formvalue[Key];
+    buildFormData(data: any, image?: File): FormData {
+        const formData = new FormData();
+
+        const appendValue = (value: any, key: string): void => {
+
+            // Ignore undefined/null
             if (value === null || value === undefined) {
                 return;
             }
-            if (typeof value === 'object' && !(value instanceof File)) {
-                formdata.append(Key, JSON.stringify(value));
-            } else if (value instanceof File) {
-                formdata.append(Key, value);
-            } else {
-                formdata.append(Key, value.toString());
+
+            // File
+            if (value instanceof File) {
+                formData.append(key, value, value.name);
+                return;
             }
-        });
+
+            // Blob
+            if (value instanceof Blob) {
+                formData.append(key, value);
+                return;
+            }
+
+            // Array
+            if (Array.isArray(value)) {
+                value.forEach((item, index) => appendValue(item, `${key}[${index}]`));
+                return;
+            }
+
+            // Object
+            if (typeof value === 'object') {
+                Object.keys(value).forEach(property => appendValue(value[property], key ? `${key}.${property}` : property));
+                return;
+            }
+
+            // Primitive
+            formData.append(key, value.toString());
+        };
+
+        Object.keys(data).forEach(key => appendValue(data[key], key));
+
+        // Keep backward compatibility with existing callers
         if (image) {
-            formdata.append('image', image);
+            formData.append('image', image, image.name);
         }
-        return formdata;
+
+        return formData;
     }
 
     /**

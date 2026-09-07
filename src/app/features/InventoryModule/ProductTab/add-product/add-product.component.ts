@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { applyEach, form, FormField, required, validate } from '@angular/forms/signals';
 import { FloatLabel } from "primeng/floatlabel";
 import { FormsModule } from '@angular/forms';
@@ -23,12 +23,11 @@ import { FormDataService } from '../../../../services/formData.service';
 })
 export class AddProductComponent {
 
-  //Initial Call
+  //Initial Calls 
   wareHouses = signal<AutoDropdown[]>([]);
   productCategories = signal<AutoDropdown[]>([]);
   brands = signal<AutoDropdown[]>([]);
   attributeDefinitions = signal<AttributeDefinitionDropdown[]>([]);
-
 
   //properties
   private dataService = inject(DataLayerService);
@@ -51,9 +50,10 @@ export class AddProductComponent {
   variantImagePreviews = signal<Record<number, string>>({});
   warehouseLocations = signal<Record<number, AutoDropdown[]>>({});
 
+
   //Load Voucher for Edit Mode
   ngOnInit() {
-    this.wareHouses();
+    this.loadFormLookups();
     this.activatedRoute.paramMap.pipe(
       takeUntilDestroyed(this.destroyRef)).subscribe(param => {
         const id = param.get('id');
@@ -87,21 +87,21 @@ export class AddProductComponent {
   // Initial template for a Variant
   private readonly defaultVariant: ProductVariantDto = {
     sku: '',
-    barcode: null,
-    description: null,
+    barcode: '',
+    description: '',
     costPrice: 0,
     sellingPrice: 0,
-    netWeight: null,
-    grossWeight: null,
-    length: null,
-    width: null,
-    height: null,
+    netWeight: 0,
+    grossWeight: 0,
+    length: 0,
+    width: 0,
+    height: 0,
     imageUrl: null,
     image: undefined,
     isActive: true,
     removedImage: false,
     attributeValues: [{ ...this.defaultAttributeValue }],
-    initialStock: [{ ...this.defaultWarehouseStock }]
+    initialStock: []
   };
 
   // Main Product Root Model Template
@@ -172,73 +172,37 @@ export class AddProductComponent {
           return null;
         });
 
-        validate(stock.warehouseLocationId, ({ value, valueOf }) => {
-          const locationId = value();
-          if (locationId == null) {
+        validate(stock.warehouseId, ({ value, valueOf }) => {
+          const currentWarehouseId = value();
+
+          if (!currentWarehouseId) {
             return null;
           }
 
+          const currentLocationId = valueOf(stock.warehouseLocationId);
           const stockRows = valueOf(variant.initialStock) ?? [];
 
-          const duplicateCount = stockRows.filter((s) => s.warehouseLocationId === locationId).length;
+          // Treat "no location" as its own comparable bucket (empty string)
+          // so a warehouse-with-no-location matches only other
+          // warehouse-with-no-location rows, and a warehouse+location
+          // pair matches only the same pair.
+          const currentKey = `${currentWarehouseId}|${currentLocationId ?? ''}`;
+
+          const duplicateCount = stockRows.filter(
+            (s) => `${s.warehouseId}|${s.warehouseLocationId ?? ''}` === currentKey
+          ).length;
 
           if (duplicateCount > 1) {
-            return { kind: 'uniqueWarehouseLocation', message: 'This warehouse location is already used in this variant\'s stock', };
+            return {
+              kind: 'duplicateWarehouseLocation',
+              message: 'This combination is already added to this variant',
+            };
           }
+
           return null;
         });
       });
 
-      // Variant Attribute Combination Validation
-
-      validate(variant.attributeValues, ({ value }) => {
-
-        const attributes = value();
-
-        if (!attributes || attributes.length === 0) {
-          return null;
-        }
-
-        // Don't validate incomplete attribute rows (user still picking values)
-        const validAttributes = attributes.filter(
-          (attr) => attr.attributeDefinitionId != null && attr.attributeValueId != null
-        );
-
-        if (validAttributes.length !== attributes.length) {
-          return null;
-        }
-
-        // Sorting makes Color=Red+Size=XL equal to Size=XL+Color=Red
-        const currentCombination = validAttributes
-          .map((attr) => `${attr.attributeDefinitionId}:${attr.attributeValueId}`).sort().join('|');
-
-        const variants = this.productModel().variants;
-
-        const duplicateCount = variants.filter((otherVariant) => {
-          const otherAttributes = otherVariant.attributeValues ?? [];
-
-          const validOtherAttributes = otherAttributes.filter((attr) => attr.attributeDefinitionId != null && attr.attributeValueId != null);
-
-          if (validOtherAttributes.length !== otherAttributes.length) {
-            return false;
-          }
-
-          const otherCombination = validOtherAttributes.map((attr) => `${attr.attributeDefinitionId}:${attr.attributeValueId}`).sort().join('|');
-
-          return otherCombination === currentCombination;
-        }).length;
-
-        // The current variant is included in this count, so > 1 means
-        // another variant shares the exact same combination.
-        if (duplicateCount > 1) {
-          return {
-            kind: 'uniqueVariantAttributes',
-            message: 'This attribute combination already exists in another variant',
-          };
-        }
-
-        return null;
-      });
     });
   });
   //Method to Update Fields For Non supporting Primeng Fields
@@ -262,10 +226,8 @@ export class AddProductComponent {
   }
   // Update field inside an attribute row of a variant
   updateVariantAttributeField<K extends keyof ProductAttributeValueDto>(
-    variantIndex: number,
-    attrIndex: number,
-    field: K,
-    value: ProductAttributeValueDto[K]
+    variantIndex: number, attrIndex: number,
+    field: K, value: ProductAttributeValueDto[K]
   ) {
     this.productModel.update(prev => {
       const variants = [...prev.variants];
@@ -329,40 +291,46 @@ export class AddProductComponent {
   }
 
   addStockLine(variantIndex: number): void {
-    const stockArray = this.productForm.variants[variantIndex].initialStock;
-    const lastIndex = stockArray.length - 1;
-    const currentStockRow = stockArray[lastIndex];
+    const stockArray = this.productModel().variants[variantIndex].initialStock;
 
-    // Validate the current row's controls before adding a new line
-    const isInvalid =
-      currentStockRow.warehouseId().invalid() ||
-      currentStockRow.quantity().invalid() ||
-      currentStockRow.unitCost().invalid();
+    // No existing stock lines -> add the first one
+    if (stockArray.length === 0) {
+      this.productModel.update(prev => {
+        const variants = [...prev.variants];
+        variants[variantIndex] = { ...variants[variantIndex], initialStock: [{ ...this.defaultWarehouseStock }] };
+        return { ...prev, variants };
+      });
+
+      return;
+    }
+
+    // Validate the last existing stock line before adding another
+    const lastIndex = stockArray.length - 1;
+    const currentStockRow = this.productForm.variants[variantIndex].initialStock[lastIndex];
+
+    const isInvalid = currentStockRow.warehouseId().invalid() || currentStockRow.quantity().invalid() || currentStockRow.unitCost().invalid();
 
     if (isInvalid) {
       currentStockRow.warehouseId().markAsTouched();
       currentStockRow.quantity().markAsTouched();
       currentStockRow.unitCost().markAsTouched();
+
       return;
     }
 
-    // Add new stock line safely
+    // Last row is valid -> add a new empty stock line
     this.productModel.update(prev => {
       const variants = [...prev.variants];
-      variants[variantIndex] = {
-        ...variants[variantIndex],
-        initialStock: [
-          ...variants[variantIndex].initialStock,
-          { ...this.defaultWarehouseStock }
-        ]
-      };
+      variants[variantIndex] = { ...variants[variantIndex], initialStock: [...variants[variantIndex].initialStock, { ...this.defaultWarehouseStock }] };
       return { ...prev, variants };
     });
   }
+
   deleteStockLine(variantIndex: number, stockIndex: number): void {
     const targetVariant = this.productModel().variants[variantIndex];
 
-    // If editing an EXISTING variant, initial stock is historical and should not be modified
+    // If editing an EXISTING variant, initial stock is historical
+    // and should not be modified or deleted.
     if (this.isEditMode() && targetVariant.id && this.existingVariantIds().includes(targetVariant.id)) {
       this.errors.set(['Initial stock for existing variants cannot be modified or deleted.']);
       return;
@@ -372,19 +340,21 @@ export class AddProductComponent {
 
     this.productModel.update(prev => {
       const variants = [...prev.variants];
-      const currentStock = variants[variantIndex].initialStock;
+      variants[variantIndex] = { ...variants[variantIndex], initialStock: variants[variantIndex].initialStock.filter((_, i) => i !== stockIndex) };
 
-      const updatedStock = currentStock.length === 1
-        ? [{ ...this.defaultWarehouseStock }]
-        : currentStock.filter((_, i) => i !== stockIndex);
-
-      variants[variantIndex] = { ...variants[variantIndex], initialStock: updatedStock };
       return { ...prev, variants };
     });
   }
+
   //Create method
   createProduct(event: Event) {
     if (this.submit()) {
+      return;
+    }
+    //Checking Duplicate variant attributes
+    console.log(this.duplicateVariantIndices());
+    if (this.duplicateVariantIndices().size > 0) {
+      this.errors.set(['Two or more variants have the same attribute combination. Each variant must be unique.']);
       return;
     }
     //Validating the Form
@@ -402,8 +372,6 @@ export class AddProductComponent {
     this.backendErrors.set({});
     const formvalue = this.productForm().value() as ProductDTO;
     const formdata = this.formservice.buildFormData(formvalue);
-
-
 
     //for update and create
     const url = `Products`;
@@ -469,17 +437,17 @@ export class AddProductComponent {
     });
   }
   onWarehouseChange(variantIndex: number, stockIndex: number, warehouseId: number | null): void {
-
+    // Set warehouse
     this.updateVariantStockField(variantIndex, stockIndex, 'warehouseId', warehouseId);
 
-    // Location from previous warehouse is invalid
+    // Reset previously selected location
     this.updateVariantStockField(variantIndex, stockIndex, 'warehouseLocationId', null);
 
     if (warehouseId == null) {
       return;
     }
 
-    // Use cached locations
+    // Already loaded? Don't call API again
     if (this.warehouseLocations()[warehouseId]) {
       return;
     }
@@ -509,19 +477,85 @@ export class AddProductComponent {
     return this.warehouseLocations()[warehouseId] ?? [];
   }
   onVariantImageSelected(event: Event, variantIndex: number) {
+
     const preview = signal(this.variantImagePreviews()[variantIndex] ?? '');
+
     const file = this.formservice.onImageSelected(event, preview);
-    if (!file) return;
-    this.variantImagePreviews.update(prev => ({ ...prev, [variantIndex]: preview() }));
-    this.updateLineField(variantIndex, 'image', file);
+
+    if (!file) {
+      return;
+    }
+    // FileReader in FormDataService is async, so don't read preview() here.
+    // Create the preview directly from the selected File.
+    const previewUrl = URL.createObjectURL(file);
+
+    this.variantImagePreviews.update(prev => ({ ...prev, [variantIndex]: previewUrl }));
+
+    // Store actual File
+    this.productModel.update(prev => {
+      const variants = [...prev.variants];
+      variants[variantIndex] = { ...variants[variantIndex], image: file, removedImage: false };
+      return { ...prev, variants };
+    });
+
   }
   removeVariantImage(variantIndex: number) {
+
     const preview = signal(this.variantImagePreviews()[variantIndex] ?? '');
+
     this.formservice.removeImage(preview, `variantImage_${variantIndex}`);
+
     this.variantImagePreviews.update(prev => ({ ...prev, [variantIndex]: '' }));
-    this.updateLineField(variantIndex, 'image', undefined);
-    if (this.isEditMode()) {
-      this.updateLineField(variantIndex, 'removedImage', true);
-    }
+
+    this.productModel.update(prev => {
+      const variants = [...prev.variants];
+      variants[variantIndex] = { ...variants[variantIndex], image: undefined, removedImage: this.isEditMode() ? true : false };
+      return { ...prev, variants };
+    });
   }
+
+  // Prevent Duplication of Attributes
+  duplicateVariantIndices = computed<Set<number>>(() => {
+    const variants = this.productModel().variants ?? [];
+    const definitions = this.attributeDefinitions() ?? [];
+    const seen = new Map<string, number[]>();
+
+    variants.forEach((variant, variantIdx) => {
+      const rawAttrs = variant.attributeValues ?? [];
+      if (rawAttrs.length === 0) return;
+
+      // Map each attribute value option, resolving the parent definition ID from attributeDefinitions()
+      const validAttrs = rawAttrs
+        .map((attr, attrIdx) => {
+          // Fallback to definition ID from definitions signal if not present on the model item
+          const defId = attr.attributeDefinitionId ?? definitions[attrIdx]?.id;
+          const valId = attr.attributeValueId;
+          return { defId, valId };
+        })
+        .filter((a) => a.defId != null && a.valId != null);
+
+      // Skip incomplete variants (user hasn't selected options across all dynamic dropdowns yet)
+      if (validAttrs.length === 0 || validAttrs.length !== definitions.length) {
+        return;
+      }
+
+      // Sort to ensure combination order doesn't matter (e.g. Color:Red|Size:XL == Size:XL|Color:Red)
+      const key = validAttrs
+        .map((a) => `${a.defId}:${a.valId}`)
+        .sort()
+        .join('|');
+
+      const existing = seen.get(key) ?? [];
+      seen.set(key, [...existing, variantIdx]);
+    });
+
+    const duplicates = new Set<number>();
+    for (const indices of seen.values()) {
+      if (indices.length > 1) {
+        indices.forEach((idx) => duplicates.add(idx));
+      }
+    }
+
+    return duplicates;
+  });
 }

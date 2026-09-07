@@ -1,108 +1,459 @@
-<form [formGroup]="addproduct" (ngSubmit)="createProduct()">
+<!-- Create Form -->
+<form (ngSubmit)="createProduct($event)">
   <div class="flex flex-wrap global-div p-5">
-
     <div class="w-full mb-4">
-      @if (isEditMode()) {
-      <input id="id" autocomplete="off" type="hidden" formControlName="id">
-      <h3 class="text-2xl font-semibold text-center second-color mb-3">Edit Product Information</h3>
-      } @else {
-      <h3 class="text-2xl font-semibold text-center second-color mb-3">Add Product Information</h3>
-      }
+      <h3 class="text-2xl font-semibold text-center mb-3">
+        @if(isEditMode()){
+        <span class="gradient-heading">Edit Product</span>
+        }@else{
+        <span class="gradient-heading">Add Product</span>
+        }
+      </h3>
       <hr class="second-color">
     </div>
 
-    <!-- Product Name -->
-    <div class="lg:w-1/2 w-full mb-3">
+    <div class="lg:w-1/4 w-full mb-3">
       <p-floatLabel variant="on">
-        <div class="lg:w-1/2 w-2/3">
-          <input pInputText pSize="small" id="name" autocomplete="off" type="text" formControlName="name"
-            class="w-full">
-          <label for="name" class="required">Product Name</label>
+        <div class="lg:w-8/12 w-full">
+          <input pInputText pSize="small" id="productName" autocomplete="off" type="text" class="w-full"
+            [formField]="productForm.productName">
+          <label for="productName" class="required">Name</label>
         </div>
       </p-floatLabel>
-      <app-field-error [form]="addproduct" field="name" [backendErrors]="backendErrors" [submit]="submit"
-        [formChange]="formChange">
-      </app-field-error>
+      <app-field-errorS [field]="productForm.productName" [submit]="formSubmitted()" [backendErrors]="backendErrors()">
+      </app-field-errorS>
     </div>
-
-    <!-- Product Price -->
-    <div class="lg:w-1/2 w-full mb-3">
-      <div class="lg:w-1/2 w-2/3">
-        <p-floatLabel variant="on">
-          <input pInputText pSize="small" id="price" autocomplete="off" type="number" formControlName="price"
-            class="w-full">
-          <label for="price" class="required">Product Price</label>
-        </p-floatLabel>
-        <app-field-error [form]="addproduct" field="price" [backendErrors]="backendErrors" [submit]="submit"
-          [formChange]="formChange">
-        </app-field-error>
-      </div>
-    </div>
-
-    <!-- Product Quantity -->
-    <div class="lg:w-1/2 w-full mb-3">
-      <div class="lg:w-1/2 w-2/3">
-        <p-floatLabel variant="on">
-          <input pInputText pSize="small" id="quantity" autocomplete="off" type="number" formControlName="quantity"
-            class="w-full">
-          <label for="quantity">Product Quantity</label>
-        </p-floatLabel>
-        <app-field-error [form]="addproduct" field="quantity" [backendErrors]="backendErrors" [submit]="submit"
-            [formChange]="formChange">
-          </app-field-error>
-      </div>
-    </div>
-
-    <!-- Supplier -->
-    <div class="lg:w-1/2 w-full mb-3">
-      <div>
-      <p-floatLabel variant="on">      
-          <p-autoComplete (completeMethod)="SearchSuppliers($event,suppliersearch.searchterm)" inputId="supplierId"
-            optionLabel="name" formControlName="supplierId" [dropdown]="true" [suggestions]="suppliers()"
-            optionValue="id" [showClear]="true">
-          </p-autoComplete>
-          <label for="supplierId">Select Supplier</label>
-          
+    <div class="lg:w-1/4 w-full mb-3">
+      <p-floatLabel variant="on">
+        <div class="lg:w-8/12 w-full">
+          <input pInputText pSize="small" id="productNumber" autocomplete="off" type="text" class="w-full"
+            [formField]="productForm.productNumber">
+          <label for="productNumber" class="required">Product Number</label>
+        </div>
       </p-floatLabel>
-      <small>Enter atleast 3 Characters</small>
+      <app-field-errorS [field]="productForm.productNumber" [submit]="formSubmitted()"
+        [backendErrors]="backendErrors()">
+      </app-field-errorS>
     </div>
+    <div class="lg:w-1/4 w-full mb-3">
+      <p-floatLabel variant="on">
+        <div class="lg:w-8/12 w-full">
+          <input pInputText pSize="small" id="productDescription" autocomplete="off" type="text" class="w-full"
+            [formField]="productForm.productDescription">
+          <label for="productDescription">Description</label>
+        </div>
+      </p-floatLabel>
     </div>
-
-    <!-- Upload Image -->
-    <div class="lg:w-1/2 w-full mb-3">
-      <label class="block mb-2">Upload Product Image</label>
-
-      <label for="productImage" class="uploadImage">
-        <span class="material-symbols-outlined">Upload</span>
-        <span>Select Image</span>
-      </label>
-
-      <input id="productImage" type="file" accept="image/jpeg,image/png,image/webp" class="hidden"
-        (change)="onImageSelected($event)">
+    <div class="lg:w-1/4 w-full mb-3">
+      <p-floatLabel variant="on">
+        <div class="lg:w-8/12 w-full">
+          <input pInputText pSize="small" id="taxRate" autocomplete="off" type="number" class="w-full"
+            [formField]="productForm.taxRate">
+          <label for="taxRate">Tax Rate %</label>
+        </div>
+      </p-floatLabel>
     </div>
+    <div class="lg:w-1/4 w-full mb-3">
+      <p-floatLabel variant="on">
+        <div class="lg:w-8/12 w-full">
+          <p-select [(ngModel)]="productModel().productType" [ngModelOptions]="{standalone: true}"
+            (ngModelChange)="updateField('productType',$event)" [options]="productTypes()" optionLabel="name"
+            optionValue="value" class="w-full" [showClear]="true" [filter]="true" filterBy="name" />
+          <label for="productType" class="required">Product Type</label>
+        </div>
+      </p-floatLabel>
+      <app-field-errorS [field]="productForm.productType" [submit]="formSubmitted()" [backendErrors]="backendErrors()">
+      </app-field-errorS>
 
-    <!-- Image Preview -->
-    <div class="lg:w-1/2 w-full mb-3">
-      <label class="block mb-2">Product Image</label>
+    </div>
+    <div class="lg:w-1/4 w-full mb-3">
+      <p-floatLabel variant="on">
+        <div class="lg:w-8/12 w-full">
+          <p-select [(ngModel)]="productModel().uom" [ngModelOptions]="{standalone: true}"
+            (ngModelChange)="updateField('uom',$event)" [options]="uomList()" optionLabel="name" optionValue="value"
+            class="w-full" [showClear]="true" [filter]="true" filterBy="name" />
+          <label for="uom" class="required">UOM</label>
+        </div>
+      </p-floatLabel>
+      <app-field-errorS [field]="productForm.uom" [submit]="formSubmitted()" [backendErrors]="backendErrors()">
+      </app-field-errorS>
 
-      @if (imagePreview()) {
-      <div class="image-preview-container">
-        <img [src]="imagePreview()" alt="Preview" class="image-preview" />
-        <button type="button" class="btn-remove-image">
-          ✕ Remove
+    </div>
+    <div class="lg:w-1/4 w-full mb-3">
+      <p-floatLabel variant="on">
+        <div class="lg:w-8/12 w-full">
+          <p-select [(ngModel)]="productModel().productCategoryId" [ngModelOptions]="{standalone: true}"
+            (ngModelChange)="updateField('productCategoryId',$event)" [options]="productCategories()" optionLabel="name"
+            optionValue="value" class="w-full" [showClear]="true" [filter]="true" filterBy="name" />
+          <label for="productCategoryId" class="required">Product Category</label>
+        </div>
+      </p-floatLabel>
+      <app-field-errorS [field]="productForm.productCategoryId" [submit]="formSubmitted()"
+        [backendErrors]="backendErrors()">
+      </app-field-errorS>
+    </div>
+    <div class="lg:w-1/4 w-full mb-3">
+      <p-floatLabel variant="on">
+        <div class="lg:w-8/12 w-full">
+          <p-select [(ngModel)]="productModel().brandId" [ngModelOptions]="{standalone: true}"
+            (ngModelChange)="updateField('brandId',$event)" [options]="brands()" optionLabel="name" optionValue="value"
+            class="w-full" [showClear]="true" [filter]="true" filterBy="name" />
+          <label for="brandId">Brand</label>
+        </div>
+      </p-floatLabel>
+    </div>
+    @if(isEditMode()){
+    <div class="lg:w-1/4 w-full mb-3 flex items-center gap-2">
+      <input id="isActive" type="checkbox" [formField]="productForm.isActive" class="w-auto" />
+      <label for="isActive" class="mb-0 !text-lg font-medium gradient-heading">Active</label>
+    </div>
+    }
+
+    <div class="w-full">
+      <div class="w-full mt-3">
+        <h4 class="text-base sm:text-lg font-semibold mb-2 float-left">
+          <span>Product Variants</span>
+        </h4>
+        <!--add line button -->
+        <button type="button" class="global-button float-right" (click)="addVariant()">
+          <span class="material-symbols-outlined second-color">add</span> Add Variant
         </button>
       </div>
-      }
     </div>
 
-    <!-- Submit Button -->
-    <div class="lg:w-1/2 w-full mb-3">
-      @if (isEditMode()) {
-      <button class="global-button">Updtae Product</button>
-      } @else {
-      <button class="global-button">Add Product</button>
-      }
+    <!-- Variants Loop -->
+    @for (line of productModel().variants; track $index; let variantIdx = $index) {
+
+    <!-- SKU -->
+    <div class="lg:w-1/4 w-full mb-3">
+      <p-floatLabel variant="on">
+        <div class="lg:w-8/12 w-full">
+          <input pInputText pSize="small" [id]="'sku_' + variantIdx" autocomplete="off" type="text" class="w-full"
+            [formField]="productForm.variants[variantIdx].sku" />
+          <label [for]="'sku_' + variantIdx">SKU</label>
+        </div>
+      </p-floatLabel>
+      <app-field-errorS [field]="productForm.variants[variantIdx].sku" [submit]="formSubmitted()"
+        [backendErrors]="backendErrors()" [fieldPath]="'variants[' + variantIdx + '].sku'">
+      </app-field-errorS>
     </div>
 
+    <!-- Barcode -->
+    <div class="lg:w-1/4 w-full mb-3">
+      <p-floatLabel variant="on">
+        <div class="lg:w-8/12 w-full">
+          <input pInputText pSize="small" [id]="'barcode_' + variantIdx" autocomplete="off" type="text" class="w-full"
+            [formField]="productForm.variants[variantIdx].barcode" />
+          <label [for]="'barcode_' + variantIdx">Barcode</label>
+        </div>
+      </p-floatLabel>
+    </div>
+
+    <!-- Description -->
+    <div class="lg:w-1/4 w-full mb-3">
+      <p-floatLabel variant="on">
+        <div class="lg:w-8/12 w-full">
+          <input pInputText pSize="small" [id]="'variantDescription_' + variantIdx" autocomplete="off" type="text"
+            class="w-full" [formField]="productForm.variants[variantIdx].description" />
+          <label [for]="'variantDescription_' + variantIdx">Description</label>
+        </div>
+      </p-floatLabel>
+    </div>
+
+    <!-- Cost Price -->
+    <div class="lg:w-1/4 w-full mb-3">
+      <p-floatLabel variant="on">
+        <div class="lg:w-8/12 w-full">
+          <input pInputText pSize="small" [id]="'costPrice_' + variantIdx" autocomplete="off" type="number"
+            class="w-full" [formField]="productForm.variants[variantIdx].costPrice" />
+          <label [for]="'costPrice_' + variantIdx">Cost Price</label>
+        </div>
+      </p-floatLabel>
+      <app-field-errorS [field]="productForm.variants[variantIdx].costPrice" [submit]="formSubmitted()"
+        [backendErrors]="backendErrors()" [fieldPath]="'variants[' + variantIdx + '].costPrice'">
+      </app-field-errorS>
+    </div>
+
+    <!-- Selling Price -->
+    <div class="lg:w-1/4 w-full mb-3">
+      <p-floatLabel variant="on">
+        <div class="lg:w-8/12 w-full">
+          <input pInputText pSize="small" [id]="'sellingPrice_' + variantIdx" autocomplete="off" type="number"
+            class="w-full" [formField]="productForm.variants[variantIdx].sellingPrice" />
+          <label [for]="'sellingPrice_' + variantIdx">Selling Price</label>
+        </div>
+      </p-floatLabel>
+      <app-field-errorS [field]="productForm.variants[variantIdx].sellingPrice" [submit]="formSubmitted()"
+        [backendErrors]="backendErrors()" [fieldPath]="'variants[' + variantIdx + '].sellingPrice'">
+      </app-field-errorS>
+    </div>
+
+    <!-- Net Weight -->
+    <div class="lg:w-1/4 w-full mb-3">
+      <p-floatLabel variant="on">
+        <div class="lg:w-8/12 w-full">
+          <input pInputText pSize="small" [id]="'netWeight_' + variantIdx" autocomplete="off" type="number"
+            class="w-full" [formField]="productForm.variants[variantIdx].netWeight" />
+          <label [for]="'netWeight_' + variantIdx">Net Weight</label>
+        </div>
+      </p-floatLabel>
+    </div>
+
+    <!-- Gross Weight -->
+    <div class="lg:w-1/4 w-full mb-3">
+      <p-floatLabel variant="on">
+        <div class="lg:w-8/12 w-full">
+          <input pInputText pSize="small" [id]="'grossWeight_' + variantIdx" autocomplete="off" type="number"
+            class="w-full" [formField]="productForm.variants[variantIdx].grossWeight" />
+          <label [for]="'grossWeight_' + variantIdx">Gross Weight</label>
+        </div>
+      </p-floatLabel>
+    </div>
+
+    <!-- Length -->
+    <div class="lg:w-1/4 w-full mb-3">
+      <p-floatLabel variant="on">
+        <div class="lg:w-8/12 w-full">
+          <input pInputText pSize="small" [id]="'length_' + variantIdx" autocomplete="off" type="number" class="w-full"
+            [formField]="productForm.variants[variantIdx].length" />
+          <label [for]="'length_' + variantIdx">Length</label>
+        </div>
+      </p-floatLabel>
+    </div>
+
+    <!-- Width -->
+    <div class="lg:w-1/4 w-full mb-3">
+      <p-floatLabel variant="on">
+        <div class="lg:w-8/12 w-full">
+          <input pInputText pSize="small" [id]="'width_' + variantIdx" autocomplete="off" type="number" class="w-full"
+            [formField]="productForm.variants[variantIdx].width" />
+          <label [for]="'width_' + variantIdx">Width</label>
+        </div>
+      </p-floatLabel>
+    </div>
+
+    <!-- Height -->
+    <div class="lg:w-1/4 w-full mb-3">
+      <p-floatLabel variant="on">
+        <div class="lg:w-8/12 w-full">
+          <input pInputText pSize="small" [id]="'height_' + variantIdx" autocomplete="off" type="number" class="w-full"
+            [formField]="productForm.variants[variantIdx].height" />
+          <label [for]="'height_' + variantIdx">Height</label>
+        </div>
+      </p-floatLabel>
+    </div>
+
+    <!-- Is Active (Edit Mode Only) -->
+    @if (isEditMode()) {
+    <div class="lg:w-1/4 w-full mb-3 flex items-center gap-2">
+      <input [id]="'isActive_' + variantIdx" type="checkbox" [formField]="productForm.variants[variantIdx].isActive"
+        class="w-auto" />
+      <label [for]="'isActive_' + variantIdx" class="mb-0 !text-lg font-medium gradient-heading">Active</label>
+    </div>
+    }
+
+    <!-- Images -->
+    <div class="w-full mb-3">
+      <div class="lg:w-1/2 w-full mb-3">
+
+        <div class="logo-section-header">
+          <span class="material-symbols-outlined">image</span>
+          Variant Image
+        </div>
+
+        <div class="logo-section">
+
+          <!-- Preview -->
+          <div class="logo-preview-box">
+            @if (variantImagePreviews()[variantIdx]) {
+            <img [src]="variantImagePreviews()[variantIdx]" alt="Variant Image" />
+            } @else {
+            <div class="logo-placeholder">
+              <span class="material-symbols-outlined placeholder-icon">
+                image
+              </span>
+              <span class="placeholder-text">No Image</span>
+            </div>
+            }
+          </div>
+
+          <!-- Actions -->
+          <div class="logo-actions">
+
+            <label [for]="'variantImage_' + variantIdx" class="uploadImage">
+
+              <span class="material-symbols-outlined">upload</span>
+              <span>Select Image</span>
+            </label>
+
+            <input [id]="'variantImage_' + variantIdx" type="file" accept="image/jpeg,image/png,image/webp"
+              class="hidden" (change)="onVariantImageSelected($event, variantIdx)" />
+
+            @if (variantImagePreviews()[variantIdx]) {
+            <button type="button" class="btn-remove-image" (click)="removeVariantImage(variantIdx)">
+
+              <span class="material-symbols-outlined">close</span>
+              Remove
+            </button>
+            }
+
+            <p class="logo-hint">
+              Accepted: JPEG, PNG, WebP · Max 3 MB
+            </p>
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Dynamic Attributes Section -->
+    @if (attributeDefinitions().length > 0) {
+    <div class="w-full mb-4 flex flex-wrap gap-3">
+      <div class="w-full">
+        <div class="w-full mt-3">
+          <h4 class="text-base sm:text-lg font-semibold mb-2 float-left">
+            <span>Variant Attributes</span>
+          </h4>
+        </div>
+      </div>
+      @for (attr of attributeDefinitions(); track attr.id; let attrIdx = $index) {
+      <div class="lg:w-1/4 w-full mb-3">
+        <p-floatLabel variant="on">
+          <div class="lg:w-8/12 w-full">
+            <p-select [ngModel]="line.attributeValues[attrIdx]?.attributeValueId"
+              [ngModelOptions]="{ standalone: true }"
+              (ngModelChange)="updateVariantAttributeField(variantIdx, attrIdx, 'attributeValueId', $event)"
+              [options]="attr.values" optionLabel="value" optionValue="id" [filter]="true" filterBy="value"
+              [id]="'attr_' + variantIdx + '_' + attr.id" class="w-full" appendTo="body" pSize="small"
+              [showClear]="true">
+            </p-select>
+            <label [for]="'attr_' + variantIdx + '_' + attr.id">{{ attr.name }}</label>
+          </div>
+        </p-floatLabel>
+      </div>
+      }
+    </div>
+    }
+    <div class="w-full">
+      <div class="w-full mt-3">
+        <h4 class="text-base sm:text-lg font-semibold mb-2 float-left">
+          <span>Warehouse Initial Stock</span>
+        </h4>
+        <!--add line button -->
+        <button type="button" class="global-button float-right" (click)="addStockLine(variantIdx)">
+          <span class="material-symbols-outlined second-color">add</span> Add Stock Line
+        </button>
+      </div>
+    </div>
+    <!-- Warehouse Initial Stock Section -->
+    <div class="overflow-auto">
+      <table class="w-full border-collapse" style="table-layout: fixed; min-width: 1000px;">
+        <thead>
+          <tr class="text-left border-b second-color">
+            <th class="p-2">WareHouse</th>
+            <th class="p-2">WareHouse Location</th>
+            <th class="p-2">Quantity</th>
+            <th class="p-2">Unit Cost</th>
+            <th class="p-2 text-center">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          @if (productForm.variants[variantIdx].initialStock.length === 0) {
+          <tr>
+            <td colspan="5" class="p-6 text-center text-gray-500">
+              No WareHous Stock added yet.
+              Click <strong>Add Line</strong> to add a WareHouse Stock.
+            </td>
+          </tr>
+          } @else {
+          @for(line of productForm.variants[variantIdx].initialStock; track $index) {
+          <tr class="border-b second-color">
+
+            <!-- Warehouse -->
+            <td class="p-2 align-top">
+              <p-select [ngModel]="line.warehouseId().value()" [ngModelOptions]="{standalone: true}"
+                (ngModelChange)="onWarehouseChange(variantIdx, $index, $event)" [options]="wareHouses()"
+                optionLabel="name" optionValue="id" [filter]="true" filterBy="name" class="w-full" appendTo="body"
+                pSize="small" [showClear]="true">
+              </p-select>
+
+              <app-field-errorS [field]="productForm.variants[variantIdx].initialStock[$index].warehouseId"
+                [submit]="formSubmitted()" [backendErrors]="backendErrors()"
+                [fieldPath]="'variants[' + variantIdx + '].initialStock[' + $index + '].warehouseId'">
+              </app-field-errorS>
+            </td>
+            <!-- Warehouse Location -->
+            <td class="p-2 align-top">
+              <p-select [ngModel]="line.warehouseLocationId().value()" [ngModelOptions]="{standalone: true}"
+                (ngModelChange)="updateVariantStockField(variantIdx, $index, 'warehouseLocationId', $event)"
+                [options]="getWarehouseLocations(line.warehouseId().value())" optionLabel="name" optionValue="id"
+                [filter]="true" filterBy="name" class="w-full" appendTo="body" pSize="small" [showClear]="true">
+              </p-select>
+            </td>
+            <!-- Quantity -->
+            <td class="p-2 align-top">
+              <input pInputText pSize="small" autocomplete="off" type="number" class="w-full"
+                [formField]="productForm.variants[variantIdx].initialStock[$index].quantity">
+              <app-field-errorS [field]="productForm.variants[variantIdx].initialStock[$index].quantity"
+                [submit]="formSubmitted()" [backendErrors]="backendErrors()"
+                [fieldPath]="'variants[' + variantIdx + '].initialStock[' + $index + '].quantity'">
+              </app-field-errorS>
+            </td>
+
+            <!-- Unit Cost -->
+            <td class="p-2 align-top">
+              <input pInputText pSize="small" autocomplete="off" type="number" class="w-full"
+                [formField]="productForm.variants[variantIdx].initialStock[$index].unitCost">
+              <app-field-errorS [field]="productForm.variants[variantIdx].initialStock[$index].unitCost"
+                [submit]="formSubmitted()" [backendErrors]="backendErrors()"
+                [fieldPath]="'variants[' + variantIdx + '].initialStock[' + $index + '].unitCost'">
+              </app-field-errorS>
+            </td>
+
+
+            <!-- Delete -->
+            <td class="p-2 text-center align-top">
+              <button type="button" (click)="deleteStockLine(variantIdx, $index)">
+                <span class="material-symbols-outlined icon-color">delete</span>
+              </button>
+            </td>
+
+          </tr>
+          }
+          }
+        </tbody>
+
+
+      </table>
+
+    </div>
+
+
+
+    }
+
+    <!--Errors -->
+    <div class="w-full mt-3">
+      <ul class="text-red-500 text-sm font-medium pl-4">
+        @if (errors()) {
+        @for (e of errors(); track e) {
+        <li>{{ e }}</li>
+        }
+        }
+      </ul>
+    </div>
+
+
+    <!--submitting the form  -->
+    <div class="w-full flex justify-center m-3">
+      @if(isEditMode()){
+      <button class="global-button" type="submit" [disabled]="submit()">
+        {{ submit() ? 'Processing...' : 'Update Product' }}
+      </button>
+      }@else{
+      <button class="global-button" type="submit" [disabled]="submit()">
+        {{ submit() ? 'Processing...' : 'Create Product' }}
+      </button>
+      }
+    </div>
   </div>
 </form>
