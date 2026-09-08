@@ -22,7 +22,7 @@ export const INVENTORY_LAYOUT_CONFIG: ModuleLayoutConfig = {
                 },
                 {
                     label: 'Product List',
-                    route: '/Inventory/products'
+                    route: '/Inventory/productlist'
                 },
                 {
                     label: 'Add Product Categories',

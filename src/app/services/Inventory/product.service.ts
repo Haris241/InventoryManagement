@@ -239,34 +239,21 @@ export class ProductService {
     return !variant.sku || variant.sku === lastAutoSku;
   }
 
-  findDuplicateVariantIndices(
-    variants: ProductVariantDto[],
-    attributeDefinitions: AttributeDefinitionDropdown[]
-  ): Set<number> {
+  findDuplicateVariantIndices(variants: ProductVariantDto[], attributeDefinitions: AttributeDefinitionDropdown[]): Set<number> {
     const seen = new Map<string, number[]>();
 
+    if (attributeDefinitions.length === 0) {
+      return new Set<number>();
+    }
+
     variants.forEach((variant, variantIdx) => {
-      const rawAttrs = variant.attributeValues ?? [];
-      if (rawAttrs.length === 0) {
-        return;
-      }
+      const attrValues = variant.attributeValues ?? [];
 
-      const validAttrs = rawAttrs
-        .map((attr, attrIdx) => {
-          const defId = attr.attributeDefinitionId ?? attributeDefinitions[attrIdx]?.id;
-          const valId = attr.attributeValueId;
-          return { defId, valId };
-        })
-        .filter((a) => a.defId != null && a.valId != null);
-
-      if (validAttrs.length === 0 || validAttrs.length !== attributeDefinitions.length) {
-        return;
-      }
-
-      const key = validAttrs
-        .map((a) => `${a.defId}:${a.valId}`)
-        .sort()
-        .join('|');
+      const key = attributeDefinitions
+        .map((def, defIdx) => {
+          const valueId = attrValues[defIdx]?.attributeValueId ?? 'none';
+          return `${def.id}:${valueId}`;
+        }).join('|');
 
       const existing = seen.get(key) ?? [];
       seen.set(key, [...existing, variantIdx]);
@@ -281,7 +268,6 @@ export class ProductService {
 
     return duplicates;
   }
-
   canDeleteVariant(
     isEditMode: boolean,
     variant: ProductVariantDto,
