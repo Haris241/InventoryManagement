@@ -319,10 +319,9 @@
       <div class="lg:w-1/4 w-full mb-3">
         <p-floatLabel variant="on">
           <div class="lg:w-8/12 w-full">
-            <p-select [ngModel]="line.attributeValues[attrIdx]?.attributeValueId"
-              [ngModelOptions]="{ standalone: true }"
-              (ngModelChange)="updateVariantAttributeField(variantIdx, attrIdx, 'attributeValueId', $event)"
-              [options]="attr.values" optionLabel="value" optionValue="id" [filter]="true" filterBy="value"
+            <p-select [ngModel]="getAttributeValue(line, attr.id)" [ngModelOptions]="{ standalone: true }"
+              (ngModelChange)="updateVariantAttributeField(variantIdx, attr.id, $event)" [options]="attr.values"
+              optionLabel="value" optionValue="id" [filter]="true" filterBy="value"
               [id]="'attr_' + variantIdx + '_' + attr.id" class="w-full" appendTo="body" pSize="small"
               [showClear]="true">
             </p-select>
@@ -339,9 +338,11 @@
           <span>Warehouse Initial Stock</span>
         </h4>
         <!--add line button -->
+        @if (!lockedVariantIndices().has(variantIdx)) {
         <button type="button" class="global-button float-right" (click)="addStockLine(variantIdx)">
           <span class="material-symbols-outlined second-color">add</span> Add Stock Line
         </button>
+        }
       </div>
     </div>
     <!-- Warehouse Initial Stock Section -->
@@ -411,12 +412,13 @@
 
 
             <!-- Delete -->
+            @if (!lockedVariantIndices().has(variantIdx)) {
             <td class="p-2 text-center align-top">
               <button type="button" (click)="deleteStockLine(variantIdx, $index)">
                 <span class="material-symbols-outlined icon-color">delete</span>
               </button>
             </td>
-
+            }
           </tr>
           }
           }

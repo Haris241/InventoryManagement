@@ -19,53 +19,33 @@ export class ProductService {
   private dataService = inject(DataLayerService);
   private formDataService = inject(FormDataService);
 
-  readonly defaultAttributeValue: ProductAttributeValueDto = {
-    attributeDefinitionId: null,
-    attributeName: '',
-    attributeValueId: null,
-    value: ''
-  };
+  createDefaultAttributeValue(): ProductAttributeValueDto {
+    return { attributeDefinitionId: null, attributeName: '', attributeValueId: null, value: '' };
+  }
 
-  readonly defaultWarehouseStock: WareHouseStockDto = {
-    warehouseId: null,
-    warehouseLocationId: null,
-    warehouseName: '',
-    warehouseLocationName: '',
-    quantity: 0,
-    unitCost: 0
-  };
+  createDefaultWarehouseStock(): WareHouseStockDto {
+    return { warehouseId: null, warehouseLocationId: null, warehouseName: '', warehouseLocationName: '', quantity: 0, unitCost: 0 };
+  }
 
-  readonly defaultVariant: ProductVariantDto = {
-    sku: '',
-    barcode: '',
-    description: '',
-    costPrice: 0,
-    sellingPrice: 0,
-    netWeight: 0,
-    grossWeight: 0,
-    length: 0,
-    width: 0,
-    height: 0,
-    imageUrl: null,
-    image: undefined,
-    isActive: true,
-    removedImage: false,
-    attributeValues: [{ ...this.defaultAttributeValue }],
-    initialStock: []
-  };
+  createDefaultVariant(): ProductVariantDto {
+    return {
+      sku: '', barcode: '', description: '',
+      costPrice: 0, sellingPrice: 0,
+      netWeight: 0, grossWeight: 0, length: 0, width: 0, height: 0,
+      imageUrl: null, image: undefined, isActive: true, removedImage: false,
+      attributeValues: [this.createDefaultAttributeValue()],
+      initialStock: []
+    };
+  }
 
-  readonly defaultProduct: ProductDTO = {
-    productName: '',
-    productNumber: '',
-    productDescription: '',
-    uom: null,
-    productType: null,
-    taxRate: 0,
-    isActive: true,
-    productCategoryId: null,
-    brandId: null,
-    variants: [{ ...this.defaultVariant }]
-  };
+  createDefaultProduct(): ProductDTO {
+    return {
+      productName: '', productNumber: '', productDescription: '',
+      uom: null, productType: null, taxRate: 0, isActive: true,
+      productCategoryId: null, brandId: null,
+      variants: [this.createDefaultVariant()]
+    };
+  }
 
   updateField<K extends keyof ProductDTO>(product: ProductDTO, field: K, value: ProductDTO[K]): ProductDTO {
     return { ...product, [field]: value };
@@ -124,16 +104,16 @@ export class ProductService {
     const defaults = this.generateSmartVariant(existingVariants);
 
     return {
-      ...this.defaultVariant,
+      ...this.createDefaultVariant(),
       ...defaults,
-      attributeValues: [{ ...this.defaultAttributeValue }],
+      attributeValues: [this.createDefaultAttributeValue()],
       initialStock: []
     };
   }
 
   deleteVariant(product: ProductDTO, variantIndex: number): ProductDTO {
     if (product.variants.length === 1) {
-      return { ...product, variants: [{ ...this.defaultVariant }] };
+      return { ...product, variants: [{ ...this.createDefaultVariant() }] };
     }
 
     return {
@@ -146,7 +126,7 @@ export class ProductService {
     const variants = [...product.variants];
     variants[variantIndex] = {
       ...variants[variantIndex],
-      initialStock: [...variants[variantIndex].initialStock, { ...this.defaultWarehouseStock }]
+      initialStock: [...variants[variantIndex].initialStock, { ...this.createDefaultWarehouseStock() }]
     };
     return { ...product, variants };
   }
@@ -155,7 +135,7 @@ export class ProductService {
     const variants = [...product.variants];
     variants[variantIndex] = {
       ...variants[variantIndex],
-      initialStock: [{ ...this.defaultWarehouseStock }]
+      initialStock: [{ ...this.createDefaultWarehouseStock() }]
     };
     return { ...product, variants };
   }
@@ -215,10 +195,10 @@ export class ProductService {
       .trim()
       .replace(/\s+/g, '-');
 
-    const attrCodes = (variant.attributeValues ?? [])
-      .map((attr, attrIdx) => {
-        const def = attributeDefinitions[attrIdx];
-        const option = def?.values.find(v => v.id === attr.attributeValueId);
+    const attrCodes = attributeDefinitions
+      .map(def => {
+        const entry = variant.attributeValues?.find(a => a.attributeDefinitionId === def.id);
+        const option = def.values.find(v => v.id === entry?.attributeValueId);
         return option?.code?.toUpperCase();
       })
       .filter((code): code is string => !!code);
@@ -250,9 +230,9 @@ export class ProductService {
       const attrValues = variant.attributeValues ?? [];
 
       const key = attributeDefinitions
-        .map((def, defIdx) => {
-          const valueId = attrValues[defIdx]?.attributeValueId ?? 'none';
-          return `${def.id}:${valueId}`;
+        .map(def => {
+          const entry = attrValues.find(a => a.attributeDefinitionId === def.id);
+          return `${def.id}:${entry?.attributeValueId ?? 'none'}`;
         }).join('|');
 
       const existing = seen.get(key) ?? [];
@@ -315,5 +295,29 @@ export class ProductService {
     return isEditMode
       ? this.dataService.edit<ProductDTO>(url, formValue.id?.toString() ?? '', formdata)
       : this.dataService.create<ProductDTO>(url, formdata);
+  }
+  setVariantAttributeValue(product: ProductDTO, variantIndex: number, attributeDefinitionId: number, attributeValueId: number | null, definitions: AttributeDefinitionDropdown[]): ProductDTO {
+    const variants = [...product.variants];
+    const variant = variants[variantIndex];
+    const def = definitions.find(d => d.id === attributeDefinitionId);
+
+    const attributeValues = [...(variant.attributeValues ?? [])];
+    const existingIdx = attributeValues.findIndex(a => a.attributeDefinitionId === attributeDefinitionId);
+
+    const entry: ProductAttributeValueDto = {
+      attributeDefinitionId,
+      attributeName: def?.name ?? '',
+      attributeValueId,
+      value: def?.values.find(v => v.id === attributeValueId)?.value ?? ''
+    };
+
+    if (existingIdx >= 0) {
+      attributeValues[existingIdx] = entry;
+    } else {
+      attributeValues.push(entry);
+    }
+
+    variants[variantIndex] = { ...variant, attributeValues };
+    return { ...product, variants };
   }
 }
