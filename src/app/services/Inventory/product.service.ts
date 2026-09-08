@@ -229,12 +229,17 @@ export class ProductService {
     variants.forEach((variant, variantIdx) => {
       const attrValues = variant.attributeValues ?? [];
 
-      const key = attributeDefinitions
-        .map(def => {
-          const entry = attrValues.find(a => a.attributeDefinitionId === def.id);
-          return `${def.id}:${entry?.attributeValueId ?? 'none'}`;
-        }).join('|');
+      const parts = attributeDefinitions.map(def => {
+        const entry = attrValues.find(a => a.attributeDefinitionId === def.id);
+        return `${def.id}:${entry?.attributeValueId ?? 'none'}`;
+      });
 
+      // A variant where every attribute is unselected (all null) is inherently
+      // valid on its own — e.g. a cement bag with no attributes. Skip it.
+      const allNone = parts.every(p => p.endsWith(':none'));
+      if (allNone) return;
+
+      const key = parts.join('|');
       const existing = seen.get(key) ?? [];
       seen.set(key, [...existing, variantIdx]);
     });
