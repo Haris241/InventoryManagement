@@ -90,8 +90,19 @@ export function toDateOnlyString(date: Date | null): string | null {
   return `${year}-${month}-${day}`;
 }
 
+function isMobileBrowser(): boolean {
+  return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+}
+
 export function openLoadingTab(title = 'Generating Report...', message = 'Please wait, your report is being prepared...It can Take Some Time, Do not Close'): Window | null {
+
+  // Mobile: don't open a tab
+  if (isMobileBrowser()) {
+    return null;
+  }
+
   const newTab = window.open('', '_blank');
+
   if (newTab) {
     newTab.document.title = title;
     newTab.document.body.innerHTML = `
@@ -101,18 +112,43 @@ export function openLoadingTab(title = 'Generating Report...', message = 'Please
           border-radius:50%;animation:spin 1s linear infinite;margin-bottom:24px;"></div>
         <h2 style="margin:0 0 8px;font-weight:500;color:#f0f0f0;">${title}</h2>
         <p style="margin:0;color:#999;font-size:14px;">${message}</p>
-        <style>@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}</style>
+        <style>@keyframes spin{0%{transform:rotate(360deg)}100%{transform:rotate(0deg)}}</style>
       </div>
     `;
   }
+
   return newTab;
 }
 
 export function showBlobInTab(newTab: Window | null, blob: Blob, fileName: string): void {
-  if (!newTab || newTab.closed) return;
+
+  // Mobile
+  if (!newTab) {
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = fileName;
+    link.style.display = 'none';
+
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+
+    setTimeout(() => URL.revokeObjectURL(url), 60000);
+
+    return;
+  }
+
+  // Desktop
+  if (newTab.closed) return;
+
   const namedBlob = new File([blob], fileName, { type: 'application/pdf' });
+
   const url = URL.createObjectURL(namedBlob);
+
   newTab.location.href = url;
+
   setTimeout(() => URL.revokeObjectURL(url), 60000);
 }
 export type ReportResponse<TJob> = { type: 'file'; blob: Blob; } | { type: 'job'; job: TJob; };

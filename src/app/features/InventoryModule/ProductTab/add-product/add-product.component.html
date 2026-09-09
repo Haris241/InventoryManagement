@@ -95,8 +95,7 @@
             <p-floatLabel variant="on">
               <p-select [(ngModel)]="productModel().productCategoryId" [ngModelOptions]="{standalone: true}"
                 (ngModelChange)="updateField('productCategoryId',$event)" [options]="productCategories()"
-                optionLabel="name" optionValue="value" class="w-full" [showClear]="true" [filter]="true"
-                filterBy="name" />
+                optionLabel="name" optionValue="id" class="w-full" [showClear]="true" [filter]="true" filterBy="name" />
               <label for="productCategoryId" class="required">Product Category</label>
             </p-floatLabel>
             <app-field-errorS [field]="productForm.productCategoryId" [submit]="formSubmitted()"
@@ -108,8 +107,8 @@
           <div class="field-item">
             <p-floatLabel variant="on">
               <p-select [(ngModel)]="productModel().brandId" [ngModelOptions]="{standalone: true}"
-                (ngModelChange)="updateField('brandId',$event)" [options]="brands()" optionLabel="name"
-                optionValue="value" class="w-full" [showClear]="true" [filter]="true" filterBy="name" />
+                (ngModelChange)="updateField('brandId',$event)" [options]="brands()" optionLabel="name" optionValue="id"
+                class="w-full" [showClear]="true" [filter]="true" filterBy="name" />
               <label for="brandId">Brand</label>
             </p-floatLabel>
           </div>
@@ -186,7 +185,7 @@
               <p-floatLabel variant="on">
                 <input pInputText pSize="small" [id]="'sku_' + variantIdx" autocomplete="off" type="text" class="w-full"
                   [formField]="productForm.variants[variantIdx].sku" />
-                <label [for]="'sku_' + variantIdx">SKU</label>
+                <label [for]="'sku_' + variantIdx" class="required">SKU</label>
               </p-floatLabel>
               <app-field-errorS [field]="productForm.variants[variantIdx].sku" [submit]="formSubmitted()"
                 [backendErrors]="backendErrors()" [fieldPath]="'variants[' + variantIdx + '].sku'">
@@ -216,7 +215,7 @@
               <p-floatLabel variant="on">
                 <input pInputText pSize="small" [id]="'costPrice_' + variantIdx" autocomplete="off" type="number"
                   class="w-full" [formField]="productForm.variants[variantIdx].costPrice" />
-                <label [for]="'costPrice_' + variantIdx">Cost Price</label>
+                <label [for]="'costPrice_' + variantIdx" class="required">Cost Price</label>
               </p-floatLabel>
               <app-field-errorS [field]="productForm.variants[variantIdx].costPrice" [submit]="formSubmitted()"
                 [backendErrors]="backendErrors()" [fieldPath]="'variants[' + variantIdx + '].costPrice'">
@@ -228,7 +227,7 @@
               <p-floatLabel variant="on">
                 <input pInputText pSize="small" [id]="'sellingPrice_' + variantIdx" autocomplete="off" type="number"
                   class="w-full" [formField]="productForm.variants[variantIdx].sellingPrice" />
-                <label [for]="'sellingPrice_' + variantIdx">Selling Price</label>
+                <label [for]="'sellingPrice_' + variantIdx" class="required">Selling Price</label>
               </p-floatLabel>
               <app-field-errorS [field]="productForm.variants[variantIdx].sellingPrice" [submit]="formSubmitted()"
                 [backendErrors]="backendErrors()" [fieldPath]="'variants[' + variantIdx + '].sellingPrice'">
@@ -362,14 +361,13 @@
         }
 
         <!-- Group 4: Warehouse Initial Stock -->
+        @if (!lockedVariantIndices().has(variantIdx)) {
         <div class="variant-fields-group">
           <div class="variant-stock-header">
             <p class="variant-group-label mb-0">Warehouse Initial Stock</p>
-            @if (!lockedVariantIndices().has(variantIdx)) {
             <button type="button" class="global-button" (click)="addStockLine(variantIdx)">
               <span class="material-symbols-outlined second-color">add</span> Add Stock Line
             </button>
-            }
           </div>
           <div class="overflow-auto">
             <table class="w-full border-collapse" style="table-layout: fixed; min-width: 1000px;">
@@ -437,13 +435,12 @@
                   </td>
 
                   <!-- Delete -->
-                  @if (!lockedVariantIndices().has(variantIdx)) {
                   <td class="p-2 text-center align-top">
                     <button type="button" (click)="deleteStockLine(variantIdx, $index)">
                       <span class="material-symbols-outlined icon-color">delete</span>
                     </button>
                   </td>
-                  }
+
 
                 </tr>
                 }
@@ -452,7 +449,7 @@
             </table>
           </div>
         </div>
-
+        }
       </div>
       }
     </div>

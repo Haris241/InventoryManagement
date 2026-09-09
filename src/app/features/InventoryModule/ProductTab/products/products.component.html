@@ -25,6 +25,42 @@
             </p-floatLabel>
 
         </div>
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-10/12 w-full">
+                    <p-autoComplete [(ngModel)]="productModel().productCategoryId" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('productCategoryId',$event)"
+                        (completeMethod)="SearchDropDown($event,productCategory.searchterm)" inputId="productCategoryId"
+                        optionLabel="name" [dropdown]="true" [suggestions]="productCategoryList()" optionValue="id"
+                        [showClear]="true" class="w-full"></p-autoComplete>
+                    <label for="productCategoryId">Product Category</label>
+                </div>
+            </p-floatLabel>
+        </div>
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-10/12 w-full">
+                    <p-autoComplete [(ngModel)]="productModel().brandId" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('brandId',$event)"
+                        (completeMethod)="SearchDropDown($event,brand.searchterm)" inputId="brandId" optionLabel="name"
+                        [dropdown]="true" [suggestions]="brandList()" optionValue="id" [showClear]="true"
+                        class="w-full"></p-autoComplete>
+                    <label for="brandId">Brand</label>
+                </div>
+            </p-floatLabel>
+        </div>
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-10/12 w-full">
+                    <p-select [(ngModel)]="productModel().productType" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('productType',$event)" [options]="productTypes()"
+                        optionLabel="name" optionValue="value" class="w-full" [showClear]="true" [filter]="true"
+                        filterBy="name" />
+                    <label for="productType">Product Type</label>
+                </div>
+
+            </p-floatLabel>
+        </div>
         <div class="lg:w-1/4 w-full mb-3 flex items-center gap-2">
             <input id="isActive" type="checkbox" [formField]="productForm.isActive" class="w-auto" />
             <label for="isActive" class="mb-0 !text-lg font-medium gradient-heading">Active</label>
@@ -34,10 +70,10 @@
         </div>
     </div>
 </form>
-@if(productList().length > 0){
 <div class="flex flex-wrap global-div mt-4 p-4">
     <div class="w-full">
-        <p-table #dt [value]="productList()" [rows]="20" [tableStyle]="{ 'min-width': '50rem' }">
+        <p-table #dt [value]="productList()" [rows]="20" [lazy]="true" (onLazyLoad)="loadProducts()"
+            [tableStyle]="{ 'min-width': '50rem' }">
             <ng-template pTemplate="header">
                 <tr>
                     <th>Serial No</th>
@@ -59,7 +95,7 @@
                     <td>{{products.productNumber}}</td>
                     <td>{{products.productType}}</td>
                     <td>{{products.uom}}</td>
-                    <td>{{products.category}}</td>
+                    <td>{{products.productCategory}}</td>
                     <td>{{products.brand}}</td>
                     <td>
                         <span class="status-dot" [ngClass]="products.isActive ? 'active' : 'inactive'"></span>
@@ -68,6 +104,11 @@
                     <td>
                         <button class="me-3" (click)="editProduct(products.id)"><span
                                 class="material-symbols-outlined icon-color">edit</span></button>
+                        <button (click)="getProductReport(products.id)">
+                            <span class="material-symbols-outlined icon-color">
+                                description
+                            </span>
+                        </button>
                     </td>
 
                 </tr>
@@ -84,4 +125,3 @@
 
     </div>
 </div>
-}

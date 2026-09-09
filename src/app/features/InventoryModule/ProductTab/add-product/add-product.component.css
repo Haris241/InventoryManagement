@@ -13,12 +13,14 @@
   .fields-grid {
     grid-template-columns: repeat(2, 1fr);
   }
+
   .fields-grid--5 {
     grid-template-columns: repeat(3, 1fr);
   }
 }
 
 @media (max-width: 640px) {
+
   .fields-grid,
   .fields-grid--5 {
     grid-template-columns: 1fr;

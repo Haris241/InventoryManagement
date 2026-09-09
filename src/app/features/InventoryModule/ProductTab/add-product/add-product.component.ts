@@ -277,7 +277,20 @@ export class AddProductComponent implements OnInit {
     this.backendErrors.set({});
     const formvalue = this.productForm().value() as ProductDTO;
 
-    this.productService.saveProduct(formvalue, this.isEditMode())
+    //Filters empty Attributes
+    const payload: ProductDTO = {
+      ...formvalue,
+      variants: formvalue.variants.map(variant => ({
+        ...variant,
+        attributeValues: (variant.attributeValues ?? [])
+          .filter(attribute =>
+            attribute.attributeDefinitionId != null &&
+            attribute.attributeValueId != null
+          )
+      }))
+    };
+
+    this.productService.saveProduct(payload, this.isEditMode())
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => {
@@ -292,6 +305,9 @@ export class AddProductComponent implements OnInit {
             ...this.productService.createDefaultProduct(),
             variants: [{ ...this.productService.createDefaultVariant() }]
           });
+          //Remove Images
+          this.variantImagePreviews.set({});
+
           this.submit.set(false);
           this.formSubmitted.set(false);
         },
@@ -328,6 +344,15 @@ export class AddProductComponent implements OnInit {
       .subscribe({
         next: (data) => {
           this.productModel.set(data);
+          const previews: Record<number, string> = {};
+
+          data.variants.forEach((variant, index) => {
+            if (variant.imageUrl) {
+              previews[index] = variant.imageUrl;
+            }
+          });
+
+          this.variantImagePreviews.set(previews);
           this.existingVariantIds.set(this.productService.extractExistingVariantIds(data));
         },
         error: (err) => {

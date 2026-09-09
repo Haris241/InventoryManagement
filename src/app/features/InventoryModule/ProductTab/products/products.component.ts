@@ -7,15 +7,16 @@ import { PaginationService } from '../../../../services/pagination.service';
 import { DataLayerService } from '../../../../services/data-layer.service';
 import { AutoDropdown } from '../../../../Models/Pagination.model';
 import { ProductListDTO, ProductSearchDTO, ProductType } from '../../../../Models/Inventory/Product.model';
-import { enumToOptions } from '../../../../shared/Utility';
+import { enumToOptions, openLoadingTab, showBlobInTab } from '../../../../shared/Utility';
 import { form, FormField } from '@angular/forms/signals';
 import { FormsModule } from '@angular/forms';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { CommonModule } from '@angular/common';
+import { SelectModule } from 'primeng/select';
 
 @Component({
   selector: 'app-products',
-  imports: [TableModule, AutoCompleteModule, FormsModule, FloatLabelModule, FormField, CommonModule],
+  imports: [TableModule, AutoCompleteModule, SelectModule, FormsModule, FloatLabelModule, FormField, CommonModule],
   templateUrl: './products.component.html',
   styleUrl: './products.component.css',
 })
@@ -30,7 +31,7 @@ export class ProductsComponent {
   productSearchList = this.productSearch.result;
   productCategory = this.pagination.autoSearchDropdown<AutoDropdown>('DropDowns/ProductCategories');
   productCategoryList = this.productCategory.result;
-  brand = this.pagination.autoSearchDropdown<AutoDropdown>('DropDowns/Brands');
+  brand = this.pagination.autoSearchDropdown<AutoDropdown>('DropDowns/BrandsList');
   brandList = this.brand.result;
   productTypes = signal(enumToOptions(ProductType, true));
 
@@ -107,5 +108,18 @@ export class ProductsComponent {
       searchtermsignal.set(search);
     }
   }
+  getProductReport(id: string) {
+    const newTab = openLoadingTab();
+
+    this.dataService.getReport('Products/report', id)
+      .subscribe({
+        next: (blob) => showBlobInTab(newTab, blob, `Product-Report-${id}.pdf`),
+        error: (err) => {
+          if (newTab) newTab.close();
+          this.base.handleError(err, err.error?.message);
+        }
+      });
+  }
+
 
 }
