@@ -1,22 +1,25 @@
 import { HttpErrorResponse, HttpEvent, HttpHandlerFn, HttpRequest } from "@angular/common/http";
 import { inject } from "@angular/core";
-import { catchError, Observable, switchMap, throwError } from "rxjs";
+import { BehaviorSubject, catchError, filter, Observable, switchMap, take, throwError } from "rxjs";
 import { BaseApiService } from "../../services/base-api.service";
 import { MessageService } from "primeng/api";
 
 const EXCLUDED_URLS = ['/login', '/register', '/refresh'];
+
+let isRefreshing = false;
+const refreshTokenSubject = new BehaviorSubject<string | null>(null);
 
 function isExcludedRoute(url: string): boolean {
     return EXCLUDED_URLS.some(path => url.toLowerCase().includes(path));
 }
 
 function attachToken(req: HttpRequest<unknown>, token: string): HttpRequest<unknown> {
-    return req.clone({
-        setHeaders: { Authorization: `Bearer ${token}` }
-    });
+    return req.clone({ setHeaders: { Authorization: `Bearer ${token}` } });
 }
 
 function handleRefreshFailure(auth: BaseApiService, msg: MessageService, err: unknown): Observable<never> {
+    isRefreshing = false;
+    refreshTokenSubject.next(null);
     (err as any).handled = true;
     auth.logout();
     msg.add({
@@ -42,14 +45,27 @@ export function refreshtokenInterceptor(req: HttpRequest<unknown>, next: HttpHan
     return next(authReq).pipe(
         catchError((error: HttpErrorResponse) => {
             if (error.status === 401) {
-                return auth.refreshtoken().pipe(
-                    switchMap(res => {
-                        // Extract token string if refreshtoken() returns an object like { accessToken: string }
-                        const newTokenString = typeof res === 'string' ? res : (res as any)?.accessToken;
-                        return next(attachToken(req, newTokenString));
-                    }),
-                    catchError(err => handleRefreshFailure(auth, msg, err))
-                );
+                if (!isRefreshing) {
+                    isRefreshing = true;
+                    refreshTokenSubject.next(null);
+
+                    return auth.refreshtoken().pipe(
+                        switchMap(res => {
+                            const newTokenString = typeof res === 'string' ? res : (res as any)?.accessToken;
+                            isRefreshing = false;
+                            refreshTokenSubject.next(newTokenString);
+                            return next(attachToken(req, newTokenString));
+                        }),
+                        catchError(err => handleRefreshFailure(auth, msg, err))
+                    );
+                } else {
+                    // A refresh is already in flight — wait for it instead of firing another one
+                    return refreshTokenSubject.pipe(
+                        filter(t => t !== null),
+                        take(1),
+                        switchMap(newToken => next(attachToken(req, newToken as string)))
+                    );
+                }
             }
             return throwError(() => error);
         })
