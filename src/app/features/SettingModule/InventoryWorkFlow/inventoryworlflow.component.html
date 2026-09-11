@@ -1,0 +1,92 @@
+<!-- (Instructions Buttons) -->
+
+<div class="w-full grid grid-cols-2 lg:flex lg:justify-end lg:items-center mb-4 gap-2">
+    <button type="button" class="blog-button flex items-center justify-center whitespace-nowrap"
+        routerLink="/Docs/InventoryWorkFlowDocs">
+        <span class="material-symbols-outlined mr-1">article</span>
+        Read Instructions
+    </button>
+</div>
+<!-- Inventory Workflow Edit Form -->
+<form (ngSubmit)="updateInventoryWorkflow($event)">
+    <div class="flex flex-wrap global-div p-5">
+        <div class="w-full mb-4">
+            <h3 class="text-2xl font-semibold text-center mb-3">
+                <span class="gradient-heading">Manage Inventory Workflow</span>
+            </h3>
+            <hr class="second-color">
+        </div>
+
+        <div class="w-full mb-3">
+            <div class="lg:w-1/2 w-full">
+                <p class="note-banner">
+                    Note: Configure the workflows and voucher posting point according to your business needs.
+                </p>
+            </div>
+        </div>
+
+
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <p-select [(ngModel)]="inventoryWorkflowModel().postingPoint" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('postingPoint',$event)" [options]="postingPointList()"
+                        optionLabel="name" optionValue="value" class="w-full" />
+                    <label for="postingPoint" class="required">Voucher Posting Point</label>
+                </div>
+            </p-floatLabel>
+            <app-field-errorS [field]="inventoryWorkflowForm.postingPoint" [submit]="formSubmitted()"
+                [backendErrors]="backendErrors()">
+            </app-field-errorS>
+
+        </div>
+        <div class="lg:w-1/4 w-full mb-3 flex items-center gap-2">
+            <input id="enableDemand" type="checkbox" [formField]="inventoryWorkflowForm.enableDemand" class="w-auto" />
+            <label for="enableDemand" class="mb-0 !text-lg font-medium gradient-heading">Enable Demand</label>
+        </div>
+        <div class="lg:w-1/4 w-full mb-3 flex items-center gap-2">
+            <input id="enableGateEntry" type="checkbox" [formField]="inventoryWorkflowForm.enableGateEntry"
+                class="w-auto" />
+            <label for="enableGateEntry" class="mb-0 !text-lg font-medium gradient-heading">Enable Gate Entry</label>
+        </div>
+        <div class="lg:w-1/4 w-full mb-3 flex items-center gap-2">
+            <input id="enableGRN" type="checkbox" [formField]="inventoryWorkflowForm.enableGRN" class="w-auto" />
+            <label for="enableGRN" class="mb-0 !text-lg font-medium gradient-heading">Enable GRN</label>
+        </div>
+        <div class="lg:w-1/4 w-full mb-3 flex items-center gap-2">
+            <input id="enableOutwardGatePass" type="checkbox" [formField]="inventoryWorkflowForm.enableOutwardGatePass"
+                class="w-auto" />
+            <label for="enableOutwardGatePass" class="mb-0 !text-lg font-medium gradient-heading">Enable Outward Gate
+                Pass</label>
+        </div>
+        <div class="lg:w-1/4 w-full mb-3 flex items-center gap-2">
+            <input id="enableInternalMovement" type="checkbox"
+                [formField]="inventoryWorkflowForm.enableInternalMovement" class="w-auto" />
+            <label for="enableInternalMovement" class="mb-0 !text-lg font-medium gradient-heading">Enable Internal
+                Movement</label>
+        </div>
+        <div class="lg:w-1/4 w-full mb-3 flex items-center gap-2">
+            <input id="requirePOForGRN" type="checkbox" [formField]="inventoryWorkflowForm.requirePOForGRN"
+                class="w-auto" />
+            <label for="requirePOForGRN" class="mb-0 !text-lg font-medium gradient-heading">Require PO For GRN</label>
+        </div>
+
+        <!-- Errors -->
+        <div class="w-full mt-3">
+            <ul class="text-red-500 text-sm font-medium pl-4">
+                @if (errors()) {
+                @for (e of errors(); track e) {
+                <li>{{ e }}</li>
+                }
+                }
+            </ul>
+        </div>
+
+
+        <div class="w-full flex justify-center m-3">
+            <button class="global-button" type="submit" [disabled]="submit()">
+                {{ submit() ? 'Processing...' : 'Update' }}
+            </button>
+        </div>
+    </div>
+</form>

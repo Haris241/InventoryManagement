@@ -29,3 +29,19 @@ export interface NotificationEnvelope {
     timestamp: string;
     persist: boolean;
 }
+export interface InventoryWorkflowDto {
+    id: string;
+    enableDemand: boolean;
+    enableGateEntry: boolean;
+    enableGRN: boolean;
+    enableOutwardGatePass: boolean;
+    enableInternalMovement: boolean;
+    requirePOForGRN: boolean;
+    postingPoint: VoucherPostingPoint;
+
+}
+export enum VoucherPostingPoint {
+    Purchase,
+    GRN,
+    ManualInvoice
+}

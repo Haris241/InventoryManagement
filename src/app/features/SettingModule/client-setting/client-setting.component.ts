@@ -1,16 +1,15 @@
 import { Component, DestroyRef, inject, signal } from '@angular/core';
-import { ClientSettingGetDTO, ClientSettingUpdateDTO } from '../../Models/ClientSetting.model';
 import { form, FormField, required } from '@angular/forms/signals';
-import { ActivatedRoute } from '@angular/router';
-import { BaseApiService } from '../../services/base-api.service';
-import { DataLayerService } from '../../services/data-layer.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FloatLabel } from "primeng/floatlabel";
 import { CommonModule } from '@angular/common';
 import { InputTextModule } from 'primeng/inputtext';
 import { FormsModule } from '@angular/forms';
-import { FieldErrorSComponent } from '../field-error-s/field-error-s.component';
-import { FormDataService } from '../../services/formData.service';
+import { BaseApiService } from '../../../services/base-api.service';
+import { FormDataService } from '../../../services/formData.service';
+import { DataLayerService } from '../../../services/data-layer.service';
+import { ClientSettingGetDTO, ClientSettingUpdateDTO } from '../../../Models/ClientSetting.model';
+import { FieldErrorSComponent } from '../../../shared/field-error-s/field-error-s.component';
 
 @Component({
   selector: 'app-client-setting',
@@ -19,7 +18,6 @@ import { FormDataService } from '../../services/formData.service';
   styleUrl: './client-setting.component.css',
 })
 export class ClientSettingComponent {
-  private readonly route = inject(ActivatedRoute);
   private readonly destroyRef = inject(DestroyRef);
   private base = inject(BaseApiService);
   private dataService = inject(DataLayerService);
@@ -41,7 +39,7 @@ export class ClientSettingComponent {
 
   //Load Client Setting Data
   loadClientSetting() {
-    this.dataService.getAll<ClientSettingGetDTO>('ClientSetting').pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+    this.dataService.getAll<ClientSettingGetDTO>('ClientSetting/client-settings').pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (data: ClientSettingGetDTO) => {
         this.clientSettingModel.set(data);
         this.imagePreview.set(data.imagePath);
@@ -86,7 +84,7 @@ export class ClientSettingComponent {
       formvalue.imageFile = this.selectedImage;
     }
     const formdata = this.formservice.buildFormData(formvalue);
-    this.dataService.edit('ClientSetting', formvalue.id, formdata).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+    this.dataService.edit('ClientSetting/client-settings', formvalue.id, formdata).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (res) => {
         this.base.globalMessage('success', 'Client Setting Updated Successfully', false);
         this.submit.set(false);
