@@ -1,29 +1,136 @@
-<form [formGroup]="addSupplier" (ngSubmit)="createSupplier()">
+<form (ngSubmit)="createSupplier($event)">
   <div class="flex flex-wrap global-div p-5">
     <div class="w-full mb-4">
-      <h3 class="text-2xl font-semibold text-center second-color mb-3">Add Supplier Information</h3>
+      @if(isEditMode()){
+      <h3 class="text-2xl font-semibold text-center mb-3">
+        <span class="gradient-heading">Edit Supplier</span>
+      </h3>
+      }@else{
+      <h3 class="text-2xl font-semibold text-center mb-3">
+        <span class="gradient-heading">Add Supplier</span>
+      </h3>
+      }
       <hr class="second-color">
     </div>
-    <div class="md:w-1/2 w-full mb-3">
-      <label for="name">Supplier Name *</label>
-      <div class="md:w-1/2 w-2/3">
-        <input pInputText pSize="small" id="name" autocomplete="off" type="text" formControlName="name"
-          class="w-full">
-        @if (submit && addSupplier.get('name')?.invalid) {
-        <small style="color: red;">Name is required</small>
-        }
-      </div>
-    </div>
 
-    <div class="md:w-1/2 w-full mb-3">
-      <label for="contact">Contact</label>
-      <div class="md:w-1/2 w-2/3">
-        <input pInputText pSize="small" id="contact" autocomplete="off" type="text" formControlName="contact"
-        class="w-full">
-      </div>
+    <div class="lg:w-1/4 w-full mb-3">
+      <p-floatLabel variant="on">
+        <div class="lg:w-8/12 w-full">
+          <input pInputText pSize="small" id="value" autocomplete="off" type="text" class="w-full"
+            [formField]="supplierForm.name">
+          <label for="value" class="required">Name</label>
+        </div>
+      </p-floatLabel>
+      <app-field-errorS [field]="supplierForm.name" [submit]="formSubmitted()" [backendErrors]="backendErrors()">
+      </app-field-errorS>
     </div>
-    <div class="md:w-1/2 w-full mb-3">
-      <button class="global-button">Add Supplier</button>
+    <div class="lg:w-1/4 w-full mb-3">
+      <p-floatLabel variant="on">
+        <div class="lg:w-8/12 w-full">
+          <input pInputText pSize="small" id="code" autocomplete="off" type="text" class="w-full"
+            [formField]="supplierForm.code">
+          <label for="code" class="required">Code</label>
+        </div>
+      </p-floatLabel>
+      <app-field-errorS [field]="supplierForm.code" [submit]="formSubmitted()" [backendErrors]="backendErrors()">
+      </app-field-errorS>
     </div>
+    <div class="lg:w-1/4 w-full mb-3">
+      <p-floatLabel variant="on">
+        <div class="lg:w-8/12 w-full">
+          <input pInputText pSize="small" id="contactPerson" autocomplete="off" type="text" class="w-full"
+            [formField]="supplierForm.contactPerson">
+          <label for="contactPerson">Contact Person</label>
+        </div>
+      </p-floatLabel>
+    </div>
+    <div class="lg:w-1/4 w-full mb-3">
+      <p-floatLabel variant="on">
+        <div class="lg:w-8/12 w-full">
+          <input pInputText pSize="small" id="email" autocomplete="off" type="text" class="w-full"
+            [formField]="supplierForm.email">
+          <label for="email">Email</label>
+        </div>
+      </p-floatLabel>
+    </div>
+    <div class="lg:w-1/4 w-full mb-3">
+      <p-floatLabel variant="on">
+        <div class="lg:w-8/12 w-full">
+          <input pInputText pSize="small" id="phone" autocomplete="off" type="text" class="w-full"
+            [formField]="supplierForm.phone">
+          <label for="phone">Phone</label>
+        </div>
+      </p-floatLabel>
+    </div>
+    <div class="lg:w-1/4 w-full mb-3">
+      <p-floatLabel variant="on">
+        <div class="lg:w-8/12 w-full">
+          <input pInputText pSize="small" id="address" autocomplete="off" type="text" class="w-full"
+            [formField]="supplierForm.address">
+          <label for="address">Address</label>
+        </div>
+      </p-floatLabel>
+    </div>
+    <div class="lg:w-1/4 w-full mb-3">
+      <p-floatLabel variant="on">
+        <div class="lg:w-8/12 w-full">
+          <input pInputText pSize="small" id="city" autocomplete="off" type="text" class="w-full"
+            [formField]="supplierForm.city">
+          <label for="city">City</label>
+        </div>
+      </p-floatLabel>
+    </div>
+    <div class="lg:w-1/4 w-full mb-3">
+      <p-floatLabel variant="on">
+        <div class="lg:w-8/12 w-full">
+          <input pInputText pSize="small" id="country" autocomplete="off" type="text" class="w-full"
+            [formField]="supplierForm.country">
+          <label for="country">Country</label>
+        </div>
+      </p-floatLabel>
+    </div>
+    <div class="lg:w-1/4 w-full mb-3">
+      <p-floatLabel variant="on">
+        <div class="lg:w-8/12 w-full">
+          <p-select [(ngModel)]="supplierModel().chartOfAccountId" [ngModelOptions]="{standalone: true}"
+            (ngModelChange)="updateField('chartOfAccountId',$event)" [options]="coaSupplierList()" optionLabel="name"
+            optionValue="id" class="w-full" inputId="chartOfAccountId" [showClear]="true" [filter]="true"
+            filterBy="name" />
+          <label for="chartOfAccountId" class="required">Chart Of Account</label>
+        </div>
+      </p-floatLabel>
+      <app-field-errorS [field]="supplierForm.chartOfAccountId" [submit]="formSubmitted()"
+        [backendErrors]="backendErrors()">
+      </app-field-errorS>
+    </div>
+    @if(isEditMode()){
+    <div class="lg:w-1/4 w-full mb-3 flex items-center gap-2">
+      <input id="isActive" type="checkbox" [formField]="supplierForm.isActive" class="w-auto" />
+      <label for="isActive" class="mb-0 !text-lg font-medium gradient-heading">Active</label>
+    </div>
+    }
+
+
+    <div class="w-full flex justify-center m-3">
+      @if(isEditMode()){
+      <button class="global-button" type="submit" [disabled]="submit()">
+        {{ submit() ? 'Processing...' : 'Update Supplier' }}
+      </button>
+      }@else{
+      <button class="global-button" type="submit" [disabled]="submit()">
+        {{ submit() ? 'Processing...' : 'Create Supplier' }}
+      </button>
+      }
+    </div>
+    <!-- Tell User to first Add Supplier Account Usage Dto to Proceed -->
+    @if(!isEditMode() && coaSupplierList().length === 0){
+    <div class="w-full text-center">
+      <p class="p-6 text-center text-gray-500">Please Add Supplier Chart of Account with Usage Type
+        <strong>'Supplier'</strong>
+        in <strong>'Chart Of Accounts'</strong> Tab to
+        Proceed</p>
+    </div>
+    }
   </div>
+
 </form>

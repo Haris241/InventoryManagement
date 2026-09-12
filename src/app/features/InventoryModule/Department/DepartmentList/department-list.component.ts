@@ -11,23 +11,23 @@ import { form, FormField } from '@angular/forms/signals';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { SelectModule } from 'primeng/select';
 import { CommonModule } from '@angular/common';
-import { ProductAttributeValueList, ProductAttributeValueSearch } from '../../../../Models/Inventory/AttributeValue.model';
+import { DepartmentListDto, DepartmentSearch } from '../../../../Models/Inventory/Department.model';
 
 @Component({
-  selector: 'app-product-attribute-value-list',
+  selector: 'app-department-list',
   imports: [TableModule, AutoCompleteModule, FormsModule, FloatLabelModule, SelectModule, FormField, CommonModule],
-  templateUrl: './product-attribute-value-list.component.html',
-  styleUrl: './product-attribute-value-list.component.css',
+  templateUrl: './department-list.component.html',
+  styleUrl: './department-list.component.css',
 })
-export class ProductAttributeValueListComponent {
+export class DepartmentListComponent {
   base = inject(BaseApiService);
   router = inject(Router);
   pagination = inject(PaginationService);
   dataService = inject(DataLayerService);
 
-  attributeValueList = signal<ProductAttributeValueList[]>([]);
-  attributeSearch = this.pagination.autoSearchDropdown<AutoDropdown>('DropDowns/AttributeValuesList');
-  attributeSearchList = this.attributeSearch.result;
+  departmentList = signal<DepartmentListDto[]>([]);
+  departmentSearch = this.pagination.autoSearchDropdown<AutoDropdown>('DropDowns/DepartmentList');
+  departmentSearchList = this.departmentSearch.result;
 
   //pagination signals
   hasNextPage = signal<boolean>(false);
@@ -39,36 +39,36 @@ export class ProductAttributeValueListComponent {
   backendErrors = signal<Record<string, string[]>>({});
 
   //Model For FormData
-  private readonly initialModel: ProductAttributeValueSearch = {
+  private readonly initialModel: DepartmentSearch = {
     id: null,
     isActive: true,
     nextCursor: null,
     previousCursor: null,
   };
   //Signal Model For FormData
-  attributeValueModel = signal<ProductAttributeValueSearch>({ ...this.initialModel });
+  departmentModel = signal<DepartmentSearch>({ ...this.initialModel });
 
   // Signal form with validation schema
-  attributeValueForm = form(this.attributeValueModel);
+  departmentForm = form(this.departmentModel);
 
   //Method to Update Fields For Non supporting Primeng Fields
-  updateField<K extends keyof ProductAttributeValueSearch>(field: K, value: ProductAttributeValueSearch[K]) {
-    this.attributeValueModel.update(prev => ({
+  updateField<K extends keyof DepartmentSearch>(field: K, value: DepartmentSearch[K]) {
+    this.departmentModel.update(prev => ({
       ...prev,
       [field]: value
     }));
   }
 
-  loadAttributeValues(direction: 'next' | 'previous' | 'fresh' = 'fresh') {
-    const formValue = this.attributeValueForm().value();
+  loadDepartments(direction: 'next' | 'previous' | 'fresh' = 'fresh') {
+    const formValue = this.departmentForm().value();
     this.formSubmitted.set(true);
 
 
     // attach cursors based on direction
     const payload = { ...formValue, nextCursor: direction === 'next' ? this.nextCursor() : null, previousCursor: direction === 'previous' ? this.previousCursor() : null };
-    this.pagination.getDataCursor<ProductAttributeValueList, ProductAttributeValueSearch>('ProductAttributeValue/GetAll', payload).subscribe({
+    this.pagination.getDataCursor<DepartmentListDto, DepartmentSearch>('Department/GetAll', payload).subscribe({
       next: (result) => {
-        this.attributeValueList.set(result.data);
+        this.departmentList.set(result.data);
         this.hasNextPage.set(result.hasNextPage);
         this.hasPreviousPage.set(result.hasPreviousPage);
         this.nextCursor.set(result.nextCursor ?? null);
@@ -86,11 +86,11 @@ export class ProductAttributeValueListComponent {
   OnSearch() {
     this.nextCursor.set(null);
     this.previousCursor.set(null);
-    this.loadAttributeValues('fresh');
+    this.loadDepartments('fresh');
   }
 
-  editAttributeValue(id: string) {
-    this.router.navigate(['Inventory/editproductattribute', id]);
+  editDepartment(id: string) {
+    this.router.navigate(['Inventory/editdepartment', id]);
   }
   SearchDropDown(event: { query: string }, searchtermsignal: WritableSignal<string>) {
     const search = event.query?.trim() ?? '';
@@ -98,5 +98,4 @@ export class ProductAttributeValueListComponent {
       searchtermsignal.set(search);
     }
   }
-
 }

@@ -1,71 +1,101 @@
-import { Component,CUSTOM_ELEMENTS_SCHEMA, inject, signal } from '@angular/core';
+import { Component, WritableSignal, inject, signal } from '@angular/core';
 import { TableModule } from 'primeng/table';
-import { RouterLink } from '@angular/router';
-import { ToastModule } from 'primeng/toast';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { AutoCompleteModule } from 'primeng/autocomplete';
+import { FormsModule } from '@angular/forms';
 import { BaseApiService } from '../../../../services/base-api.service';
 import { DataLayerService } from '../../../../services/data-layer.service';
-import { PaginationResult } from '../../../../Models/Pagination.model';
-import { Supplier } from '../../../../Models/Supplier.model';
+import { Router } from '@angular/router';
+import { PaginationService } from '../../../../services/pagination.service';
+import { AutoDropdown } from '../../../../Models/Pagination.model';
+import { form, FormField } from '@angular/forms/signals';
+import { FloatLabelModule } from 'primeng/floatlabel';
+import { SelectModule } from 'primeng/select';
+import { CommonModule } from '@angular/common';
+import { SupplierListDto, SupplierSearch } from '../../../../Models/Inventory/Supplier.model';
 
 @Component({
   selector: 'app-suppliers',
-  imports: [TableModule,RouterLink, ToastModule],
+  imports: [TableModule, AutoCompleteModule, FormsModule, FloatLabelModule, SelectModule, FormField, CommonModule],
   templateUrl: './suppliers.component.html',
-  styleUrl: './suppliers.component.css',
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  styleUrl: './suppliers.component.css'
 })
 export class SuppliersComponent {
-  constructor(){}
-  confimation = inject(ConfirmationService);
-  base=inject(BaseApiService);
-  dataService=inject(DataLayerService);
-  msg = inject(MessageService);
-  suppliers=signal<PaginationResult<Supplier>>({
-    items: [],
-    pageNumber: 1,
-    pageSize: 10,
-    hasNextPage: false,
-    hasPreviousPage: false
-  });
+  base = inject(BaseApiService);
+  router = inject(Router);
+  pagination = inject(PaginationService);
+  dataService = inject(DataLayerService);
 
-  ngOnInit(){
-    // this.api.getAll<PaginationResult<Supplier>>("Supplier").subscribe({
-    //   next:(data:PaginationResult<Supplier>)=>{
-    //     this.suppliers.set(data);
-    //   },
-    //   error:(err)=>{
-    //     this.api.handleError(err,err.error.message);
-    //   }
-    // });
+  supplierList = signal<SupplierListDto[]>([]);
+  supplierSearch = this.pagination.autoSearchDropdown<AutoDropdown>('DropDowns/SuppliersList');
+  supplierSearchList = this.supplierSearch.result;
+
+  //pagination signals
+  hasNextPage = signal<boolean>(false);
+  hasPreviousPage = signal<boolean>(false);
+  nextCursor = signal<string | null>(null);
+  previousCursor = signal<string | null>(null);
+
+  formSubmitted = signal<boolean>(false);
+  backendErrors = signal<Record<string, string[]>>({});
+
+  //Model For FormData
+  private readonly initialModel: SupplierSearch = {
+    id: null,
+    isActive: true,
+    nextCursor: null,
+    previousCursor: null,
+  };
+  //Signal Model For FormData
+  supplierFormModel = signal<SupplierSearch>({ ...this.initialModel });
+
+  // Signal form with validation schema
+  supplierForm = form(this.supplierFormModel);
+
+  //Method to Update Fields For Non supporting Primeng Fields
+  updateField<K extends keyof SupplierSearch>(field: K, value: SupplierSearch[K]) {
+    this.supplierFormModel.update(prev => ({
+      ...prev,
+      [field]: value
+    }));
   }
-  deleteSupplier(id: string){
-    this.confimation.confirm({
-      message: 'Are you sure you want to delete this Supplier?',
-      header: 'Supplier Delete Confirmation',
-      acceptButtonStyleClass: 'p-button-success',
-      rejectButtonStyleClass: 'p-button-danger',
-      acceptLabel: 'Yes',
-      rejectLabel: 'No',
-      accept:()=>{
-        this.dataService.delete<void>('Supplier',id).subscribe({
-          next:()=>{
-            this.suppliers.update(supplier=>({
-              ...supplier,items: supplier.items.filter(s=>s.id!==id)}));
-            this.msg.add({
-              severity: 'success',
-              summary: 'Success',
-              detail: 'Supplier Deleted Successfully'
-            });
-          },
-          error:(err)=>{
-            this.base.handleError(err)
-          }
-        });
+
+  loadSuppliers(direction: 'next' | 'previous' | 'fresh' = 'fresh') {
+    const formValue = this.supplierForm().value();
+    this.formSubmitted.set(true);
+
+
+    // attach cursors based on direction
+    const payload = { ...formValue, nextCursor: direction === 'next' ? this.nextCursor() : null, previousCursor: direction === 'previous' ? this.previousCursor() : null };
+    this.pagination.getDataCursor<SupplierListDto, SupplierSearch>('Supplier/GetAll', payload).subscribe({
+      next: (result) => {
+        this.supplierList.set(result.data);
+        this.hasNextPage.set(result.hasNextPage);
+        this.hasPreviousPage.set(result.hasPreviousPage);
+        this.nextCursor.set(result.nextCursor ?? null);
+        this.previousCursor.set(result.previousCursor ?? null);
+        this.formSubmitted.set(false);
+
       },
-      reject: ()=>{
+      error: (err) => {
+        this.base.handleError(err, err.error.message);
+        this.formSubmitted.set(false);
 
       }
-    });
+    })
+  }
+  OnSearch() {
+    this.nextCursor.set(null);
+    this.previousCursor.set(null);
+    this.loadSuppliers('fresh');
+  }
+
+  editSupplier(id: string) {
+    this.router.navigate(['Inventory/editsupplier', id]);
+  }
+  SearchDropDown(event: { query: string }, searchtermsignal: WritableSignal<string>) {
+    const search = event.query?.trim() ?? '';
+    if (search.length >= 1) {
+      searchtermsignal.set(search);
+    }
   }
 }

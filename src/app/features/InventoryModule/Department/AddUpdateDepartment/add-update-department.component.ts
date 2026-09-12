@@ -10,17 +10,17 @@ import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
 import { FieldErrorSComponent } from '../../../../shared/field-error-s/field-error-s.component';
 import { PaginationService } from '../../../../services/pagination.service';
-import { AutoDropdown } from '../../../../Models/Pagination.model';
 import { AutoCompleteModule } from 'primeng/autocomplete';
-import { SupplierDto } from '../../../../Models/Inventory/Supplier.model';
+import { ProductAttributeValueDto } from '../../../../Models/Inventory/AttributeValue.model';
+import { DepartmentDto } from '../../../../Models/Inventory/Department.model';
 
 @Component({
-  selector: 'app-add-supplier',
+  selector: 'app-add-update-department',
   imports: [AutoCompleteModule, FieldErrorSComponent, FormField, FormsModule, FloatLabelModule, InputTextModule, SelectModule],
-  templateUrl: './add-supplier.component.html',
-  styleUrl: './add-supplier.component.css'
+  templateUrl: './add-update-department.component.html',
+  styleUrl: './add-update-department.component.css',
 })
-export class AddSupplierComponent {
+export class AddUpdateDepartmentComponent {
   dataService = inject(DataLayerService);
   destroyRef = inject(DestroyRef);
   base = inject(BaseApiService);
@@ -28,71 +28,52 @@ export class AddSupplierComponent {
   submit = signal<boolean>(false);
   formSubmitted = signal<boolean>(false);
   backendErrors = signal<Record<string, string[]>>({});
-  coaSupplierList = signal<AutoDropdown[]>([]);
   isEditMode = signal<boolean>(false);
   activatedRoute = inject(ActivatedRoute);
   router = inject(Router);
 
   ngOnInit() {
-    this.GetChartOfAccounts();
     this.activatedRoute.paramMap.pipe(
       takeUntilDestroyed(this.destroyRef)).subscribe(param => {
         const id = param.get('id');
         if (id) {
 
           this.isEditMode.set(true);
-          this.loadSupplier(id);
+          this.loadDepartment(id);
         }
       });
   }
-  //Get DropDown List
-  GetChartOfAccounts() {
-    this.dataService.getAllSimple<AutoDropdown>('AccountsDropDown/COASupplierList').pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-      next: (res) => {
-        this.coaSupplierList.set(res);
-      },
-      error: (err) => {
-        this.base.handleError(err, err.error.message);
-      }
-    });
-  }
 
-  private readonly initialModel: SupplierDto = {
+
+
+  private readonly initialModel: DepartmentDto = {
     name: '',
     code: '',
-    contactPerson: '',
-    email: '',
-    phone: '',
-    address: '',
-    city: '',
-    country: '',
+    description: '',
     isActive: true,
-    chartOfAccountId: null,
-    chartOfAccountName: '',
   };
 
   //Signal Model For FormData
-  supplierModel = signal<SupplierDto>({ ...this.initialModel });
+  departmentModel = signal<DepartmentDto>({ ...this.initialModel });
 
 
   // Signal form with validation schema
-  supplierForm = form(this.supplierModel, (schemaPath) => {
+  departmentForm = form(this.departmentModel, (schemaPath) => {
     required(schemaPath.name, { message: 'Name is required' });
     required(schemaPath.code, { message: 'Code is required' });
-    required(schemaPath.chartOfAccountId, { message: 'Chart Of Account is required' });
   });
 
   //Method to Update Fields For Non supporting Primeng Fields
-  updateField<K extends keyof SupplierDto>(field: K, value: SupplierDto[K]) {
-    this.supplierModel.update(prev => ({
+  updateField<K extends keyof ProductAttributeValueDto>(field: K, value: ProductAttributeValueDto[K]) {
+    this.departmentModel.update(prev => ({
       ...prev,
       [field]: value
     }));
   }
 
 
-  //Creating Supplier
-  createSupplier(event: Event) {
+  //Creating Department
+  createDepartment(event: Event) {
     if (this.submit()) {
       return;
     }
@@ -100,34 +81,34 @@ export class AddSupplierComponent {
     event.preventDefault();
     this.submit.set(true);
     this.formSubmitted.set(true);
-    if (this.supplierForm().invalid()) {
-      this.supplierForm().markAsTouched();
+    if (this.departmentForm().invalid()) {
+      this.departmentForm().markAsTouched();
       this.submit.set(false);
       return;
     }
 
     //Accessing Form Value
     this.backendErrors.set({});
-    const formvalue = this.supplierForm().value() as SupplierDto;
+    const formvalue = this.departmentForm().value() as DepartmentDto;
 
     //for update and create
-    const url = `Supplier`;
+    const url = `Department`;
     const request$ = this.isEditMode() ?
-      this.dataService.edit<SupplierDto>(url, this.activatedRoute.snapshot.paramMap.get('id')!, formvalue)
-      : this.dataService.create<SupplierDto>(url, formvalue);
+      this.dataService.edit<DepartmentDto>(url, this.activatedRoute.snapshot.paramMap.get('id')!, formvalue)
+      : this.dataService.create<DepartmentDto>(url, formvalue);
 
     //Making Api Call
     request$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: () => {
         //Redirect To List For Edit
         if (this.isEditMode()) {
-          this.router.navigate(['Inventory', 'supplierlist']);
-          this.base.globalMessage('success', 'Supplier Updated Successfully', false);
+          this.router.navigate(['Inventory', 'departmentslist']);
+          this.base.globalMessage('success', 'Department Updated Successfully', false);
           return;
         }
-        this.base.globalMessage('success', 'Supplier Added Successfully', false);
+        this.base.globalMessage('success', 'Department Added Successfully', false);
 
-        this.supplierForm().reset({ ...this.initialModel });
+        this.departmentForm().reset({ ...this.initialModel });
         this.submit.set(false);
         this.formSubmitted.set(false);
       },
@@ -143,14 +124,14 @@ export class AddSupplierComponent {
 
   }
 
-  loadSupplier(id: string) {
-    this.dataService.getById<SupplierDto>('Supplier', id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+  loadDepartment(id: string) {
+    this.dataService.getById<DepartmentDto>('Department', id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (data) => {
-        this.supplierModel.set(data);
+        this.departmentModel.set(data);
       },
       error: (err) => {
         this.base.handleError(err, err.error?.message);
-        this.router.navigate(['Inventory', 'supplierlist']);
+        this.router.navigate(['Inventory', 'departmentslist']);
       }
     });
   }

@@ -24,12 +24,28 @@ export const inventoryRoutes: Routes = [
                 loadComponent: () => import('../features/InventoryModule/ProductTab/add-product/add-product.component').then(m => m.AddProductComponent)
             },
             {
-                path: 'suppliers',
+                path: 'supplierlist',
                 loadComponent: () => import('../features/InventoryModule/SupplierTab/suppliers/suppliers.component').then(m => m.SuppliersComponent)
             },
             {
                 path: 'addsupplier',
                 loadComponent: () => import('../features/InventoryModule/SupplierTab/add-supplier/add-supplier.component').then(m => m.AddSupplierComponent)
+            },
+            {
+                path: 'editsupplier/:id',
+                loadComponent: () => import('../features/InventoryModule/SupplierTab/add-supplier/add-supplier.component').then(m => m.AddSupplierComponent)
+            },
+            {
+                path: 'departmentslist',
+                loadComponent: () => import('../features/InventoryModule/Department/DepartmentList/department-list.component').then(m => m.DepartmentListComponent)
+            },
+            {
+                path: 'adddepartment',
+                loadComponent: () => import('../features/InventoryModule/Department/AddUpdateDepartment/add-update-department.component').then(m => m.AddUpdateDepartmentComponent)
+            },
+            {
+                path: 'editdepartment/:id',
+                loadComponent: () => import('../features/InventoryModule/Department/AddUpdateDepartment/add-update-department.component').then(m => m.AddUpdateDepartmentComponent)
             },
             {
                 path: 'productcategorieslist',

@@ -90,7 +90,23 @@ export const INVENTORY_LAYOUT_CONFIG: ModuleLayoutConfig = {
                 },
                 {
                     label: 'Supplier List',
-                    route: '/Inventory/suppliers'
+                    route: '/Inventory/supplierlist'
+                }
+            ]
+        },
+
+        {
+            key: 'Department',
+            icon: 'apartment',
+            label: 'Department',
+            children: [
+                {
+                    label: 'Add Department',
+                    route: '/Inventory/adddepartment'
+                },
+                {
+                    label: 'Department List',
+                    route: '/Inventory/departmentslist'
                 }
             ]
         }
