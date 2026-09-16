@@ -1,0 +1,81 @@
+<form (ngSubmit)="createTax($event)">
+    <div class="flex flex-wrap global-div p-5">
+        <div class="w-full mb-4">
+            @if(isEditMode()){
+            <h3 class="text-2xl font-semibold text-center mb-3">
+                <span class="gradient-heading">Edit Tax</span>
+            </h3>
+            }@else{
+            <h3 class="text-2xl font-semibold text-center mb-3">
+                <span class="gradient-heading">Add Tax</span>
+            </h3>
+            }
+            <hr class="second-color">
+        </div>
+        @if(isEditMode()){
+        <div class="w-full mb-3">
+            <div class="lg:w-1/2 w-full">
+                <p class="note-banner">Note: Some fields cannot be changed once tax is created.</p>
+            </div>
+        </div>
+        }
+
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <input pInputText pSize="small" id="name" autocomplete="off" type="text" class="w-full"
+                        [formField]="taxForm.name">
+                    <label for="name" class="required">Name</label>
+                </div>
+            </p-floatLabel>
+            <app-field-errorS [field]="taxForm.name" [submit]="formSubmitted()" [backendErrors]="backendErrors()">
+            </app-field-errorS>
+        </div>
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <input pInputText pSize="small" id="rate" autocomplete="off" type="number" class="w-full"
+                        [formField]="taxForm.rate">
+                    <label for="rate" class="required">Rate (%)</label>
+                </div>
+            </p-floatLabel>
+            <app-field-errorS [field]="taxForm.rate" [submit]="formSubmitted()" [backendErrors]="backendErrors()">
+            </app-field-errorS>
+        </div>
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <input pInputText pSize="small" id="description" autocomplete="off" type="text" class="w-full"
+                        [formField]="taxForm.description">
+                    <label for="description">Description</label>
+                </div>
+            </p-floatLabel>
+        </div>
+        <div class="lg:w-1/4 w-full mb-3 flex items-center gap-2">
+            <input id="isRecoverable" type="checkbox" [formField]="taxForm.isRecoverable" class="w-auto" />
+            <label for="isRecoverable" class="mb-0 !text-lg font-medium gradient-heading">Is Recoverable</label>
+        </div>
+
+
+        @if(isEditMode()){
+        <div class="lg:w-1/4 w-full mb-3 flex items-center gap-2">
+            <input id="isActive" type="checkbox" [formField]="taxForm.isActive" class="w-auto" />
+            <label for="isActive" class="mb-0 !text-lg font-medium gradient-heading">Active</label>
+        </div>
+        }
+
+
+        <div class="w-full flex justify-center m-3">
+            @if(isEditMode()){
+            <button class="global-button" type="submit" [disabled]="submit()">
+                {{ submit() ? 'Processing...' : 'Update Tax' }}
+            </button>
+            }@else{
+            <button class="global-button" type="submit" [disabled]="submit()">
+                {{ submit() ? 'Processing...' : 'Create Tax' }}
+            </button>
+            }
+        </div>
+    </div>
+
+</form>

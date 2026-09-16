@@ -36,6 +36,18 @@ export const accountsRoutes: Routes = [
                 loadComponent: () => import('../features/AccountsModule/COA/ChartOfAccountEdit/coa-edit.component').then(m => m.CoaEditComponent)
             },
             {
+                path: 'taxAdd',
+                loadComponent: () => import('../features/AccountsModule/Tax/AddUpdateTax/add-update-tax.component').then(m => m.AddUpdateTaxComponent)
+            },
+            {
+                path: 'taxList',
+                loadComponent: () => import('../features/AccountsModule/Tax/TaxList/tax-list.component').then(m => m.TaxListComponent)
+            },
+            {
+                path: 'taxEdit/:id',
+                loadComponent: () => import('../features/AccountsModule/Tax/AddUpdateTax/add-update-tax.component').then(m => m.AddUpdateTaxComponent)
+            },
+            {
                 path: 'voucherManager',
                 loadComponent: () => import('../features/AccountsModule/VoucherManager/AddVoucher/voucher-manger.component').then(m => m.VoucherMangerComponent),
                 children: [

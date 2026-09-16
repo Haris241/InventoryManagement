@@ -1,0 +1,169 @@
+<form (ngSubmit)="saveAccountMappings($event)">
+    <div class="flex flex-wrap global-div p-5">
+
+        <!-- Header -->
+        <div class="w-full mb-4">
+            <h3 class="text-2xl font-semibold text-center mb-3">
+                <span class="gradient-heading">Account Mappings</span>
+            </h3>
+            <hr class="second-color">
+        </div>
+
+        <div class="w-full mb-3">
+            <div class="lg:w-1/2 w-full">
+                <p class="note-banner">Map default Chart of Accounts for automated accounting posting transactions.</p>
+            </div>
+        </div>
+
+        <!-- ================= ASSET ACCOUNTS ================= -->
+        <div class="w-full mt-3">
+            <h4 class="text-lg font-semibold mb-4 text-primary">Asset Accounts</h4>
+        </div>
+
+        <!-- Inventory Default (Key: 1) -->
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-10/12 w-full">
+                    <p-autoComplete [ngModel]="selectedAccounts[AccountMappingKey.InventoryDefault]"
+                        [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="onAccountSelect(AccountMappingKey.InventoryDefault, $event)"
+                        (completeMethod)="SearchDropDown($event, assetAccountSearch.searchterm)"
+                        inputId="inventoryDefault" optionLabel="name" [dropdown]="true"
+                        [suggestions]="assetAccountSearch.result()" [showClear]="true" class="w-full">
+                    </p-autoComplete>
+                    <label for="inventoryDefault">Inventory Default Account</label>
+                </div>
+            </p-floatLabel>
+        </div>
+
+        <!-- Input Tax Account (Key: 6) -->
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-10/12 w-full">
+                    <p-autoComplete [ngModel]="selectedAccounts[AccountMappingKey.InputTaxAccount]"
+                        [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="onAccountSelect(AccountMappingKey.InputTaxAccount, $event)"
+                        (completeMethod)="SearchDropDown($event, assetAccountSearch.searchterm)"
+                        inputId="inputTaxAccount" optionLabel="name" [dropdown]="true"
+                        [suggestions]="assetAccountSearch.result()" [showClear]="true" class="w-full">
+                    </p-autoComplete>
+                    <label for="inputTaxAccount">Input Tax Account</label>
+                </div>
+            </p-floatLabel>
+
+        </div>
+
+
+        <!-- ================= LIABILITY ACCOUNTS ================= -->
+        <div class="w-full mt-3">
+            <h4 class="text-lg font-semibold mb-4 text-primary">Liability Accounts</h4>
+        </div>
+
+        <!-- GRNI (Key: 2) -->
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-10/12 w-full">
+                    <p-autoComplete [ngModel]="selectedAccounts[AccountMappingKey.GRNI]"
+                        [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="onAccountSelect(AccountMappingKey.GRNI, $event)"
+                        (completeMethod)="SearchDropDown($event, liabilityAccountSearch.searchterm)"
+                        inputId="grniAccount" optionLabel="name" [dropdown]="true"
+                        [suggestions]="liabilityAccountSearch.result()" [showClear]="true" class="w-full">
+                    </p-autoComplete>
+                    <label for="grniAccount">GRNI Account</label>
+                </div>
+            </p-floatLabel>
+        </div>
+
+        <!-- Output Tax Account (Key: 7) -->
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-10/12 w-full">
+                    <p-autoComplete [ngModel]="selectedAccounts[AccountMappingKey.OutputTaxAccount]"
+                        [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="onAccountSelect(AccountMappingKey.OutputTaxAccount, $event)"
+                        (completeMethod)="SearchDropDown($event, liabilityAccountSearch.searchterm)"
+                        inputId="outputTaxAccount" optionLabel="name" [dropdown]="true"
+                        [suggestions]="liabilityAccountSearch.result()" [showClear]="true" class="w-full">
+                    </p-autoComplete>
+                    <label for="outputTaxAccount">Output Tax Account</label>
+                </div>
+            </p-floatLabel>
+        </div>
+
+
+        <!-- ================= REVENUE ACCOUNTS ================= -->
+        <div class="w-full mt-3">
+            <h4 class="text-lg font-semibold mb-4 text-primary">Revenue Accounts</h4>
+        </div>
+
+        <!-- Sales (Key: 3) -->
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-10/12 w-full">
+                    <p-autoComplete [ngModel]="selectedAccounts[AccountMappingKey.Sales]"
+                        [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="onAccountSelect(AccountMappingKey.Sales, $event)"
+                        (completeMethod)="SearchDropDown($event, revenueAccountSearch.searchterm)"
+                        inputId="salesAccount" optionLabel="name" [dropdown]="true"
+                        [suggestions]="revenueAccountSearch.result()" [showClear]="true" class="w-full">
+                    </p-autoComplete>
+                    <label for="salesAccount">Sales Account</label>
+                </div>
+            </p-floatLabel>
+        </div>
+
+
+        <!-- ================= EXPENSE ACCOUNTS ================= -->
+        <div class="w-full mt-3">
+            <h4 class="text-lg font-semibold mb-4 text-primary">Expense Accounts</h4>
+        </div>
+
+        <!-- COGS (Key: 4) -->
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="w-full">
+                    <p-autoComplete [ngModel]="selectedAccounts[AccountMappingKey.COGS]"
+                        [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="onAccountSelect(AccountMappingKey.COGS, $event)"
+                        (completeMethod)="SearchDropDown($event, expenseAccountSearch.searchterm)" inputId="cogsAccount"
+                        optionLabel="name" [dropdown]="true" [suggestions]="expenseAccountSearch.result()"
+                        [showClear]="true" class="w-full">
+                    </p-autoComplete>
+                    <label for="cogsAccount">COGS Account</label>
+                </div>
+            </p-floatLabel>
+        </div>
+
+
+        <!-- ================= EQUITY ACCOUNTS ================= -->
+        <div class="w-full mt-3">
+            <h4 class="text-lg font-semibold mb-4 text-primary">Equity Accounts</h4>
+        </div>
+
+        <!-- Opening Stock Offset (Key: 5) -->
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="w-full">
+                    <p-autoComplete [ngModel]="selectedAccounts[AccountMappingKey.OpeningStockOffset]"
+                        [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="onAccountSelect(AccountMappingKey.OpeningStockOffset, $event)"
+                        (completeMethod)="SearchDropDown($event, equityAccountSearch.searchterm)"
+                        inputId="openingStockOffset" optionLabel="name" [dropdown]="true"
+                        [suggestions]="equityAccountSearch.result()" [showClear]="true" class="w-full">
+                    </p-autoComplete>
+                    <label for="openingStockOffset">Opening Stock Offset Account</label>
+                </div>
+            </p-floatLabel>
+        </div>
+
+
+        <!-- Submit Action Button -->
+        <div class="w-full flex justify-center m-3">
+            <button class="global-button" type="submit" [disabled]="submit()">
+                {{ submit() ? 'Updating...' : 'Save Account Mappings' }}
+            </button>
+        </div>
+
+    </div>
+</form>

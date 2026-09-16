@@ -85,5 +85,6 @@ export enum AccountUsageType {
     Bank = 3,
     Customer = 4,
     Supplier = 5,
-    Tax = 6
+    InputTaxAccount = 6,
+    OutputTaxAccount = 7
 }

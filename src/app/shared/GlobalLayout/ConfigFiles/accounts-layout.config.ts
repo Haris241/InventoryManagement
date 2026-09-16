@@ -21,11 +21,14 @@ export const ACCOUNTS_LAYOUT_CONFIG: ModuleLayoutConfig = {
             ]
         },
         {
-            key: 'Settings', icon: 'rule_settings', label: 'Settings',
-            children: [
-                { label: 'Add Fiscal Year', route: '/Accounts/fiscalyear' },
-                { label: 'Client Setting', route: '/Accounts/clientSetting' },
-            ]
+            key: 'fiscalyear', icon: 'calendar_month', label: 'Fiscal Year', directRoute: '/Accounts/fiscalyear'
         },
+        {
+            key: 'Tax', icon: 'percent', label: 'Tax',
+            children: [
+                { label: 'Add Tax', route: '/Accounts/taxAdd' },
+                { label: 'Tax List', route: '/Accounts/taxList' },
+            ]
+        }
     ]
 };

@@ -8,9 +8,9 @@ import { FormsModule } from '@angular/forms';
 import { BaseApiService } from '../../../services/base-api.service';
 import { DataLayerService } from '../../../services/data-layer.service';
 import { FieldErrorSComponent } from '../../../shared/field-error-s/field-error-s.component';
-import { InventoryWorkflowDto, VoucherPostingPoint } from '../../../Models/Notification.model';
 import { enumToOptions } from '../../../shared/Utility';
 import { SelectModule } from 'primeng/select';
+import { InventoryWorkflowDto, VoucherPostingPoint } from '../../../Models/ClientSetting.model';
 
 @Component({
   selector: 'app-inventoryworlflow',

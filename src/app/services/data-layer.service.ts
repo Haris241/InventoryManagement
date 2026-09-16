@@ -57,6 +57,9 @@ export class DataLayerService {
   downloadReport(controller: string): Observable<Blob> {
     return this.http.get(`${this.baseurl}${controller}`, { responseType: 'blob', withCredentials: true }).pipe(this.handleBlobError());
   }
+  postAction<T>(controller: string, id: string): Observable<T> {
+    return this.http.post<T>(`${this.baseurl}${controller}/${id}`, null, { withCredentials: true });
+  }
 
   getReportOrJob<TRequest, TJob>(controller: string, data: TRequest): Observable<ReportResponse<TJob>> {
 
