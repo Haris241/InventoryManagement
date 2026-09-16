@@ -18,7 +18,7 @@ export class PaginationService {
     const search$ = toObservable(searchterm).pipe(
       debounceTime(500),
       distinctUntilChanged(),
-      filter(search => search.length > 2),
+      filter(search => search.length > 0),
       switchMap(search => this.dataService.getById<T[]>(endpoint, search))
     );
 

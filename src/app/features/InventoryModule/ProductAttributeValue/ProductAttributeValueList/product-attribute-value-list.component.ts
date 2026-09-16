@@ -94,7 +94,7 @@ export class ProductAttributeValueListComponent {
   }
   SearchDropDown(event: { query: string }, searchtermsignal: WritableSignal<string>) {
     const search = event.query?.trim() ?? '';
-    if (search.length >= 1) {
+    if (search.length > 0) {
       searchtermsignal.set(search);
     }
   }

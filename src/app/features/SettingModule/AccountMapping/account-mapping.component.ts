@@ -113,7 +113,7 @@ export class AccountMappingComponent {
 
   SearchDropDown(event: { query: string }, searchtermSignal: any) {
     const search = event.query?.trim() ?? '';
-    if (search.length > 1) {
+    if (search.length > 0) {
       searchtermSignal.set(search);
     }
   }
