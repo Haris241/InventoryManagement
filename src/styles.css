@@ -113,7 +113,7 @@ input[type="checkbox"] {
 
 .p-datatable .p-datatable-tbody>tr>td {
   font-size: small;
-  padding: 5px;
+  padding: 8px;
   font-weight: 500;
 }
 
@@ -374,6 +374,11 @@ input[type="number"] {
 .status-active {
   background-color: #22c55e;
   /* Green */
+}
+
+.status-draft {
+  background-color: #0966c3;
+  /* Blue */
 }
 
 .status-closed {

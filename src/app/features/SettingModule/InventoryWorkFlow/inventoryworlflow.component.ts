@@ -58,6 +58,8 @@ export class InventoryworlflowComponent {
     enableOutwardGatePass: false,
     enableInternalMovement: false,
     requirePOForGRN: false,
+    enableBarcode: false,
+    enableWareHouseLocations: false,
     postingPoint: VoucherPostingPoint.ManualInvoice
   };
   //Signal Model For FormData

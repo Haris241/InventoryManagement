@@ -18,6 +18,8 @@ export interface InventoryWorkflowDto {
     enableOutwardGatePass: boolean;
     enableInternalMovement: boolean;
     requirePOForGRN: boolean;
+    enableBarcode: boolean;
+    enableWareHouseLocations: boolean;
     postingPoint: VoucherPostingPoint;
 
 }

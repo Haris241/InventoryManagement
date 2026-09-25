@@ -2,6 +2,11 @@ export interface AutoDropdown {
     id: string | number | null,
     name: string
 }
+export interface TaxDropDown {
+    id: string | number | null,
+    name: string,
+    rate: number
+}
 export interface PaginationResult<T> {
     items: T[],
     pageNumber: number,

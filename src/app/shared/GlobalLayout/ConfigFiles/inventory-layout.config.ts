@@ -78,7 +78,36 @@ export const INVENTORY_LAYOUT_CONFIG: ModuleLayoutConfig = {
                 }
             ]
         },
-
+        {
+            key: 'PurchaseRequisition',
+            icon: 'receipt',
+            label: 'Purchase Requisition',
+            children: [
+                {
+                    label: 'Add Purchase Requisition',
+                    route: '/Inventory/addpurchaserequisition'
+                },
+                {
+                    label: 'Purchase Requisition List',
+                    route: '/Inventory/purchaserequisitionlist'
+                }
+            ]
+        },
+        {
+            key: 'PurchaseOrder',
+            icon: 'shopping_cart',
+            label: 'Purchase Order',
+            children: [
+                {
+                    label: 'Add Purchase Order',
+                    route: '/Inventory/addpurchaseorder'
+                },
+                {
+                    label: 'Purchase Order List',
+                    route: '/Inventory/purchaseorderlist'
+                }
+            ]
+        },
         {
             key: 'Supplier',
             icon: 'person',

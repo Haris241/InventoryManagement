@@ -1,0 +1,155 @@
+<form (ngSubmit)="OnSearch()">
+    <div class="flex flex-wrap global-div p-5">
+        <div class="w-full mb-4">
+            <h3 class="text-2xl font-semibold text-center mb-3">
+                <span class="gradient-heading">Purchase Order List</span>
+            </h3>
+            <hr class="second-color">
+        </div>
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-10/12 w-full">
+                    <p-autoComplete [(ngModel)]="poFormModel().id" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('id',$event)"
+                        (completeMethod)="SearchDropDown($event,poSearch.searchterm)" inputId="id" optionLabel="name"
+                        [dropdown]="true" [suggestions]="poSearchList()" optionValue="id" [showClear]="true"
+                        class="w-full"></p-autoComplete>
+                    <label for="id">Search by Name or Number</label>
+                </div>
+
+            </p-floatLabel>
+
+        </div>
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <p-select [(ngModel)]="poFormModel().status" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('status',$event)" [options]="poStatusOptions()" optionLabel="name"
+                        optionValue="value" class="w-full" [showClear]="true" />
+                    <label for="status">Status</label>
+                </div>
+            </p-floatLabel>
+        </div>
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <p-select [(ngModel)]="poFormModel().fulfillmentStatus" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('fulfillmentStatus',$event)"
+                        [options]="poFulfillmentStatusOptions()" optionLabel="name" optionValue="value" class="w-full"
+                        [showClear]="true" />
+                    <label for="fulfillmentStatus">Fulfillment Status</label>
+                </div>
+            </p-floatLabel>
+        </div>
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <p-select [(ngModel)]="poFormModel().sourceModule" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('sourceModule',$event)" [options]="poSourceModuleOptions()"
+                        optionLabel="name" optionValue="value" class="w-full" [showClear]="true" />
+                    <label for="sourceModule">Source Module</label>
+                </div>
+            </p-floatLabel>
+        </div>
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <p-datepicker [(ngModel)]="poFormModel().fromDateUI" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('fromDateUI',$event)" view="date" dateFormat="dd/mm/yy"
+                        size="small" inputId="fromDateUI" class="w-full" />
+                    <label for="fromDateUI">From Date</label>
+                </div>
+            </p-floatLabel>
+        </div>
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <p-datepicker [(ngModel)]="poFormModel().toDateUI" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('toDateUI',$event)" view="date" dateFormat="dd/mm/yy" size="small"
+                        inputId="toDateUI" class="w-full" />
+                    <label for="toDateUI">To Date</label>
+                </div>
+            </p-floatLabel>
+        </div>
+
+        <div class="w-full flex justify-center m-3">
+            <button class="global-button">Search</button>
+        </div>
+    </div>
+</form>
+<div class="flex flex-wrap global-div mt-4 p-4">
+    <div class="w-full">
+        <p-table #dt [value]="poList()" [rows]="20" [lazy]="true" (onLazyLoad)="loadPo()"
+            [tableStyle]="{ 'min-width': '50rem' }">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Name</th>
+                    <th>Number</th>
+                    <th>Status</th>
+                    <th>Fulfillment Status</th>
+                    <th>Source Module</th>
+                    <th>Total Qty</th>
+                    <th>Recieved Qty</th>
+                    <th>Grand Total</th>
+                    <th>Created At</th>
+                    <th class="text-center">Actions</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-po>
+                <tr>
+                    <td>{{ po.name }}</td>
+                    <td>{{ po.purchaseNumber }}</td>
+                    <td>
+                        <span class="status-badge" [ngClass]="getPoStatusClass(po.status)">
+                            {{ poStatusLabel(po.status) }}
+                        </span>
+                    </td>
+                    <td>{{ poFulfillmentStatusLabel(po.fulfillmentStatus) }}</td>
+                    <td>{{ po.sourceModule }}</td>
+                    <td>{{ po.totalQuantity }}</td>
+                    <td>{{ po.recievedQuantity }}</td>
+                    <td>{{ po.grandTotal }}</td>
+                    <td>{{ po.date | date:'yyyy-MM-dd' }}</td>
+
+                    <!-- Combined & Aligned Actions Column -->
+                    <td>
+                        <!-- Use justify-start to align every action button consistently to the left -->
+                        <div class="flex items-center justify-start gap-2">
+                            @if (po.status === poStatus.Draft) {
+                            <!-- Draft Actions: Approve + Edit + Delete -->
+                            <button class="status-badge close-year" (click)="ApprovePo(po.id)">
+                                Approve
+                            </button>
+
+                            <button class="p-1" (click)="editPo(po.id)">
+                                <span class="material-symbols-outlined icon-color">edit</span>
+                            </button>
+
+                            <button class="p-1" (click)="deletePO(po.id)" title="Delete">
+                                <span class="material-symbols-outlined icon-color">delete</span>
+                            </button>
+                            } @else if (po.status === poStatus.Approved) {
+                            <!-- Approved Actions: Cancel only -->
+                            <button class="status-badge close-year" (click)="CancelPo(po.id)">
+                                Cancel
+                            </button>
+                            } @else {
+                            <span class="text-gray-400 ps-4">-</span>
+                            }
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+
+        <!-- Pagination Controls -->
+        <div class="flex justify-end mt-3">
+            @if (hasPreviousPage()) {
+            <button class="pagination-button me-3" (click)="loadPo('previous')">Previous</button>
+            }
+            @if (hasNextPage()) {
+            <button class="pagination-button me-3" (click)="loadPo('next')">Next</button>
+            }
+        </div>
+    </div>
+</div>

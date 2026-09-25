@@ -2,7 +2,7 @@ import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { BaseApiService } from '../../../../services/base-api.service';
 import { DataLayerService } from '../../../../services/data-layer.service';
-import { disabled, form, FormField, min, readonly, required, validate } from '@angular/forms/signals';
+import { disabled, form, FormField, readonly, required, validate } from '@angular/forms/signals';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { FormsModule } from '@angular/forms';
@@ -110,7 +110,7 @@ export class AddUpdateTaxComponent {
       next: () => {
         //Redirect To List For Edit
         if (this.isEditMode()) {
-          this.router.navigate(['Accounts', 'tax']);
+          this.router.navigate(['Accounts', 'taxList']);
           this.base.globalMessage('success', 'Tax Updated Successfully', false);
           return;
         }

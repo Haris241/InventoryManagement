@@ -64,7 +64,7 @@ export class AddUpdateDepartmentComponent {
   });
 
   //Method to Update Fields For Non supporting Primeng Fields
-  updateField<K extends keyof ProductAttributeValueDto>(field: K, value: ProductAttributeValueDto[K]) {
+  updateField<K extends keyof DepartmentDto>(field: K, value: DepartmentDto[K]) {
     this.departmentModel.update(prev => ({
       ...prev,
       [field]: value

@@ -15,6 +15,7 @@ import { enumToOptions } from '../../../../shared/Utility';
 import { AttributeDefinitionDropdown, ProductAttributeValueDto, ProductDTO, ProductType, ProductVariantDto, UOM, WareHouseStockDto } from '../../../../Models/Inventory/Product.model';
 import { FormDataService } from '../../../../services/formData.service';
 import { ProductService } from '../../../../services/Inventory/product.service';
+import { ProductSearchService } from '../../../../services/Inventory/ProductSearch.service';
 
 @Component({
   selector: 'app-add-product',
@@ -30,6 +31,7 @@ export class AddProductComponent implements OnInit {
   attributeDefinitions = signal<AttributeDefinitionDropdown[]>([]);
 
   private productService = inject(ProductService);
+  private productSearchService = inject(ProductSearchService);
   private destroyRef = inject(DestroyRef);
   private base = inject(BaseApiService);
   private activatedRoute = inject(ActivatedRoute);
@@ -374,7 +376,7 @@ export class AddProductComponent implements OnInit {
   }
 
   loadWarehouseLocations(warehouseId: number): void {
-    this.productService.getLocationsByWarehouse(warehouseId)
+    this.productSearchService.getLocationsByWarehouse(warehouseId)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (locations) => {

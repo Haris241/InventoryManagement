@@ -71,6 +71,17 @@
                 class="w-auto" />
             <label for="requirePOForGRN" class="mb-0 !text-lg font-medium gradient-heading">Require PO For GRN</label>
         </div>
+        <div class="lg:w-1/4 w-full mb-3 flex items-center gap-2">
+            <input id="enableBarcode" type="checkbox" [formField]="inventoryWorkflowForm.enableBarcode"
+                class="w-auto" />
+            <label for="enableBarcode" class="mb-0 !text-lg font-medium gradient-heading">Enable Barcode</label>
+        </div>
+        <div class="lg:w-1/4 w-full mb-3 flex items-center gap-2">
+            <input id="enableWarehouseLocations" type="checkbox"
+                [formField]="inventoryWorkflowForm.enableWareHouseLocations" class="w-auto" />
+            <label for="enableWarehouseLocations" class="mb-0 !text-lg font-medium gradient-heading">Enable Warehouse
+                Locations</label>
+        </div>
 
         <!-- Errors -->
         <div class="w-full mt-3">

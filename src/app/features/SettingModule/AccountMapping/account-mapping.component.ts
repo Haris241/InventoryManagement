@@ -34,7 +34,8 @@ export class AccountMappingComponent {
   revenueAccountSearch = this.pagination.autoSearchDropdown<AutoDropdown>('AccountsDropDown/RevenueAccounts');
   expenseAccountSearch = this.pagination.autoSearchDropdown<AutoDropdown>('AccountsDropDown/ExpenseAccounts');
   equityAccountSearch = this.pagination.autoSearchDropdown<AutoDropdown>('AccountsDropDown/EquityAccounts');
-
+  inputTaxSearch = this.pagination.autoSearchDropdown<AutoDropdown>('AccountsDropDown/InputTaxAccounts');
+  outputTaxSearch = this.pagination.autoSearchDropdown<AutoDropdown>('AccountsDropDown/OutputTaxAccounts');
   // Selected AutoComplete objects for PrimeNG component display
   selectedAccounts: Record<number, AutoDropdown | null> = {
     [AccountMappingKey.InventoryDefault]: null,

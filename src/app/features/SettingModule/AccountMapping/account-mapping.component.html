@@ -43,9 +43,9 @@
                     <p-autoComplete [ngModel]="selectedAccounts[AccountMappingKey.InputTaxAccount]"
                         [ngModelOptions]="{standalone: true}"
                         (ngModelChange)="onAccountSelect(AccountMappingKey.InputTaxAccount, $event)"
-                        (completeMethod)="SearchDropDown($event, assetAccountSearch.searchterm)"
-                        inputId="inputTaxAccount" optionLabel="name" [dropdown]="true"
-                        [suggestions]="assetAccountSearch.result()" [showClear]="true" class="w-full">
+                        (completeMethod)="SearchDropDown($event, inputTaxSearch.searchterm)" inputId="inputTaxAccount"
+                        optionLabel="name" [dropdown]="true" [suggestions]="inputTaxSearch.result()" [showClear]="true"
+                        class="w-full">
                     </p-autoComplete>
                     <label for="inputTaxAccount">Input Tax Account</label>
                 </div>
@@ -82,9 +82,9 @@
                     <p-autoComplete [ngModel]="selectedAccounts[AccountMappingKey.OutputTaxAccount]"
                         [ngModelOptions]="{standalone: true}"
                         (ngModelChange)="onAccountSelect(AccountMappingKey.OutputTaxAccount, $event)"
-                        (completeMethod)="SearchDropDown($event, liabilityAccountSearch.searchterm)"
-                        inputId="outputTaxAccount" optionLabel="name" [dropdown]="true"
-                        [suggestions]="liabilityAccountSearch.result()" [showClear]="true" class="w-full">
+                        (completeMethod)="SearchDropDown($event, outputTaxSearch.searchterm)" inputId="outputTaxAccount"
+                        optionLabel="name" [dropdown]="true" [suggestions]="outputTaxSearch.result()" [showClear]="true"
+                        class="w-full">
                     </p-autoComplete>
                     <label for="outputTaxAccount">Output Tax Account</label>
                 </div>

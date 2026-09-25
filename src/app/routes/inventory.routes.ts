@@ -99,6 +99,32 @@ export const inventoryRoutes: Routes = [
                 path: 'editproductattribute/:id',
                 loadComponent: () => import('../features/InventoryModule/ProductAttributeValue/ProductAttributeValueAddUpdate/product-attribute-value.component').then(m => m.ProductAttributeValueComponent)
             },
+            // Purchase Requisition Routes
+            {
+                path: 'purchaserequisitionlist',
+                loadComponent: () => import('../features/InventoryModule/PurchaseRequisition/PurchaseRequisitionList/purchase-requisition-list.component').then(m => m.PurchaseRequisitionListComponent)
+            },
+            {
+                path: 'addpurchaserequisition',
+                loadComponent: () => import('../features/InventoryModule/PurchaseRequisition/PurchaseRequisitionAdd/purchase-requisition.component').then(m => m.PurchaseRequisitionComponent)
+            },
+            {
+                path: 'editpurchaserequisition/:id',
+                loadComponent: () => import('../features/InventoryModule/PurchaseRequisition/PurchaseRequisitionAdd/purchase-requisition.component').then(m => m.PurchaseRequisitionComponent)
+            },
+            // Purchase Order Routes
+            {
+                path: 'purchaseorderlist',
+                loadComponent: () => import('../features/InventoryModule/PurchaseOrder/PurchaseOrderList/purchase-order-list.component').then(m => m.PurchaseOrderListComponent)
+            },
+            {
+                path: 'addpurchaseorder',
+                loadComponent: () => import('../features/InventoryModule/PurchaseOrder/PurchaseOrderAdd/purchase-order.component').then(m => m.PurchaseOrderComponent)
+            },
+            {
+                path: 'editpurchaseorder/:id',
+                loadComponent: () => import('../features/InventoryModule/PurchaseOrder/PurchaseOrderAdd/purchase-order.component').then(m => m.PurchaseOrderComponent)
+            },
 
             {
                 path: '',

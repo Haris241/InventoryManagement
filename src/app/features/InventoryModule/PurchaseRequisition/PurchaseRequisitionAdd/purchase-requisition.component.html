@@ -1,1 +1,217 @@
-<p>purchase-requisition works!</p>
+<!-- Inventory Work Flow Setting Button -->
+
+<div class="w-full grid grid-cols-2 lg:flex lg:justify-end lg:items-center mb-4 gap-2">
+    <button type="button" class="blog-button flex items-center justify-center whitespace-nowrap"
+        routerLink="/Setting/inventoryWorkflow">
+        <span class="material-symbols-outlined mr-1">settings</span>
+        Work Flow Setting
+    </button>
+</div>
+<!-- Purchase Requisition Create Form -->
+<form (ngSubmit)="createPr($event)">
+    <div class="flex flex-wrap global-div p-5">
+        <div class="w-full mb-4">
+            <h3 class="text-2xl font-semibold text-center mb-3">
+                @if(isEditMode()){
+                <span class="gradient-heading">Edit Purchase Requisition</span>
+                }@else{
+                <span class="gradient-heading">Add Purchase Requisition</span>
+                }
+            </h3>
+            <hr class="second-color">
+        </div>
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <p-select [(ngModel)]="prModel().sourceModule" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('sourceModule',$event)" [options]="sourceModules()"
+                        optionLabel="name" optionValue="value" class="w-full" readonly />
+                    <label for="sourceModule" class="required">Source Module</label>
+                </div>
+            </p-floatLabel>
+            <app-field-errorS [field]="prForm.sourceModule" [submit]="formSubmitted()"
+                [backendErrors]="backendErrors()">
+            </app-field-errorS>
+        </div>
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <p-datepicker [(ngModel)]="prModel().dateUI" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('dateUI',$event)" view="date" dateFormat="dd/mm/yy" size="small"
+                        inputId="dateUI" class="w-full" />
+                    <label for="dateUI">Date</label>
+                </div>
+            </p-floatLabel>
+        </div>
+
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <input pInputText pSize="small" id="name" autocomplete="off" type="text" class="w-full"
+                        [formField]="prForm.name">
+                    <label for="name" class="required">Name</label>
+                </div>
+            </p-floatLabel>
+            <app-field-errorS [field]="prForm.name" [submit]="formSubmitted()" [backendErrors]="backendErrors()">
+            </app-field-errorS>
+        </div>
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <input pInputText pSize="small" id="description" autocomplete="off" type="text" class="w-full"
+                        [formField]="prForm.description">
+                    <label for="description" class="required">Description</label>
+                </div>
+            </p-floatLabel>
+        </div>
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <p-select [(ngModel)]="prModel().departmentId" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('departmentId',$event)" [options]="departments()"
+                        optionLabel="name" optionValue="id" class="w-full" [showClear]="true" />
+                    <label for="departmentId">Department</label>
+                </div>
+            </p-floatLabel>
+        </div>
+
+
+
+        <div class="w-full">
+            <div class="w-full mt-3">
+                <h4 class="text-base sm:text-lg font-semibold mb-2 float-left">
+                    <span>Purchase Requisition Lines</span>
+                </h4>
+                <!--add line button -->
+                <button type="button" class="global-button float-right" (click)="addLine()">
+                    <span class="material-symbols-outlined second-color">add</span> Add Line
+                </button>
+            </div>
+        </div>
+
+        <!-- lines table -->
+        <div class="overflow-auto">
+            <table class="w-full border-collapse" style="table-layout: fixed; min-width: 1000px;">
+                <thead>
+                    <tr class="text-left border-b second-color">
+                        <th class="p-2">WareHouse</th>
+                        @if(enableBarcode()){
+                        <th class="p-2">Barcode</th>
+                        }
+                        <th class="p-2">Product</th>
+                        <th class="p-2">UOM</th>
+                        <th class="p-2">Quantity</th>
+                        <th class="p-2 text-center">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for(line of prModel().lines; track $index) {
+                    <tr class="border-b second-color">
+                        <!-- WareHouse -->
+                        <td class="p-2 align-top">
+                            <p-select [ngModel]="line.wareHouseId" [ngModelOptions]="{standalone: true}"
+                                (ngModelChange)="updateLineField($index, 'wareHouseId', $event)"
+                                [options]="wareHouses()" optionLabel="name" optionValue="id" [filter]="true"
+                                filterBy="name" class="w-full" appendTo="body" size="small" [showClear]="true">
+                            </p-select>
+                            <app-field-errorS [field]="prForm.lines[$index].wareHouseId" [submit]="formSubmitted()"
+                                [backendErrors]="backendErrors()" [fieldPath]="'lines[' + $index + '].wareHouseId'">
+                            </app-field-errorS>
+                        </td>
+                        <!-- Barcode -->
+                        @if(enableBarcode()){
+                        <td class="p-2 align-top">
+                            <input pInputText pSize="small" autocomplete="off" type="text" class="w-full"
+                                [formField]="prForm.lines[$index].barcode"
+                                (keydown.enter)="searchBarcode($index, $event)">
+                        </td>
+                        }
+
+                        <!-- Product -->
+                        <td class="p-2 align-top">
+                            <p-autoComplete [(ngModel)]="line.selectedProductVariant"
+                                [ngModelOptions]="{standalone: true}"
+                                (ngModelChange)="updateLineField($index, 'productVariantId', $event?.id ?? null)"
+                                (onSelect)="onProductVariantChange($index, $event.value)"
+                                (completeMethod)="SearchDropDown($event, productSearch.searchterm)"
+                                optionLabel="displayName" [suggestions]="productSearchList()" [showClear]="true"
+                                appendTo="body" fluid size="small">
+
+                                <ng-template let-product pTemplate="item">
+                                    <div class="product-search-item">
+                                        <div class="product-search-main">
+                                            {{ product.displayName }}
+                                        </div>
+
+                                        <div class="product-search-meta">
+                                            <span>SKU: {{ product.sku }}</span>
+                                            <span>UOM: {{ product.uom }}</span>
+                                        </div>
+                                    </div>
+                                </ng-template>
+
+                            </p-autoComplete>
+
+
+                            <app-field-errorS [field]="prForm.lines[$index].productVariantId" [submit]="formSubmitted()"
+                                [backendErrors]="backendErrors()"
+                                [fieldPath]="'lines[' + $index + '].productVariantId'">
+                            </app-field-errorS>
+                        </td>
+
+                        <!-- UOM -->
+                        <td class="p-2 align-top">
+                            <input pInputText pSize="small" autocomplete="off" type="text" class="w-full"
+                                [formField]="prForm.lines[$index].uom">
+                        </td>
+
+                        <!-- Quantity -->
+                        <td class="p-2 align-top">
+                            <input pInputText pSize="small" autocomplete="off" type="number" class="w-full"
+                                [formField]="prForm.lines[$index].quantity">
+                            <app-field-errorS [field]="prForm.lines[$index].quantity" [submit]="formSubmitted()"
+                                [backendErrors]="backendErrors()" [fieldPath]="'lines[' + $index + '].quantity'">
+                            </app-field-errorS>
+                        </td>
+
+                        <!-- Delete -->
+                        <td class="p-2 text-center align-top">
+                            <button type="button" (click)="deleteLine($index)">
+                                <span class="material-symbols-outlined icon-color">delete</span>
+                            </button>
+                        </td>
+
+                    </tr>
+                    }
+                </tbody>
+
+
+            </table>
+
+        </div>
+
+        <!--Errors -->
+        <div class="w-full mt-3">
+            <ul class="text-red-500 text-sm font-medium pl-4">
+                @if (errors()) {
+                @for (e of errors(); track e) {
+                <li>{{ e }}</li>
+                }
+                }
+            </ul>
+        </div>
+
+        <!--submitting the form  -->
+        <div class="w-full flex justify-center m-3">
+            @if(isEditMode()){
+            <button class="global-button" type="submit" [disabled]="submit()">
+                {{ submit() ? 'Processing...' : 'Update Purchase Requisition' }}
+            </button>
+            }@else{
+            <button class="global-button" type="submit" [disabled]="submit()">
+                {{ submit() ? 'Processing...' : 'Create Purchase Requisition' }}
+            </button>
+            }
+        </div>
+    </div>
+</form>

@@ -289,10 +289,6 @@ export class ProductService {
     return this.dataService.getById<ProductDTO>('Products', id);
   }
 
-  getLocationsByWarehouse(warehouseId: number): Observable<AutoDropdown[]> {
-    return this.dataService.getAllSimple<AutoDropdown>(`Dropdowns/LocationsByWarehouse/${warehouseId}`);
-  }
-
   saveProduct(formValue: ProductDTO, isEditMode: boolean): Observable<ProductDTO> {
     const formdata = this.formDataService.buildFormData(formValue);
     const url = 'Products';
