@@ -9,7 +9,7 @@
 </div>
 <!-- Purchase Requisition Create Form -->
 <form (ngSubmit)="createPo($event)">
-    <div class="flex flex-wrap global-div p-5">
+    <div class="flex flex-wrap global-div p-5 gap-2 lg:gap-0">
         <div class="w-full mb-4">
             <h3 class="text-2xl font-semibold text-center mb-3">
                 @if(isEditMode()){
@@ -20,7 +20,7 @@
             </h3>
             <hr class="second-color">
         </div>
-        <div class="lg:w-1/4 w-full mb-3">
+        <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3 ">
             <p-floatLabel variant="on">
                 <div class="lg:w-8/12 w-full">
                     <p-select [(ngModel)]="poModel().sourceModule" [ngModelOptions]="{standalone: true}"
@@ -33,7 +33,7 @@
                 [backendErrors]="backendErrors()">
             </app-field-errorS>
         </div>
-        <div class="lg:w-1/4 w-full mb-3">
+        <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3">
             <p-floatLabel variant="on">
                 <div class="lg:w-8/12 w-full">
                     <p-datepicker [(ngModel)]="poModel().purchaseDateUI" [ngModelOptions]="{standalone: true}"
@@ -46,7 +46,7 @@
                 [backendErrors]="backendErrors()">
             </app-field-errorS>
         </div>
-        <div class="lg:w-1/4 w-full mb-3">
+        <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3">
             <p-floatLabel variant="on">
                 <div class="lg:w-8/12 w-full">
                     <p-datepicker [(ngModel)]="poModel().expectedDeliveryDateUI" [ngModelOptions]="{standalone: true}"
@@ -57,7 +57,7 @@
             </p-floatLabel>
         </div>
 
-        <div class="lg:w-1/4 w-full mb-3">
+        <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3">
             <p-floatLabel variant="on">
                 <div class="lg:w-8/12 w-full">
                     <input pInputText pSize="small" id="name" autocomplete="off" type="text" class="w-full"
@@ -68,7 +68,7 @@
             <app-field-errorS [field]="poForm.name" [submit]="formSubmitted()" [backendErrors]="backendErrors()">
             </app-field-errorS>
         </div>
-        <div class="lg:w-1/4 w-full mb-3">
+        <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3">
             <p-floatLabel variant="on">
                 <div class="lg:w-8/12 w-full">
                     <p-select [(ngModel)]="poModel().supplierId" [ngModelOptions]="{standalone: true}"
@@ -80,7 +80,7 @@
             <app-field-errorS [field]="poForm.supplierId" [submit]="formSubmitted()" [backendErrors]="backendErrors()">
             </app-field-errorS>
         </div>
-        <div class="lg:w-1/4 w-full mb-3">
+        <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3">
             <p-floatLabel variant="on">
                 <div class="lg:w-8/12 w-full">
                     <input pInputText pSize="small" id="description" autocomplete="off" type="text" class="w-full"
@@ -89,7 +89,7 @@
                 </div>
             </p-floatLabel>
         </div>
-        <div class="lg:w-1/4 w-full mb-3">
+        <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3">
             <p-floatLabel variant="on">
                 <div class="lg:w-8/12 w-full">
                     <input pInputText pSize="small" id="paymentTerms" autocomplete="off" type="text" class="w-full"
@@ -98,7 +98,7 @@
                 </div>
             </p-floatLabel>
         </div>
-        <div class="lg:w-1/4 w-full mb-3">
+        <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3">
             <p-floatLabel variant="on">
                 <div class="lg:w-8/12 w-full">
                     <input pInputText pSize="small" id="deliveryTerms" autocomplete="off" type="text" class="w-full"
@@ -123,98 +123,80 @@
         </div>
         }
 
-        <div class="w-full">
-            <div class="w-full mt-3">
-                <h4 class="text-base sm:text-lg font-semibold mb-2 float-left">
-                    <span>Purchase Order Lines</span>
-                </h4>
-                <!--add line button -->
-                @if(!isPurchaseRequisitionSource ()){
-                <button type="button" class="global-button float-right" (click)="addLine()">
-                    <span class="material-symbols-outlined second-color">add</span> Add Line
-                </button>
-                }
-            </div>
+        <div class="w-full mt-3">
+            <h4 class="text-base sm:text-lg font-semibold mb-2 float-left">
+                <span>Purchase Order Lines</span>
+            </h4>
+            @if(!isPurchaseRequisitionSource ()){
+            <button type="button" class="global-button float-right" (click)="addLine()">
+                <span class="material-symbols-outlined second-color">add</span> Add Line
+            </button>
+            }
         </div>
 
-        <!-- lines table -->
-        <div class="overflow-auto">
-            <table class="w-full border-collapse" style="table-layout: fixed; min-width: 1000px;">
+        <div class="w-full">
+            <hr class="second-color my-4">
+        </div>
 
-                <thead>
-                    <tr class="text-left border-b second-color">
-                        <th class="p-2">WareHouse</th>
-                        @if (postingPoint()) {
-                        <th class="p-2">Location</th>
-                        }
-                        @if (enableBarcode()) {
-                        <th class="p-2">Barcode</th>
-                        }
-                        <th class="p-2">Product</th>
-                        <th class="p-2">UOM</th>
-                        @if (isPurchaseRequisitionSource()) {
-                        <th class="p-2">PR Quantity</th>
-                        }
-                        <th class="p-2">Quantity</th>
-                        <th class="p-2">Rate</th>
-                        <th class="p-2">Discount</th>
-                        <th class="p-2">Tax</th>
-                        <th class="p-2 text-center">Action</th>
-                    </tr>
-                </thead>
+        <div class="w-full">
+            @for (line of poModel().lines; track $index) {
 
-                <tbody>
-                    @for (line of poModel().lines; track $index) {
+            <div class="flex flex-wrap items-start gap-2 pb-3 mb-3 border-b second-color">
 
-                    <tr class="border-b second-color">
-
-                        <!-- Warehouse -->
-                        <td class="p-2 align-top">
-                            @if (isPurchaseRequisitionSource()) {
-                            {{ line.warehouseName }}
-                            } @else {
+                <!-- Warehouse -->
+                <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
+                    @if (isPurchaseRequisitionSource()) {
+                    <p-floatLabel variant="on">
+                        <div class="w-full">
+                            <input pInputText pSize="small" [value]="line.warehouseName" readonly class="w-full">
+                            <label>WareHouse</label>
+                        </div>
+                    </p-floatLabel>
+                    } @else {
+                    <p-floatLabel variant="on">
+                        <div class="w-full">
                             <p-select [ngModel]="line.wareHouseId" [ngModelOptions]="{standalone: true}"
                                 (ngModelChange)="onWarehouseChange($index, $event)" [options]="wareHouses()"
                                 optionLabel="name" optionValue="id" [filter]="true" filterBy="name" class="w-full"
-                                appendTo="body" size="small" [showClear]="true">
+                                [showClear]="true">
                             </p-select>
+                            <label class="required">WareHouse</label>
+                        </div>
+                    </p-floatLabel>
+                    <app-field-errorS [field]="poForm.lines[$index].wareHouseId" [submit]="formSubmitted()"
+                        [backendErrors]="backendErrors()" [fieldPath]="'lines[' + $index + '].wareHouseId'">
+                    </app-field-errorS>
+                    }
+                </div>
 
-                            <app-field-errorS [field]="poForm.lines[$index].wareHouseId" [submit]="formSubmitted()"
-                                [backendErrors]="backendErrors()" [fieldPath]="'lines[' + $index + '].wareHouseId'">
-                            </app-field-errorS>
-                            }
-                        </td>
-
-                        <!-- Warehouse Location -->
-                        @if (postingPoint() && enableLocation()) {
-                        <td class="p-2 align-top">
+                <!-- Location -->
+                @if (postingPoint() && enableLocation()) {
+                <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
+                    <p-floatLabel variant="on">
+                        <div class="w-full">
                             <p-select [ngModel]="line.warehouseLocationId" [ngModelOptions]="{standalone: true}"
                                 (ngModelChange)="updateLineField($index,'warehouseLocationId',$event)"
                                 [options]="getWarehouseLocations(line.wareHouseId)" optionLabel="name" optionValue="id"
-                                [filter]="true" filterBy="name" class="w-full" appendTo="body" size="small"
-                                [showClear]="true">
+                                [filter]="true" filterBy="name" class="w-full" [showClear]="true">
                             </p-select>
-                        </td>
-                        }
+                            <label>Location</label>
+                        </div>
+                    </p-floatLabel>
+                </div>
+                }
 
-                        <!-- Barcode -->
-                        @if (enableBarcode()) {
-                        <td class="p-2 align-top">
-                            @if (isPurchaseRequisitionSource()) {
-                            {{ line.barcode }}
-                            } @else {
-                            <input pInputText pSize="small" autocomplete="off" type="text" class="w-full"
-                                [formField]="poForm.lines[$index].barcode"
-                                (keydown.enter)="searchBarcode($index, $event)">
-                            }
-                        </td>
-                        }
-
-                        <!-- Product -->
-                        <td class="p-2 align-top">
-                            @if (isPurchaseRequisitionSource()) {
-                            {{ line.productName }}
-                            } @else {
+                <!-- Product — stays full width, even on mobile -->
+                <div class="w-full lg:w-1/4 mb-3">
+                    @if (isPurchaseRequisitionSource()) {
+                    <p-floatLabel variant="on">
+                        <div class="w-full">
+                            <input pInputText pSize="small" [value]="line.productName" readonly class="w-full">
+                            <label>Product</label>
+                        </div>
+                    </p-floatLabel>
+                    } @else {
+                    <p-floatLabel variant="on">
+                        <div class="w-full">
                             <p-autoComplete [(ngModel)]="line.selectedProductVariant"
                                 [ngModelOptions]="{standalone: true}"
                                 (ngModelChange)="updateLineField($index,'productVariantId',$event?.id ?? null)"
@@ -222,92 +204,133 @@
                                 (completeMethod)="SearchDropDown($event,productSearch.searchterm)"
                                 optionLabel="displayName" [suggestions]="productSearchList()" [showClear]="true"
                                 appendTo="body" fluid size="small">
-
                                 <ng-template let-product pTemplate="item">
                                     <div class="product-search-item">
-                                        <div class="product-search-main">
-                                            {{ product.displayName }}
-                                        </div>
-
+                                        <div class="product-search-main">{{ product.displayName }}</div>
                                         <div class="product-search-meta">
                                             <span>SKU: {{ product.sku }}</span>
                                             <span>UOM: {{ product.uom }}</span>
                                         </div>
                                     </div>
                                 </ng-template>
-
                             </p-autoComplete>
+                            <label class="required">Product</label>
+                        </div>
+                    </p-floatLabel>
+                    <app-field-errorS [field]="poForm.lines[$index].productVariantId" [submit]="formSubmitted()"
+                        [backendErrors]="backendErrors()" [fieldPath]="'lines[' + $index + '].productVariantId'">
+                    </app-field-errorS>
+                    }
+                </div>
 
-                            <app-field-errorS [field]="poForm.lines[$index].productVariantId" [submit]="formSubmitted()"
-                                [backendErrors]="backendErrors()"
-                                [fieldPath]="'lines[' + $index + '].productVariantId'">
-                            </app-field-errorS>
-                            }
-                        </td>
+                <!-- Barcode -->
+                @if (enableBarcode()) {
+                <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
+                    @if (isPurchaseRequisitionSource()) {
+                    <p-floatLabel variant="on">
+                        <div class="w-full">
+                            <input pInputText pSize="small" [value]="line.barcode" readonly class="w-full">
+                            <label>Barcode</label>
+                        </div>
+                    </p-floatLabel>
+                    } @else {
+                    <p-floatLabel variant="on">
+                        <div class="w-full">
+                            <input pInputText pSize="small" autocomplete="off" type="text" class="w-full"
+                                [formField]="poForm.lines[$index].barcode"
+                                (keydown.enter)="searchBarcode($index, $event)">
+                            <label>Barcode</label>
+                        </div>
+                    </p-floatLabel>
+                    }
+                </div>
+                }
 
-                        <!-- UOM -->
-                        <td class="p-2 align-top">
-                            {{ line.uom }}
-                        </td>
+                <!-- UOM -->
+                <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
+                    <p-floatLabel variant="on">
+                        <div class="w-full">
+                            <input pInputText pSize="small" [value]="line.uom" readonly class="w-full">
+                            <label>UOM</label>
+                        </div>
+                    </p-floatLabel>
+                </div>
 
-                        <!-- PR Quantity -->
-                        @if (isPurchaseRequisitionSource()) {
-                        <td class="p-2 align-top">
-                            {{ line.allocations[0].quantity }}
-                        </td>
-                        }
+                <!-- PR Quantity -->
+                @if (isPurchaseRequisitionSource()) {
+                <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
+                    <p-floatLabel variant="on">
+                        <div class="w-full">
+                            <input pInputText pSize="small" [value]="line.availableQuantity" readonly class="w-full">
+                            <label>PR Qty</label>
+                        </div>
+                    </p-floatLabel>
+                </div>
+                }
 
-                        <!-- PO Quantity -->
-                        <td class="p-2 align-top">
+                <!-- Quantity -->
+                <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
+                    <p-floatLabel variant="on">
+                        <div class="w-full">
                             <input pInputText pSize="small" autocomplete="off" type="number" class="w-full"
                                 [formField]="poForm.lines[$index].quantity">
+                            <label class="required">Qty</label>
+                        </div>
+                    </p-floatLabel>
+                    <app-field-errorS [field]="poForm.lines[$index].quantity" [submit]="formSubmitted()"
+                        [backendErrors]="backendErrors()" [fieldPath]="'lines[' + $index + '].quantity'">
+                    </app-field-errorS>
+                </div>
 
-                            <app-field-errorS [field]="poForm.lines[$index].quantity" [submit]="formSubmitted()"
-                                [backendErrors]="backendErrors()" [fieldPath]="'lines[' + $index + '].quantity'">
-                            </app-field-errorS>
-                        </td>
-
-                        <!-- Rate -->
-                        <td class="p-2 align-top">
+                <!-- Rate -->
+                <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
+                    <p-floatLabel variant="on">
+                        <div class="w-full">
                             <input pInputText pSize="small" autocomplete="off" type="number" class="w-full"
                                 [formField]="poForm.lines[$index].rate">
+                            <label class="required">Rate</label>
+                        </div>
+                    </p-floatLabel>
+                    <app-field-errorS [field]="poForm.lines[$index].rate" [submit]="formSubmitted()"
+                        [backendErrors]="backendErrors()" [fieldPath]="'lines[' + $index + '].rate'">
+                    </app-field-errorS>
+                </div>
 
-                            <app-field-errorS [field]="poForm.lines[$index].rate" [submit]="formSubmitted()"
-                                [backendErrors]="backendErrors()" [fieldPath]="'lines[' + $index + '].rate'">
-                            </app-field-errorS>
-                        </td>
-
-                        <!-- Discount -->
-                        <td class="p-2 align-top">
+                <!-- Discount -->
+                <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
+                    <p-floatLabel variant="on">
+                        <div class="w-full">
                             <input pInputText pSize="small" autocomplete="off" type="number" class="w-full"
                                 [formField]="poForm.lines[$index].discountAmount">
-                        </td>
+                            <label>Disc</label>
+                        </div>
+                    </p-floatLabel>
+                </div>
 
-                        <!-- Tax -->
-                        <td class="p-2 align-top">
+                <!-- Tax -->
+                <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
+                    <p-floatLabel variant="on">
+                        <div class="w-full">
                             <p-select [ngModel]="line.taxId" [ngModelOptions]="{standalone: true}"
                                 (ngModelChange)="updateLineField($index, 'taxId', $event)" [options]="taxes()"
                                 optionLabel="name" optionValue="id" [filter]="true" filterBy="name" class="w-full"
-                                appendTo="body" size="small" [showClear]="true">
+                                [showClear]="true">
                             </p-select>
-                        </td>
+                            <label>Tax</label>
+                        </div>
+                    </p-floatLabel>
+                </div>
 
-                        <!-- Action -->
-                        <td class="p-2 text-center align-top">
-                            <button type="button" (click)="deleteLine($index)">
-                                <span class="material-symbols-outlined icon-color">
-                                    delete
-                                </span>
-                            </button>
-                        </td>
+                <!-- Action -->
+                <div class="w-full lg:w-1/12 mt-1 flex items-center justify-center">
+                    <button type="button" (click)="deleteLine($index)">
+                        <span class="material-symbols-outlined icon-color">delete</span>
+                    </button>
+                </div>
 
-                    </tr>
-                    }
-                </tbody>
-
-            </table>
+            </div>
+            }
         </div>
-
         <!--Errors -->
         <div class="w-full mt-3">
             <ul class="text-red-500 text-sm font-medium pl-4">

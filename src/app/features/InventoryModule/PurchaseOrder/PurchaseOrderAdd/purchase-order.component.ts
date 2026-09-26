@@ -60,25 +60,36 @@ export class PurchaseOrderComponent {
   isPurchaseRequisitionSource = computed(
     () => this.poModel().sourceModule === PurchaseOrderSourceModule.PurchaseRequisition
   );
-  //Computed GrandTotal
-  grandTotal = computed(() =>
-    this.poModel().lines.reduce((grandTotal, line) => {
+  private taxMap = computed(() => {
+    const map = new Map<string | number, number>();
+
+    for (const tax of this.taxes()) {
+      if (tax.id != null) {
+        map.set(tax.id, tax.rate);
+      }
+    }
+
+    return map;
+  });
+
+  // 2. Computed GrandTotal using the safe lookup
+  grandTotal = computed(() => {
+    const taxes = this.taxMap();
+
+    return this.poModel().lines.reduce((total, line) => {
       const quantity = line.quantity ?? 0;
       const rate = line.rate ?? 0;
       const discount = line.discountAmount ?? 0;
 
-      const grossAmount = quantity * rate;
-      const taxableAmount = grossAmount - discount;
+      const taxableAmount = (quantity * rate) - discount;
 
-      const tax = this.taxes().find(t => t.id === line.taxId);
-      const taxAmount = tax ? taxableAmount * (tax.rate / 100) : 0;
+      // Check if line.taxId is present and look up in map
+      const taxRate = line.taxId != null ? (taxes.get(line.taxId) ?? 0) : 0;
+      const taxAmount = taxableAmount * (taxRate / 100);
 
-      const lineTotal = taxableAmount + taxAmount;
-
-      return grandTotal + lineTotal;
-    }, 0)
-  );
-
+      return total + taxableAmount + taxAmount;
+    }, 0);
+  });
 
 
 
@@ -101,7 +112,6 @@ export class PurchaseOrderComponent {
     applyEach(schema.lines, (line) => {
       required(line.wareHouseId, { message: 'Warehouse is required', });
       required(line.productVariantId, { message: 'Product is required', });
-      readonly(line.uom);
       validate(line.quantity, ({ value, valueOf }) => {
         const qty = value();
 
@@ -113,21 +123,12 @@ export class PurchaseOrderComponent {
         }
 
         if (this.poModel().sourceModule === PurchaseOrderSourceModule.PurchaseRequisition) {
-          const allocations = valueOf(line.allocations);
+          const available = valueOf(line.availableQuantity) ?? 0;
 
-          const allocatedQty = allocations?.reduce(
-            (sum, allocation) => sum + (allocation.quantity ?? 0),
-            0
-          ) ?? 0;
-
-          if (qty > allocatedQty) {
-            return {
-              kind: 'prQuantityExceeded',
-              message: `Quantity cannot be greater than PR quantity (${allocatedQty}).`
-            };
+          if (qty > available) {
+            return { kind: 'prQuantityExceeded', message: `Quantity cannot be greater than PR quantity.` };
           }
         }
-
         return null;
       });
 
@@ -272,7 +273,8 @@ export class PurchaseOrderComponent {
               displayName: line.productName,
               barcode: line.barcode,
               uom: line.uom,
-              sku: ""
+              sku: "",
+              cost: line.rate
             };
           });
 
@@ -280,8 +282,8 @@ export class PurchaseOrderComponent {
             data.lines.map(x => x.selectedProductVariant!)
           );
 
-          data.purchaseDateUI = new Date(data.purchaseDate);
-          data.expectedDeliveryDateUI = new Date(data.expectedDeliveryDate);
+          data.purchaseDateUI = data.purchaseDate ? new Date(data.purchaseDate) : null;
+          data.expectedDeliveryDateUI = data.expectedDeliveryDate ? new Date(data.expectedDeliveryDate) : null;
           this.poModel.set(data);
           this.loadPOLocationsIfRequired();
         },
@@ -352,10 +354,21 @@ export class PurchaseOrderComponent {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (lines) => {
-          this.poModel.update(prev => ({ ...prev, lines: lines.map(line => ({ ...line, purchaseRequisitionLineId: line.id })) }));
+          const existingPrLineIds = new Set(
+            this.poModel().lines.map(line => line.sourceRowId).filter((id): id is string => !!id)
+          );
+
+          const newLines = lines.filter(line => line.sourceRowId && !existingPrLineIds.has(line.sourceRowId));
+
+          if (lines.length > 0 && newLines.length === 0) {
+            this.errors.set(['The selected Purchase Requisition has already been added.']);
+            return;
+          }
+
+          this.errors.set([]);
+          this.poModel.update(prev => ({ ...prev, lines: [...prev.lines, ...newLines] }));
           if (this.postingPoint()) {
-            // Load locations for all unique warehouses
-            this.loadLocationsForLines(lines);
+            this.loadLocationsForLines(newLines);
           }
         },
         error: (err) => {
@@ -378,18 +391,24 @@ export class PurchaseOrderComponent {
   }
 
   setProductVariant(index: number, product: ProductVariantSearchDto) {
-    this.poModel().lines[index].selectedProductVariant = product;
-
-    this.updateLineField(index, 'productVariantId', product.id);
-    this.updateLineField(index, 'barcode', product.barcode ?? '');
-    this.updateLineField(index, 'uom', product.uom ?? '');
-
+    this.poModel.update(prev => {
+      const lines = [...prev.lines];
+      lines[index] = {
+        ...lines[index],
+        selectedProductVariant: product,
+        productVariantId: product.id,
+        barcode: product.barcode ?? '',
+        uom: product.uom ?? '',
+        rate: product.cost
+      };
+      return { ...prev, lines };
+    });
   }
   onWarehouseChange(index: number, warehouseId: number | null): void {
     this.updateLineField(index, 'wareHouseId', warehouseId);
 
     // If posting point/location is not enabled, don't manage warehouse locations
-    if (!this.postingPoint()) {
+    if (!this.postingPoint() || !this.enableLocation()) {
       return;
     }
     // Warehouse changed, so reset the previous location

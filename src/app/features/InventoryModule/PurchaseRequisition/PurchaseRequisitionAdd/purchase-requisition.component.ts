@@ -191,7 +191,8 @@ export class PurchaseRequisitionComponent {
               displayName: line.productVariantName ?? "",
               barcode: line.barcode,
               uom: line.uom,
-              sku: ""
+              sku: "",
+              cost: 0
             };
           });
 
@@ -199,7 +200,7 @@ export class PurchaseRequisitionComponent {
             data.lines.map(x => x.selectedProductVariant!)
           );
 
-          data.dateUI = new Date(data.date);
+          data.dateUI = data.date ? new Date(data.date) : null;
           this.prModel.set(data);
         },
         error: (err) => {
@@ -253,13 +254,18 @@ export class PurchaseRequisitionComponent {
         }
       });
   }
-  private setProductVariant(index: number, product: ProductVariantSearchDto) {
-    this.prModel().lines[index].selectedProductVariant = product;
-
-    this.updateLineField(index, 'productVariantId', product.id);
-    this.updateLineField(index, 'barcode', product.barcode ?? '');
-    this.updateLineField(index, 'uom', product.uom ?? '');
-
+  setProductVariant(index: number, product: ProductVariantSearchDto) {
+    this.prModel.update(prev => {
+      const lines = [...prev.lines];
+      lines[index] = {
+        ...lines[index],
+        selectedProductVariant: product,
+        productVariantId: product.id,
+        barcode: product.barcode ?? '',
+        uom: product.uom ?? ''
+      };
+      return { ...prev, lines };
+    });
   }
 
 }

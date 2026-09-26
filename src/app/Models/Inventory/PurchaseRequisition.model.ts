@@ -4,7 +4,7 @@ import { ProductVariantSearchDto } from "./ProductSearch.model";
 export interface PurchaseRequisitionDto {
     id?: string;
     name: string;
-    date: string;
+    date: string | null;
     dateUI: Date | null;
     description: string;
     departmentId: string | null;

@@ -4,4 +4,5 @@ export interface ProductVariantSearchDto {
     sku: string;
     barcode: string;
     uom: string;
+    cost: number;
 }

@@ -2,8 +2,7 @@ import { inject, Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { DataLayerService } from "../data-layer.service";
 import { toDateOnlyString } from "../../shared/Utility";
-import { ProductVariantSearchDto } from "../../Models/Inventory/ProductSearch.model";
-import { POFormLookupsDto, PurchaseOrderDto, PurchaseOrderLineAllocationDto, PurchaseOrderLineDto, PurchaseOrderSourceModule } from "../../Models/Inventory/PurchaseOrder.model";
+import { POFormLookupsDto, PurchaseOrderDto, PurchaseOrderLineDto, PurchaseOrderSourceModule } from "../../Models/Inventory/PurchaseOrder.model";
 
 @Injectable({
     providedIn: 'root'
@@ -22,11 +21,8 @@ export class PurchaseOrderService {
         return {
             quantity: 0, wareHouseId: null, productVariantId: null, barcode: '', uom: '',
             warehouseLocationId: null, warehouseLocationName: '', taxId: null, rate: 0, discountAmount: 0, productName: '',
-            warehouseName: '', allocations: []
+            warehouseName: '', sourceRowId: null, availableQuantity: null
         };
-    }
-    createAllocations(): PurchaseOrderLineAllocationDto {
-        return { purchaseRequisitionLineId: null, quantity: 0 };
     }
     getFormLookups(): Observable<POFormLookupsDto> {
         return this.dataService.getAll<POFormLookupsDto>('Dropdowns/POFormLookups');
@@ -87,8 +83,8 @@ export class PurchaseOrderService {
 
     savePO(formValue: PurchaseOrderDto, isEditMode: boolean): Observable<PurchaseOrderDto> {
         const url = 'PurchaseOrder';
-        formValue.purchaseDate = toDateOnlyString(formValue.purchaseDateUI) ?? '';
-        formValue.expectedDeliveryDate = toDateOnlyString(formValue.expectedDeliveryDateUI) ?? '';
+        formValue.purchaseDate = toDateOnlyString(formValue.purchaseDateUI) ?? null;
+        formValue.expectedDeliveryDate = toDateOnlyString(formValue.expectedDeliveryDateUI) ?? null;
 
 
         return isEditMode

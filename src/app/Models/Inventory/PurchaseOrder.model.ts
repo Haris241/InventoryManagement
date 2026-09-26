@@ -7,9 +7,9 @@ export interface PurchaseOrderDto {
     id?: string;
     name: string;
     description: string;
-    purchaseDate: string;
+    purchaseDate: string | null;
     purchaseDateUI: Date | null;
-    expectedDeliveryDate: string;
+    expectedDeliveryDate: string | null;
     expectedDeliveryDateUI: Date | null;
     paymentTerms: string;
     deliveryTerms: string;
@@ -34,14 +34,10 @@ export interface PurchaseOrderLineDto {
     productName: string;
     barcode: string;
     uom: string;
-    allocations: PurchaseOrderLineAllocationDto[];
+    sourceRowId: string | null;
+    availableQuantity: number | null;
 }
 
-// Line Allocation DTO (Sourced from Requisitions)
-export interface PurchaseOrderLineAllocationDto {
-    purchaseRequisitionLineId?: string | null;
-    quantity: number;
-}
 
 // Lookups for Forms
 export interface POFormLookupsDto {

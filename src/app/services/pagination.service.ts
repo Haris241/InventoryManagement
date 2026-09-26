@@ -14,10 +14,9 @@ export class PaginationService {
   constructor() { }
   private dataService = inject(DataLayerService)
   autoSearchDropdown<T>(endpoint: string) {
-    const searchterm = signal<string>('');
+    const searchterm = signal<string>('', { equal: () => false });
     const search$ = toObservable(searchterm).pipe(
       debounceTime(500),
-      distinctUntilChanged(),
       filter(search => search.length > 0),
       switchMap(search => this.dataService.getById<T[]>(endpoint, search))
     );

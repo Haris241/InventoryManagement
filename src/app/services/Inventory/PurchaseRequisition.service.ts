@@ -72,7 +72,7 @@ export class PurchaseRequisitionService {
 
     savePr(formValue: PurchaseRequisitionDto, isEditMode: boolean): Observable<PurchaseRequisitionDto> {
         const url = 'PurchaseRequisition';
-        formValue.date = toDateOnlyString(formValue.dateUI) ?? '';
+        formValue.date = toDateOnlyString(formValue.dateUI) ?? null;
 
 
         return isEditMode

@@ -1,6 +1,6 @@
 <!-- Create Form -->
 <form (ngSubmit)="createBrand($event)">
-    <div class="flex flex-wrap global-div p-5">
+    <div class="flex flex-wrap global-div p-5 gap-2 lg:gap-0">
         <div class="w-full mb-4">
             <h3 class="text-2xl font-semibold text-center mb-3">
                 @if(isEditMode()){
@@ -12,7 +12,7 @@
             <hr class="second-color">
         </div>
 
-        <div class="lg:w-1/4 w-full mb-3">
+        <div class="lg:w-1/4  w-[calc(50%-0.25rem)] mb-3">
             <p-floatLabel variant="on">
                 <div class="lg:w-8/12 w-full">
                     <input pInputText pSize="small" id="name" autocomplete="off" type="text" class="w-full"
@@ -23,7 +23,7 @@
             <app-field-errorS [field]="brandForm.name" [submit]="formSubmitted()" [backendErrors]="backendErrors()">
             </app-field-errorS>
         </div>
-        <div class="lg:w-1/4 w-full mb-3">
+        <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3">
             <p-floatLabel variant="on">
                 <div class="lg:w-8/12 w-full">
                     <input pInputText pSize="small" id="slug" autocomplete="off" type="text" class="w-full"
@@ -32,7 +32,7 @@
                 </div>
             </p-floatLabel>
         </div>
-        <div class="lg:w-1/4 w-full mb-3">
+        <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3">
             <p-floatLabel variant="on">
                 <div class="lg:w-8/12 w-full">
                     <input pInputText pSize="small" id="description" autocomplete="off" type="text" class="w-full"
@@ -42,7 +42,7 @@
             </p-floatLabel>
         </div>
         @if(isEditMode()){
-        <div class="lg:w-1/4 w-full mb-3 flex items-center gap-2">
+        <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3 flex items-center gap-2">
             <input id="isActive" type="checkbox" [formField]="brandForm.isActive" class="w-auto" />
             <label for="isActive" class="mb-0 !text-lg font-medium gradient-heading">Active</label>
         </div>
