@@ -69,7 +69,8 @@
                 <div class="lg:w-8/12 w-full">
                     <p-select [(ngModel)]="prModel().departmentId" [ngModelOptions]="{standalone: true}"
                         (ngModelChange)="updateField('departmentId',$event)" [options]="departments()"
-                        optionLabel="name" optionValue="id" class="w-full" [showClear]="true" />
+                        optionLabel="name" optionValue="id" class="w-full" [filter]="true" filterBy="name"
+                        [showClear]="true" />
                     <label for="departmentId">Department</label>
                 </div>
             </p-floatLabel>
@@ -135,23 +136,39 @@
                                 (onSelect)="onProductVariantChange($index, $event.value)"
                                 (completeMethod)="SearchDropDown($event, productSearch.searchterm)"
                                 optionLabel="displayName" [suggestions]="productSearchList()" [showClear]="true"
-                                appendTo="body" fluid size="small">
+                                appendTo="body" panelStyleClass="product-search-panel" fluid size="small">
 
                                 <ng-template let-product pTemplate="item">
                                     <div class="product-search-item">
+
+                                        <!-- Product -->
                                         <div class="product-search-main">
                                             {{ product.displayName }}
                                         </div>
 
+                                        <!-- Details -->
                                         <div class="product-search-meta">
-                                            <span>SKU: {{ product.sku }}</span>
-                                            <span>UOM: {{ product.uom }}</span>
+
+                                            <div class="product-search-detail">
+                                                <span class="product-search-label">SKU:</span>
+                                                <span class="product-search-value">
+                                                    {{ product.sku }}
+                                                </span>
+                                            </div>
+
+                                            <div class="product-search-detail">
+                                                <span class="product-search-label">Unit:</span>
+                                                <span class="product-search-value">
+                                                    {{ product.uom }}
+                                                </span>
+                                            </div>
+
                                         </div>
+
                                     </div>
                                 </ng-template>
 
                             </p-autoComplete>
-
 
                             <app-field-errorS [field]="prForm.lines[$index].productVariantId" [submit]="formSubmitted()"
                                 [backendErrors]="backendErrors()"

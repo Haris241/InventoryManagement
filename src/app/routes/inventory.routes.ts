@@ -125,6 +125,32 @@ export const inventoryRoutes: Routes = [
                 path: 'editpurchaseorder/:id',
                 loadComponent: () => import('../features/InventoryModule/PurchaseOrder/PurchaseOrderAdd/purchase-order.component').then(m => m.PurchaseOrderComponent)
             },
+            // Gate Entry Routes
+            {
+                path: 'gateentrylist',
+                loadComponent: () => import('../features/InventoryModule/GateEntry/GateEntryList/gate-entry-list.component').then(m => m.GateEntryListComponent)
+            },
+            {
+                path: 'addgateentry',
+                loadComponent: () => import('../features/InventoryModule/GateEntry/GateEntryAddUpdate/gate-entry-add-update.component').then(m => m.GateEntryAddUpdateComponent)
+            },
+            {
+                path: 'editgateentry/:id',
+                loadComponent: () => import('../features/InventoryModule/GateEntry/GateEntryAddUpdate/gate-entry-add-update.component').then(m => m.GateEntryAddUpdateComponent)
+            },
+            // GRN Routes
+            {
+                path: 'grnlist',
+                loadComponent: () => import('../features/InventoryModule/GRN/GRNList/grn-list.component').then(m => m.GrnListComponent)
+            },
+            {
+                path: 'addgrn',
+                loadComponent: () => import('../features/InventoryModule/GRN/GRNAddUpdate/grn-add-update.component').then(m => m.GrnAddUpdateComponent)
+            },
+            {
+                path: 'editgrn/:id',
+                loadComponent: () => import('../features/InventoryModule/GRN/GRNAddUpdate/grn-add-update.component').then(m => m.GrnAddUpdateComponent)
+            },
 
             {
                 path: '',

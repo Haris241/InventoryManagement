@@ -109,6 +109,36 @@ export const INVENTORY_LAYOUT_CONFIG: ModuleLayoutConfig = {
             ]
         },
         {
+            key: 'GateEntry',
+            icon: 'local_shipping',
+            label: 'Gate Entry',
+            children: [
+                {
+                    label: 'Add Gate Entry',
+                    route: '/Inventory/addgateentry'
+                },
+                {
+                    label: 'Gate Entry List',
+                    route: '/Inventory/gateentrylist'
+                }
+            ]
+        },
+        {
+            key: 'GRN',
+            icon: 'fact_check',
+            label: 'GRN',
+            children: [
+                {
+                    label: 'Add GRN',
+                    route: '/Inventory/addgrn'
+                },
+                {
+                    label: 'GRN List',
+                    route: '/Inventory/grnlist'
+                }
+            ]
+        },
+        {
             key: 'Supplier',
             icon: 'person',
             label: 'Supplier',

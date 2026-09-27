@@ -73,7 +73,7 @@
                 <div class="lg:w-8/12 w-full">
                     <p-select [(ngModel)]="poModel().supplierId" [ngModelOptions]="{standalone: true}"
                         (ngModelChange)="updateField('supplierId',$event)" [options]="suppliers()" optionLabel="name"
-                        optionValue="id" class="w-full" [showClear]="true" />
+                        optionValue="id" class="w-full" [showClear]="true" [filter]="true" filterBy="name" />
                     <label for="supplierId" class="required">Supplier</label>
                 </div>
             </p-floatLabel>
@@ -203,13 +203,27 @@
                                 (onSelect)="onProductVariantChange($index, $event.value)"
                                 (completeMethod)="SearchDropDown($event,productSearch.searchterm)"
                                 optionLabel="displayName" [suggestions]="productSearchList()" [showClear]="true"
-                                appendTo="body" fluid size="small">
+                                appendTo="body" fluid size="small" panelStyleClass="product-search-panel">
                                 <ng-template let-product pTemplate="item">
                                     <div class="product-search-item">
-                                        <div class="product-search-main">{{ product.displayName }}</div>
+                                        <!-- Product -->
+                                        <div class="product-search-main">
+                                            {{ product.displayName }}
+                                        </div>
+                                        <!-- Details -->
                                         <div class="product-search-meta">
-                                            <span>SKU: {{ product.sku }}</span>
-                                            <span>UOM: {{ product.uom }}</span>
+                                            <div class="product-search-detail">
+                                                <span class="product-search-label">SKU:</span>
+                                                <span class="product-search-value">
+                                                    {{ product.sku }}
+                                                </span>
+                                            </div>
+                                            <div class="product-search-detail">
+                                                <span class="product-search-label">Unit:</span>
+                                                <span class="product-search-value">
+                                                    {{ product.uom }}
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
                                 </ng-template>
