@@ -1,8 +1,406 @@
-<section class="placeholder-page WhiteC" aria-labelledby="contact-page-heading">
-  <span class="material-symbols-outlined second-color" style="font-size:48px;" aria-hidden="true">mail</span>
-  <h1 id="contact-page-heading" class="gradient-heading">Contact Us</h1>
-  <p>This page is coming soon. We're working on it!</p>
-  <a routerLink="/" class="global-button" style="margin-top:16px;">
-    <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span>&nbsp;Back to Home
+<!-- ============================================================
+     Harvora ERP — Contact Us Page
+     SEO: Get in touch with the developer of Harvora ERP — the
+          cloud-based multi-tenant ERP for textile & trade businesses.
+     ============================================================ -->
+
+<!-- ── NAV ────────────────────────────────────────────────── -->
+<nav class="hp-nav" role="navigation" aria-label="Main navigation">
+
+  <button class="hp-theme-btn hp-theme-btn-mobile" (click)="toggleTheme()"
+    [attr.aria-label]="themeService.isDark() ? 'Switch to light mode' : 'Switch to dark mode'">
+    <span class="material-symbols-outlined" aria-hidden="true">
+      {{ themeService.isDark() ? 'light_mode' : 'dark_mode' }}
+    </span>
+  </button>
+
+  <a class="hp-logo" routerLink="/" aria-label="Harvora ERP Home">
+    <img src="/Logo.png" alt="Harvora ERP Logo" class="hp-logo-img">
+    <span class="gradient-heading hp-logo-text">Harvora ERP</span>
   </a>
+
+  <div class="hp-nav-right">
+    <div class="hp-nav-links" role="menubar">
+      <a class="hp-nav-link" routerLink="/" role="menuitem">Home</a>
+      <a class="hp-nav-link" routerLink="/about" role="menuitem">About</a>
+      <a class="hp-nav-link hp-nav-link-active" routerLink="/contact" role="menuitem">Contact</a>
+    </div>
+
+    <button class="hp-theme-btn hp-theme-btn-desktop" (click)="toggleTheme()"
+      [attr.aria-label]="themeService.isDark() ? 'Switch to light mode' : 'Switch to dark mode'">
+      <span class="material-symbols-outlined" aria-hidden="true">
+        {{ themeService.isDark() ? 'light_mode' : 'dark_mode' }}
+      </span>
+    </button>
+
+    <div class="hp-nav-actions">
+      <a id="ct-nav-login-btn" routerLink="/login" class="hp-btn-outline">Login</a>
+      <a id="ct-nav-register-btn" routerLink="/register" class="hp-btn-outline">Get Started</a>
+    </div>
+  </div>
+
+  <button class="hp-burger" (click)="toggleMenu()" aria-label="Toggle navigation menu"
+    [attr.aria-expanded]="menuOpen">
+    <span class="material-symbols-outlined" aria-hidden="true">{{ menuOpen ? 'close' : 'menu' }}</span>
+  </button>
+</nav>
+
+<!-- Mobile drawer -->
+<div class="hp-drawer" [class.hp-drawer-open]="menuOpen" role="dialog" aria-label="Mobile navigation">
+  <a class="hp-nav-link" routerLink="/" (click)="menuOpen=false">Home</a>
+  <a class="hp-nav-link" routerLink="/about" (click)="menuOpen=false">About</a>
+  <a class="hp-nav-link" routerLink="/contact" (click)="menuOpen=false">Contact</a>
+  <div class="hp-drawer-divider"></div>
+  <a routerLink="/login" class="hp-btn-outline" (click)="menuOpen=false">Login</a>
+  <a routerLink="/register" class="hp-btn-outline" (click)="menuOpen=false">Get Started</a>
+</div>
+
+
+<!-- ── PAGE HERO ────────────────────────────────────────────── -->
+<section class="hp-hero" id="contact-hero" aria-labelledby="contact-hero-heading">
+
+  <div class="hp-hero-badge">
+    <span class="material-symbols-outlined icon-color" aria-hidden="true">mail</span>
+    We'd Love to Hear From You
+  </div>
+
+  <h1 id="contact-hero-heading">
+    <span class="gradient-heading">Let's Start a Conversation.</span>
+  </h1>
+
+  <p class="hp-hero-sub">
+    Whether you have a question about features, pricing, trial access, or anything else — reach
+    out directly and get a response from the developer, not a support bot.
+  </p>
+
 </section>
+
+
+<!-- ── MAIN CONTENT: form + info ────────────────────────────── -->
+<section class="hp-section ct-section" id="contact-form-section" aria-labelledby="contact-form-heading">
+
+  <div class="ct-layout">
+
+    <!-- ── LEFT: Contact Info ──────────────────────────── -->
+    <aside class="ct-info-panel" aria-label="Contact information">
+
+      <div class="hp-section-label">
+        <span class="material-symbols-outlined icon-color" aria-hidden="true">contact_support</span>
+        Get in Touch
+      </div>
+      <h2 id="contact-form-heading" class="hp-section-title">Contact Information</h2>
+      <p class="hp-section-sub" style="margin-bottom: 24px;">
+        Harvora ERP is built and maintained by a single senior developer. Your message goes
+        directly to the person who wrote the code.
+      </p>
+
+      <div class="ct-info-list">
+
+        <div class="ct-info-item">
+          <div class="ct-info-icon">
+            <span class="material-symbols-outlined" aria-hidden="true">mail</span>
+          </div>
+          <div>
+            <strong>Email</strong>
+            <!-- ★ PLACEHOLDER: Replace with your business email -->
+            <a href="mailto:hello@harvoraerp.com" class="ct-info-link">hello@harvoraerp.com</a>
+          </div>
+        </div>
+
+        <div class="ct-info-item">
+          <div class="ct-info-icon">
+            <span class="material-symbols-outlined" aria-hidden="true">schedule</span>
+          </div>
+          <div>
+            <strong>Response Time</strong>
+            <p>Usually within 24 – 48 hours on business days.</p>
+          </div>
+        </div>
+
+        <div class="ct-info-item">
+          <div class="ct-info-icon">
+            <span class="material-symbols-outlined" aria-hidden="true">public</span>
+          </div>
+          <div>
+            <strong>Location</strong>
+            <!-- ★ PLACEHOLDER: Replace with your city / region -->
+            <p>[Your City, Country]</p>
+          </div>
+        </div>
+
+        <div class="ct-info-item">
+          <div class="ct-info-icon">
+            <span class="material-symbols-outlined" aria-hidden="true">link</span>
+          </div>
+          <div>
+            <strong>Follow & Connect</strong>
+            <div class="ct-social-row">
+              <!-- ★ PLACEHOLDER: Replace href with your actual URLs -->
+              <a id="ct-social-linkedin" href="#" class="ct-social-btn" target="_blank"
+                rel="noopener noreferrer" aria-label="LinkedIn">
+                <span class="material-symbols-outlined" aria-hidden="true">work</span>
+              </a>
+              <a id="ct-social-github" href="#" class="ct-social-btn" target="_blank"
+                rel="noopener noreferrer" aria-label="GitHub">
+                <span class="material-symbols-outlined" aria-hidden="true">code</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Quick FAQ chips -->
+      <div class="ct-faq">
+        <div class="hp-section-label" style="margin-top: 24px;">
+          <span class="material-symbols-outlined icon-color" aria-hidden="true">help</span>
+          Common Reasons to Reach Out
+        </div>
+        <div class="ct-faq-chips">
+          <span class="ct-faq-chip">Trial Access</span>
+          <span class="ct-faq-chip">Pricing</span>
+          <span class="ct-faq-chip">Feature Request</span>
+          <span class="ct-faq-chip">Technical Support</span>
+          <span class="ct-faq-chip">Partnership</span>
+          <span class="ct-faq-chip">Bug Report</span>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- ── RIGHT: Contact Form ─────────────────────────── -->
+    <div class="ct-form-panel">
+
+      <!-- Success state -->
+      @if (submitted()) {
+        <div class="ct-success-card" role="alert" aria-live="polite">
+          <div class="ct-success-icon">
+            <span class="material-symbols-outlined" aria-hidden="true">check_circle</span>
+          </div>
+          <h3>Message Sent!</h3>
+          <p>
+            Thank you for reaching out. I'll get back to you within 24 – 48 business hours.
+            Looking forward to speaking with you!
+          </p>
+          <button id="ct-send-another-btn" class="global-button" (click)="resetForm()">
+            <span class="material-symbols-outlined" aria-hidden="true">refresh</span>&nbsp;Send Another Message
+          </button>
+        </div>
+      }
+
+      <!-- Form -->
+      @if (!submitted()) {
+        <form class="ct-form" (ngSubmit)="onSubmit()" #contactForm="ngForm"
+          aria-label="Contact enquiry form" novalidate>
+
+          <div class="ct-form-header">
+            <div class="hp-section-label">
+              <span class="material-symbols-outlined icon-color" aria-hidden="true">edit_note</span>
+              Send a Message
+            </div>
+            <p class="ct-form-sub">Fill in the details below and hit Send — it goes straight to my inbox.</p>
+          </div>
+
+          <!-- Row: Full Name + Email -->
+          <div class="ct-row">
+            <div class="ct-field">
+              <label for="ct-fullName" class="ct-label">
+                Full Name <span class="ct-required" aria-hidden="true">*</span>
+              </label>
+              <div class="ct-input-wrap">
+                <span class="material-symbols-outlined ct-input-icon" aria-hidden="true">person</span>
+                <input
+                  id="ct-fullName"
+                  name="fullName"
+                  type="text"
+                  class="ct-input"
+                  placeholder="Jane Smith"
+                  [(ngModel)]="form.fullName"
+                  required
+                  maxlength="100"
+                  aria-required="true"
+                  autocomplete="name"
+                />
+              </div>
+              @if (contactForm.submitted && contactForm.controls['fullName']?.invalid) {
+                <span class="ct-error" role="alert">Full name is required.</span>
+              }
+            </div>
+
+            <div class="ct-field">
+              <label for="ct-email" class="ct-label">
+                Email Address <span class="ct-required" aria-hidden="true">*</span>
+              </label>
+              <div class="ct-input-wrap">
+                <span class="material-symbols-outlined ct-input-icon" aria-hidden="true">mail</span>
+                <input
+                  id="ct-email"
+                  name="email"
+                  type="email"
+                  class="ct-input"
+                  placeholder="jane@company.com"
+                  [(ngModel)]="form.email"
+                  required
+                  maxlength="150"
+                  aria-required="true"
+                  autocomplete="email"
+                />
+              </div>
+              @if (contactForm.submitted && contactForm.controls['email']?.invalid) {
+                <span class="ct-error" role="alert">A valid email address is required.</span>
+              }
+            </div>
+          </div>
+
+          <!-- Row: Phone + Company -->
+          <div class="ct-row">
+            <div class="ct-field">
+              <label for="ct-phone" class="ct-label">Phone Number</label>
+              <div class="ct-input-wrap">
+                <span class="material-symbols-outlined ct-input-icon" aria-hidden="true">phone</span>
+                <input
+                  id="ct-phone"
+                  name="phone"
+                  type="tel"
+                  class="ct-input"
+                  placeholder="+92 300 0000000"
+                  [(ngModel)]="form.phone"
+                  maxlength="20"
+                  autocomplete="tel"
+                />
+              </div>
+            </div>
+
+            <div class="ct-field">
+              <label for="ct-company" class="ct-label">Company / Organisation</label>
+              <div class="ct-input-wrap">
+                <span class="material-symbols-outlined ct-input-icon" aria-hidden="true">business</span>
+                <input
+                  id="ct-company"
+                  name="company"
+                  type="text"
+                  class="ct-input"
+                  placeholder="Acme Textiles Ltd."
+                  [(ngModel)]="form.company"
+                  maxlength="100"
+                  autocomplete="organization"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- Subject -->
+          <div class="ct-field">
+            <label for="ct-subject" class="ct-label">
+              Subject <span class="ct-required" aria-hidden="true">*</span>
+            </label>
+            <div class="ct-input-wrap">
+              <span class="material-symbols-outlined ct-input-icon" aria-hidden="true">subject</span>
+              <select
+                id="ct-subject"
+                name="subject"
+                class="ct-input ct-select"
+                [(ngModel)]="form.subject"
+                required
+                aria-required="true">
+                <option value="" disabled>Select a topic…</option>
+                @for (opt of subjectOptions; track opt) {
+                  <option [value]="opt">{{ opt }}</option>
+                }
+              </select>
+            </div>
+            @if (contactForm.submitted && contactForm.controls['subject']?.invalid) {
+              <span class="ct-error" role="alert">Please select a subject.</span>
+            }
+          </div>
+
+          <!-- Message -->
+          <div class="ct-field">
+            <label for="ct-message" class="ct-label">
+              Message <span class="ct-required" aria-hidden="true">*</span>
+            </label>
+            <textarea
+              id="ct-message"
+              name="message"
+              class="ct-input ct-textarea"
+              placeholder="Tell me how I can help…"
+              [(ngModel)]="form.message"
+              required
+              minlength="10"
+              maxlength="2000"
+              rows="6"
+              aria-required="true">
+            </textarea>
+            @if (contactForm.submitted && contactForm.controls['message']?.invalid) {
+              <span class="ct-error" role="alert">Message must be at least 10 characters.</span>
+            }
+          </div>
+
+          <!-- API error -->
+          @if (errorMsg()) {
+            <div class="ct-api-error" role="alert" aria-live="polite">
+              <span class="material-symbols-outlined" aria-hidden="true">error</span>
+              {{ errorMsg() }}
+            </div>
+          }
+
+          <!-- Submit -->
+          <div class="ct-form-footer">
+            <button
+              id="ct-submit-btn"
+              type="submit"
+              class="global-button ct-submit-btn"
+              [disabled]="isSubmitting()"
+              [attr.aria-busy]="isSubmitting()">
+              @if (isSubmitting()) {
+                <span class="material-symbols-outlined ct-spin" aria-hidden="true">progress_activity</span>
+                &nbsp;Sending…
+              } @else {
+                <span class="material-symbols-outlined" aria-hidden="true">send</span>
+                &nbsp;Send Message
+              }
+            </button>
+            <p class="ct-privacy-note">
+              <span class="material-symbols-outlined" aria-hidden="true">lock</span>
+              Your information is kept private and never shared.
+            </p>
+          </div>
+
+        </form>
+      }
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ── FOOTER ────────────────────────────────────────────────── -->
+<footer class="hp-footer" role="contentinfo">
+  <div class="hp-footer-inner">
+
+    <div class="hp-footer-brand">
+      <div class="hp-footer-brand-row">
+        <img src="/Logo.png" alt="Harvora ERP Logo" class="hp-logo-img">
+        <span class="gradient-heading" style="font-size:1.05rem;font-weight:700;">Harvora ERP</span>
+      </div>
+      <p>Where Business Flows — the modern cloud ERP for textile, garment &amp; general trade.</p>
+    </div>
+
+    <nav class="hp-footer-links" aria-label="Quick links">
+      <strong>Quick Links</strong>
+      <a routerLink="/" class="hp-footer-link">Home</a>
+      <a routerLink="/about" class="hp-footer-link">About</a>
+      <a routerLink="/contact" class="hp-footer-link">Contact</a>
+    </nav>
+
+    <nav class="hp-footer-links" aria-label="Account links">
+      <strong>Account</strong>
+      <a routerLink="/login" class="hp-footer-link">Login</a>
+      <a routerLink="/register" class="hp-footer-link">Register</a>
+    </nav>
+
+  </div>
+  <div class="hp-footer-bottom">
+    <p>&copy; {{ currentYear }} Harvora ERP. All rights reserved.</p>
+  </div>
+</footer>
