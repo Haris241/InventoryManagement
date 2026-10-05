@@ -94,33 +94,17 @@
                 </div>
             </p-floatLabel>
         </div>
-        @if(isPOSource ()){
+        @if(currentSourceConfig(); as config){
         <div class="lg:w-1/4 w-full mb-3">
             <p-floatLabel variant="on">
                 <div class="lg:w-10/12 w-full">
-                    <p-autoComplete [(ngModel)]="poId" [ngModelOptions]="{standalone: true}"
-                        (onSelect)="getPOLines($event.value.id)"
-                        (completeMethod)="SearchDropDown($event,poSearch.searchterm)" inputId="poId" optionLabel="name"
-                        [dropdown]="true" [suggestions]="poSearchList()" optionValue="id" [showClear]="true"
-                        class="w-full"></p-autoComplete>
-                    <label for="poId"> Search Purchase Order</label>
+                    <p-autoComplete [(ngModel)]="sourceDocumentId" [ngModelOptions]="{standalone: true}"
+                        (onSelect)="loadSourceLines($event.value.id)"
+                        (completeMethod)="SearchDropDown($event, config.search.searchterm)" inputId="sourceDocId"
+                        optionLabel="name" [dropdown]="true" [suggestions]="config.search.result()" optionValue="id"
+                        [showClear]="true" class="w-full"></p-autoComplete>
+                    <label for="sourceDocId">{{ config.label }}</label>
                 </div>
-
-            </p-floatLabel>
-        </div>
-        }
-        @if(isGESource ()){
-        <div class="lg:w-1/4 w-full mb-3">
-            <p-floatLabel variant="on">
-                <div class="lg:w-10/12 w-full">
-                    <p-autoComplete [(ngModel)]="geId" [ngModelOptions]="{standalone: true}"
-                        (onSelect)="getGELines($event.value.id)"
-                        (completeMethod)="SearchDropDown($event,geSearch.searchterm)" inputId="geId" optionLabel="name"
-                        [dropdown]="true" [suggestions]="geSearchList()" optionValue="id" [showClear]="true"
-                        class="w-full"></p-autoComplete>
-                    <label for="geId"> Search Gate Entry</label>
-                </div>
-
             </p-floatLabel>
         </div>
         }
@@ -322,6 +306,14 @@
                 </div>
                 <!-- Rate -->
                 <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
+                    @if (isLinePriceReadonly(line)) {
+                    <p-floatLabel variant="on">
+                        <div class="w-full">
+                            <input pInputText pSize="small" [value]="line.rate" readonly class="w-full">
+                            <label>Rate</label>
+                        </div>
+                    </p-floatLabel>
+                    } @else {
                     <p-floatLabel variant="on">
                         <div class="w-full">
                             <input pInputText pSize="small" autocomplete="off" type="number" class="w-full"
@@ -332,10 +324,19 @@
                     <app-field-errorS [field]="grnForm.lines[$index].rate" [submit]="formSubmitted()"
                         [backendErrors]="backendErrors()" [fieldPath]="'lines[' + $index + '].rate'">
                     </app-field-errorS>
+                    }
                 </div>
 
                 <!-- Discount -->
                 <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
+                    @if (isLinePriceReadonly(line)) {
+                    <p-floatLabel variant="on">
+                        <div class="w-full">
+                            <input pInputText pSize="small" [value]="line.discountPercentage" readonly class="w-full">
+                            <label>Disc (%)</label>
+                        </div>
+                    </p-floatLabel>
+                    } @else {
                     <p-floatLabel variant="on">
                         <div class="w-full">
                             <input pInputText pSize="small" autocomplete="off" type="number" class="w-full"
@@ -343,6 +344,7 @@
                             <label>Disc (%)</label>
                         </div>
                     </p-floatLabel>
+                    }
                 </div>
 
                 <!-- Tax -->
@@ -352,7 +354,8 @@
                             <p-select [ngModel]="line.taxId" [ngModelOptions]="{standalone: true}"
                                 (ngModelChange)="updateLineField($index, 'taxId', $event)" [options]="taxes()"
                                 optionLabel="name" optionValue="id" [filter]="true" filterBy="name" class="w-full"
-                                [showClear]="true">
+                                [showClear]="!isLinePriceReadonly(line)"
+                                [disabled]="isLinePriceReadonly(line)">
                             </p-select>
                             <label>Tax</label>
                         </div>

@@ -1,4 +1,4 @@
-import { Component, computed, DestroyRef, inject, signal, WritableSignal } from '@angular/core';
+import { Component, computed, DestroyRef, inject, signal, Signal, WritableSignal } from '@angular/core';
 import { applyEach, form, FormField, readonly, required, validate } from '@angular/forms/signals';
 import { FloatLabel } from "primeng/floatlabel";
 import { FormsModule } from '@angular/forms';
@@ -7,6 +7,7 @@ import { DatePickerModule } from 'primeng/datepicker';
 import { SelectModule } from 'primeng/select';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Observable } from 'rxjs';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FieldErrorSComponent } from '../../../../shared/field-error-s/field-error-s.component';
 import { AutoDropdown, TaxDropDown } from '../../../../Models/Pagination.model';
@@ -17,6 +18,17 @@ import { ProductVariantSearchDto } from '../../../../Models/Inventory/ProductSea
 import { PurchaseOrderService } from '../../../../services/Inventory/PurchaseOrder.service';
 import { PurchaseOrderDto, PurchaseOrderLineDto, PurchaseOrderSourceModule } from '../../../../Models/Inventory/PurchaseOrder.model';
 import { ProductSearchService } from '../../../../services/Inventory/ProductSearch.service';
+
+interface POSourceModuleConfig {
+  label: string;
+  search: {
+    searchterm: WritableSignal<string>;
+    result: Signal<AutoDropdown[]>;
+    setInitialValue?: (items: AutoDropdown[]) => void;
+  };
+  fetchLines: (id: string) => Observable<PurchaseOrderLineDto[]>;
+  duplicateError: string;
+}
 
 @Component({
   selector: 'app-purchase-order',
@@ -53,10 +65,27 @@ export class PurchaseOrderComponent {
   productSearchList = this.productSearch.result;
   sourceModules = signal(enumToOptions(PurchaseOrderSourceModule, true));
 
-  //PR Search AutoComplete
-  prSearch = this.pagination.autoSearchDropdown<AutoDropdown>('DropDowns/PurchaseRequisitionListApproved');
-  prSearchList = this.prSearch.result;
-  prId = signal<string | null>(null);
+  // Source Document AutoComplete
+  sourceDocumentId = signal<string | null>(null);
+
+  readonly sourceConfigs: Partial<Record<PurchaseOrderSourceModule, POSourceModuleConfig>> = {
+    [PurchaseOrderSourceModule.PurchaseRequisition]: {
+      label: 'Search Purchase Requisition',
+      search: this.pagination.autoSearchDropdown<AutoDropdown>('DropDowns/PurchaseRequisitionListApproved'),
+      fetchLines: (id) => this.poService.getPRLines(id),
+      duplicateError: 'The selected Purchase Requisition has already been added.'
+    }
+  };
+
+  currentSourceConfig = computed(() => {
+    const source = this.poModel().sourceModule;
+    return source != null ? this.sourceConfigs[source] ?? null : null;
+  });
+
+  isGeneralSource = computed(
+    () => this.poModel().sourceModule === PurchaseOrderSourceModule.General
+  );
+
   isPurchaseRequisitionSource = computed(
     () => this.poModel().sourceModule === PurchaseOrderSourceModule.PurchaseRequisition
   );
@@ -349,8 +378,11 @@ export class PurchaseOrderComponent {
         }
       });
   }
-  getPRLines(prId: string) {
-    this.poService.getPRLines(prId)
+  loadSourceLines(docId: string) {
+    const config = this.currentSourceConfig();
+    if (!config) return;
+
+    config.fetchLines(docId)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (lines) => {
@@ -361,7 +393,7 @@ export class PurchaseOrderComponent {
           const newLines = lines.filter(line => line.sourceRowId && !existingPrLineIds.has(line.sourceRowId));
 
           if (lines.length > 0 && newLines.length === 0) {
-            this.errors.set(['The selected Purchase Requisition has already been added.']);
+            this.errors.set([config.duplicateError]);
             return;
           }
 
@@ -453,8 +485,8 @@ export class PurchaseOrderComponent {
       ...prev, lines: sourceModule === PurchaseOrderSourceModule.General
         ? [this.poService.createDefaultPOline([])] : []
     }));
-    // Clear selected PR
-    this.prId.set(null);
+    // Clear selected source document
+    this.sourceDocumentId.set(null);
   }
 
 }

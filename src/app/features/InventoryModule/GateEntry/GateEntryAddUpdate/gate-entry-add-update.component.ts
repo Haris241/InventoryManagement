@@ -1,4 +1,4 @@
-import { Component, computed, DestroyRef, inject, signal, WritableSignal } from '@angular/core';
+import { Component, computed, DestroyRef, inject, signal, Signal, WritableSignal } from '@angular/core';
 import { applyEach, form, FormField, required, validate } from '@angular/forms/signals';
 import { FloatLabel } from "primeng/floatlabel";
 import { FormsModule } from '@angular/forms';
@@ -7,6 +7,7 @@ import { DatePickerModule } from 'primeng/datepicker';
 import { SelectModule } from 'primeng/select';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Observable } from 'rxjs';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FieldErrorSComponent } from '../../../../shared/field-error-s/field-error-s.component';
 import { AutoDropdown } from '../../../../Models/Pagination.model';
@@ -17,6 +18,17 @@ import { ProductVariantSearchDto } from '../../../../Models/Inventory/ProductSea
 import { ProductSearchService } from '../../../../services/Inventory/ProductSearch.service';
 import { GateEntryService } from '../../../../services/Inventory/GateEntry.service';
 import { GateEntryDto, GateEntryLineDto, GateEntrySourceModule } from '../../../../Models/Inventory/GateEntry.model';
+
+interface GESourceModuleConfig {
+  label: string;
+  search: {
+    searchterm: WritableSignal<string>;
+    result: Signal<AutoDropdown[]>;
+    setInitialValue?: (items: AutoDropdown[]) => void;
+  };
+  fetchLines: (id: string) => Observable<GateEntryLineDto[]>;
+  duplicateError: string;
+}
 
 @Component({
   selector: 'app-gate-entry-add-update',
@@ -49,10 +61,23 @@ export class GateEntryAddUpdateComponent {
   productSearchList = this.productSearch.result;
   sourceModules = signal(enumToOptions(GateEntrySourceModule, true));
 
-  //PO Search AutoComplete
-  poSearch = this.pagination.autoSearchDropdown<AutoDropdown>('DropDowns/PurchaseOrderListApproved');
-  poSearchList = this.poSearch.result;
-  poId = signal<string | null>(null);
+  // Source Document AutoComplete
+  sourceDocumentId = signal<string | null>(null);
+
+  readonly sourceConfigs: Partial<Record<GateEntrySourceModule, GESourceModuleConfig>> = {
+    [GateEntrySourceModule.PurchaseOrder]: {
+      label: 'Search Purchase Order',
+      search: this.pagination.autoSearchDropdown<AutoDropdown>('DropDowns/PurchaseOrderListApproved'),
+      fetchLines: (id) => this.geService.getPOLines(id),
+      duplicateError: 'The selected Purchase Order has already been added.'
+    }
+  };
+
+  currentSourceConfig = computed(() => {
+    const source = this.geModel().sourceModule;
+    return source != null ? this.sourceConfigs[source] ?? null : null;
+  });
+
   isGeneralSource = computed(
     () => this.geModel().sourceModule === GateEntrySourceModule.General
   );
@@ -288,8 +313,11 @@ export class GateEntryAddUpdateComponent {
         }
       });
   }
-  getPOLines(prId: string) {
-    this.geService.getPOLines(prId)
+  loadSourceLines(docId: string) {
+    const config = this.currentSourceConfig();
+    if (!config) return;
+
+    config.fetchLines(docId)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (lines) => {
@@ -300,7 +328,7 @@ export class GateEntryAddUpdateComponent {
           const newLines = lines.filter(line => line.sourceRowId && !existingPrLineIds.has(line.sourceRowId));
 
           if (lines.length > 0 && newLines.length === 0) {
-            this.errors.set(['The selected Purchase Order has already been added.']);
+            this.errors.set([config.duplicateError]);
             return;
           }
 
@@ -335,7 +363,7 @@ export class GateEntryAddUpdateComponent {
       ...prev, lines: sourceModule === GateEntrySourceModule.General
         ? [this.geService.createDefaultGEline([])] : []
     }));
-    // Clear selected PR
-    this.poId.set(null);
+    // Clear selected source document
+    this.sourceDocumentId.set(null);
   }
 }

@@ -1,4 +1,4 @@
-import { AutoDropdown } from "../Pagination.model";
+import { AutoDropdown, TaxDropDown } from "../Pagination.model";
 import { ProductVariantSearchDto } from "./ProductSearch.model";
 
 export interface GRNDto {
@@ -65,7 +65,7 @@ export interface GRNSearch {
 export interface GRNFormLookupsDto {
     warehouses: AutoDropdown[];
     suppliers: AutoDropdown[];
-    taxes: AutoDropdown[];
+    taxes: TaxDropDown[];
     requirePOForGRN: boolean;
     enableBarcode: boolean;
     enableLocations: boolean;

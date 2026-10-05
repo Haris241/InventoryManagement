@@ -123,18 +123,17 @@
             </p-floatLabel>
         </div>
 
-        @if(!isGeneralSource()){
+        @if (currentSourceConfig(); as config) {
         <div class="lg:w-1/4 w-full mb-3">
             <p-floatLabel variant="on">
                 <div class="lg:w-10/12 w-full">
-                    <p-autoComplete [(ngModel)]="poId" [ngModelOptions]="{standalone: true}"
-                        (onSelect)="getPOLines($event.value.id)"
-                        (completeMethod)="SearchDropDown($event,poSearch.searchterm)" inputId="poId" optionLabel="name"
-                        [dropdown]="true" [suggestions]="poSearchList()" optionValue="id" [showClear]="true"
-                        class="w-full"></p-autoComplete>
-                    <label for="poId"> Search Purchase Order</label>
+                    <p-autoComplete [(ngModel)]="sourceDocumentId" [ngModelOptions]="{standalone: true}"
+                        (onSelect)="loadSourceLines($event.value.id)"
+                        (completeMethod)="SearchDropDown($event, config.search.searchterm)" inputId="sourceDocId"
+                        optionLabel="name" [dropdown]="true" [suggestions]="config.search.result()" optionValue="id"
+                        [showClear]="true" class="w-full"></p-autoComplete>
+                    <label for="sourceDocId">{{ config.label }}</label>
                 </div>
-
             </p-floatLabel>
         </div>
         }

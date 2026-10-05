@@ -123,18 +123,17 @@
                 </div>
             </p-floatLabel>
         </div>
-        @if(isPurchaseRequisitionSource ()){
+        @if (currentSourceConfig(); as config) {
         <div class="lg:w-1/4 w-full mb-3">
             <p-floatLabel variant="on">
                 <div class="lg:w-10/12 w-full">
-                    <p-autoComplete [(ngModel)]="prId" [ngModelOptions]="{standalone: true}"
-                        (onSelect)="getPRLines($event.value.id)"
-                        (completeMethod)="SearchDropDown($event,prSearch.searchterm)" inputId="prId" optionLabel="name"
-                        [dropdown]="true" [suggestions]="prSearchList()" optionValue="id" [showClear]="true"
-                        class="w-full"></p-autoComplete>
-                    <label for="prId"> Search Purchase Requisition</label>
+                    <p-autoComplete [(ngModel)]="sourceDocumentId" [ngModelOptions]="{standalone: true}"
+                        (onSelect)="loadSourceLines($event.value.id)"
+                        (completeMethod)="SearchDropDown($event, config.search.searchterm)" inputId="sourceDocId"
+                        optionLabel="name" [dropdown]="true" [suggestions]="config.search.result()" optionValue="id"
+                        [showClear]="true" class="w-full"></p-autoComplete>
+                    <label for="sourceDocId">{{ config.label }}</label>
                 </div>
-
             </p-floatLabel>
         </div>
         }
@@ -143,7 +142,7 @@
             <h4 class="text-base sm:text-lg font-semibold mb-2 float-left">
                 <span>Purchase Order Lines</span>
             </h4>
-            @if(!isPurchaseRequisitionSource ()){
+            @if(isGeneralSource ()){
             <button type="button" class="global-button float-right" (click)="addLine()">
                 <span class="material-symbols-outlined second-color">add</span> Add Line
             </button>
@@ -161,7 +160,7 @@
 
                 <!-- Warehouse -->
                 <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
-                    @if (isPurchaseRequisitionSource()) {
+                    @if (!isGeneralSource()) {
                     <p-floatLabel variant="on">
                         <div class="w-full">
                             <input pInputText pSize="small" [value]="line.warehouseName" readonly class="w-full">
@@ -203,7 +202,7 @@
 
                 <!-- Product — stays full width, even on mobile -->
                 <div class="w-full lg:w-1/4 mb-3">
-                    @if (isPurchaseRequisitionSource()) {
+                    @if (!isGeneralSource()) {
                     <p-floatLabel variant="on">
                         <div class="w-full">
                             <input pInputText pSize="small" [value]="line.productName" readonly class="w-full">
@@ -256,7 +255,7 @@
                 <!-- Barcode -->
                 @if (enableBarcode()) {
                 <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
-                    @if (isPurchaseRequisitionSource()) {
+                    @if (!isGeneralSource()) {
                     <p-floatLabel variant="on">
                         <div class="w-full">
                             <input pInputText pSize="small" [value]="line.barcode" readonly class="w-full">
@@ -286,13 +285,13 @@
                     </p-floatLabel>
                 </div>
 
-                <!-- PR Quantity -->
-                @if (isPurchaseRequisitionSource()) {
+                <!-- Available Quantity -->
+                @if (!isGeneralSource()) {
                 <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
                     <p-floatLabel variant="on">
                         <div class="w-full">
                             <input pInputText pSize="small" [value]="line.availableQuantity" readonly class="w-full">
-                            <label>PR Qty</label>
+                            <label>Available Qty</label>
                         </div>
                     </p-floatLabel>
                 </div>

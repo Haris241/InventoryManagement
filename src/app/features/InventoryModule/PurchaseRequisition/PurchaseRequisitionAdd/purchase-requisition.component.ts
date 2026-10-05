@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, signal, WritableSignal } from '@angular/core';
+import { Component, computed, DestroyRef, inject, signal, Signal, WritableSignal } from '@angular/core';
 import { applyEach, form, FormField, readonly, required, validate } from '@angular/forms/signals';
 import { FloatLabel } from "primeng/floatlabel";
 import { FormsModule } from '@angular/forms';
@@ -7,6 +7,7 @@ import { DatePickerModule } from 'primeng/datepicker';
 import { SelectModule } from 'primeng/select';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Observable } from 'rxjs';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FieldErrorSComponent } from '../../../../shared/field-error-s/field-error-s.component';
 import { AutoDropdown } from '../../../../Models/Pagination.model';
@@ -17,6 +18,17 @@ import { PaginationService } from '../../../../services/pagination.service';
 import { enumToOptions } from '../../../../shared/Utility';
 import { ProductVariantSearchDto } from '../../../../Models/Inventory/ProductSearch.model';
 import { ProductSearchService } from '../../../../services/Inventory/ProductSearch.service';
+
+interface PRSourceModuleConfig {
+  label: string;
+  search: {
+    searchterm: WritableSignal<string>;
+    result: Signal<AutoDropdown[]>;
+    setInitialValue?: (items: AutoDropdown[]) => void;
+  };
+  fetchLines: (id: string) => Observable<PurchaseRequisitionLineDto[]>;
+  duplicateError: string;
+}
 
 
 @Component({
@@ -48,6 +60,22 @@ export class PurchaseRequisitionComponent {
   productSearch = this.pagination.autoSearchDropdown<ProductVariantSearchDto>('DropDowns/ProductsVariants');
   productSearchList = this.productSearch.result;
   sourceModules = signal(enumToOptions(SourceModule, true));
+
+  // Source Document AutoComplete
+  sourceDocumentId = signal<string | null>(null);
+
+  readonly sourceConfigs: Partial<Record<SourceModule, PRSourceModuleConfig>> = {
+    // Configs for ProductionOrder, ExportOrder, SalesOrder can be added here
+  };
+
+  currentSourceConfig = computed(() => {
+    const source = this.prModel().sourceModule;
+    return source != null ? this.sourceConfigs[source] ?? null : null;
+  });
+
+  isGeneralSource = computed(
+    () => this.prModel().sourceModule === SourceModule.General
+  );
 
 
 
@@ -268,4 +296,43 @@ export class PurchaseRequisitionComponent {
     });
   }
 
+  loadSourceLines(docId: string) {
+    const config = this.currentSourceConfig();
+    if (!config) return;
+
+    config.fetchLines(docId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (lines) => {
+          const existingPrLineIds = new Set(
+            this.prModel().lines.map(line => line.sourceRowId).filter((id): id is string => !!id)
+          );
+
+          const newLines = lines.filter(line => line.sourceRowId && !existingPrLineIds.has(line.sourceRowId));
+
+          if (lines.length > 0 && newLines.length === 0) {
+            this.errors.set([config.duplicateError]);
+            return;
+          }
+
+          this.errors.set([]);
+          this.prModel.update(prev => ({ ...prev, lines: [...prev.lines, ...newLines] }));
+        },
+        error: (err) => {
+          this.base.handleError(err, err.error?.message, false);
+        }
+      });
+  }
+
+  onSourceModuleChange(sourceModule: SourceModule): void {
+    this.updateField('sourceModule', sourceModule);
+
+    // Clear existing lines whenever source module changes
+    this.prModel.update(prev => ({
+      ...prev, lines: sourceModule === SourceModule.General
+        ? [this.prService.createDefaultPRLine([])] : []
+    }));
+    // Clear selected source document
+    this.sourceDocumentId.set(null);
+  }
 }
