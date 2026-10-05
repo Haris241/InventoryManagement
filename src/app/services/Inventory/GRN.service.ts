@@ -35,11 +35,11 @@ export class GrnService {
     getGRNById(id: string): Observable<GRNDto> {
         return this.dataService.getById<GRNDto>('GRN', id);
     }
-    getPOLines(id: string): Observable<GateEntryLineDto[]> {
-        return this.dataService.getById<GateEntryLineDto[]>('GRN/getPurchaseOrder', id);
+    getPOLines(id: string): Observable<GRNLineDto[]> {
+        return this.dataService.getById<GRNLineDto[]>('GRN/getPurchaseOrder', id);
     }
-    getGELines(id: string): Observable<GateEntryLineDto[]> {
-        return this.dataService.getById<GateEntryLineDto[]>('GRN/getGateEntry', id);
+    getGELines(id: string): Observable<GRNLineDto[]> {
+        return this.dataService.getById<GRNLineDto[]>('GRN/getGateEntry', id);
     }
 
     updateField<K extends keyof GRNDto>(grn: GRNDto, field: K, value: GRNDto[K]): GRNDto {

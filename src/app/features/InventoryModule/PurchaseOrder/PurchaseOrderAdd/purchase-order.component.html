@@ -383,11 +383,11 @@
         <div class="w-full flex justify-center m-3">
             @if(isEditMode()){
             <button class="global-button" type="submit" [disabled]="submit()">
-                {{ submit() ? 'Processing...' : 'Update Purchase Requisition' }}
+                {{ submit() ? 'Processing...' : 'Update Purchase Order' }}
             </button>
             }@else{
             <button class="global-button" type="submit" [disabled]="submit()">
-                {{ submit() ? 'Processing...' : 'Create Purchase Requisition' }}
+                {{ submit() ? 'Processing...' : 'Create Purchase Order' }}
             </button>
             }
         </div>

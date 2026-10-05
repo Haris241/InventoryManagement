@@ -143,7 +143,7 @@ export class PurchaseOrderComponent {
       validate(line.discountPercentage, ({ value }) => {
         const discountPercentage = value();
         if (discountPercentage == null || discountPercentage < 0) {
-          return { kind: 'positiveQuantity', message: 'Discount must be greater than 0' };
+          return { kind: 'positiveQuantity', message: 'Discount must be greater than or equal to 0' };
         }
         return null;
       });
