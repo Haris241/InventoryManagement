@@ -1,1 +1,219 @@
-<p>product-guide works!</p>
+<article class="px-4 pb-12 pt-3 WhiteC global-div" aria-label="Products & Variants Guide">
+
+    <!-- Hero -->
+    <header class="mb-10">
+        <div class="pd-badge second-color">
+            <span class="material-symbols-outlined icon-color" aria-hidden="true">inventory_2</span>
+            Inventory Basics
+        </div>
+
+        <h1 class="text-4xl font-bold leading-tight mb-3">
+            <span class="gradient-heading">What Is a Product in an Inventory System?</span>
+        </h1>
+
+        <p class="text-sm leading-relaxed mb-4 max-w-xl opacity-75">
+            A product is the master record for anything you buy, stock, or sell — it defines what the
+            item is, how it's priced, and how it's tracked in stock. Everything else in Harvora ERP
+            that touches inventory, from a GRN to a sales invoice, ultimately points back to a product
+            record.
+        </p>
+
+        <a routerLink="/Docs/productcategoriesGuide" class="pd-inline-link">
+            <span class="material-symbols-outlined icon-color" aria-hidden="true">category</span>
+            New here? See how Product Categories work first
+            <span class="material-symbols-outlined icon-color" aria-hidden="true">arrow_forward</span>
+        </a>
+    </header>
+
+    <!-- Why product setup matters -->
+    <section class="mb-10" aria-labelledby="why-product">
+        <h2 id="why-product" class="pd-section-title">
+            <span class="material-symbols-outlined icon-color" aria-hidden="true">lightbulb</span>
+            Why Getting Product Setup Right Matters
+        </h2>
+        <p class="pd-text">
+            A messy product catalogue — duplicate SKUs, missing costs, inconsistent variants — quietly
+            breaks everything downstream: stock counts drift, margins get miscalculated, and reports
+            stop being trustworthy. Setting products up correctly once, with clean variants and
+            accurate costs, is what makes every later report and transaction reliable.
+        </p>
+        <div class="pd-grid">
+            <div class="pd-card">
+                <span class="material-symbols-outlined icon-color" aria-hidden="true">inventory</span>
+                <h3 class="text-sm font-semibold mb-1">Accurate Stock Tracking</h3>
+                <p class="text-xs opacity-60 m-0 leading-relaxed">Every variant is tracked separately, so stock levels
+                    reflect exactly what you have.</p>
+            </div>
+            <div class="pd-card">
+                <span class="material-symbols-outlined icon-color" aria-hidden="true">payments</span>
+                <h3 class="text-sm font-semibold mb-1">Correct Costing &amp; Margins</h3>
+                <p class="text-xs opacity-60 m-0 leading-relaxed">Cost and selling price are set per variant, so margin
+                    reporting is never averaged across unlike items.</p>
+            </div>
+            <div class="pd-card">
+                <span class="material-symbols-outlined icon-color" aria-hidden="true">fact_check</span>
+                <h3 class="text-sm font-semibold mb-1">Clean, Comparable Reports</h3>
+                <p class="text-xs opacity-60 m-0 leading-relaxed">Unique SKUs and consistent categories keep your sales
+                    and inventory reports meaningful.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Prerequisites -->
+    <section class="mb-10" aria-labelledby="prerequisites">
+        <h2 id="prerequisites" class="pd-section-title">
+            <span class="material-symbols-outlined icon-color" aria-hidden="true">checklist</span>
+            Before You Create a Product
+        </h2>
+        <p class="pd-text">
+            A product record references several other things you'll want set up first — creating them
+            as you go works too, but it's faster to have them ready.
+        </p>
+        <div class="pd-grid">
+            <div class="pd-card">
+                <span class="material-symbols-outlined icon-color" aria-hidden="true">category</span>
+                <h3 class="text-sm font-semibold mb-1">Product Category</h3>
+                <p class="text-xs opacity-60 m-0 leading-relaxed">Required. Every product belongs to one category.</p>
+            </div>
+            <div class="pd-card">
+                <span class="material-symbols-outlined icon-color" aria-hidden="true">straighten</span>
+                <h3 class="text-sm font-semibold mb-1">Unit of Measure (UOM)</h3>
+                <p class="text-xs opacity-60 m-0 leading-relaxed">Required. Defines how the product is counted — pieces,
+                    meters, kilograms, and so on.</p>
+            </div>
+            <div class="pd-card">
+                <span class="material-symbols-outlined icon-color" aria-hidden="true">tune</span>
+                <h3 class="text-sm font-semibold mb-1">Attributes</h3>
+                <p class="text-xs opacity-60 m-0 leading-relaxed">Needed if your product has variants — e.g. Size and
+                    Color — so each variant can be built from attribute values.</p>
+            </div>
+            <div class="pd-card">
+                <span class="material-symbols-outlined icon-color" aria-hidden="true">warehouse</span>
+                <h3 class="text-sm font-semibold mb-1">Warehouses &amp; Locations</h3>
+                <p class="text-xs opacity-60 m-0 leading-relaxed">Needed only if you plan to enter opening stock while
+                    creating the product.</p>
+            </div>
+            <div class="pd-card">
+                <span class="material-symbols-outlined icon-color" aria-hidden="true">branding_watermark</span>
+                <h3 class="text-sm font-semibold mb-1">Brand</h3>
+                <p class="text-xs opacity-60 m-0 leading-relaxed">Optional. Attach a brand if you track products by
+                    manufacturer or label.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Product basics -->
+    <section class="mb-10" aria-labelledby="product-basics">
+        <h2 id="product-basics" class="pd-section-title">
+            <span class="material-symbols-outlined icon-color" aria-hidden="true">badge</span>
+            Product Basics
+        </h2>
+        <ul class="pd-checklist" role="list">
+            <li><strong>Product Name</strong> and <strong>Product Number</strong> are both required and must be unique
+                across your catalogue.</li>
+            <li><strong>UOM</strong>, <strong>Product Type</strong>, and <strong>Product Category</strong> are required
+                for every product.</li>
+            <li><strong>Brand</strong> is optional, but if provided it must be a valid, existing brand.</li>
+            <li>Every product needs <strong>at least one variant</strong> — there's no such thing as a product with zero
+                variants.</li>
+        </ul>
+    </section>
+
+    <!-- Variants -->
+    <section class="mb-10" aria-labelledby="variants">
+        <h2 id="variants" class="pd-section-title">
+            <span class="material-symbols-outlined icon-color" aria-hidden="true">style</span>
+            Variants
+        </h2>
+        <p class="pd-text">
+            A variant is a specific, sellable version of a product — if "Cotton T-Shirt" is the product,
+            "Cotton T-Shirt, Red, Medium" is a variant. Simple products with no real variations just get
+            a single variant. Each variant is tracked, priced, and stocked independently.
+        </p>
+        <div class="pd-warning">
+            <ul class="pd-checklist pd-checklist--warning" role="list">
+                <li>Every variant needs a unique <strong>SKU</strong> — unique both within the product and across your
+                    entire catalogue.</li>
+                <li><strong>Cost Price</strong> and <strong>Selling Price</strong> are required for every variant and
+                    must be greater than zero.</li>
+                <li>Two variants can't share the exact same combination of attribute values — you can't create "Red +
+                    Medium" twice on the same product.</li>
+                <li>Attribute values must actually belong to the attribute you're assigning them under.</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Opening stock -->
+    <section class="mb-10" aria-labelledby="opening-stock">
+        <h2 id="opening-stock" class="pd-section-title">
+            <span class="material-symbols-outlined icon-color" aria-hidden="true">stacks</span>
+            Opening Stock
+        </h2>
+        <p class="pd-text">
+            While creating a product, you can optionally set an opening quantity for each variant in one
+            or more warehouses — useful when you're bringing existing inventory into Harvora for the
+            first time.
+        </p>
+        <ul class="pd-checklist" role="list">
+            <li>Opening stock is entered <strong>per variant</strong>, split across one or more warehouses if needed.
+            </li>
+            <li>Each entry needs a <strong>Warehouse</strong>, a <strong>Quantity</strong> greater than zero, and a
+                <strong>Unit Cost</strong> greater than zero.
+            </li>
+            <li>You can't enter the same warehouse and location twice for the same variant.</li>
+        </ul>
+        <div class="pd-callout">
+            <p class="pd-text m-0 pd-text--small">
+                Opening stock is a one-time entry made only when the product is created. Once saved, it
+                can't be edited or removed from the product screen — any later stock correction should go
+                through a stock adjustment, not by changing the product record.
+            </p>
+        </div>
+    </section>
+
+    <!-- Editing -->
+    <section class="mb-10" aria-labelledby="editing">
+        <h2 id="editing" class="pd-section-title">
+            <span class="material-symbols-outlined icon-color" aria-hidden="true">edit</span>
+            Editing a Product
+        </h2>
+        <p class="pd-text">
+            Product details stay editable, but existing variants are locked once created — this keeps
+            your stock and transaction history consistent with what was actually bought and sold.
+        </p>
+        <ul class="pd-checklist" role="list">
+            <li>Name and Number remain unique when updated, the same as on creation.</li>
+            <li>Existing variants — SKU, prices, and their opening stock — can't be modified after creation.</li>
+            <li>New variants can be added to an existing product at any time.</li>
+        </ul>
+    </section>
+
+    <!-- Reliability note -->
+    <section class="mb-10" aria-labelledby="reliability">
+        <h2 id="reliability" class="pd-section-title">
+            <span class="material-symbols-outlined icon-color" aria-hidden="true">verified_user</span>
+            Created as One Unit
+        </h2>
+        <p class="pd-text">
+            The product, its variants, and any opening stock are all saved together as a single
+            operation. If any part fails — an invalid warehouse, a stock error — nothing is saved
+            partially. You'll get a clear error and can fix it and try again, without ending up with a
+            half-created product.
+        </p>
+    </section>
+
+    <!-- CTA -->
+    <section class="gs-cta text-center" aria-labelledby="cta-heading">
+        <h2 id="cta-heading" class="text-2xl font-bold mb-2">Ready to Let Your Business Flow?</h2>
+        <p class="text-sm opacity-70 mb-6 leading-relaxed">
+            Join businesses already running on Harvora ERP. Register for free today —
+            no credit card, no commitment.
+        </p>
+        <a id="getting-started-register-btn" routerLink="/register" class="global-button" role="button"
+            aria-label="Register for Harvora ERP — free account">
+            <span class="material-symbols-outlined" aria-hidden="true">person_add</span>
+            &nbsp;Register Free
+        </a>
+    </section>
+
+</article>
