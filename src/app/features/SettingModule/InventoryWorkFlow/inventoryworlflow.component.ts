@@ -60,7 +60,7 @@ export class InventoryworlflowComponent {
     requirePOForGRN: false,
     enableBarcode: false,
     enableWareHouseLocations: false,
-    postingPoint: VoucherPostingPoint.ManualInvoice
+    postingPoint: VoucherPostingPoint.PurchaseInvoice
   };
   //Signal Model For FormData
   inventoryWorkflowModel = signal<InventoryWorkflowDto>({ ...this.initialModel });
@@ -118,7 +118,7 @@ export class InventoryworlflowComponent {
     }
 
     // 2. Posting at Purchase requires GRN and Gate Entry to be disabled
-    if (s.postingPoint === VoucherPostingPoint.Purchase && (s.enableGRN || s.enableGateEntry)) {
+    if (s.postingPoint === VoucherPostingPoint.PurchaseOrder && (s.enableGRN || s.enableGateEntry)) {
       return 'Posting at Purchase requires GRN and Gate Entry to be disabled.';
     }
 

@@ -79,9 +79,9 @@ export class PurchaseOrderComponent {
     return this.poModel().lines.reduce((total, line) => {
       const quantity = line.quantity ?? 0;
       const rate = line.rate ?? 0;
-      const discount = line.discountAmount ?? 0;
+      const discountPercentage = line.discountPercentage ?? 0;
 
-      const taxableAmount = (quantity * rate) - discount;
+      const taxableAmount = (quantity * rate) - discountPercentage;
 
       // Check if line.taxId is present and look up in map
       const taxRate = line.taxId != null ? (taxes.get(line.taxId) ?? 0) : 0;
@@ -140,9 +140,9 @@ export class PurchaseOrderComponent {
         }
         return null;
       });
-      validate(line.discountAmount, ({ value }) => {
-        const discountAmount = value();
-        if (discountAmount == null || discountAmount < 0) {
+      validate(line.discountPercentage, ({ value }) => {
+        const discountPercentage = value();
+        if (discountPercentage == null || discountPercentage < 0) {
           return { kind: 'positiveQuantity', message: 'Discount must be greater than 0' };
         }
         return null;
@@ -167,7 +167,7 @@ export class PurchaseOrderComponent {
     const line = this.poForm.lines[index];
 
     //Mark required field 
-    const isInvalid = line.wareHouseId().invalid() || line.productVariantId().invalid() || line.quantity().invalid() || line.rate().invalid() || line.discountAmount().invalid();
+    const isInvalid = line.wareHouseId().invalid() || line.productVariantId().invalid() || line.quantity().invalid() || line.rate().invalid() || line.discountPercentage().invalid();
 
     if (isInvalid) {
       // only mark THIS line
@@ -175,7 +175,7 @@ export class PurchaseOrderComponent {
       line.productVariantId().markAsTouched();
       line.quantity().markAsTouched();
       line.rate().markAsTouched();
-      line.discountAmount().markAsTouched();
+      line.discountPercentage().markAsTouched();
       return;
     }
 

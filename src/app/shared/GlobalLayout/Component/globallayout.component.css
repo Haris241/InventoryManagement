@@ -214,4 +214,25 @@
     .custom {
         font-size: 11px;
     }
+
+    .custom,
+    .custom-dropdown {
+        font-size: 11px;
+        white-space: nowrap;
+        /* Prevents long text from breaking onto multiple lines */
+        overflow-x: auto;
+        /* Enables horizontal scrolling when text exceeds width */
+        max-width: 130px;
+        /* Restricts text area width inside the 200px mobile sidebar */
+        display: inline-block;
+        vertical-align: middle;
+        scrollbar-width: none;
+        /* Hides scrollbar on Firefox */
+    }
+
+    /* Hide horizontal scrollbar for Chrome, Safari, and Edge */
+    .custom::-webkit-scrollbar,
+    .custom-dropdown::-webkit-scrollbar {
+        display: none;
+    }
 }

@@ -1,1 +1,332 @@
-<p>gate-entry-add-update works!</p>
+<!-- Inventory Work Flow Setting Button -->
+
+<div class="w-full grid grid-cols-2 lg:flex lg:justify-end lg:items-center mb-4 gap-2">
+    <button type="button" class="blog-button flex items-center justify-center whitespace-nowrap"
+        routerLink="/Setting/inventoryWorkflow">
+        <span class="material-symbols-outlined mr-1">settings</span>
+        Work Flow Setting
+    </button>
+</div>
+<!-- Purchase Requisition Create Form -->
+<form (ngSubmit)="createGE($event)">
+    <div class="flex flex-wrap global-div p-5 gap-2 lg:gap-0">
+        <div class="w-full mb-4">
+            <h3 class="text-2xl font-semibold text-center mb-3">
+                @if(isEditMode()){
+                <span class="gradient-heading">Edit Gate Entry</span>
+                }@else{
+                <span class="gradient-heading">Add Gate Entry</span>
+                }
+            </h3>
+            <hr class="second-color">
+        </div>
+        <!-- Non Editable on Edit -->
+        @if (!isEditMode()){
+        <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3 ">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <p-select [(ngModel)]="geModel().sourceModule" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="onSourceModuleChange($event)" [options]="sourceModules()" optionLabel="name"
+                        optionValue="value" class="w-full" />
+                    <label for="sourceModule" class="required">Source Module</label>
+                </div>
+            </p-floatLabel>
+            <app-field-errorS [field]="geForm.sourceModule" [submit]="formSubmitted()"
+                [backendErrors]="backendErrors()">
+            </app-field-errorS>
+        </div>
+        }@else{
+        <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3 ">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <p-select [(ngModel)]="geModel().sourceModule" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="onSourceModuleChange($event)" [options]="sourceModules()" optionLabel="name"
+                        optionValue="value" class="w-full" readonly />
+                    <label for="sourceModule" class="required">Source Module</label>
+                </div>
+            </p-floatLabel>
+            <app-field-errorS [field]="geForm.sourceModule" [submit]="formSubmitted()"
+                [backendErrors]="backendErrors()">
+            </app-field-errorS>
+        </div>
+        }
+        <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <p-datepicker [(ngModel)]="geModel().entryDateUI" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('entryDateUI',$event)" view="date" dateFormat="dd/mm/yy"
+                        size="small" inputId="entryDateUI" class="w-full" />
+                    <label for="entryDateUI" class="required">Entry Date</label>
+                </div>
+            </p-floatLabel>
+            <app-field-errorS [field]="geForm.entryDateUI" [submit]="formSubmitted()" [backendErrors]="backendErrors()">
+            </app-field-errorS>
+        </div>
+
+        <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <input pInputText pSize="small" id="name" autocomplete="off" type="text" class="w-full"
+                        [formField]="geForm.name">
+                    <label for="name" class="required">Name</label>
+                </div>
+            </p-floatLabel>
+            <app-field-errorS [field]="geForm.name" [submit]="formSubmitted()" [backendErrors]="backendErrors()">
+            </app-field-errorS>
+        </div>
+        <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <p-select [(ngModel)]="geModel().supplierId" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('supplierId',$event)" [options]="suppliers()" optionLabel="name"
+                        optionValue="id" class="w-full" [showClear]="true" [filter]="true" filterBy="name" />
+                    <label for="supplierId" class="required">Supplier</label>
+                </div>
+            </p-floatLabel>
+            <app-field-errorS [field]="geForm.supplierId" [submit]="formSubmitted()" [backendErrors]="backendErrors()">
+            </app-field-errorS>
+        </div>
+        <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <input pInputText pSize="small" id="description" autocomplete="off" type="text" class="w-full"
+                        [formField]="geForm.description">
+                    <label for="description">Description</label>
+                </div>
+            </p-floatLabel>
+        </div>
+        <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <input pInputText pSize="small" id="vehicleNumber" autocomplete="off" type="text" class="w-full"
+                        [formField]="geForm.vehicleNumber">
+                    <label for="vehicleNumber">Vehicle Number</label>
+                </div>
+            </p-floatLabel>
+        </div>
+        <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <input pInputText pSize="small" id="driverName" autocomplete="off" type="text" class="w-full"
+                        [formField]="geForm.driverName">
+                    <label for="driverName">Driver Name</label>
+                </div>
+            </p-floatLabel>
+        </div>
+        <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <input pInputText pSize="small" id="driverContact" autocomplete="off" type="text" class="w-full"
+                        [formField]="geForm.driverContact">
+                    <label for="driverContact">Driver Contact</label>
+                </div>
+            </p-floatLabel>
+        </div>
+
+        @if(!isGeneralSource()){
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-10/12 w-full">
+                    <p-autoComplete [(ngModel)]="poId" [ngModelOptions]="{standalone: true}"
+                        (onSelect)="getPOLines($event.value.id)"
+                        (completeMethod)="SearchDropDown($event,poSearch.searchterm)" inputId="poId" optionLabel="name"
+                        [dropdown]="true" [suggestions]="poSearchList()" optionValue="id" [showClear]="true"
+                        class="w-full"></p-autoComplete>
+                    <label for="poId"> Search Purchase Order</label>
+                </div>
+
+            </p-floatLabel>
+        </div>
+        }
+
+        <div class="w-full mt-3">
+            <h4 class="text-base sm:text-lg font-semibold mb-2 float-left">
+                <span>Gate Entry Details</span>
+            </h4>
+            @if(isGeneralSource()){
+            <button type="button" class="global-button float-right" (click)="addLine()">
+                <span class="material-symbols-outlined second-color">add</span> Add Line
+            </button>
+            }
+        </div>
+
+        <div class="w-full">
+            <hr class="second-color my-4">
+        </div>
+
+        <div class="w-full">
+            @for (line of geModel().lines; track $index) {
+
+            <div class="flex flex-wrap items-start gap-2 pb-3 mb-3 border-b second-color">
+
+                <!-- Warehouse -->
+                <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
+                    @if (!isGeneralSource()) {
+                    <p-floatLabel variant="on">
+                        <div class="w-full">
+                            <input pInputText pSize="small" [value]="line.warehouseName" readonly class="w-full">
+                            <label>WareHouse</label>
+                        </div>
+                    </p-floatLabel>
+                    } @else {
+                    <p-floatLabel variant="on">
+                        <div class="w-full">
+                            <p-select [ngModel]="line.wareHouseId" [ngModelOptions]="{standalone: true}"
+                                (ngModelChange)="updateLineField($index, 'wareHouseId',$event)" [options]="wareHouses()"
+                                optionLabel="name" optionValue="id" [filter]="true" filterBy="name" class="w-full"
+                                [showClear]="true">
+                            </p-select>
+                            <label class="required">WareHouse</label>
+                        </div>
+                    </p-floatLabel>
+                    <app-field-errorS [field]="geForm.lines[$index].wareHouseId" [submit]="formSubmitted()"
+                        [backendErrors]="backendErrors()" [fieldPath]="'lines[' + $index + '].wareHouseId'">
+                    </app-field-errorS>
+                    }
+                </div>
+
+                <!-- Product — stays full width, even on mobile -->
+                <div class="w-full lg:w-1/4 mb-3">
+                    @if (!isGeneralSource()) {
+                    <p-floatLabel variant="on">
+                        <div class="w-full">
+                            <input pInputText pSize="small" [value]="line.productVariantName" readonly class="w-full">
+                            <label>Product</label>
+                        </div>
+                    </p-floatLabel>
+                    } @else {
+                    <p-floatLabel variant="on">
+                        <div class="w-full">
+                            <p-autoComplete [(ngModel)]="line.selectedProductVariant"
+                                [ngModelOptions]="{standalone: true}"
+                                (ngModelChange)="updateLineField($index,'productVariantId',$event?.id ?? null)"
+                                (onSelect)="onProductVariantChange($index, $event.value)"
+                                (completeMethod)="SearchDropDown($event,productSearch.searchterm)"
+                                optionLabel="displayName" [suggestions]="productSearchList()" [showClear]="true"
+                                appendTo="body" fluid size="small" panelStyleClass="product-search-panel">
+                                <ng-template let-product pTemplate="item">
+                                    <div class="product-search-item">
+                                        <!-- Product -->
+                                        <div class="product-search-main">
+                                            {{ product.displayName }}
+                                        </div>
+                                        <!-- Details -->
+                                        <div class="product-search-meta">
+                                            <div class="product-search-detail">
+                                                <span class="product-search-label">SKU:</span>
+                                                <span class="product-search-value">
+                                                    {{ product.sku }}
+                                                </span>
+                                            </div>
+                                            <div class="product-search-detail">
+                                                <span class="product-search-label">Unit:</span>
+                                                <span class="product-search-value">
+                                                    {{ product.uom }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ng-template>
+                            </p-autoComplete>
+                            <label class="required">Product</label>
+                        </div>
+                    </p-floatLabel>
+                    <app-field-errorS [field]="geForm.lines[$index].productVariantId" [submit]="formSubmitted()"
+                        [backendErrors]="backendErrors()" [fieldPath]="'lines[' + $index + '].productVariantId'">
+                    </app-field-errorS>
+                    }
+                </div>
+
+                <!-- Barcode -->
+                @if (enableBarcode()) {
+                <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
+                    @if (!isGeneralSource()) {
+                    <p-floatLabel variant="on">
+                        <div class="w-full">
+                            <input pInputText pSize="small" [value]="line.barcode" readonly class="w-full">
+                            <label>Barcode</label>
+                        </div>
+                    </p-floatLabel>
+                    } @else {
+                    <p-floatLabel variant="on">
+                        <div class="w-full">
+                            <input pInputText pSize="small" autocomplete="off" type="text" class="w-full"
+                                [formField]="geForm.lines[$index].barcode"
+                                (keydown.enter)="searchBarcode($index, $event)">
+                            <label>Barcode</label>
+                        </div>
+                    </p-floatLabel>
+                    }
+                </div>
+                }
+
+                <!-- UOM -->
+                <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
+                    <p-floatLabel variant="on">
+                        <div class="w-full">
+                            <input pInputText pSize="small" [value]="line.uom" readonly class="w-full">
+                            <label>UOM</label>
+                        </div>
+                    </p-floatLabel>
+                </div>
+
+                <!-- PO Quantity -->
+                @if (!isGeneralSource()) {
+                <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
+                    <p-floatLabel variant="on">
+                        <div class="w-full">
+                            <input pInputText pSize="small" [value]="line.availableQuantity" readonly class="w-full">
+                            <label>PO Qty</label>
+                        </div>
+                    </p-floatLabel>
+                </div>
+                }
+
+                <!-- Quantity -->
+                <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
+                    <p-floatLabel variant="on">
+                        <div class="w-full">
+                            <input pInputText pSize="small" autocomplete="off" type="number" class="w-full"
+                                [formField]="geForm.lines[$index].quantity">
+                            <label class="required">Qty</label>
+                        </div>
+                    </p-floatLabel>
+                    <app-field-errorS [field]="geForm.lines[$index].quantity" [submit]="formSubmitted()"
+                        [backendErrors]="backendErrors()" [fieldPath]="'lines[' + $index + '].quantity'">
+                    </app-field-errorS>
+                </div>
+                <!-- Action -->
+                <div class="w-full lg:w-1/12 mt-1 flex items-center justify-center">
+                    <button type="button" (click)="deleteLine($index)">
+                        <span class="material-symbols-outlined icon-color">delete</span>
+                    </button>
+                </div>
+
+            </div>
+            }
+        </div>
+        <!--Errors -->
+        <div class="w-full mt-3">
+            <ul class="text-red-500 text-sm font-medium pl-4">
+                @if (errors()) {
+                @for (e of errors(); track e) {
+                <li>{{ e }}</li>
+                }
+                }
+            </ul>
+        </div>
+
+        <!--submitting the form  -->
+        <div class="w-full flex justify-center m-3">
+            @if(isEditMode()){
+            <button class="global-button" type="submit" [disabled]="submit()">
+                {{ submit() ? 'Processing...' : 'Update Gate Entry' }}
+            </button>
+            }@else{
+            <button class="global-button" type="submit" [disabled]="submit()">
+                {{ submit() ? 'Processing...' : 'Create Gate Entry' }}
+            </button>
+            }
+        </div>
+    </div>
+</form>

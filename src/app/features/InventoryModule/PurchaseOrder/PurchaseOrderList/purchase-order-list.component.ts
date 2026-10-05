@@ -33,6 +33,8 @@ export class PurchaseOrderListComponent {
   poList = signal<PurchaseOrderList[]>([]);
   poSearch = this.pagination.autoSearchDropdown<AutoDropdown>('DropDowns/PurchaseOrderList');
   poSearchList = this.poSearch.result;
+  SupplierSearch = this.pagination.autoSearchDropdown<AutoDropdown>('DropDowns/SuppliersList');
+  SupplierSearchSearchList = this.SupplierSearch.result;
 
   //pagination signals
   hasNextPage = signal<boolean>(false);
@@ -55,6 +57,7 @@ export class PurchaseOrderListComponent {
   //Model For FormData
   private readonly initialModel: PurchaseOrderSearch = {
     id: null,
+    supplierId: null,
     fromDate: null,
     toDate: null,
     fromDateUI: null,

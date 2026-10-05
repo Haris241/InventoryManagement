@@ -24,9 +24,9 @@ export interface InventoryWorkflowDto {
 
 }
 export enum VoucherPostingPoint {
-    Purchase,
+    PurchaseOrder,
     GRN,
-    ManualInvoice
+    PurchaseInvoice
 }
 export interface AccountMappingDto {
     id?: string;

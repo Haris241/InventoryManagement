@@ -23,7 +23,7 @@ export interface PurchaseOrderLineDto {
     id?: string;
     quantity: number;
     rate: number;
-    discountAmount: number;
+    discountPercentage: number;
     taxId: number | null;
     wareHouseId: number | null;
     warehouseName: string;
@@ -52,6 +52,7 @@ export interface POFormLookupsDto {
 // Search Filter DTO
 export interface PurchaseOrderSearch {
     id: string | null;
+    supplierId: string | null;
     fromDate: string | null;
     toDate: string | null;
     fromDateUI: Date | null;
@@ -66,6 +67,7 @@ export interface PurchaseOrderSearch {
 // Table / List DTO
 export interface PurchaseOrderList {
     id: string;
+    supplierName: string;
     name: string;
     purchaseNumber: string;
     date: Date;

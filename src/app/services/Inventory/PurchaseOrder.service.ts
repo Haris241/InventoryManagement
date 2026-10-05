@@ -20,7 +20,7 @@ export class PurchaseOrderService {
     createPOline(): PurchaseOrderLineDto {
         return {
             quantity: 0, wareHouseId: null, productVariantId: null, barcode: '', uom: '',
-            warehouseLocationId: null, warehouseLocationName: '', taxId: null, rate: 0, discountAmount: 0, productName: '',
+            warehouseLocationId: null, warehouseLocationName: '', taxId: null, rate: 0, discountPercentage: 0, productName: '',
             warehouseName: '', sourceRowId: null, availableQuantity: null
         };
     }
@@ -65,7 +65,7 @@ export class PurchaseOrderService {
             quantity: lastLine.quantity,
             wareHouseId: lastLine.wareHouseId,
             rate: lastLine.rate,
-            discountAmount: lastLine.discountAmount,
+            discountPercentage: lastLine.discountPercentage,
             taxId: lastLine.taxId,
 
         };

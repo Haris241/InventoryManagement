@@ -20,6 +20,20 @@
             </p-floatLabel>
 
         </div>
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-10/12 w-full">
+                    <p-autoComplete [(ngModel)]="poFormModel().supplierId" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('supplierId',$event)"
+                        (completeMethod)="SearchDropDown($event,SupplierSearch.searchterm)" inputId="id"
+                        optionLabel="name" [dropdown]="true" [suggestions]="SupplierSearchSearchList()" optionValue="id"
+                        [showClear]="true" class="w-full"></p-autoComplete>
+                    <label for="id">Search by Supplier</label>
+                </div>
+
+            </p-floatLabel>
+
+        </div>
         <div class="lg:w-1/4  w-[calc(50%-0.25rem)] mb-3">
             <p-floatLabel variant="on">
                 <div class="lg:w-8/12 w-full">
@@ -85,6 +99,7 @@
                 <tr>
                     <th>Name</th>
                     <th>Number</th>
+                    <th>Supplier</th>
                     <th>Status</th>
                     <th>Fulfillment Status</th>
                     <th>Source Module</th>
@@ -99,6 +114,7 @@
                 <tr>
                     <td>{{ po.name }}</td>
                     <td>{{ po.purchaseNumber }}</td>
+                    <td>{{ po.supplierName }}</td>
                     <td>
                         <span class="status-badge" [ngClass]="getPoStatusClass(po.status)">
                             {{ poStatusLabel(po.status) }}
