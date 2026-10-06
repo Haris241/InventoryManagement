@@ -4,12 +4,45 @@ import { GRNDto, GRNFormLookupsDto, GRNLineDto, GRNSourceModule } from "../../Mo
 import { GateEntryLineDto } from "../../Models/Inventory/GateEntry.model";
 import { Observable } from "rxjs";
 import { toDateOnlyString } from "../../shared/Utility";
+import { PaginationService } from "../pagination.service";
+import { AutoDropdown } from "../../Models/Pagination.model";
+import { SourceModuleConfig } from "../../Models/Inventory/SourceModuleConfig.model";
 
 @Injectable({
     providedIn: 'root'
 })
 export class GrnService {
     private dataService = inject(DataLayerService);
+    private pagination = inject(PaginationService);
+
+    getSourceConfigs(): Partial<Record<GRNSourceModule, SourceModuleConfig<GRNLineDto>>> {
+        return {
+            [GRNSourceModule.PurchaseOrder]: {
+                label: 'Search Purchase Order',
+                search: this.pagination.autoSearchDropdown<AutoDropdown>('DropDowns/PurchaseOrderListApproved'),
+                fetchLines: (id) => this.getPOLines(id),
+                duplicateError: 'The selected Purchase Order has already been added.',
+                isPriceReadonly: () => true
+            },
+            [GRNSourceModule.GateEntry]: {
+                label: 'Search Gate Entry',
+                search: this.pagination.autoSearchDropdown<AutoDropdown>('DropDowns/GateEntryListApproved'),
+                fetchLines: (id) => this.getGELines(id),
+                duplicateError: 'The selected Gate Entry has already been added.',
+                isPriceReadonly: (line) => !!line.isPOBasedGE
+            }
+        };
+    }
+
+    isLinePriceReadonly(sourceModule: GRNSourceModule | null, line: GRNLineDto): boolean {
+        if (sourceModule === GRNSourceModule.PurchaseOrder) {
+            return true;
+        }
+        if (sourceModule === GRNSourceModule.GateEntry) {
+            return !!line.isPOBasedGE;
+        }
+        return false;
+    }
 
     createDefaultGRN(): GRNDto {
         return {

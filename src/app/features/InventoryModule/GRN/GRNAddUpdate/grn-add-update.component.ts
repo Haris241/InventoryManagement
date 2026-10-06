@@ -1,4 +1,4 @@
-import { Component, computed, DestroyRef, inject, signal, Signal, WritableSignal } from '@angular/core';
+import { Component, computed, DestroyRef, inject, signal, WritableSignal } from '@angular/core';
 import { applyEach, form, FormField, required, validate } from '@angular/forms/signals';
 import { FloatLabel } from "primeng/floatlabel";
 import { FormsModule } from '@angular/forms';
@@ -7,7 +7,6 @@ import { DatePickerModule } from 'primeng/datepicker';
 import { SelectModule } from 'primeng/select';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Observable } from 'rxjs';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FieldErrorSComponent } from '../../../../shared/field-error-s/field-error-s.component';
 import { AutoDropdown, TaxDropDown } from '../../../../Models/Pagination.model';
@@ -18,18 +17,7 @@ import { ProductVariantSearchDto } from '../../../../Models/Inventory/ProductSea
 import { ProductSearchService } from '../../../../services/Inventory/ProductSearch.service';
 import { GrnService } from '../../../../services/Inventory/GRN.service';
 import { GRNDto, GRNLineDto, GRNSourceModule } from '../../../../Models/Inventory/GRN.model';
-
-interface SourceModuleConfig {
-  label: string;
-  search: {
-    searchterm: WritableSignal<string>;
-    result: Signal<AutoDropdown[]>;
-    setInitialValue?: (items: AutoDropdown[]) => void;
-  };
-  fetchLines: (id: string) => Observable<GRNLineDto[]>;
-  duplicateError: string;
-  isPriceReadonly?: (line: GRNLineDto) => boolean;
-}
+import { filterNewSourceLines } from '../../../../Models/Inventory/SourceModuleConfig.model';
 
 @Component({
   selector: 'app-grn-add-update',
@@ -60,7 +48,6 @@ export class GrnAddUpdateComponent {
   isEditMode = signal<boolean>(false);
   warehouseLocations = signal<Record<number, AutoDropdown[]>>({});
 
-
   grnModel = signal<GRNDto>(this.grnService.createDefaultGRN());
   //for Global Search
   productSearch = this.pagination.autoSearchDropdown<ProductVariantSearchDto>('DropDowns/ProductsVariants');
@@ -68,24 +55,8 @@ export class GrnAddUpdateComponent {
   sourceModules = signal(enumToOptions(GRNSourceModule, true));
 
   // Source Document AutoComplete
+  sourceConfigs = this.grnService.getSourceConfigs();
   sourceDocumentId = signal<string | null>(null);
-
-  readonly sourceConfigs: Partial<Record<GRNSourceModule, SourceModuleConfig>> = {
-    [GRNSourceModule.PurchaseOrder]: {
-      label: 'Search Purchase Order',
-      search: this.pagination.autoSearchDropdown<AutoDropdown>('DropDowns/PurchaseOrderListApproved'),
-      fetchLines: (id) => this.grnService.getPOLines(id),
-      duplicateError: 'The selected Purchase Order has already been added.',
-      isPriceReadonly: () => true
-    },
-    [GRNSourceModule.GateEntry]: {
-      label: 'Search Gate Entry',
-      search: this.pagination.autoSearchDropdown<AutoDropdown>('DropDowns/GateEntryListApproved'),
-      fetchLines: (id) => this.grnService.getGELines(id),
-      duplicateError: 'The selected Gate Entry has already been added.',
-      isPriceReadonly: (line) => !!line.isPOBasedGE
-    }
-  };
 
   currentSourceConfig = computed(() => {
     const source = this.grnModel().sourceModule;
@@ -97,8 +68,7 @@ export class GrnAddUpdateComponent {
   );
 
   isLinePriceReadonly(line: GRNLineDto): boolean {
-    const config = this.currentSourceConfig();
-    return config?.isPriceReadonly ? config.isPriceReadonly(line) : false;
+    return this.grnService.isLinePriceReadonly(this.grnModel().sourceModule, line);
   }
 
   private taxMap = computed(() => {
@@ -404,13 +374,9 @@ export class GrnAddUpdateComponent {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (lines) => {
-          const existingLineIds = new Set(
-            this.grnModel().lines.map(line => line.sourceRowId).filter((id): id is string => !!id)
-          );
+          const { newLines, hasDuplicates } = filterNewSourceLines(this.grnModel().lines, lines);
 
-          const newLines = lines.filter(line => line.sourceRowId && !existingLineIds.has(line.sourceRowId));
-
-          if (lines.length > 0 && newLines.length === 0) {
+          if (hasDuplicates) {
             this.errors.set([config.duplicateError]);
             return;
           }
@@ -418,7 +384,6 @@ export class GrnAddUpdateComponent {
           this.errors.set([]);
           this.grnModel.update(prev => ({ ...prev, lines: [...prev.lines, ...newLines] }));
           this.loadLocationsForLines(newLines);
-
         },
         error: (err) => {
           this.base.handleError(err, err.error?.message, false);

@@ -4,12 +4,22 @@ import { Observable } from "rxjs";
 import { DataLayerService } from "../data-layer.service";
 import { toDateOnlyString } from "../../shared/Utility";
 import { ProductVariantSearchDto } from "../../Models/Inventory/ProductSearch.model";
+import { PaginationService } from "../pagination.service";
+import { AutoDropdown } from "../../Models/Pagination.model";
+import { SourceModuleConfig } from "../../Models/Inventory/SourceModuleConfig.model";
 
 @Injectable({
     providedIn: 'root'
 })
 export class PurchaseRequisitionService {
     private dataService = inject(DataLayerService);
+    private pagination = inject(PaginationService);
+
+    getSourceConfigs(): Partial<Record<SourceModule, SourceModuleConfig<PurchaseRequisitionLineDto>>> {
+        return {
+            // Future source modules can be configured here
+        };
+    }
 
     createDefaultPR(): PurchaseRequisitionDto {
         return {

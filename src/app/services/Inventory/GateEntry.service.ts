@@ -3,12 +3,27 @@ import { GateEntryDto, GateEntryLineDto, GateEntrySourceModule, GEFormLookupsDto
 import { DataLayerService } from "../data-layer.service";
 import { Observable } from "rxjs";
 import { toDateOnlyString } from "../../shared/Utility";
+import { PaginationService } from "../pagination.service";
+import { AutoDropdown } from "../../Models/Pagination.model";
+import { SourceModuleConfig } from "../../Models/Inventory/SourceModuleConfig.model";
 
 @Injectable({
     providedIn: 'root'
 })
 export class GateEntryService {
     private dataService = inject(DataLayerService);
+    private pagination = inject(PaginationService);
+
+    getSourceConfigs(): Partial<Record<GateEntrySourceModule, SourceModuleConfig<GateEntryLineDto>>> {
+        return {
+            [GateEntrySourceModule.PurchaseOrder]: {
+                label: 'Search Purchase Order',
+                search: this.pagination.autoSearchDropdown<AutoDropdown>('DropDowns/PurchaseOrderListApproved'),
+                fetchLines: (id) => this.getPOLines(id),
+                duplicateError: 'The selected Purchase Order has already been added.'
+            }
+        };
+    }
 
     createDefaultGE(): GateEntryDto {
         return {

@@ -18,18 +18,7 @@ import { PaginationService } from '../../../../services/pagination.service';
 import { enumToOptions } from '../../../../shared/Utility';
 import { ProductVariantSearchDto } from '../../../../Models/Inventory/ProductSearch.model';
 import { ProductSearchService } from '../../../../services/Inventory/ProductSearch.service';
-
-interface PRSourceModuleConfig {
-  label: string;
-  search: {
-    searchterm: WritableSignal<string>;
-    result: Signal<AutoDropdown[]>;
-    setInitialValue?: (items: AutoDropdown[]) => void;
-  };
-  fetchLines: (id: string) => Observable<PurchaseRequisitionLineDto[]>;
-  duplicateError: string;
-}
-
+import { filterNewSourceLines } from '../../../../Models/Inventory/SourceModuleConfig.model';
 
 @Component({
   selector: 'app-purchase-requisition',
@@ -62,11 +51,8 @@ export class PurchaseRequisitionComponent {
   sourceModules = signal(enumToOptions(SourceModule, true));
 
   // Source Document AutoComplete
+  sourceConfigs = this.prService.getSourceConfigs();
   sourceDocumentId = signal<string | null>(null);
-
-  readonly sourceConfigs: Partial<Record<SourceModule, PRSourceModuleConfig>> = {
-    // Configs for ProductionOrder, ExportOrder, SalesOrder can be added here
-  };
 
   currentSourceConfig = computed(() => {
     const source = this.prModel().sourceModule;
@@ -304,13 +290,9 @@ export class PurchaseRequisitionComponent {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (lines) => {
-          const existingPrLineIds = new Set(
-            this.prModel().lines.map(line => line.sourceRowId).filter((id): id is string => !!id)
-          );
+          const { newLines, hasDuplicates } = filterNewSourceLines(this.prModel().lines, lines);
 
-          const newLines = lines.filter(line => line.sourceRowId && !existingPrLineIds.has(line.sourceRowId));
-
-          if (lines.length > 0 && newLines.length === 0) {
+          if (hasDuplicates) {
             this.errors.set([config.duplicateError]);
             return;
           }

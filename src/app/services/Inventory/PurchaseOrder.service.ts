@@ -3,12 +3,27 @@ import { Observable } from "rxjs";
 import { DataLayerService } from "../data-layer.service";
 import { toDateOnlyString } from "../../shared/Utility";
 import { POFormLookupsDto, PurchaseOrderDto, PurchaseOrderLineDto, PurchaseOrderSourceModule } from "../../Models/Inventory/PurchaseOrder.model";
+import { PaginationService } from "../pagination.service";
+import { AutoDropdown } from "../../Models/Pagination.model";
+import { SourceModuleConfig } from "../../Models/Inventory/SourceModuleConfig.model";
 
 @Injectable({
     providedIn: 'root'
 })
 export class PurchaseOrderService {
     private dataService = inject(DataLayerService);
+    private pagination = inject(PaginationService);
+
+    getSourceConfigs(): Partial<Record<PurchaseOrderSourceModule, SourceModuleConfig<PurchaseOrderLineDto>>> {
+        return {
+            [PurchaseOrderSourceModule.PurchaseRequisition]: {
+                label: 'Search Purchase Requisition',
+                search: this.pagination.autoSearchDropdown<AutoDropdown>('DropDowns/PurchaseRequisitionListApproved'),
+                fetchLines: (id) => this.getPRLines(id),
+                duplicateError: 'The selected Purchase Requisition has already been added.'
+            }
+        };
+    }
 
     createDefaultPO(): PurchaseOrderDto {
         return {

@@ -18,17 +18,7 @@ import { ProductVariantSearchDto } from '../../../../Models/Inventory/ProductSea
 import { PurchaseOrderService } from '../../../../services/Inventory/PurchaseOrder.service';
 import { PurchaseOrderDto, PurchaseOrderLineDto, PurchaseOrderSourceModule } from '../../../../Models/Inventory/PurchaseOrder.model';
 import { ProductSearchService } from '../../../../services/Inventory/ProductSearch.service';
-
-interface POSourceModuleConfig {
-  label: string;
-  search: {
-    searchterm: WritableSignal<string>;
-    result: Signal<AutoDropdown[]>;
-    setInitialValue?: (items: AutoDropdown[]) => void;
-  };
-  fetchLines: (id: string) => Observable<PurchaseOrderLineDto[]>;
-  duplicateError: string;
-}
+import { filterNewSourceLines } from '../../../../Models/Inventory/SourceModuleConfig.model';
 
 @Component({
   selector: 'app-purchase-order',
@@ -66,16 +56,8 @@ export class PurchaseOrderComponent {
   sourceModules = signal(enumToOptions(PurchaseOrderSourceModule, true));
 
   // Source Document AutoComplete
+  sourceConfigs = this.poService.getSourceConfigs();
   sourceDocumentId = signal<string | null>(null);
-
-  readonly sourceConfigs: Partial<Record<PurchaseOrderSourceModule, POSourceModuleConfig>> = {
-    [PurchaseOrderSourceModule.PurchaseRequisition]: {
-      label: 'Search Purchase Requisition',
-      search: this.pagination.autoSearchDropdown<AutoDropdown>('DropDowns/PurchaseRequisitionListApproved'),
-      fetchLines: (id) => this.poService.getPRLines(id),
-      duplicateError: 'The selected Purchase Requisition has already been added.'
-    }
-  };
 
   currentSourceConfig = computed(() => {
     const source = this.poModel().sourceModule;
@@ -386,13 +368,9 @@ export class PurchaseOrderComponent {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (lines) => {
-          const existingPrLineIds = new Set(
-            this.poModel().lines.map(line => line.sourceRowId).filter((id): id is string => !!id)
-          );
+          const { newLines, hasDuplicates } = filterNewSourceLines(this.poModel().lines, lines);
 
-          const newLines = lines.filter(line => line.sourceRowId && !existingPrLineIds.has(line.sourceRowId));
-
-          if (lines.length > 0 && newLines.length === 0) {
+          if (hasDuplicates) {
             this.errors.set([config.duplicateError]);
             return;
           }
