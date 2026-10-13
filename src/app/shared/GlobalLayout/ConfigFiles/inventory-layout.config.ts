@@ -139,6 +139,21 @@ export const INVENTORY_LAYOUT_CONFIG: ModuleLayoutConfig = {
             ]
         },
         {
+            key: 'PurchaseInvoice',
+            icon: 'description',
+            label: 'Purchase Invoice',
+            children: [
+                {
+                    label: 'Add Purchase Invoice',
+                    route: '/Inventory/addpurchaseinvoice'
+                },
+                {
+                    label: 'Purchase Invoice List',
+                    route: '/Inventory/purchaseinvoicelist'
+                }
+            ]
+        },
+        {
             key: 'Supplier',
             icon: 'person',
             label: 'Supplier',

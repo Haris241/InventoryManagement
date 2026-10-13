@@ -151,6 +151,19 @@ export const inventoryRoutes: Routes = [
                 path: 'editgrn/:id',
                 loadComponent: () => import('../features/InventoryModule/GRN/GRNAddUpdate/grn-add-update.component').then(m => m.GrnAddUpdateComponent)
             },
+            // Purchase Invoice
+            {
+                path: 'purchaseinvoicelist',
+                loadComponent: () => import('../features/InventoryModule/PurchaseInvoice/PurchaseInvoiceList/purchase-invoice-list.component').then(m => m.PurchaseInvoiceListComponent)
+            },
+            {
+                path: 'addpurchaseinvoice',
+                loadComponent: () => import('../features/InventoryModule/PurchaseInvoice/PurchaseInvoiceAddUpdate/purchase-invoice-add-updae.component').then(m => m.PurchaseInvoiceAddUpdaeComponent)
+            },
+            {
+                path: 'editpurchaseinvoice/:id',
+                loadComponent: () => import('../features/InventoryModule/PurchaseInvoice/PurchaseInvoiceAddUpdate/purchase-invoice-add-updae.component').then(m => m.PurchaseInvoiceAddUpdaeComponent)
+            },
 
             {
                 path: '',
