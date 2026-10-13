@@ -32,7 +32,8 @@ export interface GRNLineDto {
     sourceRowId: string | null;
     availableQuantity: number | null;
     selectedProductVariant?: ProductVariantSearchDto;
-    isPOBasedGE: boolean
+    isPOBasedGE: boolean;
+    supplierId?: string | null;
 }
 export interface GRNList {
     id: string;

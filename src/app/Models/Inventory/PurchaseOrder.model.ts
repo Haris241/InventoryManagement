@@ -36,6 +36,7 @@ export interface PurchaseOrderLineDto {
     uom: string;
     sourceRowId: string | null;
     availableQuantity: number | null;
+    supplierId?: string | null;
 }
 
 

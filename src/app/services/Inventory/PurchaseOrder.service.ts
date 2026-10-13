@@ -36,7 +36,8 @@ export class PurchaseOrderService {
         return {
             quantity: 0, wareHouseId: null, productVariantId: null, barcode: '', uom: '',
             warehouseLocationId: null, warehouseLocationName: '', taxId: null, rate: 0, discountPercentage: 0, productName: '',
-            warehouseName: '', sourceRowId: null, availableQuantity: null
+            warehouseName: '', sourceRowId: null, availableQuantity: null,
+            supplierId: null
         };
     }
     getFormLookups(): Observable<POFormLookupsDto> {

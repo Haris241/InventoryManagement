@@ -26,7 +26,7 @@ export interface GateEntryLineDto {
     sourceRowId: string | null;
     availableQuantity: number | null;
     selectedProductVariant?: ProductVariantSearchDto;
-
+    supplierId?: string | null;
 }
 export interface GateEntryList {
     id: string;

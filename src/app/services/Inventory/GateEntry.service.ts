@@ -42,7 +42,8 @@ export class GateEntryService {
     createGEline(): GateEntryLineDto {
         return {
             quantity: 0, wareHouseId: null, productVariantId: null, barcode: '', uom: '',
-            productVariantName: '', warehouseName: '', sourceRowId: null, availableQuantity: null
+            productVariantName: '', warehouseName: '', sourceRowId: null, availableQuantity: null,
+            supplierId: null
         };
     }
     getFormLookups(): Observable<GEFormLookupsDto> {

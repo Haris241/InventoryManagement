@@ -302,6 +302,22 @@ export class GateEntryAddUpdateComponent {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (lines) => {
+          if (!lines || lines.length === 0) return;
+
+          const incomingSupplierId = lines.find(l => !!l.supplierId)?.supplierId;
+          const currentSupplierId = this.geModel().supplierId;
+
+          if (incomingSupplierId) {
+            if (currentSupplierId && currentSupplierId !== incomingSupplierId) {
+              this.errors.set(['The selected source document belongs to a different supplier than the currently selected supplier.']);
+              return;
+            }
+
+            if (!currentSupplierId) {
+              this.updateField('supplierId', incomingSupplierId);
+            }
+          }
+
           const { newLines, hasDuplicates } = filterNewSourceLines(this.geModel().lines, lines);
 
           if (hasDuplicates) {
