@@ -83,16 +83,32 @@ export class PurchaseOrderComponent {
     return map;
   });
 
+  activeDiscountAmount = signal<{ index: number; value: number | null } | null>(null);
+
+  // Computed discount amounts per line
+  lineDiscountAmounts = computed(() => {
+    return this.poModel().lines.map((line, i) => {
+      const active = this.activeDiscountAmount();
+      if (active && active.index === i) {
+        return active.value;
+      }
+      const gross = (line.quantity ?? 0) * (line.rate ?? 0);
+      const disc = line.discountPercentage ?? 0;
+      return gross > 0 ? Number(((gross * disc) / 100).toFixed(2)) : 0;
+    });
+  });
+
   // 2. Computed GrandTotal using the safe lookup
   grandTotal = computed(() => {
     const taxes = this.taxMap();
 
-    return this.poModel().lines.reduce((total, line) => {
+    const total = this.poModel().lines.reduce((total, line) => {
       const quantity = line.quantity ?? 0;
       const rate = line.rate ?? 0;
       const discountPercentage = line.discountPercentage ?? 0;
 
-      const taxableAmount = (quantity * rate) - discountPercentage;
+      const discountAmount = (quantity * rate) * (discountPercentage / 100);
+      const taxableAmount = (quantity * rate) - discountAmount;
 
       // Check if line.taxId is present and look up in map
       const taxRate = line.taxId != null ? (taxes.get(line.taxId) ?? 0) : 0;
@@ -100,6 +116,8 @@ export class PurchaseOrderComponent {
 
       return total + taxableAmount + taxAmount;
     }, 0);
+
+    return Number(total.toFixed(2));
   });
 
 
@@ -154,7 +172,10 @@ export class PurchaseOrderComponent {
       validate(line.discountPercentage, ({ value }) => {
         const discountPercentage = value();
         if (discountPercentage == null || discountPercentage < 0) {
-          return { kind: 'positiveQuantity', message: 'Discount must be greater than or equal to 0' };
+          return { kind: 'minDiscount', message: 'Discount must be greater than or equal to 0' };
+        }
+        if (discountPercentage > 100) {
+          return { kind: 'maxDiscount', message: 'Discount cannot be above 100%' };
         }
         return null;
       });
@@ -171,6 +192,23 @@ export class PurchaseOrderComponent {
     value: PurchaseOrderLineDto[K]
   ) {
     this.poModel.update(prev => this.poService.updateLineField(prev, index, field, value));
+  }
+
+  onDiscountAmountChange(index: number, amount: number | null): void {
+    this.activeDiscountAmount.set({ index, value: amount });
+    const amt = amount ?? 0;
+    const line = this.poModel().lines[index];
+    const gross = (line.quantity ?? 0) * (line.rate ?? 0);
+    if (gross > 0) {
+      const percentage = Number(((amt / gross) * 100).toFixed(4));
+      this.updateLineField(index, 'discountPercentage', percentage);
+    } else {
+      this.updateLineField(index, 'discountPercentage', 0);
+    }
+  }
+
+  onDiscountAmountBlur(): void {
+    this.activeDiscountAmount.set(null);
   }
 
   addLine(): void {

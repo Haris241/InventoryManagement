@@ -1,7 +1,7 @@
 import { AutoDropdown, TaxDropDown } from "../Pagination.model";
 
 export interface PurchaseInvoiceDto {
-    id: string;
+    id?: string;
     name: string;
     date: string | null;
     dateUI: Date | null;

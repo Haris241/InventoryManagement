@@ -1,1 +1,280 @@
-<p>purchase-invoice-add-updae works!</p>
+<!-- Top Settings Button -->
+<div class="w-full grid grid-cols-2 lg:flex lg:justify-end lg:items-center mb-4 gap-2">
+    <button type="button" class="blog-button flex items-center justify-center whitespace-nowrap"
+        routerLink="/Setting/inventoryWorkflow">
+        <span class="material-symbols-outlined mr-1">settings</span>
+        Work Flow Setting
+    </button>
+</div>
+
+<!-- Purchase Invoice Form -->
+<form (ngSubmit)="createPurchaseInvoice($event)">
+    <div class="flex flex-wrap global-div p-5 gap-2 lg:gap-0">
+        <div class="w-full mb-4">
+            <h3 class="text-2xl font-semibold text-center mb-3">
+                @if(isEditMode()){
+                <span class="gradient-heading">Edit Purchase Invoice</span>
+                }@else{
+                <span class="gradient-heading">Add Purchase Invoice</span>
+                }
+            </h3>
+            <hr class="second-color">
+        </div>
+
+        <!-- Name -->
+        <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <input pInputText pSize="small" id="name" autocomplete="off" type="text" class="w-full"
+                        [formField]="piForm.name">
+                    <label for="name" class="required">Name</label>
+                </div>
+            </p-floatLabel>
+            <app-field-errorS [field]="piForm.name" [submit]="formSubmitted()" [backendErrors]="backendErrors()">
+            </app-field-errorS>
+        </div>
+
+        <!-- Date -->
+        <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <p-datepicker [(ngModel)]="piModel().dateUI" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('dateUI',$event)" view="date" dateFormat="dd/mm/yy" size="small"
+                        inputId="dateUI" class="w-full" />
+                    <label for="dateUI" class="required">Date</label>
+                </div>
+            </p-floatLabel>
+            <app-field-errorS [field]="piForm.dateUI" [submit]="formSubmitted()" [backendErrors]="backendErrors()">
+            </app-field-errorS>
+        </div>
+
+        <!-- Due Date -->
+        <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <p-datepicker [(ngModel)]="piModel().dueDateUI" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('dueDateUI',$event)" view="date" dateFormat="dd/mm/yy" size="small"
+                        inputId="dueDateUI" class="w-full" />
+                    <label for="dueDateUI">Due Date</label>
+                </div>
+            </p-floatLabel>
+        </div>
+
+        <!-- Supplier -->
+        <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <p-select [(ngModel)]="piModel().supplierId" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('supplierId',$event)" [options]="suppliers()" optionLabel="name"
+                        optionValue="id" class="w-full" [showClear]="true" [filter]="true" filterBy="name" />
+                    <label for="supplierId" class="required">Supplier</label>
+                </div>
+            </p-floatLabel>
+            <app-field-errorS [field]="piForm.supplierId" [submit]="formSubmitted()" [backendErrors]="backendErrors()">
+            </app-field-errorS>
+        </div>
+
+        <!-- Supplier Invoice Number -->
+        <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <input pInputText pSize="small" id="supplierInvoiceNumber" autocomplete="off" type="text" class="w-full"
+                        [formField]="piForm.supplierInvoiceNumber">
+                    <label for="supplierInvoiceNumber">Supplier Invoice No</label>
+                </div>
+            </p-floatLabel>
+        </div>
+
+        <!-- Description -->
+        <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <input pInputText pSize="small" id="description" autocomplete="off" type="text" class="w-full"
+                        [formField]="piForm.description">
+                    <label for="description">Description</label>
+                </div>
+            </p-floatLabel>
+        </div>
+
+        <!-- Direct GRN Search Field (no source module) -->
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-10/12 w-full">
+                    <p-autoComplete [(ngModel)]="selectedGrnId" [ngModelOptions]="{standalone: true}"
+                        (onSelect)="loadGRNLines($event.value.id)"
+                        (completeMethod)="searchGRN($event)" inputId="grnSearchId"
+                        optionLabel="name" [dropdown]="true" [suggestions]="grnSearch.result()" optionValue="id"
+                        [showClear]="true" class="w-full"></p-autoComplete>
+                    <label for="grnSearchId">Search GRN</label>
+                </div>
+            </p-floatLabel>
+        </div>
+
+        <!-- Lines Heading -->
+        <div class="w-full mt-3">
+            <h4 class="text-base sm:text-lg font-semibold mb-2 float-left">
+                <span>Purchase Invoice Lines</span>
+            </h4>
+        </div>
+
+        <div class="w-full">
+            <hr class="second-color my-4">
+        </div>
+
+        <!-- Lines Table/List -->
+        <div class="w-full">
+            @for (line of piModel().lines; track $index) {
+            <div class="flex flex-wrap items-start gap-2 pb-3 mb-3 border-b second-color">
+
+                <!-- Warehouse (readonly) -->
+                <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
+                    <p-floatLabel variant="on">
+                        <div class="w-full">
+                            <input pInputText pSize="small" [value]="line.warehouseName" readonly class="w-full">
+                            <label>Warehouse</label>
+                        </div>
+                    </p-floatLabel>
+                </div>
+
+                <!-- Product (readonly, no product global search) -->
+                <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
+                    <p-floatLabel variant="on">
+                        <div class="w-full">
+                            <input pInputText pSize="small" [value]="line.productVariantName" readonly class="w-full">
+                            <label>Product</label>
+                        </div>
+                    </p-floatLabel>
+                </div>
+
+                <!-- Barcode (readonly) -->
+                <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
+                    <p-floatLabel variant="on">
+                        <div class="w-full">
+                            <input pInputText pSize="small" [value]="line.barcode" readonly class="w-full">
+                            <label>Barcode</label>
+                        </div>
+                    </p-floatLabel>
+                </div>
+
+                <!-- UOM (readonly) -->
+                <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
+                    <p-floatLabel variant="on">
+                        <div class="w-full">
+                            <input pInputText pSize="small" [value]="line.uom" readonly class="w-full">
+                            <label>UOM</label>
+                        </div>
+                    </p-floatLabel>
+                </div>
+
+                <!-- Available Qty (readonly) -->
+                <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
+                    <p-floatLabel variant="on">
+                        <div class="w-full">
+                            <input pInputText pSize="small" [value]="line.availableQuantity" readonly class="w-full">
+                            <label>Available Qty</label>
+                        </div>
+                    </p-floatLabel>
+                </div>
+
+                <!-- Quantity (EDITABLE!) -->
+                <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
+                    <p-floatLabel variant="on">
+                        <div class="w-full">
+                            <input pInputText pSize="small" autocomplete="off" type="number" class="w-full"
+                                [formField]="piForm.lines[$index].quantity">
+                            <label class="required">Qty</label>
+                        </div>
+                    </p-floatLabel>
+                    <app-field-errorS [field]="piForm.lines[$index].quantity" [submit]="formSubmitted()"
+                        [backendErrors]="backendErrors()" [fieldPath]="'lines[' + $index + '].quantity'">
+                    </app-field-errorS>
+                </div>
+
+                <!-- Rate (readonly) -->
+                <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
+                    <p-floatLabel variant="on">
+                        <div class="w-full">
+                            <input pInputText pSize="small" [value]="line.rate" readonly class="w-full">
+                            <label>Rate</label>
+                        </div>
+                    </p-floatLabel>
+                </div>
+
+                <!-- Discount (%) (readonly) -->
+                <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
+                    <p-floatLabel variant="on">
+                        <div class="w-full">
+                            <input pInputText pSize="small" [value]="line.discountPercentage" readonly class="w-full">
+                            <label>Disc (%)</label>
+                        </div>
+                    </p-floatLabel>
+                </div>
+
+                <!-- Discount (Amt) (readonly) -->
+                <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
+                    <p-floatLabel variant="on">
+                        <div class="w-full">
+                            <input pInputText pSize="small" [value]="lineDiscountAmounts()[$index]" readonly class="w-full">
+                            <label>Disc (Amt)</label>
+                        </div>
+                    </p-floatLabel>
+                </div>
+
+                <!-- Tax (Dropdown) -->
+                <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
+                    <p-floatLabel variant="on">
+                        <div class="w-full">
+                            <p-select [ngModel]="line.taxId" [ngModelOptions]="{standalone: true}"
+                                (ngModelChange)="updateLineField($index, 'taxId', $event)" [options]="taxes()"
+                                optionLabel="name" optionValue="id" [filter]="true" filterBy="name" class="w-full"
+                                [showClear]="true">
+                            </p-select>
+                            <label>Tax</label>
+                        </div>
+                    </p-floatLabel>
+                </div>
+
+                <!-- Action (Delete Line) -->
+                <div class="w-full lg:w-1/12 mt-1 flex items-center justify-center">
+                    <button type="button" (click)="deleteLine($index)">
+                        <span class="material-symbols-outlined icon-color">delete</span>
+                    </button>
+                </div>
+
+            </div>
+            }
+        </div>
+
+        <!-- Errors -->
+        <div class="w-full mt-3">
+            <ul class="text-red-500 text-sm font-medium pl-4">
+                @if (errors()) {
+                @for (e of errors(); track e) {
+                <li>{{ e }}</li>
+                }
+                }
+            </ul>
+        </div>
+
+        <!-- Totals and Submit -->
+        <div class="mt-3 flex flex-col items-center w-full gap-2">
+            <div class="flex gap-6 second-color ">
+                <div>Grand Total: <strong>{{ grandTotal() }}</strong></div>
+            </div>
+        </div>
+
+        <!-- Submitting the form -->
+        <div class="w-full flex justify-center m-3">
+            @if(isEditMode()){
+            <button class="global-button" type="submit" [disabled]="submit()">
+                {{ submit() ? 'Processing...' : 'Update Purchase Invoice' }}
+            </button>
+            }@else{
+            <button class="global-button" type="submit" [disabled]="submit()">
+                {{ submit() ? 'Processing...' : 'Save Purchase Invoice' }}
+            </button>
+            }
+        </div>
+
+    </div>
+</form>

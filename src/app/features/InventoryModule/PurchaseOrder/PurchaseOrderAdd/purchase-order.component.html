@@ -325,13 +325,30 @@
                     </app-field-errorS>
                 </div>
 
-                <!-- Discount -->
+                <!-- Discount (%) -->
                 <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
                     <p-floatLabel variant="on">
                         <div class="w-full">
                             <input pInputText pSize="small" autocomplete="off" type="number" class="w-full"
                                 [formField]="poForm.lines[$index].discountPercentage">
                             <label>Disc (%)</label>
+                        </div>
+                    </p-floatLabel>
+                    <app-field-errorS [field]="poForm.lines[$index].discountPercentage" [submit]="formSubmitted()"
+                        [backendErrors]="backendErrors()" [fieldPath]="'lines[' + $index + '].discountPercentage'">
+                    </app-field-errorS>
+                </div>
+
+                <!-- Discount (Amt) -->
+                <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
+                    <p-floatLabel variant="on">
+                        <div class="w-full">
+                            <input pInputText pSize="small" autocomplete="off" type="number" class="w-full"
+                                [ngModel]="lineDiscountAmounts()[$index]"
+                                [ngModelOptions]="{standalone: true}"
+                                (ngModelChange)="onDiscountAmountChange($index, $event)"
+                                (blur)="onDiscountAmountBlur()">
+                            <label>Disc (Amt)</label>
                         </div>
                     </p-floatLabel>
                 </div>

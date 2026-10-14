@@ -327,7 +327,7 @@
                     }
                 </div>
 
-                <!-- Discount -->
+                <!-- Discount (%) -->
                 <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
                     @if (isLinePriceReadonly(line)) {
                     <p-floatLabel variant="on">
@@ -342,6 +342,32 @@
                             <input pInputText pSize="small" autocomplete="off" type="number" class="w-full"
                                 [formField]="grnForm.lines[$index].discountPercentage">
                             <label>Disc (%)</label>
+                        </div>
+                    </p-floatLabel>
+                    <app-field-errorS [field]="grnForm.lines[$index].discountPercentage" [submit]="formSubmitted()"
+                        [backendErrors]="backendErrors()" [fieldPath]="'lines[' + $index + '].discountPercentage'">
+                    </app-field-errorS>
+                    }
+                </div>
+
+                <!-- Discount (Amt) -->
+                <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
+                    @if (isLinePriceReadonly(line)) {
+                    <p-floatLabel variant="on">
+                        <div class="w-full">
+                            <input pInputText pSize="small" [value]="lineDiscountAmounts()[$index]" readonly class="w-full">
+                            <label>Disc (Amt)</label>
+                        </div>
+                    </p-floatLabel>
+                    } @else {
+                    <p-floatLabel variant="on">
+                        <div class="w-full">
+                            <input pInputText pSize="small" autocomplete="off" type="number" class="w-full"
+                                [ngModel]="lineDiscountAmounts()[$index]"
+                                [ngModelOptions]="{standalone: true}"
+                                (ngModelChange)="onDiscountAmountChange($index, $event)"
+                                (blur)="onDiscountAmountBlur()">
+                            <label>Disc (Amt)</label>
                         </div>
                     </p-floatLabel>
                     }
