@@ -154,6 +154,36 @@ export const INVENTORY_LAYOUT_CONFIG: ModuleLayoutConfig = {
             ]
         },
         {
+            key: 'PurchaseReturn',
+            icon: 'arrow_back_ios_new',
+            label: 'Purchase Return',
+            children: [
+                {
+                    label: 'Add Purchase Return',
+                    route: '/Inventory/addpurchasereturn'
+                },
+                {
+                    label: 'Purchase Return List',
+                    route: '/Inventory/purchasereturnlist'
+                }
+            ]
+        },
+        {
+            key: 'OGP',
+            icon: 'local_shipping',
+            label: 'OGP',
+            children: [
+                {
+                    label: 'Add OGP',
+                    route: '/Inventory/addogp'
+                },
+                {
+                    label: 'OGP List',
+                    route: '/Inventory/ogplist'
+                }
+            ]
+        },
+        {
             key: 'Supplier',
             icon: 'person',
             label: 'Supplier',

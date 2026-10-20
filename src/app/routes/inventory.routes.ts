@@ -164,6 +164,32 @@ export const inventoryRoutes: Routes = [
                 path: 'editpurchaseinvoice/:id',
                 loadComponent: () => import('../features/InventoryModule/PurchaseInvoice/PurchaseInvoiceAddUpdate/purchase-invoice-add-updae.component').then(m => m.PurchaseInvoiceAddUpdaeComponent)
             },
+            // Purchase Return
+            {
+                path: 'purchasereturnlist',
+                loadComponent: () => import('../features/InventoryModule/PurchaseRetrun/PurchaseRetrunList/purchase-return-list.component').then(m => m.PurchaseReturnListComponent)
+            },
+            {
+                path: 'addpurchasereturn',
+                loadComponent: () => import('../features/InventoryModule/PurchaseRetrun/PurchaseReturnAddUpdate/purchase-return-add-update.component').then(m => m.PurchaseReturnAddUpdateComponent)
+            },
+            {
+                path: 'editpurchasereturn/:id',
+                loadComponent: () => import('../features/InventoryModule/PurchaseRetrun/PurchaseReturnAddUpdate/purchase-return-add-update.component').then(m => m.PurchaseReturnAddUpdateComponent)
+            },
+            // Outward Gate Pass
+            {
+                path: 'ogplist',
+                loadComponent: () => import('../features/InventoryModule/OutwardGatePass/OGPList/ogplist.component').then(m => m.OGPListComponent)
+            },
+            {
+                path: 'addogp',
+                loadComponent: () => import('../features/InventoryModule/OutwardGatePass/OGPAddUpdate/ogpadd-update.component').then(m => m.OGPAddUpdateComponent)
+            },
+            {
+                path: 'editogp/:id',
+                loadComponent: () => import('../features/InventoryModule/OutwardGatePass/OGPAddUpdate/ogpadd-update.component').then(m => m.OGPAddUpdateComponent)
+            },
 
             {
                 path: '',

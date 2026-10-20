@@ -1,1 +1,157 @@
-<p>purchase-invoice-list works!</p>
+<form (ngSubmit)="OnSearch()">
+    <div class="flex flex-wrap global-div p-5 gap-2 lg:gap-0">
+        <div class="w-full mb-4">
+            <h3 class="text-2xl font-semibold text-center mb-3">
+                <span class="gradient-heading">Purchase Invoice List</span>
+            </h3>
+            <hr class="second-color">
+        </div>
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-10/12 w-full">
+                    <p-autoComplete [(ngModel)]="piFormModel().id" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('id',$event)"
+                        (completeMethod)="SearchDropDown($event,purchaseInvoiceSearch.searchterm)" inputId="id"
+                        optionLabel="name" [dropdown]="true" [suggestions]="purchaseInvoiceSearchList()"
+                        optionValue="id" [showClear]="true" class="w-full"></p-autoComplete>
+                    <label for="id">Search by Name or Number</label>
+                </div>
+
+            </p-floatLabel>
+
+        </div>
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-10/12 w-full">
+                    <p-autoComplete [(ngModel)]="piFormModel().supplierId" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('supplierId',$event)"
+                        (completeMethod)="SearchDropDown($event,SupplierSearch.searchterm)" inputId="id"
+                        optionLabel="name" [dropdown]="true" [suggestions]="SupplierSearchSearchList()" optionValue="id"
+                        [showClear]="true" class="w-full"></p-autoComplete>
+                    <label for="id">Search by Supplier</label>
+                </div>
+
+            </p-floatLabel>
+
+        </div>
+        <div class="lg:w-1/4  w-[calc(50%-0.25rem)] mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <p-select [(ngModel)]="piFormModel().status" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('status',$event)" [options]="piStatusOptions()" optionLabel="name"
+                        optionValue="value" class="w-full" [showClear]="true" />
+                    <label for="status">Status</label>
+                </div>
+            </p-floatLabel>
+        </div>
+        <div class="lg:w-1/4  w-[calc(50%-0.25rem)] mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <p-select [(ngModel)]="piFormModel().fulfillmentStatus" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('fulfillmentStatus',$event)"
+                        [options]="piFulfillmentStatusOptions()" optionLabel="name" optionValue="value" class="w-full"
+                        [showClear]="true" />
+                    <label for="fulfillmentStatus">Fulfillment Status</label>
+                </div>
+            </p-floatLabel>
+        </div>
+        <div class="lg:w-1/4  w-[calc(50%-0.25rem)] mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <p-datepicker [(ngModel)]="piFormModel().fromDateUI" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('fromDateUI',$event)" view="date" dateFormat="dd/mm/yy"
+                        size="small" inputId="fromDateUI" class="w-full" />
+                    <label for="fromDateUI">From Date</label>
+                </div>
+            </p-floatLabel>
+        </div>
+        <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <p-datepicker [(ngModel)]="piFormModel().toDateUI" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('toDateUI',$event)" view="date" dateFormat="dd/mm/yy" size="small"
+                        inputId="toDateUI" class="w-full" />
+                    <label for="toDateUI">To Date</label>
+                </div>
+            </p-floatLabel>
+        </div>
+
+        <div class="w-full flex justify-center m-3">
+            <button class="global-button">Search</button>
+        </div>
+    </div>
+</form>
+<div class="flex flex-wrap global-div mt-4 p-4">
+    <div class="w-full">
+        <p-table #dt [value]="purchaseInvoiceList()" [rows]="20" [lazy]="true" (onLazyLoad)="loadPI()"
+            [tableStyle]="{ 'min-width': '50rem' }">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Name</th>
+                    <th>Number</th>
+                    <th>Supplier</th>
+                    <th>Status</th>
+                    <th>Fulfillment Status</th>
+                    <th>Total Qty</th>
+                    <th>Grand Total</th>
+                    <th>Created At</th>
+                    <th class="text-center">Actions</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-pi>
+                <tr>
+                    <td>{{ pi.name }}</td>
+                    <td>{{ pi.purchaseInvoiceNumber }}</td>
+                    <td>{{ pi.supplierName }}</td>
+                    <td>
+                        <span class="status-badge" [ngClass]="getPIStatusClass(pi.status)">
+                            {{ piStatusLabel(pi.status) }}
+                        </span>
+                    </td>
+                    <td>{{ piFulfillmentStatusLabel(pi.fulfillmentStatus) }}</td>
+                    <td>{{ pi.totalQuantity }}</td>
+                    <td>{{ pi.grandTotal }}</td>
+                    <td>{{ pi.date | date:'yyyy-MM-dd' }}</td>
+
+                    <!-- Combined & Aligned Actions Column -->
+                    <td>
+                        <!-- Use justify-start to align every action button consistently to the left -->
+                        <div class="flex items-center justify-start gap-2">
+                            @if (pi.status === piStatus.Draft) {
+                            <!-- Draft Actions: Approve + Edit + Delete -->
+                            <button class="status-badge close-year" (click)="ApprovePI(pi.id)">
+                                Approve
+                            </button>
+
+                            <button class="p-1" (click)="editPI(pi.id)">
+                                <span class="material-symbols-outlined icon-color">edit</span>
+                            </button>
+
+                            <button class="p-1" (click)="deletePI(pi.id)" title="Delete">
+                                <span class="material-symbols-outlined icon-color">delete</span>
+                            </button>
+                            } @else if (pi.status === piStatus.Approved) {
+                            <!-- Approved Actions: Cancel only -->
+                            <button class="status-badge close-year" (click)="CancelPI(pi.id)">
+                                Cancel
+                            </button>
+                            } @else {
+                            <span class="text-gray-400 ps-4">-</span>
+                            }
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+
+        <!-- Pagination Controls -->
+        <div class="flex justify-end mt-3">
+            @if (hasPreviousPage()) {
+            <button class="pagination-button me-3" (click)="loadPI('previous')">Previous</button>
+            }
+            @if (hasNextPage()) {
+            <button class="pagination-button me-3" (click)="loadPI('next')">Next</button>
+            }
+        </div>
+    </div>
+</div>
