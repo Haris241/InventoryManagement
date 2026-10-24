@@ -1,6 +1,6 @@
 import { Component, computed, DestroyRef, inject, signal, WritableSignal } from '@angular/core';
 import { applyEach, form, FormField, required, validate } from '@angular/forms/signals';
-import { FloatLabel } from "primeng/floatlabel";
+import { FloatLabelModule } from "primeng/floatlabel";
 import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { DatePickerModule } from 'primeng/datepicker';
@@ -21,7 +21,7 @@ import { filterNewSourceLines } from '../../../../Models/Inventory/SourceModuleC
 
 @Component({
   selector: 'app-grn-add-update',
-  imports: [RouterLink, FloatLabel, FieldErrorSComponent, FormsModule, InputTextModule, DatePickerModule, SelectModule, FormField, AutoCompleteModule],
+  imports: [RouterLink, FloatLabelModule, FieldErrorSComponent, FormsModule, InputTextModule, DatePickerModule, SelectModule, FormField, AutoCompleteModule],
   templateUrl: './grn-add-update.component.html',
   styleUrl: './grn-add-update.component.css',
 })

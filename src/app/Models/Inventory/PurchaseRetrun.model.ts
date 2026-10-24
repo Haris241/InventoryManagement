@@ -19,17 +19,16 @@ export interface PurchaseReturnLineDto {
     reason: string | null;
     reasonNote: string | null;
     wareHouseId: number | null;
-    warehouseName: string | null;
+    warehouseName: string;
     warehouseLocationId: number | null;
-    warehouseLocationName: string | null;
+    warehouseLocationName: string;
     productVariantId: string | null;
-    productName: string | null;
-    barcode: string | null;
-    uom: string | null;
-    sourceId: string | null;
+    productName: string;
+    barcode: string;
+    uom: string;
     sourceRowId: string | null;
     availableQuantity: number | null;
-    supplierId: string | null;
+    supplierId?: string | null;
 
 }
 export interface PurchaseReturnList {
@@ -67,7 +66,8 @@ export interface PurchaseReturnFormLookupsDto {
 }
 export enum PurchaseReturnSourceModule {
     PurchaseOrder = 0,
-    GRN = 1
+    GRN = 1,
+    PurchaseInvoice = 2
 }
 export enum PurchaseReturnStatus {
     Draft = 0,

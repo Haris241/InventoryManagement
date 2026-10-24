@@ -52,5 +52,7 @@ export enum AccountMappingKey {
     // Asset
     InputTaxAccount = 6,
     // Liability
-    OutputTaxAccount = 7
+    OutputTaxAccount = 7,
+    // Expense
+    GeneralOutwardExpense = 8
 }

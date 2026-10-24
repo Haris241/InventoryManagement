@@ -134,6 +134,22 @@
                 </div>
             </p-floatLabel>
         </div>
+        <!-- General outward expense (Key: 8) -->
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="w-full">
+                    <p-autoComplete [ngModel]="selectedAccounts[AccountMappingKey.GeneralOutwardExpense]"
+                        [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="onAccountSelect(AccountMappingKey.GeneralOutwardExpense, $event)"
+                        (completeMethod)="SearchDropDown($event, expenseAccountSearch.searchterm)"
+                        inputId="generalOutwardExpenseAccount" optionLabel="name" [dropdown]="true"
+                        [suggestions]="expenseAccountSearch.result()" [showClear]="true" class="w-full">
+                    </p-autoComplete>
+                    <label for="generalOutwardExpenseAccount">General Outward Expense Account</label>
+                </div>
+            </p-floatLabel>
+        </div>
+
 
 
         <!-- ================= EQUITY ACCOUNTS ================= -->

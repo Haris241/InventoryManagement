@@ -1,7 +1,6 @@
 import { inject, Injectable } from "@angular/core";
 import { DataLayerService } from "../data-layer.service";
 import { GRNDto, GRNFormLookupsDto, GRNLineDto, GRNSourceModule } from "../../Models/Inventory/GRN.model";
-import { GateEntryLineDto } from "../../Models/Inventory/GateEntry.model";
 import { Observable } from "rxjs";
 import { toDateOnlyString } from "../../shared/Utility";
 import { PaginationService } from "../pagination.service";
