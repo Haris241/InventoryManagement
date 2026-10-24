@@ -6,7 +6,6 @@ import { PaginationService } from "../pagination.service";
 import { AutoDropdown } from "../../Models/Pagination.model";
 import { SourceModuleConfig } from "../../Models/Inventory/SourceModuleConfig.model";
 import { PurchaseReturnDto, PurchaseReturnFormLookupsDto, PurchaseReturnLineDto, PurchaseReturnSourceModule } from "../../Models/Inventory/PurchaseRetrun.model";
-import { PRFormLookupsDto } from "../../Models/Inventory/PurchaseRequisition.model";
 
 @Injectable({
     providedIn: 'root'
@@ -46,12 +45,12 @@ export class PurchaseReturnService {
             date: '',
             dateUI: new Date(),
             supplierId: null,
-            lines: [this.createPRline()]
+            lines: []
         };
     }
     createPRline(): PurchaseReturnLineDto {
         return {
-            quantity: 0, rate: 0, reason: '', reasonNote: '',
+            quantity: 0, rate: 0, discountPercentage: 0, reason: '', reasonNote: '',
             taxId: null, wareHouseId: null, warehouseName: '', warehouseLocationId: null,
             warehouseLocationName: '', productVariantId: null, productName: '', barcode: '', uom: '', sourceRowId: null, availableQuantity: null,
             supplierId: null
@@ -90,10 +89,6 @@ export class PurchaseReturnService {
     }
 
     deleteLine(pr: PurchaseReturnDto, lineIndex: number): PurchaseReturnDto {
-        if (pr.lines.length === 1) {
-            return { ...pr, lines: [{ ...this.createPRline() }] };
-        }
-
         return {
             ...pr,
             lines: pr.lines.filter((_, i) => i !== lineIndex)

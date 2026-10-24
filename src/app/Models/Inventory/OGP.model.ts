@@ -1,4 +1,5 @@
 import { AutoDropdown, TaxDropDown } from "../Pagination.model";
+import { ProductVariantSearchDto } from "./ProductSearch.model";
 
 export interface OutwardGatePassDto {
     id?: string;
@@ -34,6 +35,7 @@ export interface OutwardGatePassLineDto {
     sourceRowId: string | null;
     availableQuantity: number | null;
     supplierId?: string | null;
+    selectedProductVariant?: ProductVariantSearchDto;
 
 }
 
@@ -68,12 +70,11 @@ export interface OutwardGatePassSearch {
 
 }
 export interface OGPFormLookupsDto {
+    warehouses?: AutoDropdown[];
     suppliers: AutoDropdown[];
     taxes: TaxDropDown[];
     enableLocations: boolean;
     enableBarcode: boolean;
-
-
 }
 export enum OutwardGatePassSourceModule {
     General = 0,

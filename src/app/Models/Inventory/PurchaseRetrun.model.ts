@@ -15,9 +15,10 @@ export interface PurchaseReturnLineDto {
     id?: string;
     quantity: number;
     rate: number;
+    discountPercentage: number;
     taxId: number | null;
-    reason: string | null;
-    reasonNote: string | null;
+    reason: string;
+    reasonNote: string;
     wareHouseId: number | null;
     warehouseName: string;
     warehouseLocationId: number | null;

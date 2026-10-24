@@ -1,5 +1,4 @@
 <!-- Inventory Work Flow Setting Button -->
-
 <div class="w-full grid grid-cols-2 lg:flex lg:justify-end lg:items-center mb-4 gap-2">
     <button type="button" class="blog-button flex items-center justify-center whitespace-nowrap"
         routerLink="/Setting/inventoryWorkflow">
@@ -7,7 +6,8 @@
         Work Flow Setting
     </button>
 </div>
-<!-- Purchase Requisition Create Form -->
+
+<!-- Purchase Return Create/Update Form -->
 <form (ngSubmit)="createPR($event)">
     <div class="flex flex-wrap global-div p-5 gap-2 lg:gap-0">
         <div class="w-full mb-4">
@@ -20,8 +20,9 @@
             </h3>
             <hr class="second-color">
         </div>
+
         @if(!isEditMode()){
-        <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3 ">
+        <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3">
             <p-floatLabel variant="on">
                 <div class="lg:w-8/12 w-full">
                     <p-select [(ngModel)]="purchaseReturnModel().sourceModule" [ngModelOptions]="{standalone: true}"
@@ -35,7 +36,7 @@
             </app-field-errorS>
         </div>
         }@else{
-        <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3 ">
+        <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3">
             <p-floatLabel variant="on">
                 <div class="lg:w-8/12 w-full">
                     <p-select [(ngModel)]="purchaseReturnModel().sourceModule" [ngModelOptions]="{standalone: true}"
@@ -49,6 +50,7 @@
             </app-field-errorS>
         </div>
         }
+
         <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3">
             <p-floatLabel variant="on">
                 <div class="lg:w-8/12 w-full">
@@ -73,6 +75,7 @@
             <app-field-errorS [field]="prForm.name" [submit]="formSubmitted()" [backendErrors]="backendErrors()">
             </app-field-errorS>
         </div>
+
         <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3">
             <p-floatLabel variant="on">
                 <div class="lg:w-8/12 w-full">
@@ -85,6 +88,7 @@
             <app-field-errorS [field]="prForm.supplierId" [submit]="formSubmitted()" [backendErrors]="backendErrors()">
             </app-field-errorS>
         </div>
+
         <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3">
             <p-floatLabel variant="on">
                 <div class="lg:w-8/12 w-full">
@@ -94,6 +98,7 @@
                 </div>
             </p-floatLabel>
         </div>
+
         @if(currentSourceConfig(); as config){
         <div class="lg:w-1/4 w-full mb-3">
             <p-floatLabel variant="on">
@@ -109,6 +114,7 @@
         </div>
         }
 
+        <!-- Lines Header -->
         <div class="w-full mt-3">
             <h4 class="text-base sm:text-lg font-semibold mb-2 float-left">
                 <span>Return Lines</span>
@@ -119,129 +125,54 @@
             <hr class="second-color my-4">
         </div>
 
+        <!-- Lines List -->
         <div class="w-full">
             @for (line of purchaseReturnModel().lines; track $index) {
-
             <div class="flex flex-wrap items-start gap-2 pb-3 mb-3 border-b second-color">
 
-                <!-- Warehouse -->
+                <!-- Warehouse (readonly) -->
                 <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
-                    @if (!isGeneralSource()) {
                     <p-floatLabel variant="on">
                         <div class="w-full">
                             <input pInputText pSize="small" [value]="line.warehouseName" readonly class="w-full">
-                            <label>WareHouse</label>
+                            <label>Warehouse</label>
                         </div>
                     </p-floatLabel>
-                    } @else {
-                    <p-floatLabel variant="on">
-                        <div class="w-full">
-                            <p-select [ngModel]="line.wareHouseId" [ngModelOptions]="{standalone: true}"
-                                (ngModelChange)="onWarehouseChange($index, $event)" [options]="wareHouses()"
-                                optionLabel="name" optionValue="id" [filter]="true" filterBy="name" class="w-full"
-                                [showClear]="true">
-                            </p-select>
-                            <label class="required">WareHouse</label>
-                        </div>
-                    </p-floatLabel>
-                    <app-field-errorS [field]="prForm.lines[$index].wareHouseId" [submit]="formSubmitted()"
-                        [backendErrors]="backendErrors()" [fieldPath]="'lines[' + $index + '].wareHouseId'">
-                    </app-field-errorS>
-                    }
                 </div>
 
-                <!-- Location -->
+                <!-- Location (readonly) -->
                 @if (enableLocation()) {
                 <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
                     <p-floatLabel variant="on">
                         <div class="w-full">
-                            <p-select [ngModel]="line.warehouseLocationId" [ngModelOptions]="{standalone: true}"
-                                (ngModelChange)="updateLineField($index,'warehouseLocationId',$event)"
-                                [options]="getWarehouseLocations(line.wareHouseId)" optionLabel="name" optionValue="id"
-                                [filter]="true" filterBy="name" class="w-full" [showClear]="true">
-                            </p-select>
+                            <input pInputText pSize="small" [value]="line.warehouseLocationName" readonly class="w-full">
                             <label>Location</label>
                         </div>
                     </p-floatLabel>
                 </div>
                 }
 
-                <!-- Product — stays full width, even on mobile -->
+                <!-- Product (readonly) -->
                 <div class="w-full lg:w-1/4 mb-3">
-                    @if (!isGeneralSource()) {
                     <p-floatLabel variant="on">
                         <div class="w-full">
-                            <input pInputText pSize="small" [value]="line.productVariantName" readonly class="w-full">
+                            <input pInputText pSize="small" [value]="line.productName" readonly class="w-full">
                             <label>Product</label>
                         </div>
                     </p-floatLabel>
-                    } @else {
-                    <p-floatLabel variant="on">
-                        <div class="w-full">
-                            <p-autoComplete [(ngModel)]="line.selectedProductVariant"
-                                [ngModelOptions]="{standalone: true}"
-                                (ngModelChange)="updateLineField($index,'productVariantId',$event?.id ?? null)"
-                                (onSelect)="onProductVariantChange($index, $event.value)"
-                                (completeMethod)="SearchDropDown($event,productSearch.searchterm)"
-                                optionLabel="displayName" [suggestions]="productSearchList()" [showClear]="true"
-                                appendTo="body" fluid size="small" panelStyleClass="product-search-panel">
-                                <ng-template let-product pTemplate="item">
-                                    <div class="product-search-item">
-                                        <!-- Product -->
-                                        <div class="product-search-main">
-                                            {{ product.displayName }}
-                                        </div>
-                                        <!-- Details -->
-                                        <div class="product-search-meta">
-                                            <div class="product-search-detail">
-                                                <span class="product-search-label">SKU:</span>
-                                                <span class="product-search-value">
-                                                    {{ product.sku }}
-                                                </span>
-                                            </div>
-                                            <div class="product-search-detail">
-                                                <span class="product-search-label">Unit:</span>
-                                                <span class="product-search-value">
-                                                    {{ product.uom }}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </ng-template>
-                            </p-autoComplete>
-                            <label class="required">Product</label>
-                        </div>
-                    </p-floatLabel>
-                    <app-field-errorS [field]="prForm.lines[$index].productVariantId" [submit]="formSubmitted()"
-                        [backendErrors]="backendErrors()" [fieldPath]="'lines[' + $index + '].productVariantId'">
-                    </app-field-errorS>
-                    }
                 </div>
 
-                <!-- Barcode -->
-                @if (enableBarcode()) {
+                <!-- Barcode (readonly) -->
                 <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
-                    @if (!isGeneralSource()) {
                     <p-floatLabel variant="on">
                         <div class="w-full">
                             <input pInputText pSize="small" [value]="line.barcode" readonly class="w-full">
                             <label>Barcode</label>
                         </div>
                     </p-floatLabel>
-                    } @else {
-                    <p-floatLabel variant="on">
-                        <div class="w-full">
-                            <input pInputText pSize="small" autocomplete="off" type="text" class="w-full"
-                                [formField]="prForm.lines[$index].barcode"
-                                (keydown.enter)="searchBarcode($index, $event)">
-                            <label>Barcode</label>
-                        </div>
-                    </p-floatLabel>
-                    }
                 </div>
-                }
 
-                <!-- UOM -->
+                <!-- UOM (readonly) -->
                 <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
                     <p-floatLabel variant="on">
                         <div class="w-full">
@@ -251,138 +182,96 @@
                     </p-floatLabel>
                 </div>
 
-                <!-- Available Quantity -->
-                @if (!isGeneralSource()) {
+                <!-- Available Quantity (readonly) -->
                 <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
                     <p-floatLabel variant="on">
                         <div class="w-full">
                             <input pInputText pSize="small" [value]="line.availableQuantity" readonly class="w-full">
-                            <label> Available Qty</label>
+                            <label>Available Qty</label>
                         </div>
                     </p-floatLabel>
                 </div>
-                }
 
-                <!-- Accepted Quantity -->
+                <!-- Quantity (Editable) -->
                 <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
                     <p-floatLabel variant="on">
                         <div class="w-full">
                             <input pInputText pSize="small" autocomplete="off" type="number" class="w-full"
-                                [formField]="prForm.lines[$index].acceptedQuantity">
-                            <label class="required">Accepted Qty</label>
+                                [formField]="prForm.lines[$index].quantity">
+                            <label class="required">Qty</label>
                         </div>
                     </p-floatLabel>
-                    <app-field-errorS [field]="prForm.lines[$index].acceptedQuantity" [submit]="formSubmitted()"
-                        [backendErrors]="backendErrors()" [fieldPath]="'lines[' + $index + '].acceptedQuantity'">
+                    <app-field-errorS [field]="prForm.lines[$index].quantity" [submit]="formSubmitted()"
+                        [backendErrors]="backendErrors()" [fieldPath]="'lines[' + $index + '].quantity'">
                     </app-field-errorS>
                 </div>
-                <!-- Rejected Quantity -->
+
+                <!-- Rate (readonly) -->
                 <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
-                    <p-floatLabel variant="on">
-                        <div class="w-full">
-                            <input pInputText pSize="small" autocomplete="off" type="number" class="w-full"
-                                [formField]="prForm.lines[$index].rejectedQuantity">
-                            <label>Rejected Qty</label>
-                        </div>
-                    </p-floatLabel>
-                    <app-field-errorS [field]="prForm.lines[$index].rejectedQuantity" [submit]="formSubmitted()"
-                        [backendErrors]="backendErrors()" [fieldPath]="'lines[' + $index + '].rejectedQuantity'">
-                    </app-field-errorS>
-                </div>
-                <!-- Rejected Reason -->
-                <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
-                    <p-floatLabel variant="on">
-                        <div class="w-full">
-                            <input pInputText pSize="small" autocomplete="off" type="text" class="w-full"
-                                [formField]="prForm.lines[$index].rejectedReason">
-                            <label>Rejected Reason</label>
-                        </div>
-                    </p-floatLabel>
-                </div>
-                <!-- Rate -->
-                <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
-                    @if (isLinePriceReadonly(line)) {
                     <p-floatLabel variant="on">
                         <div class="w-full">
                             <input pInputText pSize="small" [value]="line.rate" readonly class="w-full">
                             <label>Rate</label>
                         </div>
                     </p-floatLabel>
-                    } @else {
-                    <p-floatLabel variant="on">
-                        <div class="w-full">
-                            <input pInputText pSize="small" autocomplete="off" type="number" class="w-full"
-                                [formField]="prForm.lines[$index].rate">
-                            <label class="required">Rate</label>
-                        </div>
-                    </p-floatLabel>
-                    <app-field-errorS [field]="prForm.lines[$index].rate" [submit]="formSubmitted()"
-                        [backendErrors]="backendErrors()" [fieldPath]="'lines[' + $index + '].rate'">
-                    </app-field-errorS>
-                    }
                 </div>
 
-                <!-- Discount (%) -->
+                <!-- Discount (%) (readonly) -->
                 <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
-                    @if (isLinePriceReadonly(line)) {
                     <p-floatLabel variant="on">
                         <div class="w-full">
                             <input pInputText pSize="small" [value]="line.discountPercentage" readonly class="w-full">
                             <label>Disc (%)</label>
                         </div>
                     </p-floatLabel>
-                    } @else {
-                    <p-floatLabel variant="on">
-                        <div class="w-full">
-                            <input pInputText pSize="small" autocomplete="off" type="number" class="w-full"
-                                [formField]="prForm.lines[$index].discountPercentage">
-                            <label>Disc (%)</label>
-                        </div>
-                    </p-floatLabel>
-                    <app-field-errorS [field]="prForm.lines[$index].discountPercentage" [submit]="formSubmitted()"
-                        [backendErrors]="backendErrors()" [fieldPath]="'lines[' + $index + '].discountPercentage'">
-                    </app-field-errorS>
-                    }
                 </div>
 
-                <!-- Discount (Amt) -->
+                <!-- Discount (Amt) (readonly UI calculated) -->
                 <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
-                    @if (isLinePriceReadonly(line)) {
                     <p-floatLabel variant="on">
                         <div class="w-full">
-                            <input pInputText pSize="small" [value]="lineDiscountAmounts()[$index]" readonly
-                                class="w-full">
+                            <input pInputText pSize="small" [value]="lineDiscountAmounts()[$index]" readonly class="w-full">
                             <label>Disc (Amt)</label>
                         </div>
                     </p-floatLabel>
-                    } @else {
-                    <p-floatLabel variant="on">
-                        <div class="w-full">
-                            <input pInputText pSize="small" autocomplete="off" type="number" class="w-full"
-                                [ngModel]="lineDiscountAmounts()[$index]" [ngModelOptions]="{standalone: true}"
-                                (ngModelChange)="onDiscountAmountChange($index, $event)"
-                                (blur)="onDiscountAmountBlur()">
-                            <label>Disc (Amt)</label>
-                        </div>
-                    </p-floatLabel>
-                    }
                 </div>
 
-                <!-- Tax -->
+                <!-- Tax (readonly) -->
                 <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
                     <p-floatLabel variant="on">
                         <div class="w-full">
                             <p-select [ngModel]="line.taxId" [ngModelOptions]="{standalone: true}"
-                                (ngModelChange)="updateLineField($index, 'taxId', $event)" [options]="taxes()"
-                                optionLabel="name" optionValue="id" [filter]="true" filterBy="name" class="w-full"
-                                [showClear]="!isLinePriceReadonly(line)" [disabled]="isLinePriceReadonly(line)">
+                                [options]="taxes()" optionLabel="name" optionValue="id" class="w-full"
+                                [disabled]="true">
                             </p-select>
                             <label>Tax</label>
                         </div>
                     </p-floatLabel>
                 </div>
 
-                <!-- Action -->
+                <!-- Reason (Editable) -->
+                <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
+                    <p-floatLabel variant="on">
+                        <div class="w-full">
+                            <input pInputText pSize="small" autocomplete="off" type="text" class="w-full"
+                                [formField]="prForm.lines[$index].reason">
+                            <label>Reason</label>
+                        </div>
+                    </p-floatLabel>
+                </div>
+
+                <!-- Reason Note (Editable) -->
+                <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
+                    <p-floatLabel variant="on">
+                        <div class="w-full">
+                            <input pInputText pSize="small" autocomplete="off" type="text" class="w-full"
+                                [formField]="prForm.lines[$index].reasonNote">
+                            <label>Reason Note</label>
+                        </div>
+                    </p-floatLabel>
+                </div>
+
+                <!-- Action (Delete Line) -->
                 <div class="w-full lg:w-1/12 mt-1 flex items-center justify-center">
                     <button type="button" (click)="deleteLine($index)">
                         <span class="material-symbols-outlined icon-color">delete</span>
@@ -392,7 +281,8 @@
             </div>
             }
         </div>
-        <!--Errors -->
+
+        <!-- Errors -->
         <div class="w-full mt-3">
             <ul class="text-red-500 text-sm font-medium pl-4">
                 @if (errors()) {
@@ -405,24 +295,25 @@
 
         <!-- Totals and Submit -->
         <div class="mt-3 flex flex-col items-center w-full gap-2">
-            <div class="flex gap-6 second-color ">
+            <div class="flex gap-6 second-color">
                 <div>Grand Total: <strong>{{ grandTotal() }}</strong></div>
             </div>
         </div>
 
-        <!--submitting the form  -->
+        <!-- Submitting the form -->
         <div class="w-full flex justify-center m-3">
             @if(isEditMode()){
             <button class="global-button" type="submit" [disabled]="submit()">
-                {{ submit() ? 'Processing...' : 'Update GRN' }}
+                {{ submit() ? 'Processing...' : 'Update Purchase Return' }}
             </button>
             }@else{
             <button class="global-button" type="submit" [disabled]="submit()">
-                {{ submit() ? 'Processing...' : 'Create GRN' }}
+                {{ submit() ? 'Processing...' : 'Create Purchase Return' }}
             </button>
             }
         </div>
     </div>
+
     @if (taxes().length === 0) {
     <div class="p-6 text-center text-gray-500">
         No Tax added yet.
@@ -431,6 +322,4 @@
         to add a Tax.
     </div>
     }
-
-
 </form>

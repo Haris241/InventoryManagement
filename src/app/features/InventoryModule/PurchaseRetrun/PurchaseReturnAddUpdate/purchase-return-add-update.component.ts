@@ -13,10 +13,6 @@ import { AutoDropdown, TaxDropDown } from '../../../../Models/Pagination.model';
 import { BaseApiService } from '../../../../services/base-api.service';
 import { PaginationService } from '../../../../services/pagination.service';
 import { enumToOptions } from '../../../../shared/Utility';
-import { ProductVariantSearchDto } from '../../../../Models/Inventory/ProductSearch.model';
-import { ProductSearchService } from '../../../../services/Inventory/ProductSearch.service';
-import { GrnService } from '../../../../services/Inventory/GRN.service';
-import { GRNDto, GRNLineDto, GRNSourceModule } from '../../../../Models/Inventory/GRN.model';
 import { filterNewSourceLines } from '../../../../Models/Inventory/SourceModuleConfig.model';
 import { PurchaseReturnService } from '../../../../services/Inventory/PurchaseRetrun.service';
 import { PurchaseReturnDto, PurchaseReturnLineDto, PurchaseReturnSourceModule } from '../../../../Models/Inventory/PurchaseRetrun.model';
@@ -33,19 +29,16 @@ export class PurchaseReturnAddUpdateComponent {
   enableLocation = signal<boolean>(false);
 
   private purchaseReturnService = inject(PurchaseReturnService);
-  private productSearchService = inject(ProductSearchService);
   private destroyRef = inject(DestroyRef);
   private base = inject(BaseApiService);
   private activatedRoute = inject(ActivatedRoute);
   private router = inject(Router);
-  private pagination = inject(PaginationService);
 
   submit = signal<boolean>(false);
   formSubmitted = signal<boolean>(false);
   backendErrors = signal<Record<string, string[]>>({});
   errors = signal<string[]>([]);
   isEditMode = signal<boolean>(false);
-  warehouseLocations = signal<Record<number, AutoDropdown[]>>({});
 
   purchaseReturnModel = signal<PurchaseReturnDto>(this.purchaseReturnService.createDefaultPR());
   sourceModules = signal(enumToOptions(PurchaseReturnSourceModule, true));
@@ -71,26 +64,36 @@ export class PurchaseReturnAddUpdateComponent {
     return map;
   });
 
+  // Computed discount amounts per line
+  lineDiscountAmounts = computed(() => {
+    return this.purchaseReturnModel().lines.map((line) => {
+      const gross = (line.quantity ?? 0) * (line.rate ?? 0);
+      const disc = line.discountPercentage ?? 0;
+      return gross > 0 ? Number(((gross * disc) / 100).toFixed(2)) : 0;
+    });
+  });
 
-  // 2. Computed GrandTotal using the safe lookup
+  // Computed GrandTotal including discount and tax calculation
   grandTotal = computed(() => {
     const taxes = this.taxMap();
 
-    const total = this.purchaseReturnModel().lines.reduce((total, line) => {
+    const total = this.purchaseReturnModel().lines.reduce((acc, line) => {
       const quantity = line.quantity ?? 0;
       const rate = line.rate ?? 0;
+      const discountPercentage = line.discountPercentage ?? 0;
 
-      const taxableAmount = (quantity * rate);
+      const discountAmount = (quantity * rate) * (discountPercentage / 100);
+      const taxableAmount = (quantity * rate) - discountAmount;
 
-      // Check if line.taxId is present and look up in map
       const taxRate = line.taxId != null ? (taxes.get(line.taxId) ?? 0) : 0;
       const taxAmount = taxableAmount * (taxRate / 100);
 
-      return total + taxableAmount + taxAmount;
+      return acc + taxableAmount + taxAmount;
     }, 0);
 
     return Number(total.toFixed(2));
   });
+
   ngOnInit() {
     this.loadFormLookups();
     this.activatedRoute.paramMap.pipe(
@@ -104,40 +107,28 @@ export class PurchaseReturnAddUpdateComponent {
   }
 
   prForm = form(this.purchaseReturnModel, (schema) => {
-    required(schema.name, { message: 'Name is required', });
-    required(schema.sourceModule, { message: 'Source Module is required', });
-    required(schema.supplierId, { message: 'Supplier is required', });
-    required(schema.dateUI, { message: 'Date is required', });
+    required(schema.name, { message: 'Name is required' });
+    required(schema.sourceModule, { message: 'Source Module is required' });
+    required(schema.supplierId, { message: 'Supplier is required' });
+    required(schema.dateUI, { message: 'Date is required' });
 
     applyEach(schema.lines, (line) => {
-      required(line.wareHouseId, { message: 'Warehouse is required', });
-      required(line.productVariantId, { message: 'Product is required', });
-      validate(line.rate, ({ value }) => {
-        const rate = value();
-        if (rate == null || rate <= 0) {
-          return { kind: 'positiveQuantity', message: 'Rate must be greater than 0' };
-        }
-        return null;
-      });
-
       validate(line.quantity, ({ value, valueOf }) => {
         const qty = value();
 
-        if (qty == null || qty < 0) {
+        if (qty == null || qty <= 0) {
           return {
             kind: 'positiveQuantity',
-            message: 'Quantity must be greater than or equal to 0'
+            message: 'Quantity must be greater than 0'
           };
         }
 
-        const available = valueOf(line.availableQuantity) ?? 0;
-
-        if (qty > available) {
+        const available = valueOf(line.availableQuantity);
+        if (available != null && available > 0 && qty > available) {
           return { kind: 'prQuantityExceeded', message: `Quantity cannot be greater than Available quantity.` };
         }
         return null;
       });
-
     });
   });
 
@@ -152,8 +143,6 @@ export class PurchaseReturnAddUpdateComponent {
   ) {
     this.purchaseReturnModel.update(prev => this.purchaseReturnService.updateLineField(prev, index, field, value));
   }
-
-
 
   deleteLine(lineIndex: number): void {
     this.purchaseReturnModel.update(prev => this.purchaseReturnService.deleteLine(prev, lineIndex));
@@ -188,22 +177,22 @@ export class PurchaseReturnAddUpdateComponent {
       .subscribe({
         next: () => {
           if (this.isEditMode()) {
-            this.router.navigate(['Inventory', 'prlist']);
-            this.base.globalMessage('success', 'PR Updated Successfully', false);
+            this.router.navigate(['Inventory', 'purchasereturnlist']);
+            this.base.globalMessage('success', 'Purchase Return Updated Successfully', false);
             return;
           }
 
-          this.base.globalMessage('success', 'PR Added Successfully', false);
+          this.base.globalMessage('success', 'Purchase Return Added Successfully', false);
           this.purchaseReturnModel.set(this.purchaseReturnService.createDefaultPR());
 
           this.submit.set(false);
           this.formSubmitted.set(false);
         },
         error: (err) => {
-          if (err.error.errors) {
+          if (err.error?.errors) {
             this.backendErrors.set(err.error.errors);
           } else {
-            this.base.handleError(err, err.error.message);
+            this.base.handleError(err, err.error?.message);
           }
           this.submit.set(false);
         }
@@ -231,25 +220,26 @@ export class PurchaseReturnAddUpdateComponent {
       .subscribe({
         next: (data) => {
           data.dateUI = data.date ? new Date(data.date) : null;
+          data.lines.forEach(l => {
+            l.reason = l.reason ?? '';
+            l.reasonNote = l.reasonNote ?? '';
+          });
           this.purchaseReturnModel.set(data);
-
         },
         error: (err) => {
           this.base.handleError(err, err.error?.message);
-          this.router.navigate(['Inventory', 'prlist']);
+          this.router.navigate(['Inventory', 'purchasereturnlist']);
         }
       });
   }
 
-  //Global Search
+  // Source Document AutoComplete Search
   SearchDropDown(event: { query: string }, searchtermsignal: WritableSignal<string>) {
     const search = event.query?.trim() ?? '';
     if (search.length > 0) {
       searchtermsignal.set(search);
     }
   }
-
-
 
   loadSourceLines(docId: string) {
     const config = this.currentSourceConfig();
@@ -275,6 +265,11 @@ export class PurchaseReturnAddUpdateComponent {
             }
           }
 
+          lines.forEach(l => {
+            l.reason = l.reason ?? '';
+            l.reasonNote = l.reasonNote ?? '';
+          });
+
           const { newLines, hasDuplicates } = filterNewSourceLines(this.purchaseReturnModel().lines, lines);
 
           if (hasDuplicates) {
@@ -291,7 +286,6 @@ export class PurchaseReturnAddUpdateComponent {
       });
   }
 
-
   onSourceModuleChange(sourceModule: PurchaseReturnSourceModule): void {
     this.updateField('sourceModule', sourceModule);
 
@@ -301,6 +295,4 @@ export class PurchaseReturnAddUpdateComponent {
     // Clear selected source document
     this.sourceDocumentId.set(null);
   }
-
-
 }
