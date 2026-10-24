@@ -7,7 +7,7 @@ import { form } from '@angular/forms/signals';
 import { TableModule } from 'primeng/table';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { FormsModule } from '@angular/forms';
-import { FloatLabelModule } from 'primeng/floatlabel';
+import { FloatLabel } from 'primeng/floatlabel';
 import { SelectModule } from 'primeng/select';
 import { CommonModule } from '@angular/common';
 import { enumToOptions, toDateOnlyString } from '../../../../shared/Utility';
@@ -18,7 +18,7 @@ import { GRNFulfillmentStatus, GRNList, GRNSearch, GRNSourceModule, GRNStatus } 
 
 @Component({
   selector: 'app-grn-list',
-  imports: [DatePickerModule, TableModule, AutoCompleteModule, FormsModule, FloatLabelModule, SelectModule, CommonModule],
+  imports: [DatePickerModule, TableModule, AutoCompleteModule, FormsModule, FloatLabel, SelectModule, CommonModule],
   templateUrl: './grn-list.component.html',
   styleUrl: './grn-list.component.css',
 })

@@ -4,7 +4,7 @@ import { BaseApiService } from '../../../services/base-api.service';
 import { AccountDashBoardData, AccountDashboardFilterType, AccountsDashBoardSearch } from '../../../Models/Accouting/AccountDashboard.model';
 import { form } from '@angular/forms/signals';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FloatLabelModule } from 'primeng/floatlabel';
+import { FloatLabel } from 'primeng/floatlabel';
 import { SelectModule } from 'primeng/select';
 import { enumToOptions } from '../../../shared/Utility';
 import { FormsModule } from '@angular/forms';
@@ -40,7 +40,7 @@ Chart.register(
 
 @Component({
   selector: 'app-account-dashboard',
-  imports: [FloatLabelModule, SelectModule, FormsModule, DecimalPipe],
+  imports: [FloatLabel, SelectModule, FormsModule, DecimalPipe],
   templateUrl: './account-dashboard.component.html',
   styleUrl: './account-dashboard.component.css',
 })

@@ -3,7 +3,7 @@ import { Component, inject, signal, WritableSignal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { form, FormField } from '@angular/forms/signals';
 import { AutoCompleteModule } from 'primeng/autocomplete';
-import { FloatLabelModule } from 'primeng/floatlabel';
+import { FloatLabel } from 'primeng/floatlabel';
 import { TableModule } from 'primeng/table';
 import { BaseApiService } from '../../../../services/base-api.service';
 import { PaginationService } from '../../../../services/pagination.service';
@@ -15,7 +15,7 @@ import { BrandList, BrandSearch } from '../../../../Models/Inventory/Brand.model
 
 @Component({
   selector: 'app-brands-list',
-  imports: [TableModule, AutoCompleteModule, FormsModule, FloatLabelModule, FormField, CommonModule],
+  imports: [TableModule, AutoCompleteModule, FormsModule, FloatLabel, FormField, CommonModule],
   templateUrl: './brands-list.component.html',
   styleUrl: './brands-list.component.css',
 })

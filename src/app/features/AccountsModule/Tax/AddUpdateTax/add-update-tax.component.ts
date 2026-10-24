@@ -4,7 +4,7 @@ import { BaseApiService } from '../../../../services/base-api.service';
 import { DataLayerService } from '../../../../services/data-layer.service';
 import { disabled, form, FormField, readonly, required, validate } from '@angular/forms/signals';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FloatLabelModule } from 'primeng/floatlabel';
+import { FloatLabel } from 'primeng/floatlabel';
 import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
@@ -14,7 +14,7 @@ import { TaxDto } from '../../../../Models/Accouting/Tax.model';
 
 @Component({
   selector: 'app-add-update-tax',
-  imports: [FieldErrorSComponent, FormField, FormsModule, FloatLabelModule, InputTextModule, SelectModule],
+  imports: [FieldErrorSComponent, FormField, FormsModule, FloatLabel, InputTextModule, SelectModule],
   templateUrl: './add-update-tax.component.html',
   styleUrl: './add-update-tax.component.css',
 })

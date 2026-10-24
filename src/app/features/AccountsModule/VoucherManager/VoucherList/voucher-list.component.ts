@@ -10,7 +10,7 @@ import { form } from '@angular/forms/signals';
 import { TableModule } from 'primeng/table';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { FormsModule } from '@angular/forms';
-import { FloatLabelModule } from 'primeng/floatlabel';
+import { FloatLabel } from 'primeng/floatlabel';
 import { SelectModule } from 'primeng/select';
 import { CommonModule } from '@angular/common';
 import { DatePickerModule } from 'primeng/datepicker';
@@ -18,7 +18,7 @@ import { ConfirmationService } from 'primeng/api';
 
 @Component({
   selector: 'app-voucher-list',
-  imports: [TableModule, AutoCompleteModule, FormsModule, FloatLabelModule, SelectModule, CommonModule, DatePickerModule],
+  imports: [TableModule, AutoCompleteModule, FormsModule, FloatLabel, SelectModule, CommonModule, DatePickerModule],
   templateUrl: './voucher-list.component.html',
   styleUrl: './voucher-list.component.css',
 })

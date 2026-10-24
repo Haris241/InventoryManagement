@@ -8,14 +8,14 @@ import { Router } from '@angular/router';
 import { PaginationService } from '../../../../services/pagination.service';
 import { AutoDropdown } from '../../../../Models/Pagination.model';
 import { form, FormField } from '@angular/forms/signals';
-import { FloatLabelModule } from 'primeng/floatlabel';
+import { FloatLabel } from 'primeng/floatlabel';
 import { SelectModule } from 'primeng/select';
 import { CommonModule } from '@angular/common';
 import { DepartmentListDto, DepartmentSearch } from '../../../../Models/Inventory/Department.model';
 
 @Component({
   selector: 'app-department-list',
-  imports: [TableModule, AutoCompleteModule, FormsModule, FloatLabelModule, SelectModule, FormField, CommonModule],
+  imports: [TableModule, AutoCompleteModule, FormsModule, FloatLabel, SelectModule, FormField, CommonModule],
   templateUrl: './department-list.component.html',
   styleUrl: './department-list.component.css',
 })

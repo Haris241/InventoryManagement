@@ -3,7 +3,7 @@ import { BalanceSheetNodeData, BalanceSheetSearch, IncomeStatementData, IncomeSt
 import { form, FormField } from '@angular/forms/signals';
 import { TableModule } from 'primeng/table';
 import { FormsModule } from '@angular/forms';
-import { FloatLabelModule } from 'primeng/floatlabel';
+import { FloatLabel } from 'primeng/floatlabel';
 import { SelectModule } from 'primeng/select';
 import { CommonModule } from '@angular/common';
 import { DatePickerModule } from 'primeng/datepicker';
@@ -16,7 +16,7 @@ import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-income-statement',
-  imports: [RouterLink, TableModule, FormsModule, FloatLabelModule, SelectModule, CommonModule, FormField, DatePickerModule],
+  imports: [RouterLink, TableModule, FormsModule, FloatLabel, SelectModule, CommonModule, FormField, DatePickerModule],
   templateUrl: './income-statement.component.html',
   styleUrl: './income-statement.component.css',
 })

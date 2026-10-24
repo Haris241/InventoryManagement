@@ -8,14 +8,14 @@ import { Router } from '@angular/router';
 import { PaginationService } from '../../../../services/pagination.service';
 import { AutoDropdown } from '../../../../Models/Pagination.model';
 import { form, FormField } from '@angular/forms/signals';
-import { FloatLabelModule } from 'primeng/floatlabel';
+import { FloatLabel } from 'primeng/floatlabel';
 import { SelectModule } from 'primeng/select';
 import { CommonModule } from '@angular/common';
 import { ProductAttributeValueList, ProductAttributeValueSearch } from '../../../../Models/Inventory/AttributeValue.model';
 
 @Component({
   selector: 'app-product-attribute-value-list',
-  imports: [TableModule, AutoCompleteModule, FormsModule, FloatLabelModule, SelectModule, FormField, CommonModule],
+  imports: [TableModule, AutoCompleteModule, FormsModule, FloatLabel, SelectModule, FormField, CommonModule],
   templateUrl: './product-attribute-value-list.component.html',
   styleUrl: './product-attribute-value-list.component.css',
 })

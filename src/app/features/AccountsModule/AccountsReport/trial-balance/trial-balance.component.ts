@@ -4,7 +4,7 @@ import { form, FormField, required } from '@angular/forms/signals';
 import { TableModule } from 'primeng/table';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { FormsModule } from '@angular/forms';
-import { FloatLabelModule } from 'primeng/floatlabel';
+import { FloatLabel } from 'primeng/floatlabel';
 import { SelectModule } from 'primeng/select';
 import { CommonModule } from '@angular/common';
 import { DatePickerModule } from 'primeng/datepicker';
@@ -21,7 +21,7 @@ import { NotificationType } from '../../../../Models/Notification.model';
 import { RouterLink } from '@angular/router';
 @Component({
   selector: 'app-trial-balance',
-  imports: [RouterLink, TableModule, AutoCompleteModule, FormsModule, FormField, FloatLabelModule, SelectModule, CommonModule, DatePickerModule],
+  imports: [RouterLink, TableModule, AutoCompleteModule, FormsModule, FormField, FloatLabel, SelectModule, CommonModule, DatePickerModule],
   templateUrl: './trial-balance.component.html',
   styleUrl: './trial-balance.component.css',
 })

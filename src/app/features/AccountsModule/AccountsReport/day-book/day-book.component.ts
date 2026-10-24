@@ -4,7 +4,7 @@ import { form, required } from '@angular/forms/signals';
 import { TableModule } from 'primeng/table';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { FormsModule } from '@angular/forms';
-import { FloatLabelModule } from 'primeng/floatlabel';
+import { FloatLabel } from 'primeng/floatlabel';
 import { SelectModule } from 'primeng/select';
 import { CommonModule } from '@angular/common';
 import { DatePickerModule } from 'primeng/datepicker';
@@ -18,7 +18,7 @@ import { VoucherType } from '../../../../Models/Accouting/VoucherManager.model';
 
 @Component({
   selector: 'app-day-book',
-  imports: [RouterLink, TableModule, AutoCompleteModule, FormsModule, FloatLabelModule, SelectModule, CommonModule, DatePickerModule],
+  imports: [RouterLink, TableModule, AutoCompleteModule, FormsModule, FloatLabel, SelectModule, CommonModule, DatePickerModule],
   templateUrl: './day-book.component.html',
   styleUrl: './day-book.component.css',
 })

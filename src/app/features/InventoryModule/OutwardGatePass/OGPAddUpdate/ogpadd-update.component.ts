@@ -1,6 +1,6 @@
 import { Component, computed, DestroyRef, inject, signal, WritableSignal } from '@angular/core';
 import { applyEach, form, FormField, required, validate } from '@angular/forms/signals';
-import { FloatLabelModule } from "primeng/floatlabel";
+import { FloatLabel } from "primeng/floatlabel";
 import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { DatePickerModule } from 'primeng/datepicker';
@@ -23,7 +23,7 @@ import { DataLayerService } from '../../../../services/data-layer.service';
 
 @Component({
   selector: 'app-ogpadd-update',
-  imports: [RouterLink, FloatLabelModule, FieldErrorSComponent, FormsModule, InputTextModule, DatePickerModule, SelectModule, FormField, AutoCompleteModule, CheckboxModule],
+  imports: [RouterLink, FloatLabel, FieldErrorSComponent, FormsModule, InputTextModule, DatePickerModule, SelectModule, FormField, AutoCompleteModule, CheckboxModule],
   templateUrl: './ogpadd-update.component.html',
   styleUrl: './ogpadd-update.component.css',
 })

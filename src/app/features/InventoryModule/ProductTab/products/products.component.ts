@@ -10,13 +10,13 @@ import { ProductListDTO, ProductSearchDTO, ProductType } from '../../../../Model
 import { enumToOptions, openLoadingTab, showBlobInTab } from '../../../../shared/Utility';
 import { form, FormField } from '@angular/forms/signals';
 import { FormsModule } from '@angular/forms';
-import { FloatLabelModule } from 'primeng/floatlabel';
+import { FloatLabel } from 'primeng/floatlabel';
 import { CommonModule } from '@angular/common';
 import { SelectModule } from 'primeng/select';
 
 @Component({
   selector: 'app-products',
-  imports: [TableModule, AutoCompleteModule, SelectModule, FormsModule, FloatLabelModule, FormField, CommonModule],
+  imports: [TableModule, AutoCompleteModule, SelectModule, FormsModule, FloatLabel, FormField, CommonModule],
   templateUrl: './products.component.html',
   styleUrl: './products.component.css',
 })

@@ -1,6 +1,6 @@
 import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { applyEach, form, FormField, required, validate } from '@angular/forms/signals';
-import { FloatLabelModule } from "primeng/floatlabel";
+import { FloatLabel } from "primeng/floatlabel";
 import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { DatePickerModule } from 'primeng/datepicker';
@@ -19,7 +19,7 @@ import { ProductSearchService } from '../../../../services/Inventory/ProductSear
 
 @Component({
   selector: 'app-add-product',
-  imports: [FloatLabelModule, FieldErrorSComponent, FormsModule, InputTextModule, DatePickerModule, SelectModule, FormField, AutoCompleteModule],
+  imports: [FloatLabel, FieldErrorSComponent, FormsModule, InputTextModule, DatePickerModule, SelectModule, FormField, AutoCompleteModule],
   templateUrl: './add-product.component.html',
   styleUrl: './add-product.component.css'
 })

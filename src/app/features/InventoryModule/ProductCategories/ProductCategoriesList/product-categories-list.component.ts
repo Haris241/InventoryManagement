@@ -8,14 +8,14 @@ import { Router } from '@angular/router';
 import { PaginationService } from '../../../../services/pagination.service';
 import { AutoDropdown } from '../../../../Models/Pagination.model';
 import { form, FormField } from '@angular/forms/signals';
-import { FloatLabelModule } from 'primeng/floatlabel';
+import { FloatLabel } from 'primeng/floatlabel';
 import { SelectModule } from 'primeng/select';
 import { CommonModule } from '@angular/common';
 import { ProductCategoriesList, ProductCategoriesSearch } from '../../../../Models/Inventory/ProductCategories.model';
 
 @Component({
   selector: 'app-product-categories-list',
-  imports: [TableModule, AutoCompleteModule, FormsModule, FloatLabelModule, SelectModule, FormField, CommonModule],
+  imports: [TableModule, AutoCompleteModule, FormsModule, FloatLabel, SelectModule, FormField, CommonModule],
   templateUrl: './product-categories-list.component.html',
   styleUrl: './product-categories-list.component.css',
 })

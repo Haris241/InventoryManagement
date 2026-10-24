@@ -1,6 +1,6 @@
 import { Component, computed, DestroyRef, inject, signal, Signal, WritableSignal } from '@angular/core';
 import { applyEach, form, FormField, readonly, required, validate } from '@angular/forms/signals';
-import { FloatLabelModule } from "primeng/floatlabel";
+import { FloatLabel } from "primeng/floatlabel";
 import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { DatePickerModule } from 'primeng/datepicker';
@@ -21,7 +21,7 @@ import { filterNewSourceLines } from '../../../../Models/Inventory/SourceModuleC
 
 @Component({
   selector: 'app-purchase-order',
-  imports: [RouterLink, FloatLabelModule, FieldErrorSComponent, FormsModule, InputTextModule, DatePickerModule, SelectModule, FormField, AutoCompleteModule],
+  imports: [RouterLink, FloatLabel, FieldErrorSComponent, FormsModule, InputTextModule, DatePickerModule, SelectModule, FormField, AutoCompleteModule],
   templateUrl: './purchase-order.component.html',
   styleUrl: './purchase-order.component.css',
 })

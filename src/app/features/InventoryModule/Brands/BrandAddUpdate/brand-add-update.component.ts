@@ -4,7 +4,7 @@ import { BaseApiService } from '../../../../services/base-api.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { form, FormField, required } from '@angular/forms/signals';
-import { FloatLabelModule } from 'primeng/floatlabel';
+import { FloatLabel } from 'primeng/floatlabel';
 import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { FieldErrorSComponent } from '../../../../shared/field-error-s/field-error-s.component';
@@ -13,7 +13,7 @@ import { FormDataService } from '../../../../services/formData.service';
 
 @Component({
   selector: 'app-brand-add-update',
-  imports: [FloatLabelModule, FieldErrorSComponent, FormsModule, InputTextModule, FormField],
+  imports: [FloatLabel, FieldErrorSComponent, FormsModule, InputTextModule, FormField],
   templateUrl: './brand-add-update.component.html',
   styleUrl: './brand-add-update.component.css',
 })

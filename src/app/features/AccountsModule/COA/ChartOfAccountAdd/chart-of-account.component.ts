@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { BaseApiService } from '../../../../services/base-api.service';
 import { DataLayerService } from '../../../../services/data-layer.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FloatLabelModule } from 'primeng/floatlabel';
+import { FloatLabel } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
 import { enumToOptions } from '../../../../shared/Utility';
@@ -16,7 +16,7 @@ import { BulkimportComponent } from '../../../../shared/bulkimport/bulkimport.co
 
 @Component({
   selector: 'app-chart-of-account',
-  imports: [RouterLink, FormField, FormsModule, FieldErrorSComponent, FloatLabelModule, InputTextModule, SelectModule, BulkimportComponent],
+  imports: [RouterLink, FormField, FormsModule, FieldErrorSComponent, FloatLabel, InputTextModule, SelectModule, BulkimportComponent],
   templateUrl: './chart-of-account.component.html',
   styleUrl: './chart-of-account.component.css',
 })

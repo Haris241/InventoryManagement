@@ -4,7 +4,7 @@ import { BaseApiService } from '../../../../services/base-api.service';
 import { DataLayerService } from '../../../../services/data-layer.service';
 import { form, FormField, required } from '@angular/forms/signals';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FloatLabelModule } from 'primeng/floatlabel';
+import { FloatLabel } from 'primeng/floatlabel';
 import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
@@ -16,7 +16,7 @@ import { ProductAttributeValueDto } from '../../../../Models/Inventory/Attribute
 
 @Component({
   selector: 'app-product-attribute-value',
-  imports: [AutoCompleteModule, FieldErrorSComponent, FormField, FormsModule, FloatLabelModule, InputTextModule, SelectModule],
+  imports: [AutoCompleteModule, FieldErrorSComponent, FormField, FormsModule, FloatLabel, InputTextModule, SelectModule],
   templateUrl: './product-attribute-value.component.html',
   styleUrl: './product-attribute-value.component.css',
 })

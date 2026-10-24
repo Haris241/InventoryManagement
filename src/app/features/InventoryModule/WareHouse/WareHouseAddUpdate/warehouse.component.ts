@@ -5,14 +5,14 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { WareHouseDto, WarehouseLocationDto } from '../../../../Models/Inventory/WareHouse.model';
 import { applyEach, form, FormField, required, validate } from '@angular/forms/signals';
-import { FloatLabelModule } from 'primeng/floatlabel';
+import { FloatLabel } from 'primeng/floatlabel';
 import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { FieldErrorSComponent } from '../../../../shared/field-error-s/field-error-s.component';
 
 @Component({
   selector: 'app-warehouse',
-  imports: [FloatLabelModule, FieldErrorSComponent, FormsModule, InputTextModule, FormField],
+  imports: [FloatLabel, FieldErrorSComponent, FormsModule, InputTextModule, FormField],
   templateUrl: './warehouse.component.html',
   styleUrl: './warehouse.component.css',
 })

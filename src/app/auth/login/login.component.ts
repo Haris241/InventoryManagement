@@ -4,7 +4,7 @@ import { Router, RouterLink } from '@angular/router';
 import { BaseApiService } from '../../services/base-api.service';
 import { Login, LoginResponse } from '../../Models/Auth.model';
 import { DataLayerService } from '../../services/data-layer.service';
-import { FloatLabelModule } from 'primeng/floatlabel';
+import { FloatLabel } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { FormsModule } from '@angular/forms';
 import { form, FormField, required } from '@angular/forms/signals';
@@ -12,7 +12,7 @@ import { FieldErrorSComponent } from '../../shared/field-error-s/field-error-s.c
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 @Component({
   selector: 'app-login',
-  imports: [InputTextModule, FormsModule, FormField, RouterLink, FloatLabelModule, FieldErrorSComponent],
+  imports: [InputTextModule, FormsModule, FormField, RouterLink, FloatLabel, FieldErrorSComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })

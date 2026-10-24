@@ -5,7 +5,7 @@ import { CurrencyDto, Month, Register } from '../../Models/Auth.model';
 import { DataLayerService } from '../../services/data-layer.service';
 import { BaseApiService } from '../../services/base-api.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FloatLabelModule } from 'primeng/floatlabel';
+import { FloatLabel } from 'primeng/floatlabel';
 import { FormsModule } from '@angular/forms';
 import { form, FormField, required } from '@angular/forms/signals';
 import { FieldErrorSComponent } from '../../shared/field-error-s/field-error-s.component';
@@ -15,7 +15,7 @@ import { enumToOptions } from '../../shared/Utility';
 
 @Component({
   selector: 'app-register',
-  imports: [InputTextModule, FormsModule, FormField, RouterLink, FloatLabelModule, FieldErrorSComponent, SelectModule, DatePickerModule],
+  imports: [InputTextModule, FormsModule, FormField, RouterLink, FloatLabel, FieldErrorSComponent, SelectModule, DatePickerModule],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
 })

@@ -6,14 +6,14 @@ import { AccountMappingBulkSaveDTO, AccountMappingDto, AccountMappingKey } from 
 import { AutoDropdown } from '../../../Models/Pagination.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AutoCompleteModule } from 'primeng/autocomplete';
-import { FloatLabelModule } from 'primeng/floatlabel';
+import { FloatLabel } from 'primeng/floatlabel';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { form, required } from '@angular/forms/signals';
 
 @Component({
   selector: 'app-account-mapping',
-  imports: [AutoCompleteModule, FloatLabelModule, FormsModule, CommonModule],
+  imports: [AutoCompleteModule, FloatLabel, FormsModule, CommonModule],
   templateUrl: './account-mapping.component.html',
   styleUrl: './account-mapping.component.css',
 })

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { DatePickerModule } from 'primeng/datepicker';
-import { FloatLabelModule } from 'primeng/floatlabel';
+import { FloatLabel } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { form, FormField, required } from '@angular/forms/signals';
 import { BaseApiService } from '../../../services/base-api.service';
@@ -18,7 +18,7 @@ import { ConfirmationService } from 'primeng/api';
 
 @Component({
   selector: 'app-fiscalyear',
-  imports: [DatePickerModule, FloatLabelModule, InputTextModule, FormField, FormsModule, FieldErrorSComponent, TableModule, CommonModule],
+  imports: [DatePickerModule, FloatLabel, InputTextModule, FormField, FormsModule, FieldErrorSComponent, TableModule, CommonModule],
   templateUrl: './fiscalyear.component.html',
   styleUrl: './fiscalyear.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

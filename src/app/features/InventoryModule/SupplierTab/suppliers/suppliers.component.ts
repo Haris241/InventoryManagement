@@ -8,14 +8,14 @@ import { Router } from '@angular/router';
 import { PaginationService } from '../../../../services/pagination.service';
 import { AutoDropdown } from '../../../../Models/Pagination.model';
 import { form, FormField } from '@angular/forms/signals';
-import { FloatLabelModule } from 'primeng/floatlabel';
+import { FloatLabel } from 'primeng/floatlabel';
 import { SelectModule } from 'primeng/select';
 import { CommonModule } from '@angular/common';
 import { SupplierListDto, SupplierSearch } from '../../../../Models/Inventory/Supplier.model';
 
 @Component({
   selector: 'app-suppliers',
-  imports: [TableModule, AutoCompleteModule, FormsModule, FloatLabelModule, SelectModule, FormField, CommonModule],
+  imports: [TableModule, AutoCompleteModule, FormsModule, FloatLabel, SelectModule, FormField, CommonModule],
   templateUrl: './suppliers.component.html',
   styleUrl: './suppliers.component.css'
 })

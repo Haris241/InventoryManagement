@@ -1,6 +1,6 @@
 import { Component, computed, DestroyRef, inject, signal, WritableSignal } from '@angular/core';
 import { applyEach, form, FormField, required, validate } from '@angular/forms/signals';
-import { FloatLabelModule } from "primeng/floatlabel";
+import { FloatLabel } from "primeng/floatlabel";
 import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { DatePickerModule } from 'primeng/datepicker';
@@ -19,7 +19,7 @@ import { PurchaseReturnDto, PurchaseReturnLineDto, PurchaseReturnSourceModule } 
 
 @Component({
   selector: 'app-purchase-return-add-update',
-  imports: [RouterLink, FloatLabelModule, FieldErrorSComponent, FormsModule, InputTextModule, DatePickerModule, SelectModule, FormField, AutoCompleteModule],
+  imports: [RouterLink, FloatLabel, FieldErrorSComponent, FormsModule, InputTextModule, DatePickerModule, SelectModule, FormField, AutoCompleteModule],
   templateUrl: './purchase-return-add-update.component.html',
   styleUrl: './purchase-return-add-update.component.css',
 })

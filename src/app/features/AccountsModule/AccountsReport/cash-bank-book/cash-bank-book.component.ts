@@ -4,7 +4,7 @@ import { form, FormField, required } from '@angular/forms/signals';
 import { TableModule } from 'primeng/table';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { FormsModule } from '@angular/forms';
-import { FloatLabelModule } from 'primeng/floatlabel';
+import { FloatLabel } from 'primeng/floatlabel';
 import { SelectModule } from 'primeng/select';
 import { CommonModule } from '@angular/common';
 import { DatePickerModule } from 'primeng/datepicker';
@@ -20,7 +20,7 @@ import { AccountUsageType } from '../../../../Models/Accouting/ChartOfAccount.mo
 
 @Component({
   selector: 'app-cash-bank-book',
-  imports: [RouterLink, FormField, TableModule, AutoCompleteModule, FormsModule, FloatLabelModule, SelectModule, CommonModule, DatePickerModule],
+  imports: [RouterLink, FormField, TableModule, AutoCompleteModule, FormsModule, FloatLabel, SelectModule, CommonModule, DatePickerModule],
   templateUrl: './cash-bank-book.component.html',
   styleUrl: './cash-bank-book.component.css',
 })
