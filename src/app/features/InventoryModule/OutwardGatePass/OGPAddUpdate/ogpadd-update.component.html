@@ -55,12 +55,13 @@
             <p-floatLabel variant="on">
                 <div class="lg:w-8/12 w-full">
                     <p-datepicker [(ngModel)]="ogpModel().exitDateTimeUI" [ngModelOptions]="{standalone: true}"
-                        (ngModelChange)="updateField('exitDateTimeUI', $event)" view="date" dateFormat="dd/mm/yy" size="small"
-                        inputId="exitDateTimeUI" class="w-full" />
+                        (ngModelChange)="updateField('exitDateTimeUI', $event)" view="date" dateFormat="dd/mm/yy"
+                        size="small" inputId="exitDateTimeUI" class="w-full" />
                     <label for="exitDateTimeUI" class="required">Exit Date</label>
                 </div>
             </p-floatLabel>
-            <app-field-errorS [field]="ogpForm.exitDateTimeUI" [submit]="formSubmitted()" [backendErrors]="backendErrors()">
+            <app-field-errorS [field]="ogpForm.exitDateTimeUI" [submit]="formSubmitted()"
+                [backendErrors]="backendErrors()">
             </app-field-errorS>
         </div>
 
@@ -92,8 +93,8 @@
         <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3">
             <p-floatLabel variant="on">
                 <div class="lg:w-8/12 w-full">
-                    <input pInputText pSize="small" id="destinationAddress" autocomplete="off" type="text" class="w-full"
-                        [formField]="ogpForm.destinationAddress">
+                    <input pInputText pSize="small" id="destinationAddress" autocomplete="off" type="text"
+                        class="w-full" [formField]="ogpForm.destinationAddress">
                     <label for="destinationAddress">Destination Address</label>
                 </div>
             </p-floatLabel>
@@ -168,7 +169,7 @@
                 </div>
             </p-floatLabel>
         </div>
-
+        @if(isGeneralSource()){
         <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3 flex items-center">
             <div class="flex items-center gap-2">
                 <p-checkbox [(ngModel)]="ogpModel().isStockImpacting" [ngModelOptions]="{standalone: true}"
@@ -176,7 +177,7 @@
                 <label for="isStockImpacting" class="font-medium">Stock Impacting</label>
             </div>
         </div>
-
+        }
         @if(currentSourceConfig(); as config){
         <div class="lg:w-1/4 w-full mb-3">
             <p-floatLabel variant="on">
@@ -245,7 +246,8 @@
                     @if (!isGeneralSource()) {
                     <p-floatLabel variant="on">
                         <div class="w-full">
-                            <input pInputText pSize="small" [value]="line.warehouseLocationName" readonly class="w-full">
+                            <input pInputText pSize="small" [value]="line.warehouseLocationName" readonly
+                                class="w-full">
                             <label>Location</label>
                         </div>
                     </p-floatLabel>
