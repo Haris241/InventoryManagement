@@ -90,10 +90,12 @@ export class GrnAddUpdateComponent {
     return this.grnModel().lines.map((line, i) => {
       const active = this.activeDiscountAmount();
       if (active && active.index === i) {
-        return active.value;
+        return active.value != null && !isNaN(Number(active.value)) ? Number(active.value) : 0;
       }
-      const gross = (line.acceptedQuantity ?? 0) * (line.rate ?? 0);
-      const disc = line.discountPercentage ?? 0;
+      const qty = (line.acceptedQuantity != null && !isNaN(Number(line.acceptedQuantity))) ? Number(line.acceptedQuantity) : 0;
+      const rate = (line.rate != null && !isNaN(Number(line.rate))) ? Number(line.rate) : 0;
+      const gross = qty * rate;
+      const disc = (line.discountPercentage != null && !isNaN(Number(line.discountPercentage))) ? Number(line.discountPercentage) : 0;
       return gross > 0 ? Number(((gross * disc) / 100).toFixed(2)) : 0;
     });
   });
@@ -103,9 +105,9 @@ export class GrnAddUpdateComponent {
     const taxes = this.taxMap();
 
     const total = this.grnModel().lines.reduce((total, line) => {
-      const quantity = line.acceptedQuantity ?? 0;
-      const rate = line.rate ?? 0;
-      const discountPercentage = line.discountPercentage ?? 0;
+      const quantity = (line.acceptedQuantity != null && !isNaN(Number(line.acceptedQuantity))) ? Number(line.acceptedQuantity) : 0;
+      const rate = (line.rate != null && !isNaN(Number(line.rate))) ? Number(line.rate) : 0;
+      const discountPercentage = (line.discountPercentage != null && !isNaN(Number(line.discountPercentage))) ? Number(line.discountPercentage) : 0;
 
       const discountAmount = (quantity * rate) * (discountPercentage / 100);
       const taxableAmount = (quantity * rate) - discountAmount;
@@ -117,7 +119,7 @@ export class GrnAddUpdateComponent {
       return total + taxableAmount + taxAmount;
     }, 0);
 
-    return Number(total.toFixed(2));
+    return isNaN(total) ? 0 : Number(total.toFixed(2));
   });
   ngOnInit() {
     this.loadFormLookups();
@@ -173,6 +175,11 @@ export class GrnAddUpdateComponent {
           if (qty > available) {
             return { kind: 'poQuantityExceeded', message: `Quantity cannot be greater than Available quantity.` };
           }
+
+          const rejected = valueOf(line.rejectedQuantity) ?? 0;
+          if (qty + rejected > available) {
+            return { kind: 'totalQuantityExceeded', message: `Total quantity (Accepted + Rejected) cannot exceed Available quantity (${available}).` };
+          }
         }
         return null;
       });
@@ -192,6 +199,11 @@ export class GrnAddUpdateComponent {
 
           if (qty > available) {
             return { kind: 'rejectedQuantityExceeded', message: `Rejected Quantity cannot be greater than Available quantity.` };
+          }
+
+          const accepted = valueOf(line.acceptedQuantity) ?? 0;
+          if (accepted + qty > available) {
+            return { kind: 'totalQuantityExceeded', message: `Total quantity (Accepted + Rejected) cannot exceed Available quantity (${available}).` };
           }
         }
         return null;
@@ -213,11 +225,13 @@ export class GrnAddUpdateComponent {
 
   onDiscountAmountChange(index: number, amount: number | null): void {
     this.activeDiscountAmount.set({ index, value: amount });
-    const amt = amount ?? 0;
+    const amt = (amount != null && !isNaN(Number(amount))) ? Number(amount) : 0;
     const line = this.grnModel().lines[index];
-    const gross = (line.acceptedQuantity ?? 0) * (line.rate ?? 0);
+    const qty = (line.acceptedQuantity != null && !isNaN(Number(line.acceptedQuantity))) ? Number(line.acceptedQuantity) : 0;
+    const rate = (line.rate != null && !isNaN(Number(line.rate))) ? Number(line.rate) : 0;
+    const gross = qty * rate;
     if (gross > 0) {
-      const percentage = Number(((amt / gross) * 100).toFixed(4));
+      const percentage = Number(((amt / gross) * 100).toFixed(2));
       this.updateLineField(index, 'discountPercentage', percentage);
     } else {
       this.updateLineField(index, 'discountPercentage', 0);
@@ -280,6 +294,19 @@ export class GrnAddUpdateComponent {
       this.errors.set(['Please add at least one line']);
       this.submit.set(false);
       return;
+    }
+
+    if (this.grnModel().sourceModule === GRNSourceModule.PurchaseOrder || this.grnModel().sourceModule === GRNSourceModule.GateEntry) {
+      for (let i = 0; i < formvalue.lines.length; i++) {
+        const l = formvalue.lines[i];
+        const avail = l.availableQuantity ?? 0;
+        const total = (l.acceptedQuantity ?? 0) + (l.rejectedQuantity ?? 0);
+        if (avail > 0 && total > avail) {
+          this.errors.set([`Line ${i + 1}: Total quantity (Accepted + Rejected: ${total}) cannot exceed Available quantity (${avail}).`]);
+          this.submit.set(false);
+          return;
+        }
+      }
     }
 
     this.grnService.saveGRN(formvalue, this.isEditMode())
@@ -436,7 +463,18 @@ export class GrnAddUpdateComponent {
           }
 
           this.errors.set([]);
-          this.grnModel.update(prev => ({ ...prev, lines: [...prev.lines, ...newLines] }));
+          this.grnModel.update(prev => ({
+            ...prev,
+            lines: [
+              ...prev.lines,
+              ...newLines.map(l => ({
+                ...l,
+                discountPercentage: l.discountPercentage != null && !isNaN(Number(l.discountPercentage))
+                  ? Number(Number(l.discountPercentage).toFixed(2))
+                  : 0
+              }))
+            ]
+          }));
           this.loadLocationsForLines(newLines);
         },
         error: (err) => {

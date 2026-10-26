@@ -67,8 +67,10 @@ export class PurchaseReturnAddUpdateComponent {
   // Computed discount amounts per line
   lineDiscountAmounts = computed(() => {
     return this.purchaseReturnModel().lines.map((line) => {
-      const gross = (line.quantity ?? 0) * (line.rate ?? 0);
-      const disc = line.discountPercentage ?? 0;
+      const qty = (line.quantity != null && !isNaN(Number(line.quantity))) ? Number(line.quantity) : 0;
+      const rate = (line.rate != null && !isNaN(Number(line.rate))) ? Number(line.rate) : 0;
+      const gross = qty * rate;
+      const disc = (line.discountPercentage != null && !isNaN(Number(line.discountPercentage))) ? Number(line.discountPercentage) : 0;
       return gross > 0 ? Number(((gross * disc) / 100).toFixed(2)) : 0;
     });
   });
@@ -78,9 +80,9 @@ export class PurchaseReturnAddUpdateComponent {
     const taxes = this.taxMap();
 
     const total = this.purchaseReturnModel().lines.reduce((acc, line) => {
-      const quantity = line.quantity ?? 0;
-      const rate = line.rate ?? 0;
-      const discountPercentage = line.discountPercentage ?? 0;
+      const quantity = (line.quantity != null && !isNaN(Number(line.quantity))) ? Number(line.quantity) : 0;
+      const rate = (line.rate != null && !isNaN(Number(line.rate))) ? Number(line.rate) : 0;
+      const discountPercentage = (line.discountPercentage != null && !isNaN(Number(line.discountPercentage))) ? Number(line.discountPercentage) : 0;
 
       const discountAmount = (quantity * rate) * (discountPercentage / 100);
       const taxableAmount = (quantity * rate) - discountAmount;
@@ -91,7 +93,7 @@ export class PurchaseReturnAddUpdateComponent {
       return acc + taxableAmount + taxAmount;
     }, 0);
 
-    return Number(total.toFixed(2));
+    return isNaN(total) ? 0 : Number(total.toFixed(2));
   });
 
   ngOnInit() {
@@ -278,7 +280,18 @@ export class PurchaseReturnAddUpdateComponent {
           }
 
           this.errors.set([]);
-          this.purchaseReturnModel.update(prev => ({ ...prev, lines: [...prev.lines, ...newLines] }));
+          this.purchaseReturnModel.update(prev => ({
+            ...prev,
+            lines: [
+              ...prev.lines,
+              ...newLines.map(l => ({
+                ...l,
+                discountPercentage: l.discountPercentage != null && !isNaN(Number(l.discountPercentage))
+                  ? Number(Number(l.discountPercentage).toFixed(2))
+                  : 0
+              }))
+            ]
+          }));
         },
         error: (err) => {
           this.base.handleError(err, err.error?.message, false);

@@ -89,10 +89,12 @@ export class PurchaseOrderComponent {
     return this.poModel().lines.map((line, i) => {
       const active = this.activeDiscountAmount();
       if (active && active.index === i) {
-        return active.value;
+        return active.value != null && !isNaN(Number(active.value)) ? Number(active.value) : 0;
       }
-      const gross = (line.quantity ?? 0) * (line.rate ?? 0);
-      const disc = line.discountPercentage ?? 0;
+      const qty = (line.quantity != null && !isNaN(Number(line.quantity))) ? Number(line.quantity) : 0;
+      const rate = (line.rate != null && !isNaN(Number(line.rate))) ? Number(line.rate) : 0;
+      const gross = qty * rate;
+      const disc = (line.discountPercentage != null && !isNaN(Number(line.discountPercentage))) ? Number(line.discountPercentage) : 0;
       return gross > 0 ? Number(((gross * disc) / 100).toFixed(2)) : 0;
     });
   });
@@ -102,9 +104,9 @@ export class PurchaseOrderComponent {
     const taxes = this.taxMap();
 
     const total = this.poModel().lines.reduce((total, line) => {
-      const quantity = line.quantity ?? 0;
-      const rate = line.rate ?? 0;
-      const discountPercentage = line.discountPercentage ?? 0;
+      const quantity = (line.quantity != null && !isNaN(Number(line.quantity))) ? Number(line.quantity) : 0;
+      const rate = (line.rate != null && !isNaN(Number(line.rate))) ? Number(line.rate) : 0;
+      const discountPercentage = (line.discountPercentage != null && !isNaN(Number(line.discountPercentage))) ? Number(line.discountPercentage) : 0;
 
       const discountAmount = (quantity * rate) * (discountPercentage / 100);
       const taxableAmount = (quantity * rate) - discountAmount;
@@ -116,7 +118,7 @@ export class PurchaseOrderComponent {
       return total + taxableAmount + taxAmount;
     }, 0);
 
-    return Number(total.toFixed(2));
+    return isNaN(total) ? 0 : Number(total.toFixed(2));
   });
 
 
@@ -195,11 +197,13 @@ export class PurchaseOrderComponent {
 
   onDiscountAmountChange(index: number, amount: number | null): void {
     this.activeDiscountAmount.set({ index, value: amount });
-    const amt = amount ?? 0;
+    const amt = (amount != null && !isNaN(Number(amount))) ? Number(amount) : 0;
     const line = this.poModel().lines[index];
-    const gross = (line.quantity ?? 0) * (line.rate ?? 0);
+    const qty = (line.quantity != null && !isNaN(Number(line.quantity))) ? Number(line.quantity) : 0;
+    const rate = (line.rate != null && !isNaN(Number(line.rate))) ? Number(line.rate) : 0;
+    const gross = qty * rate;
     if (gross > 0) {
-      const percentage = Number(((amt / gross) * 100).toFixed(4));
+      const percentage = Number(((amt / gross) * 100).toFixed(2));
       this.updateLineField(index, 'discountPercentage', percentage);
     } else {
       this.updateLineField(index, 'discountPercentage', 0);

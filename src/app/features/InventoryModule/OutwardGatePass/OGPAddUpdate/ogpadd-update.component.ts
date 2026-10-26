@@ -70,7 +70,10 @@ export class OGPAddUpdateComponent {
   );
 
   totalQuantity = computed(() => {
-    return this.ogpModel().lines.reduce((total, line) => total + (line.quantity ?? 0), 0);
+    return this.ogpModel().lines.reduce((total, line) => {
+      const qty = (line.quantity != null && !isNaN(Number(line.quantity))) ? Number(line.quantity) : 0;
+      return total + qty;
+    }, 0);
   });
 
   ngOnInit() {

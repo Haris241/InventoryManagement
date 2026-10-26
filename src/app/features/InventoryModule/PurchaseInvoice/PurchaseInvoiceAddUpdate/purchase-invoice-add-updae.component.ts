@@ -57,8 +57,10 @@ export class PurchaseInvoiceAddUpdaeComponent {
   // Computed discount amounts per line
   lineDiscountAmounts = computed(() => {
     return this.piModel().lines.map(line => {
-      const gross = (line.quantity ?? 0) * (line.rate ?? 0);
-      const disc = line.discountPercentage ?? 0;
+      const qty = (line.quantity != null && !isNaN(Number(line.quantity))) ? Number(line.quantity) : 0;
+      const rate = (line.rate != null && !isNaN(Number(line.rate))) ? Number(line.rate) : 0;
+      const gross = qty * rate;
+      const disc = (line.discountPercentage != null && !isNaN(Number(line.discountPercentage))) ? Number(line.discountPercentage) : 0;
       return gross > 0 ? Number(((gross * disc) / 100).toFixed(2)) : 0;
     });
   });
@@ -68,9 +70,9 @@ export class PurchaseInvoiceAddUpdaeComponent {
     const taxes = this.taxMap();
 
     const total = this.piModel().lines.reduce((acc, line) => {
-      const quantity = line.quantity ?? 0;
-      const rate = line.rate ?? 0;
-      const discountPercentage = line.discountPercentage ?? 0;
+      const quantity = (line.quantity != null && !isNaN(Number(line.quantity))) ? Number(line.quantity) : 0;
+      const rate = (line.rate != null && !isNaN(Number(line.rate))) ? Number(line.rate) : 0;
+      const discountPercentage = (line.discountPercentage != null && !isNaN(Number(line.discountPercentage))) ? Number(line.discountPercentage) : 0;
 
       const discountAmount = (quantity * rate) * (discountPercentage / 100);
       const taxableAmount = (quantity * rate) - discountAmount;
@@ -81,7 +83,7 @@ export class PurchaseInvoiceAddUpdaeComponent {
       return acc + taxableAmount + taxAmount;
     }, 0);
 
-    return Number(total.toFixed(2));
+    return isNaN(total) ? 0 : Number(total.toFixed(2));
   });
 
   ngOnInit() {
@@ -146,6 +148,23 @@ export class PurchaseInvoiceAddUpdaeComponent {
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: (lines) => {
+          if (!lines || lines.length === 0) return;
+
+          const incomingSupplierId = lines.find(l => !!l.supplierId)?.supplierId;
+          const currentSupplierId = this.piModel().supplierId;
+
+          if (incomingSupplierId) {
+            if (currentSupplierId && currentSupplierId !== incomingSupplierId) {
+              this.errors.set(['The selected source document belongs to a different supplier than the currently selected supplier.']);
+              this.selectedGrnId.set(null);
+              return;
+            }
+
+            if (!currentSupplierId) {
+              this.updateField('supplierId', incomingSupplierId);
+            }
+          }
+
           const existingIds = new Set(
             this.piModel().lines.map(l => l.grnLineId).filter((id): id is string => !!id)
           );
@@ -153,13 +172,11 @@ export class PurchaseInvoiceAddUpdaeComponent {
 
           if (lines.length > 0 && newLines.length === 0) {
             this.errors.set(['The selected GRN has already been added.']);
+            this.selectedGrnId.set(null);
             return;
           }
 
           this.errors.set([]);
-          if (!this.piModel().supplierId && newLines.length > 0 && newLines[0].supplierId) {
-            this.updateField('supplierId', newLines[0].supplierId);
-          }
 
           this.piModel.update(prev => ({
             ...prev,
@@ -167,7 +184,10 @@ export class PurchaseInvoiceAddUpdaeComponent {
               ...prev.lines,
               ...newLines.map(l => ({
                 ...l,
-                quantity: (l.quantity != null && l.quantity > 0) ? l.quantity : (l.availableQuantity ?? 0)
+                quantity: (l.quantity != null && l.quantity > 0) ? l.quantity : (l.availableQuantity ?? 0),
+                discountPercentage: l.discountPercentage != null && !isNaN(Number(l.discountPercentage))
+                  ? Number(Number(l.discountPercentage).toFixed(2))
+                  : 0
               }))
             ]
           }));
