@@ -5,8 +5,7 @@ export interface GateEntryDto {
     id?: string;
     name: string;
     description: string;
-    entryDate: string | null;
-    entryDateUI: Date | null;
+    entryDate: Date | null;
     vehicleNumber: string;
     driverName: string;
     driverContact: string;
@@ -20,7 +19,7 @@ export interface GateEntryLineDto {
     wareHouseId: string | null;
     warehouseName: string;
     productVariantId: string | null;
-    productVariantName: string;
+    productName: string;
     barcode: string;
     uom: string;
     sourceRowId: string | null;

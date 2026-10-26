@@ -21,13 +21,12 @@
             <hr class="second-color">
         </div>
 
-        @if(!isEditMode()){
         <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3">
             <p-floatLabel variant="on">
                 <div class="lg:w-8/12 w-full">
                     <p-select [(ngModel)]="purchaseReturnModel().sourceModule" [ngModelOptions]="{standalone: true}"
                         (ngModelChange)="onSourceModuleChange($event)" [options]="sourceModules()" optionLabel="name"
-                        optionValue="value" class="w-full" />
+                        optionValue="value" class="w-full" [readonly]="isEditMode()" />
                     <label for="sourceModule" class="required">Source Module</label>
                 </div>
             </p-floatLabel>
@@ -35,21 +34,6 @@
                 [backendErrors]="backendErrors()">
             </app-field-errorS>
         </div>
-        }@else{
-        <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3">
-            <p-floatLabel variant="on">
-                <div class="lg:w-8/12 w-full">
-                    <p-select [(ngModel)]="purchaseReturnModel().sourceModule" [ngModelOptions]="{standalone: true}"
-                        (ngModelChange)="onSourceModuleChange($event)" [options]="sourceModules()" optionLabel="name"
-                        optionValue="value" class="w-full" readonly />
-                    <label for="sourceModule" class="required">Source Module</label>
-                </div>
-            </p-floatLabel>
-            <app-field-errorS [field]="prForm.sourceModule" [submit]="formSubmitted()"
-                [backendErrors]="backendErrors()">
-            </app-field-errorS>
-        </div>
-        }
 
         <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3">
             <p-floatLabel variant="on">
@@ -145,7 +129,8 @@
                 <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
                     <p-floatLabel variant="on">
                         <div class="w-full">
-                            <input pInputText pSize="small" [value]="line.warehouseLocationName" readonly class="w-full">
+                            <input pInputText pSize="small" [value]="line.warehouseLocationName" readonly
+                                class="w-full">
                             <label>Location</label>
                         </div>
                     </p-floatLabel>
@@ -230,7 +215,8 @@
                 <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
                     <p-floatLabel variant="on">
                         <div class="w-full">
-                            <input pInputText pSize="small" [value]="lineDiscountAmounts()[$index]" readonly class="w-full">
+                            <input pInputText pSize="small" [value]="lineDiscountAmounts()[$index]" readonly
+                                class="w-full">
                             <label>Disc (Amt)</label>
                         </div>
                     </p-floatLabel>
@@ -240,9 +226,8 @@
                 <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
                     <p-floatLabel variant="on">
                         <div class="w-full">
-                            <p-select [ngModel]="line.taxId" [ngModelOptions]="{standalone: true}"
-                                [options]="taxes()" optionLabel="name" optionValue="id" class="w-full"
-                                [disabled]="true">
+                            <p-select [ngModel]="line.taxId" [ngModelOptions]="{standalone: true}" [options]="taxes()"
+                                optionLabel="name" optionValue="id" class="w-full" [disabled]="true">
                             </p-select>
                             <label>Tax</label>
                         </div>

@@ -21,13 +21,12 @@
             <hr class="second-color">
         </div>
 
-        @if(!isEditMode()){
         <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3">
             <p-floatLabel variant="on">
                 <div class="lg:w-8/12 w-full">
                     <p-select [(ngModel)]="ogpModel().sourceModule" [ngModelOptions]="{standalone: true}"
                         (ngModelChange)="onSourceModuleChange($event)" [options]="sourceModules()" optionLabel="name"
-                        optionValue="value" class="w-full" />
+                        optionValue="value" class="w-full" [readonly]="isEditMode()" />
                     <label for="sourceModule" class="required">Source Module</label>
                 </div>
             </p-floatLabel>
@@ -35,21 +34,7 @@
                 [backendErrors]="backendErrors()">
             </app-field-errorS>
         </div>
-        }@else{
-        <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3">
-            <p-floatLabel variant="on">
-                <div class="lg:w-8/12 w-full">
-                    <p-select [(ngModel)]="ogpModel().sourceModule" [ngModelOptions]="{standalone: true}"
-                        (ngModelChange)="onSourceModuleChange($event)" [options]="sourceModules()" optionLabel="name"
-                        optionValue="value" class="w-full" readonly />
-                    <label for="sourceModule" class="required">Source Module</label>
-                </div>
-            </p-floatLabel>
-            <app-field-errorS [field]="ogpForm.sourceModule" [submit]="formSubmitted()"
-                [backendErrors]="backendErrors()">
-            </app-field-errorS>
-        </div>
-        }
+
 
         <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3">
             <p-floatLabel variant="on">

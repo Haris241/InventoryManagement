@@ -336,7 +336,7 @@ export class GrnAddUpdateComponent {
           data.lines.forEach(line => {
             line.selectedProductVariant = {
               id: line.productVariantId!,
-              displayName: line.productVariantName,
+              displayName: line.productName,
               barcode: line.barcode,
               uom: line.uom,
               sku: "",

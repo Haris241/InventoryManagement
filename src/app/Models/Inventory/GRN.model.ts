@@ -26,7 +26,7 @@ export interface GRNLineDto {
     warehouseLocationId: number | null;
     warehouseLocationName: string;
     productVariantId: string | null;
-    productVariantName: string
+    productName: string
     barcode: string;
     uom: string;
     sourceRowId: string | null;

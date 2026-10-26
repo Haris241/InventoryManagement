@@ -105,7 +105,7 @@
                     <th>Source Module</th>
                     <th>Total Qty</th>
                     <th>Recieved Qty</th>
-                    <th>Created At</th>
+                    <th>Entry Date</th>
                     <th class="text-center">Actions</th>
                 </tr>
             </ng-template>
@@ -123,7 +123,7 @@
                     <td>{{ ge.sourceModule }}</td>
                     <td>{{ ge.totalQuantity }}</td>
                     <td>{{ ge.recievedQuantity }}</td>
-                    <td>{{ ge.date | date:'yyyy-MM-dd' }}</td>
+                    <td>{{ ge.entryDate | date:'yyyy-MM-dd' }}</td>
 
                     <!-- Combined & Aligned Actions Column -->
                     <td>

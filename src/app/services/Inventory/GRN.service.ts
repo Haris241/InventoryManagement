@@ -58,7 +58,7 @@ export class GrnService {
         return {
             acceptedQuantity: 0, rejectedQuantity: 0, rejectedReason: '', rate: 0,
             discountPercentage: 0, taxId: null, wareHouseId: null, warehouseName: '', warehouseLocationId: null, isPOBasedGE: false,
-            warehouseLocationName: '', productVariantId: null, productVariantName: '', barcode: '', uom: '', sourceRowId: null, availableQuantity: null,
+            warehouseLocationName: '', productVariantId: null, productName: '', barcode: '', uom: '', sourceRowId: null, availableQuantity: null,
             supplierId: null
         };
     }

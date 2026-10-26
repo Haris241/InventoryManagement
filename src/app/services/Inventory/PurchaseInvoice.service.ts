@@ -33,7 +33,7 @@ export class PurchaseInvoiceService {
             wareHouseId: null,
             warehouseName: '',
             productVariantId: null,
-            productVariantName: '',
+            productName: '',
             barcode: '',
             uom: '',
             grnLineId: null,

@@ -30,8 +30,7 @@ export class GateEntryService {
             name: '',
             description: '',
             sourceModule: GateEntrySourceModule.General,
-            entryDate: '',
-            entryDateUI: new Date(),
+            entryDate: new Date(),
             driverName: '',
             vehicleNumber: '',
             driverContact: '',
@@ -42,7 +41,7 @@ export class GateEntryService {
     createGEline(): GateEntryLineDto {
         return {
             quantity: 0, wareHouseId: null, productVariantId: null, barcode: '', uom: '',
-            productVariantName: '', warehouseName: '', sourceRowId: null, availableQuantity: null,
+            productName: '', warehouseName: '', sourceRowId: null, availableQuantity: null,
             supplierId: null
         };
     }
@@ -101,7 +100,6 @@ export class GateEntryService {
 
     saveGE(formValue: GateEntryDto, isEditMode: boolean): Observable<GateEntryDto> {
         const url = 'GateEntry';
-        formValue.entryDate = toDateOnlyString(formValue.entryDateUI) ?? null;
 
         return isEditMode
             ? this.dataService.edit<GateEntryDto>(url, formValue.id?.toString() ?? '', formValue)

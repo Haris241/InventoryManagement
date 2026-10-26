@@ -228,7 +228,7 @@ export class GateEntryAddUpdateComponent {
           data.lines.forEach(line => {
             line.selectedProductVariant = {
               id: line.productVariantId!,
-              displayName: line.productVariantName,
+              displayName: line.productName,
               barcode: line.barcode,
               uom: line.uom,
               sku: "",
@@ -240,7 +240,6 @@ export class GateEntryAddUpdateComponent {
             data.lines.map(x => x.selectedProductVariant!)
           );
 
-          data.entryDateUI = data.entryDate ? new Date(data.entryDate) : null;
           this.geModel.set(data);
         },
         error: (err) => {

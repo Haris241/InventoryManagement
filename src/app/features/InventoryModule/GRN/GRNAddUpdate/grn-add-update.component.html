@@ -20,13 +20,12 @@
             </h3>
             <hr class="second-color">
         </div>
-        @if(!isEditMode()){
         <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3 ">
             <p-floatLabel variant="on">
                 <div class="lg:w-8/12 w-full">
                     <p-select [(ngModel)]="grnModel().sourceModule" [ngModelOptions]="{standalone: true}"
                         (ngModelChange)="onSourceModuleChange($event)" [options]="sourceModules()" optionLabel="name"
-                        optionValue="value" class="w-full" />
+                        optionValue="value" class="w-full" [readonly]="isEditMode()" />
                     <label for="sourceModule" class="required">Source Module</label>
                 </div>
             </p-floatLabel>
@@ -34,21 +33,7 @@
                 [backendErrors]="backendErrors()">
             </app-field-errorS>
         </div>
-        }@else{
-        <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3 ">
-            <p-floatLabel variant="on">
-                <div class="lg:w-8/12 w-full">
-                    <p-select [(ngModel)]="grnModel().sourceModule" [ngModelOptions]="{standalone: true}"
-                        (ngModelChange)="onSourceModuleChange($event)" [options]="sourceModules()" optionLabel="name"
-                        optionValue="value" class="w-full" readonly />
-                    <label for="sourceModule" class="required">Source Module</label>
-                </div>
-            </p-floatLabel>
-            <app-field-errorS [field]="grnForm.sourceModule" [submit]="formSubmitted()"
-                [backendErrors]="backendErrors()">
-            </app-field-errorS>
-        </div>
-        }
+
         <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3">
             <p-floatLabel variant="on">
                 <div class="lg:w-8/12 w-full">
@@ -176,7 +161,7 @@
                     @if (!isGeneralSource()) {
                     <p-floatLabel variant="on">
                         <div class="w-full">
-                            <input pInputText pSize="small" [value]="line.productVariantName" readonly class="w-full">
+                            <input pInputText pSize="small" [value]="line.productName" readonly class="w-full">
                             <label>Product</label>
                         </div>
                     </p-floatLabel>
@@ -355,7 +340,8 @@
                     @if (isLinePriceReadonly(line)) {
                     <p-floatLabel variant="on">
                         <div class="w-full">
-                            <input pInputText pSize="small" [value]="lineDiscountAmounts()[$index]" readonly class="w-full">
+                            <input pInputText pSize="small" [value]="lineDiscountAmounts()[$index]" readonly
+                                class="w-full">
                             <label>Disc (Amt)</label>
                         </div>
                     </p-floatLabel>
@@ -363,8 +349,7 @@
                     <p-floatLabel variant="on">
                         <div class="w-full">
                             <input pInputText pSize="small" autocomplete="off" type="number" class="w-full"
-                                [ngModel]="lineDiscountAmounts()[$index]"
-                                [ngModelOptions]="{standalone: true}"
+                                [ngModel]="lineDiscountAmounts()[$index]" [ngModelOptions]="{standalone: true}"
                                 (ngModelChange)="onDiscountAmountChange($index, $event)"
                                 (blur)="onDiscountAmountBlur()">
                             <label>Disc (Amt)</label>
@@ -380,8 +365,7 @@
                             <p-select [ngModel]="line.taxId" [ngModelOptions]="{standalone: true}"
                                 (ngModelChange)="updateLineField($index, 'taxId', $event)" [options]="taxes()"
                                 optionLabel="name" optionValue="id" [filter]="true" filterBy="name" class="w-full"
-                                [showClear]="!isLinePriceReadonly(line)"
-                                [disabled]="isLinePriceReadonly(line)">
+                                [showClear]="!isLinePriceReadonly(line)" [readonly]="isLinePriceReadonly(line)">
                             </p-select>
                             <label>Tax</label>
                         </div>

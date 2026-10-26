@@ -66,7 +66,7 @@
                 <div class="lg:w-8/12 w-full">
                     <p-select [(ngModel)]="piModel().supplierId" [ngModelOptions]="{standalone: true}"
                         (ngModelChange)="updateField('supplierId',$event)" [options]="suppliers()" optionLabel="name"
-                        optionValue="id" class="w-full" [showClear]="true" [filter]="true" filterBy="name" />
+                        optionValue="id" class="w-full" [filter]="true" filterBy="name" readonly />
                     <label for="supplierId" class="required">Supplier</label>
                 </div>
             </p-floatLabel>
@@ -78,8 +78,8 @@
         <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3">
             <p-floatLabel variant="on">
                 <div class="lg:w-8/12 w-full">
-                    <input pInputText pSize="small" id="supplierInvoiceNumber" autocomplete="off" type="text" class="w-full"
-                        [formField]="piForm.supplierInvoiceNumber">
+                    <input pInputText pSize="small" id="supplierInvoiceNumber" autocomplete="off" type="text"
+                        class="w-full" [formField]="piForm.supplierInvoiceNumber">
                     <label for="supplierInvoiceNumber">Supplier Invoice No</label>
                 </div>
             </p-floatLabel>
@@ -101,10 +101,9 @@
             <p-floatLabel variant="on">
                 <div class="lg:w-10/12 w-full">
                     <p-autoComplete [(ngModel)]="selectedGrnId" [ngModelOptions]="{standalone: true}"
-                        (onSelect)="loadGRNLines($event.value.id)"
-                        (completeMethod)="searchGRN($event)" inputId="grnSearchId"
-                        optionLabel="name" [dropdown]="true" [suggestions]="grnSearch.result()" optionValue="id"
-                        [showClear]="true" class="w-full"></p-autoComplete>
+                        (onSelect)="loadGRNLines($event.value.id)" (completeMethod)="searchGRN($event)"
+                        inputId="grnSearchId" optionLabel="name" [dropdown]="true" [suggestions]="grnSearch.result()"
+                        optionValue="id" [showClear]="true" class="w-full"></p-autoComplete>
                     <label for="grnSearchId">Search GRN</label>
                 </div>
             </p-floatLabel>
@@ -140,7 +139,7 @@
                 <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
                     <p-floatLabel variant="on">
                         <div class="w-full">
-                            <input pInputText pSize="small" [value]="line.productVariantName" readonly class="w-full">
+                            <input pInputText pSize="small" [value]="line.productName" readonly class="w-full">
                             <label>Product</label>
                         </div>
                     </p-floatLabel>
@@ -214,7 +213,8 @@
                 <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
                     <p-floatLabel variant="on">
                         <div class="w-full">
-                            <input pInputText pSize="small" [value]="lineDiscountAmounts()[$index]" readonly class="w-full">
+                            <input pInputText pSize="small" [value]="lineDiscountAmounts()[$index]" readonly
+                                class="w-full">
                             <label>Disc (Amt)</label>
                         </div>
                     </p-floatLabel>
@@ -227,7 +227,7 @@
                             <p-select [ngModel]="line.taxId" [ngModelOptions]="{standalone: true}"
                                 (ngModelChange)="updateLineField($index, 'taxId', $event)" [options]="taxes()"
                                 optionLabel="name" optionValue="id" [filter]="true" filterBy="name" class="w-full"
-                                [showClear]="true">
+                                readonly>
                             </p-select>
                             <label>Tax</label>
                         </div>

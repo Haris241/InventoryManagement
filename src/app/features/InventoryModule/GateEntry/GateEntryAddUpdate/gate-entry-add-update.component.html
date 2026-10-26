@@ -21,13 +21,12 @@
             <hr class="second-color">
         </div>
         <!-- Non Editable on Edit -->
-        @if (!isEditMode()){
         <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3 ">
             <p-floatLabel variant="on">
                 <div class="lg:w-8/12 w-full">
                     <p-select [(ngModel)]="geModel().sourceModule" [ngModelOptions]="{standalone: true}"
                         (ngModelChange)="onSourceModuleChange($event)" [options]="sourceModules()" optionLabel="name"
-                        optionValue="value" class="w-full" />
+                        optionValue="value" class="w-full" [readonly]="isEditMode()" />
                     <label for="sourceModule" class="required">Source Module</label>
                 </div>
             </p-floatLabel>
@@ -35,31 +34,17 @@
                 [backendErrors]="backendErrors()">
             </app-field-errorS>
         </div>
-        }@else{
-        <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3 ">
-            <p-floatLabel variant="on">
-                <div class="lg:w-8/12 w-full">
-                    <p-select [(ngModel)]="geModel().sourceModule" [ngModelOptions]="{standalone: true}"
-                        (ngModelChange)="onSourceModuleChange($event)" [options]="sourceModules()" optionLabel="name"
-                        optionValue="value" class="w-full" readonly />
-                    <label for="sourceModule" class="required">Source Module</label>
-                </div>
-            </p-floatLabel>
-            <app-field-errorS [field]="geForm.sourceModule" [submit]="formSubmitted()"
-                [backendErrors]="backendErrors()">
-            </app-field-errorS>
-        </div>
-        }
+
         <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3">
             <p-floatLabel variant="on">
                 <div class="lg:w-8/12 w-full">
-                    <p-datepicker [(ngModel)]="geModel().entryDateUI" [ngModelOptions]="{standalone: true}"
-                        (ngModelChange)="updateField('entryDateUI',$event)" view="date" dateFormat="dd/mm/yy"
-                        size="small" inputId="entryDateUI" class="w-full" />
-                    <label for="entryDateUI" class="required">Entry Date</label>
+                    <p-datepicker [(ngModel)]="geModel().entryDate" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('entryDate', $event)" view="date" dateFormat="dd/mm/yy"
+                        size="small" inputId="entryDate" class="w-full" />
+                    <label for="entryDate" class="required">Entry Date</label>
                 </div>
             </p-floatLabel>
-            <app-field-errorS [field]="geForm.entryDateUI" [submit]="formSubmitted()" [backendErrors]="backendErrors()">
+            <app-field-errorS [field]="geForm.entryDate" [submit]="formSubmitted()" [backendErrors]="backendErrors()">
             </app-field-errorS>
         </div>
 
@@ -79,7 +64,8 @@
                 <div class="lg:w-8/12 w-full">
                     <p-select [(ngModel)]="geModel().supplierId" [ngModelOptions]="{standalone: true}"
                         (ngModelChange)="updateField('supplierId',$event)" [options]="suppliers()" optionLabel="name"
-                        optionValue="id" class="w-full" [showClear]="true" [filter]="true" filterBy="name" />
+                        optionValue="id" class="w-full" [showClear]="isGeneralSource()" [filter]="true" filterBy="name"
+                        [readonly]="!isGeneralSource()" />
                     <label for="supplierId" class="required">Supplier</label>
                 </div>
             </p-floatLabel>
@@ -189,7 +175,7 @@
                     @if (!isGeneralSource()) {
                     <p-floatLabel variant="on">
                         <div class="w-full">
-                            <input pInputText pSize="small" [value]="line.productVariantName" readonly class="w-full">
+                            <input pInputText pSize="small" [value]="line.productName" readonly class="w-full">
                             <label>Product</label>
                         </div>
                     </p-floatLabel>

@@ -21,7 +21,7 @@ export interface PurchaseInvoiceLineDto {
     wareHouseId: number | null;
     warehouseName: string;
     productVariantId: string | null;
-    productVariantName: string
+    productName: string
     barcode: string;
     uom: string;
     grnLineId: string | null;

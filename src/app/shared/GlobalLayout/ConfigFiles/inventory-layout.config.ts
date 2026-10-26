@@ -155,7 +155,7 @@ export const INVENTORY_LAYOUT_CONFIG: ModuleLayoutConfig = {
         },
         {
             key: 'PurchaseReturn',
-            icon: 'arrow_back_ios_new',
+            icon: 'assignment_return',
             label: 'Purchase Return',
             children: [
                 {

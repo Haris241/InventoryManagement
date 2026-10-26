@@ -122,7 +122,7 @@
         <!-- COGS (Key: 4) -->
         <div class="lg:w-1/4 w-full mb-3">
             <p-floatLabel variant="on">
-                <div class="w-full">
+                <div class="lg:w-10/12 w-full">
                     <p-autoComplete [ngModel]="selectedAccounts[AccountMappingKey.COGS]"
                         [ngModelOptions]="{standalone: true}"
                         (ngModelChange)="onAccountSelect(AccountMappingKey.COGS, $event)"
@@ -137,7 +137,7 @@
         <!-- General outward expense (Key: 8) -->
         <div class="lg:w-1/4 w-full mb-3">
             <p-floatLabel variant="on">
-                <div class="w-full">
+                <div class="lg:w-10/12 w-full">
                     <p-autoComplete [ngModel]="selectedAccounts[AccountMappingKey.GeneralOutwardExpense]"
                         [ngModelOptions]="{standalone: true}"
                         (ngModelChange)="onAccountSelect(AccountMappingKey.GeneralOutwardExpense, $event)"
@@ -160,7 +160,7 @@
         <!-- Opening Stock Offset (Key: 5) -->
         <div class="lg:w-1/4 w-full mb-3">
             <p-floatLabel variant="on">
-                <div class="w-full">
+                <div class="lg:w-10/12 w-full">
                     <p-autoComplete [ngModel]="selectedAccounts[AccountMappingKey.OpeningStockOffset]"
                         [ngModelOptions]="{standalone: true}"
                         (ngModelChange)="onAccountSelect(AccountMappingKey.OpeningStockOffset, $event)"
