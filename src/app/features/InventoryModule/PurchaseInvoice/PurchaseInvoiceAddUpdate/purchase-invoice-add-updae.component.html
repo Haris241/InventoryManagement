@@ -58,6 +58,8 @@
                     <label for="dueDateUI">Due Date</label>
                 </div>
             </p-floatLabel>
+            <app-field-errorS [field]="piForm.dueDateUI" [submit]="formSubmitted()" [backendErrors]="backendErrors()">
+            </app-field-errorS>
         </div>
 
         <!-- Supplier -->
@@ -141,16 +143,6 @@
                         <div class="w-full">
                             <input pInputText pSize="small" [value]="line.productName" readonly class="w-full">
                             <label>Product</label>
-                        </div>
-                    </p-floatLabel>
-                </div>
-
-                <!-- Barcode (readonly) -->
-                <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
-                    <p-floatLabel variant="on">
-                        <div class="w-full">
-                            <input pInputText pSize="small" [value]="line.barcode" readonly class="w-full">
-                            <label>Barcode</label>
                         </div>
                     </p-floatLabel>
                 </div>

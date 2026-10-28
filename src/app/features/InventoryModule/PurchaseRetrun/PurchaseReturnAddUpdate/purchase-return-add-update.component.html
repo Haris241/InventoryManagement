@@ -65,7 +65,7 @@
                 <div class="lg:w-8/12 w-full">
                     <p-select [(ngModel)]="purchaseReturnModel().supplierId" [ngModelOptions]="{standalone: true}"
                         (ngModelChange)="updateField('supplierId',$event)" [options]="suppliers()" optionLabel="name"
-                        optionValue="id" class="w-full" [showClear]="true" [filter]="true" filterBy="name" />
+                        optionValue="id" class="w-full" [filter]="true" filterBy="name" readonly />
                     <label for="supplierId" class="required">Supplier</label>
                 </div>
             </p-floatLabel>
@@ -147,16 +147,6 @@
                     </p-floatLabel>
                 </div>
 
-                <!-- Barcode (readonly) -->
-                <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
-                    <p-floatLabel variant="on">
-                        <div class="w-full">
-                            <input pInputText pSize="small" [value]="line.barcode" readonly class="w-full">
-                            <label>Barcode</label>
-                        </div>
-                    </p-floatLabel>
-                </div>
-
                 <!-- UOM (readonly) -->
                 <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
                     <p-floatLabel variant="on">
@@ -227,7 +217,7 @@
                     <p-floatLabel variant="on">
                         <div class="w-full">
                             <p-select [ngModel]="line.taxId" [ngModelOptions]="{standalone: true}" [options]="taxes()"
-                                optionLabel="name" optionValue="id" class="w-full" [disabled]="true">
+                                optionLabel="name" optionValue="id" class="w-full" readonly>
                             </p-select>
                             <label>Tax</label>
                         </div>
@@ -238,11 +228,17 @@
                 <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
                     <p-floatLabel variant="on">
                         <div class="w-full">
-                            <input pInputText pSize="small" autocomplete="off" type="text" class="w-full"
-                                [formField]="prForm.lines[$index].reason">
+                            <p-select [ngModel]="line.reason" [ngModelOptions]="{standalone: true}"
+                                (ngModelChange)="updateLineField($index, 'reason', $event)" [options]="returnReasons()"
+                                optionLabel="name" optionValue="value" [filter]="true" filterBy="name" class="w-full">
+                            </p-select>
                             <label>Reason</label>
                         </div>
                     </p-floatLabel>
+                    <app-field-errorS [field]="prForm.lines[$index].reason" [submit]="formSubmitted()"
+                        [backendErrors]="backendErrors()" [fieldPath]="'lines[' + $index + '].reason'">
+                    </app-field-errorS>
+
                 </div>
 
                 <!-- Reason Note (Editable) -->

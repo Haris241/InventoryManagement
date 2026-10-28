@@ -239,6 +239,7 @@ export class GateEntryAddUpdateComponent {
           this.productSearch.setInitialValue(
             data.lines.map(x => x.selectedProductVariant!)
           );
+          data.entryDate = data.entryDate ? new Date(data.entryDate) : null;
 
           this.geModel.set(data);
         },

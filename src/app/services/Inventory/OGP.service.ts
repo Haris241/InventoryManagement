@@ -39,9 +39,8 @@ export class OGPService {
             customerId: null,
             supplierId: null,
             sourceModule: OutwardGatePassSourceModule.General,
-            isStockImpacting: true,
-            exitDateTime: '',
-            exitDateTimeUI: new Date(),
+            isStockImpacting: false,
+            exitDateTime: new Date(),
             lines: [this.createOGPline()]
         };
     }
@@ -129,7 +128,6 @@ export class OGPService {
 
     saveOGP(formValue: OutwardGatePassDto, isEditMode: boolean): Observable<OutwardGatePassDto> {
         const url = 'OutwardGatePass';
-        formValue.exitDateTime = formValue.exitDateTimeUI ? (toDateOnlyString(formValue.exitDateTimeUI) ?? '') : '';
 
         return isEditMode
             ? this.dataService.edit<OutwardGatePassDto>(url, formValue.id?.toString() ?? '', formValue)

@@ -5,8 +5,7 @@ export interface OutwardGatePassDto {
     id?: string;
     name: string;
     description: string;
-    exitDateTime: string;
-    exitDateTimeUI: Date | null;
+    exitDateTime: Date | null;
     destinationAddress: string;
     recipientName: string;
     vehicleNumber: string;

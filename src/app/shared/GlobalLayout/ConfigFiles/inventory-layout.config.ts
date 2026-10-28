@@ -184,6 +184,21 @@ export const INVENTORY_LAYOUT_CONFIG: ModuleLayoutConfig = {
             ]
         },
         {
+            key: 'StockTransfer',
+            icon: 'sync_alt',
+            label: 'Stock Transfer',
+            children: [
+                {
+                    label: 'Add Stock Transfer',
+                    route: '/Inventory/addstocktransfer'
+                },
+                {
+                    label: 'Stock Trasnfer List',
+                    route: '/Inventory/stocktransferlist'
+                }
+            ]
+        },
+        {
             key: 'Supplier',
             icon: 'person',
             label: 'Supplier',

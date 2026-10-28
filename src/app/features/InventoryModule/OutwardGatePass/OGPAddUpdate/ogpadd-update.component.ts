@@ -91,7 +91,7 @@ export class OGPAddUpdateComponent {
   ogpForm = form(this.ogpModel, (schema) => {
     required(schema.name, { message: 'Name is required' });
     required(schema.sourceModule, { message: 'Source Module is required' });
-    required(schema.exitDateTimeUI, { message: 'Exit Date is required' });
+    required(schema.exitDateTime, { message: 'Exit Date is required' });
 
     validate(schema.supplierId, ({ value, valueOf }) => {
       const supplierId = value();
@@ -269,7 +269,7 @@ export class OGPAddUpdateComponent {
             data.lines.map(x => x.selectedProductVariant!).filter(x => !!x.id)
           );
 
-          data.exitDateTimeUI = data.exitDateTime ? new Date(data.exitDateTime) : null;
+          data.exitDateTime = data.exitDateTime ? new Date(data.exitDateTime) : null;
           this.ogpModel.set(data);
           this.loadLocationsForLines(data.lines);
         },

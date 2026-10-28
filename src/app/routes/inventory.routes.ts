@@ -190,6 +190,24 @@ export const inventoryRoutes: Routes = [
                 path: 'editogp/:id',
                 loadComponent: () => import('../features/InventoryModule/OutwardGatePass/OGPAddUpdate/ogpadd-update.component').then(m => m.OGPAddUpdateComponent)
             },
+            // Stock Transfer
+            {
+                path: 'stocktransferlist',
+                loadComponent: () => import('../features/InventoryModule/StockTransfer/StockTransferList/stockt-transfer-list.component').then(m => m.StocktTransferListComponent)
+            },
+            {
+                path: 'addstocktransfer',
+                loadComponent: () => import('../features/InventoryModule/StockTransfer/StockTransferAddUpdate/stockt-transfer-add-update.component').then(m => m.StocktTransferAddUpdateComponent)
+            },
+            {
+                path: 'editstocktransfer',
+                loadComponent: () => import('../features/InventoryModule/StockTransfer/StockTransferAddUpdate/stockt-transfer-add-update.component').then(m => m.StocktTransferAddUpdateComponent)
+            },
+            {
+                path: 'recievestocktransfer',
+                loadComponent: () => import('../features/InventoryModule/StockTransfer/StockTransferAddUpdate/stockt-transfer-add-update.component').then(m => m.StocktTransferAddUpdateComponent)
+            },
+
 
             {
                 path: '',

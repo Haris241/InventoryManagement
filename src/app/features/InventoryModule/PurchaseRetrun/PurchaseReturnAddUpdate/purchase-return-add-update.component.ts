@@ -11,11 +11,10 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FieldErrorSComponent } from '../../../../shared/field-error-s/field-error-s.component';
 import { AutoDropdown, TaxDropDown } from '../../../../Models/Pagination.model';
 import { BaseApiService } from '../../../../services/base-api.service';
-import { PaginationService } from '../../../../services/pagination.service';
 import { enumToOptions } from '../../../../shared/Utility';
 import { filterNewSourceLines } from '../../../../Models/Inventory/SourceModuleConfig.model';
 import { PurchaseReturnService } from '../../../../services/Inventory/PurchaseRetrun.service';
-import { PurchaseReturnDto, PurchaseReturnLineDto, PurchaseReturnSourceModule } from '../../../../Models/Inventory/PurchaseRetrun.model';
+import { PurchaseReturnDto, PurchaseReturnLineDto, PurchaseReturnReason, PurchaseReturnSourceModule } from '../../../../Models/Inventory/PurchaseRetrun.model';
 
 @Component({
   selector: 'app-purchase-return-add-update',
@@ -42,8 +41,10 @@ export class PurchaseReturnAddUpdateComponent {
 
   purchaseReturnModel = signal<PurchaseReturnDto>(this.purchaseReturnService.createDefaultPR());
   sourceModules = signal(enumToOptions(PurchaseReturnSourceModule, true));
+  returnReasons = signal(enumToOptions(PurchaseReturnReason, true))
 
-  // Source Document AutoComplete
+
+  // Source Document AutoComplete-
   sourceConfigs = this.purchaseReturnService.getSourceConfigs();
   sourceDocumentId = signal<string | null>(null);
 
@@ -115,6 +116,7 @@ export class PurchaseReturnAddUpdateComponent {
     required(schema.dateUI, { message: 'Date is required' });
 
     applyEach(schema.lines, (line) => {
+      required(line.reason, { message: 'Reason is required' });
       validate(line.quantity, ({ value, valueOf }) => {
         const qty = value();
 
@@ -223,7 +225,6 @@ export class PurchaseReturnAddUpdateComponent {
         next: (data) => {
           data.dateUI = data.date ? new Date(data.date) : null;
           data.lines.forEach(l => {
-            l.reason = l.reason ?? '';
             l.reasonNote = l.reasonNote ?? '';
           });
           this.purchaseReturnModel.set(data);
@@ -268,7 +269,6 @@ export class PurchaseReturnAddUpdateComponent {
           }
 
           lines.forEach(l => {
-            l.reason = l.reason ?? '';
             l.reasonNote = l.reasonNote ?? '';
           });
 

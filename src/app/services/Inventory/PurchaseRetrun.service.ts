@@ -31,7 +31,7 @@ export class PurchaseReturnService {
             },
             [PurchaseReturnSourceModule.PurchaseInvoice]: {
                 label: 'Search Purchase Invoice',
-                search: this.pagination.autoSearchDropdown<AutoDropdown>('DropDowns/PurchaseInvoicePRListApproved'),
+                search: this.pagination.autoSearchDropdown<AutoDropdown>('DropDowns/PIPRListApproved'),
                 fetchLines: (id) => this.getPurchaseInvoiceLines(id),
                 duplicateError: 'The selected Purchase Invoice has already been added.',
             }
@@ -50,7 +50,7 @@ export class PurchaseReturnService {
     }
     createPRline(): PurchaseReturnLineDto {
         return {
-            quantity: 0, rate: 0, discountPercentage: 0, reason: '', reasonNote: '',
+            quantity: 0, rate: 0, discountPercentage: 0, reason: null, reasonNote: '',
             taxId: null, wareHouseId: null, warehouseName: '', warehouseLocationId: null,
             warehouseLocationName: '', productVariantId: null, productName: '', barcode: '', uom: '', sourceRowId: null, availableQuantity: null,
             supplierId: null

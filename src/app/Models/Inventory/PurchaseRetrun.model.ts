@@ -17,7 +17,7 @@ export interface PurchaseReturnLineDto {
     rate: number;
     discountPercentage: number;
     taxId: number | null;
-    reason: string;
+    reason: PurchaseReturnReason | null;
     reasonNote: string;
     wareHouseId: number | null;
     warehouseName: string;
@@ -81,4 +81,11 @@ export enum PurchaseReturnFulfillmentStatus      // physical / conversion lifecy
     PartiallyFulfilled = 1,
     Fulfilled = 2,
     Cancelled = 3
+}
+export enum PurchaseReturnReason {
+    Damaged = 0,
+    WrongItem = 1,
+    QualityIssue = 2,
+    Excess = 3,
+    Other = 4
 }

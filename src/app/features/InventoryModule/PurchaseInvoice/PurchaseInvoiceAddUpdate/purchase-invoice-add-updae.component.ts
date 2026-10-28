@@ -102,6 +102,7 @@ export class PurchaseInvoiceAddUpdaeComponent {
     required(schema.name, { message: 'Name is required' });
     required(schema.supplierId, { message: 'Supplier is required' });
     required(schema.dateUI, { message: 'Date is required' });
+    required(schema.dueDateUI, { message: 'Due Date is required' });
 
     applyEach(schema.lines, (line) => {
       validate(line.quantity, ({ value, valueOf }) => {
