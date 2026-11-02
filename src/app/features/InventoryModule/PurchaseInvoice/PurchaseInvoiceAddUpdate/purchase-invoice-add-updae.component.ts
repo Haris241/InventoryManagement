@@ -14,6 +14,7 @@ import { BaseApiService } from '../../../../services/base-api.service';
 import { PaginationService } from '../../../../services/pagination.service';
 import { PurchaseInvoiceService } from '../../../../services/Inventory/PurchaseInvoice.service';
 import { PurchaseInvoiceDto, PurchaseInvoiceLineDto } from '../../../../Models/Inventory/PurchaseInvoice.model';
+import { validateDecimalPlaces } from '../../../../shared/validators/decimal.validator';
 
 @Component({
   selector: 'app-purchase-invoice-add-updae',
@@ -114,8 +115,10 @@ export class PurchaseInvoiceAddUpdaeComponent {
         if (available != null && available > 0 && qty > available) {
           return { kind: 'availableExceeded', message: `Quantity cannot exceed GRN quantity (${available})` };
         }
-        return null;
+        return validateDecimalPlaces(qty);
       });
+      validate(line.rate, ({ value }) => validateDecimalPlaces(value()));
+      validate(line.discountPercentage, ({ value }) => validateDecimalPlaces(value()));
     });
   });
 

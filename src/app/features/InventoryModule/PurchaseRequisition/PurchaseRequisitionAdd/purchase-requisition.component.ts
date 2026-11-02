@@ -13,6 +13,7 @@ import { AutoDropdown } from '../../../../Models/Pagination.model';
 import { BaseApiService } from '../../../../services/base-api.service';
 import { PurchaseRequisitionService } from '../../../../services/Inventory/PurchaseRequisition.service';
 import { PurchaseRequisitionDto, PurchaseRequisitionLineDto, SourceModule } from '../../../../Models/Inventory/PurchaseRequisition.model';
+import { validateDecimalPlaces } from '../../../../shared/validators/decimal.validator';
 import { PaginationService } from '../../../../services/pagination.service';
 import { enumToOptions } from '../../../../shared/Utility';
 import { ProductVariantSearchDto } from '../../../../Models/Inventory/ProductSearch.model';
@@ -87,7 +88,7 @@ export class PurchaseRequisitionComponent {
         if (qty == null || qty <= 0) {
           return { kind: 'positiveQuantity', message: 'Quantity must be greater than 0' };
         }
-        return null;
+        return validateDecimalPlaces(qty);
       });
     });
   });

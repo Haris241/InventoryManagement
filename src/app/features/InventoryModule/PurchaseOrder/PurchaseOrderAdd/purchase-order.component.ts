@@ -16,6 +16,7 @@ import { enumToOptions } from '../../../../shared/Utility';
 import { ProductVariantSearchDto } from '../../../../Models/Inventory/ProductSearch.model';
 import { PurchaseOrderService } from '../../../../services/Inventory/PurchaseOrder.service';
 import { PurchaseOrderDto, PurchaseOrderLineDto, PurchaseOrderSourceModule } from '../../../../Models/Inventory/PurchaseOrder.model';
+import { validateDecimalPlaces } from '../../../../shared/validators/decimal.validator';
 import { ProductSearchService } from '../../../../services/Inventory/ProductSearch.service';
 import { filterNewSourceLines } from '../../../../Models/Inventory/SourceModuleConfig.model';
 
@@ -159,7 +160,7 @@ export class PurchaseOrderComponent {
             return { kind: 'prQuantityExceeded', message: `Quantity cannot be greater than PR quantity.` };
           }
         }
-        return null;
+        return validateDecimalPlaces(qty);
       });
 
 
@@ -168,7 +169,7 @@ export class PurchaseOrderComponent {
         if (rate == null || rate <= 0) {
           return { kind: 'positiveQuantity', message: 'Rate must be greater than 0' };
         }
-        return null;
+        return validateDecimalPlaces(rate);
       });
       validate(line.discountPercentage, ({ value }) => {
         const discountPercentage = value();
@@ -178,7 +179,7 @@ export class PurchaseOrderComponent {
         if (discountPercentage > 100) {
           return { kind: 'maxDiscount', message: 'Discount cannot be above 100%' };
         }
-        return null;
+        return validateDecimalPlaces(discountPercentage);
       });
     });
   });

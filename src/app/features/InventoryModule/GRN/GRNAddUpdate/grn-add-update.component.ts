@@ -17,6 +17,7 @@ import { ProductVariantSearchDto } from '../../../../Models/Inventory/ProductSea
 import { ProductSearchService } from '../../../../services/Inventory/ProductSearch.service';
 import { GrnService } from '../../../../services/Inventory/GRN.service';
 import { GRNDto, GRNLineDto, GRNSourceModule } from '../../../../Models/Inventory/GRN.model';
+import { validateDecimalPlaces } from '../../../../shared/validators/decimal.validator';
 import { filterNewSourceLines } from '../../../../Models/Inventory/SourceModuleConfig.model';
 
 @Component({
@@ -147,7 +148,7 @@ export class GrnAddUpdateComponent {
         if (rate == null || rate <= 0) {
           return { kind: 'positiveQuantity', message: 'Rate must be greater than 0' };
         }
-        return null;
+        return validateDecimalPlaces(rate);
       });
       validate(line.discountPercentage, ({ value }) => {
         const discountPercentage = value();
@@ -157,7 +158,7 @@ export class GrnAddUpdateComponent {
         if (discountPercentage > 100) {
           return { kind: 'maxDiscount', message: 'Discount cannot be above 100%' };
         }
-        return null;
+        return validateDecimalPlaces(discountPercentage);
       });
       validate(line.acceptedQuantity, ({ value, valueOf }) => {
         const qty = value();
@@ -181,7 +182,7 @@ export class GrnAddUpdateComponent {
             return { kind: 'totalQuantityExceeded', message: `Total quantity (Accepted + Rejected) cannot exceed Available quantity (${available}).` };
           }
         }
-        return null;
+        return validateDecimalPlaces(qty);
       });
 
       validate(line.rejectedQuantity, ({ value, valueOf }) => {
@@ -206,7 +207,7 @@ export class GrnAddUpdateComponent {
             return { kind: 'totalQuantityExceeded', message: `Total quantity (Accepted + Rejected) cannot exceed Available quantity (${available}).` };
           }
         }
-        return null;
+        return validateDecimalPlaces(qty);
       });
     });
   });

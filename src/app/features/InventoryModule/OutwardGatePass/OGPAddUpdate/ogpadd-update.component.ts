@@ -20,6 +20,7 @@ import { filterNewSourceLines } from '../../../../Models/Inventory/SourceModuleC
 import { OGPService } from '../../../../services/Inventory/OGP.service';
 import { OGPFormLookupsDto, OutwardGatePassDto, OutwardGatePassLineDto, OutwardGatePassSourceModule } from '../../../../Models/Inventory/OGP.model';
 import { DataLayerService } from '../../../../services/data-layer.service';
+import { validateDecimalPlaces } from '../../../../shared/validators/decimal.validator';
 
 @Component({
   selector: 'app-ogpadd-update',
@@ -123,7 +124,7 @@ export class OGPAddUpdateComponent {
             return { kind: 'prQuantityExceeded', message: `Quantity cannot be greater than Available quantity (${available}).` };
           }
         }
-        return null;
+        return validateDecimalPlaces(qty);
       });
     });
   });

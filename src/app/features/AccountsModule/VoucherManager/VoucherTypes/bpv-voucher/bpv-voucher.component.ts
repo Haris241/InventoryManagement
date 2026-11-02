@@ -16,6 +16,7 @@ import { AutoDropdown } from '../../../../../Models/Pagination.model';
 import { CurrencyDto } from '../../../../../Models/Auth.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { voucherMangerService } from '../../../../../services/Accounting/voucherManger.service';
+import { validateDecimalPlaces } from '../../../../../shared/validators/decimal.validator';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
@@ -183,7 +184,7 @@ export class BpvVoucherComponent {
           };
         }
 
-        return null;
+        return validateDecimalPlaces(value());
       });
 
       validate(line.debit, ({ value, valueOf }) => {
@@ -195,8 +196,10 @@ export class BpvVoucherComponent {
           };
         }
 
-        return null;
+        return validateDecimalPlaces(value());
       });
+
+      validate(line.exchangeRate, ({ value }) => validateDecimalPlaces(value()));
     });
   });
 

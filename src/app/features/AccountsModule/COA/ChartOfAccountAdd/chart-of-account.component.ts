@@ -1,6 +1,7 @@
 import { Component, computed, DestroyRef, inject, signal, viewChild, ViewChild } from '@angular/core';
 import { AccountKind, AccountType, AccountUsageType, COADropdownDto, CreateCOA } from '../../../../Models/Accouting/ChartOfAccount.model';
-import { form, FormField, required, min } from '@angular/forms/signals';
+import { form, FormField, required, min, validate } from '@angular/forms/signals';
+import { validateDecimalPlaces } from '../../../../shared/validators/decimal.validator';
 import { FormsModule } from '@angular/forms';
 import { BaseApiService } from '../../../../services/base-api.service';
 import { DataLayerService } from '../../../../services/data-layer.service';
@@ -96,6 +97,7 @@ export class ChartOfAccountComponent {
     required(schemaPath.kind, { message: 'Kind is required' });
     required(schemaPath.category, { message: 'Category is required' });
     min(schemaPath.openingBalance, 0, { message: 'Opening Balance must be greater than 0' });
+    validate(schemaPath.openingBalance, ({ value }) => validateDecimalPlaces(value()));
   });
 
   //Method to Update Fields For Non supporting Primeng Fields

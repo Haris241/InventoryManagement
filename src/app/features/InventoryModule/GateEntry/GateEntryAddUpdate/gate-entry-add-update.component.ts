@@ -17,6 +17,7 @@ import { ProductVariantSearchDto } from '../../../../Models/Inventory/ProductSea
 import { ProductSearchService } from '../../../../services/Inventory/ProductSearch.service';
 import { GateEntryService } from '../../../../services/Inventory/GateEntry.service';
 import { GateEntryDto, GateEntryLineDto, GateEntrySourceModule } from '../../../../Models/Inventory/GateEntry.model';
+import { validateDecimalPlaces } from '../../../../shared/validators/decimal.validator';
 import { filterNewSourceLines } from '../../../../Models/Inventory/SourceModuleConfig.model';
 
 @Component({
@@ -108,7 +109,7 @@ export class GateEntryAddUpdateComponent {
             return { kind: 'poQuantityExceeded', message: `Quantity cannot be greater than PO quantity.` };
           }
         }
-        return null;
+        return validateDecimalPlaces(qty);
       });
 
     });

@@ -16,6 +16,7 @@ import { AttributeDefinitionDropdown, ProductAttributeValueDto, ProductDTO, Prod
 import { FormDataService } from '../../../../services/formData.service';
 import { ProductService } from '../../../../services/Inventory/product.service';
 import { ProductSearchService } from '../../../../services/Inventory/ProductSearch.service';
+import { validateDecimalPlaces } from '../../../../shared/validators/decimal.validator';
 
 @Component({
   selector: 'app-add-product',
@@ -72,6 +73,7 @@ export class AddProductComponent implements OnInit {
     required(schema.uom, { message: 'UOM is required' });
     required(schema.productType, { message: 'Product Type is required' });
     required(schema.productCategoryId, { message: 'Category is required' });
+    validate(schema.taxRate, ({ value }) => validateDecimalPlaces(value()));
 
     applyEach(schema.variants, (variant) => {
       required(variant.sku, { message: 'SKU is required', });
@@ -81,7 +83,7 @@ export class AddProductComponent implements OnInit {
         if (price == null || price <= 0) {
           return { kind: 'positiveCostPrice', message: 'Cost price must be greater than 0' };
         }
-        return null;
+        return validateDecimalPlaces(price);
       });
 
       validate(variant.sellingPrice, ({ value }) => {
@@ -89,8 +91,14 @@ export class AddProductComponent implements OnInit {
         if (price == null || price <= 0) {
           return { kind: 'positiveSellingPrice', message: 'Selling price must be greater than 0' };
         }
-        return null;
+        return validateDecimalPlaces(price);
       });
+
+      validate(variant.netWeight, ({ value }) => validateDecimalPlaces(value()));
+      validate(variant.grossWeight, ({ value }) => validateDecimalPlaces(value()));
+      validate(variant.length, ({ value }) => validateDecimalPlaces(value()));
+      validate(variant.width, ({ value }) => validateDecimalPlaces(value()));
+      validate(variant.height, ({ value }) => validateDecimalPlaces(value()));
 
       applyEach(variant.initialStock, (stock) => {
         required(stock.warehouseId, { message: 'Warehouse is required', });
@@ -99,7 +107,7 @@ export class AddProductComponent implements OnInit {
           if (qty == null || qty <= 0) {
             return { kind: 'positiveQuantity', message: 'Quantity must be greater than 0' };
           }
-          return null;
+          return validateDecimalPlaces(qty);
         });
 
         validate(stock.unitCost, ({ value }) => {
@@ -107,7 +115,7 @@ export class AddProductComponent implements OnInit {
           if (cost == null || cost <= 0) {
             return { kind: 'positiveUnitCost', message: 'Unit cost must be greater than 0' };
           }
-          return null;
+          return validateDecimalPlaces(cost);
         });
 
         validate(stock.warehouseId, ({ value, valueOf }) => {

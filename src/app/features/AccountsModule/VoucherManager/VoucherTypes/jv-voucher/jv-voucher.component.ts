@@ -17,6 +17,7 @@ import { PaginationService } from '../../../../../services/pagination.service';
 import { CurrencyDto } from '../../../../../Models/Auth.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { voucherMangerService } from '../../../../../services/Accounting/voucherManger.service';
+import { validateDecimalPlaces } from '../../../../../shared/validators/decimal.validator';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
@@ -143,8 +144,11 @@ export class JvVoucherComponent {
           };
         }
 
-        return null;
+        return validateDecimalPlaces(debit);
       });
+
+      validate(line.credit, ({ value }) => validateDecimalPlaces(value()));
+      validate(line.exchangeRate, ({ value }) => validateDecimalPlaces(value()));
     });
   });
 

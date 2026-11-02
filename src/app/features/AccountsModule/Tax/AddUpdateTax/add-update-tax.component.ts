@@ -11,6 +11,7 @@ import { SelectModule } from 'primeng/select';
 import { FieldErrorSComponent } from '../../../../shared/field-error-s/field-error-s.component';
 import { PaginationService } from '../../../../services/pagination.service';
 import { TaxDto } from '../../../../Models/Accouting/Tax.model';
+import { validateDecimalPlaces } from '../../../../shared/validators/decimal.validator';
 
 @Component({
   selector: 'app-add-update-tax',
@@ -62,7 +63,7 @@ export class AddUpdateTaxComponent {
       if (rate == null || rate <= 0 || rate > 100) {
         return { kind: 'positiveRate', message: 'Rate must be between 0 and 100' };
       }
-      return null;
+      return validateDecimalPlaces(rate);
     });
 
     //Make readonly

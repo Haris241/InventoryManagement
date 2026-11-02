@@ -15,6 +15,7 @@ import { enumToOptions } from '../../../../shared/Utility';
 import { filterNewSourceLines } from '../../../../Models/Inventory/SourceModuleConfig.model';
 import { PurchaseReturnService } from '../../../../services/Inventory/PurchaseRetrun.service';
 import { PurchaseReturnDto, PurchaseReturnLineDto, PurchaseReturnReason, PurchaseReturnSourceModule } from '../../../../Models/Inventory/PurchaseRetrun.model';
+import { validateDecimalPlaces } from '../../../../shared/validators/decimal.validator';
 
 @Component({
   selector: 'app-purchase-return-add-update',
@@ -131,8 +132,10 @@ export class PurchaseReturnAddUpdateComponent {
         if (available != null && available > 0 && qty > available) {
           return { kind: 'prQuantityExceeded', message: `Quantity cannot be greater than Available quantity.` };
         }
-        return null;
+        return validateDecimalPlaces(qty);
       });
+      validate(line.rate, ({ value }) => validateDecimalPlaces(value()));
+      validate(line.discountPercentage, ({ value }) => validateDecimalPlaces(value()));
     });
   });
 
