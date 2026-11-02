@@ -46,6 +46,8 @@ export class AccountMappingComponent {
     [AccountMappingKey.InputTaxAccount]: null,
     [AccountMappingKey.OutputTaxAccount]: null,
     [AccountMappingKey.GeneralOutwardExpense]: null,
+    [AccountMappingKey.InventoryAdjustment]: null,
+
   };
 
   // Signal Model Initial State
@@ -58,6 +60,8 @@ export class AccountMappingComponent {
     [AccountMappingKey.InputTaxAccount]: { key: AccountMappingKey.InputTaxAccount, chartOfAccountId: 0 },
     [AccountMappingKey.OutputTaxAccount]: { key: AccountMappingKey.OutputTaxAccount, chartOfAccountId: 0 },
     [AccountMappingKey.GeneralOutwardExpense]: { key: AccountMappingKey.GeneralOutwardExpense, chartOfAccountId: 0 },
+    [AccountMappingKey.InventoryAdjustment]: { key: AccountMappingKey.InventoryAdjustment, chartOfAccountId: 0 },
+
   };
 
   mappingsModel = signal<Record<number, AccountMappingDto>>({ ...this.initialModel });

@@ -149,6 +149,21 @@
                 </div>
             </p-floatLabel>
         </div>
+        <!-- Inventory Adjustment expense (Key: 9) -->
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-10/12 w-full">
+                    <p-autoComplete [ngModel]="selectedAccounts[AccountMappingKey.InventoryAdjustment]"
+                        [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="onAccountSelect(AccountMappingKey.InventoryAdjustment, $event)"
+                        (completeMethod)="SearchDropDown($event, expenseAccountSearch.searchterm)"
+                        inputId="InventoryAdjustment" optionLabel="name" [dropdown]="true"
+                        [suggestions]="expenseAccountSearch.result()" [showClear]="true" class="w-full">
+                    </p-autoComplete>
+                    <label for="InventoryAdjustment">Inventory Adjustment Expense Account</label>
+                </div>
+            </p-floatLabel>
+        </div>
 
 
 
