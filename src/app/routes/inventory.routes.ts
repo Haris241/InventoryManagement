@@ -207,6 +207,20 @@ export const inventoryRoutes: Routes = [
                 path: 'recievestocktransfer',
                 loadComponent: () => import('../features/InventoryModule/StockTransfer/StockTransferAddUpdate/stockt-transfer-add-update.component').then(m => m.StocktTransferAddUpdateComponent)
             },
+            // Stock Adjustment
+            {
+                path: 'stockadjustmentlist',
+                loadComponent: () => import('../features/InventoryModule/StockAdjustment/StockAdjustmentList/stock-adjustment-list.component').then(m => m.StockAdjustmentListComponent)
+            },
+            {
+                path: 'addstockadjustment',
+                loadComponent: () => import('../features/InventoryModule/StockAdjustment/StockAdjustmentAddUpdate/stock-adjustment-add-update.component').then(m => m.StockAdjustmentAddUpdateComponent)
+            },
+            {
+                path: 'editstockadjustment',
+                loadComponent: () => import('../features/InventoryModule/StockAdjustment/StockAdjustmentAddUpdate/stock-adjustment-add-update.component').then(m => m.StockAdjustmentAddUpdateComponent)
+            },
+
 
 
             {

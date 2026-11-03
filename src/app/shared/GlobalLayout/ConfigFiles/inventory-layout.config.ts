@@ -199,6 +199,21 @@ export const INVENTORY_LAYOUT_CONFIG: ModuleLayoutConfig = {
             ]
         },
         {
+            key: 'StockAdjustment',
+            icon: 'sync_alt',
+            label: 'Stock Adjustment',
+            children: [
+                {
+                    label: 'Add Stock Adjustment',
+                    route: '/Inventory/addstockadjustment'
+                },
+                {
+                    label: 'Stock Adjustment List',
+                    route: '/Inventory/stockadjustmentlist'
+                }
+            ]
+        },
+        {
             key: 'Supplier',
             icon: 'person',
             label: 'Supplier',

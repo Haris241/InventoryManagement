@@ -1,1 +1,170 @@
-<p>stockt-transfer-list works!</p>
+<form (ngSubmit)="OnSearch()">
+    <div class="flex flex-wrap global-div p-5 gap-2 lg:gap-0">
+        <div class="w-full mb-4">
+            <h3 class="text-2xl font-semibold text-center mb-3">
+                <span class="gradient-heading">Stock Adjustment List</span>
+            </h3>
+            <hr class="second-color">
+        </div>
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-10/12 w-full">
+                    <p-autoComplete [(ngModel)]="stFormModel().id" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('id',$event)"
+                        (completeMethod)="SearchDropDown($event,stSearch.searchterm)" inputId="id" optionLabel="name"
+                        [dropdown]="true" [suggestions]="stSearchList()" optionValue="id" [showClear]="true"
+                        class="w-full"></p-autoComplete>
+                    <label for="id">Search by Name or Number</label>
+                </div>
+            </p-floatLabel>
+        </div>
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-10/12 w-full">
+                    <p-autoComplete [(ngModel)]="stFormModel().fromWarehouseId" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('fromWarehouseId',$event)"
+                        (completeMethod)="SearchDropDown($event,FromWareHouseSearch.searchterm)" inputId="id"
+                        optionLabel="name" [dropdown]="true" [suggestions]="FromWareHouseSearchSearchList()"
+                        optionValue="id" [showClear]="true" class="w-full"></p-autoComplete>
+                    <label for="id">From WareHouse</label>
+                </div>
+            </p-floatLabel>
+        </div>
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-10/12 w-full">
+                    <p-autoComplete [(ngModel)]="stFormModel().toWarehouseId" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('toWarehouseId',$event)"
+                        (completeMethod)="SearchDropDown($event,ToWareHouseSearch.searchterm)" inputId="id"
+                        optionLabel="name" [dropdown]="true" [suggestions]="ToWareHouseSearchSearchList()"
+                        optionValue="id" [showClear]="true" class="w-full"></p-autoComplete>
+                    <label for="id">To WareHouse</label>
+                </div>
+            </p-floatLabel>
+        </div>
+        <div class="lg:w-1/4  w-[calc(50%-0.25rem)] mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <p-select [(ngModel)]="stFormModel().status" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('status',$event)" [options]="stStatusOptions()" optionLabel="name"
+                        optionValue="value" class="w-full" [showClear]="true" />
+                    <label for="status">Status</label>
+                </div>-
+            </p-floatLabel>
+        </div>
+        <div class="lg:w-1/4  w-[calc(50%-0.25rem)] mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <p-select [(ngModel)]="stFormModel().mode" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('mode',$event)" [options]="stModeOptions()" optionLabel="name"
+                        optionValue="value" class="w-full" [showClear]="true" />
+                    <label for="fulfillmentStatus">mode</label>
+                </div>
+            </p-floatLabel>
+        </div>
+        <div class="lg:w-1/4  w-[calc(50%-0.25rem)] mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <p-datepicker [(ngModel)]="stFormModel().fromDateUI" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('fromDateUI',$event)" view="date" dateFormat="dd/mm/yy"
+                        size="small" inputId="fromDateUI" class="w-full" />
+                    <label for="fromDateUI">From Date</label>
+                </div>
+            </p-floatLabel>
+        </div>
+        <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <p-datepicker [(ngModel)]="stFormModel().toDateUI" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('toDateUI',$event)" view="date" dateFormat="dd/mm/yy" size="small"
+                        inputId="toDateUI" class="w-full" />
+                    <label for="toDateUI">To Date</label>
+                </div>
+            </p-floatLabel>
+        </div>
+
+        <div class="w-full flex justify-center m-3">
+            <button class="global-button">Search</button>
+        </div>
+    </div>
+</form>
+<div class="flex flex-wrap global-div mt-4 p-4">
+    <div class="w-full">
+        <p-table #dt [value]="stList()" [rows]="20" [lazy]="true" (onLazyLoad)="loadST()"
+            [tableStyle]="{ 'min-width': '50rem' }">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Name</th>
+                    <th>Number</th>
+                    <th>From WareHouse</th>
+                    <th>To WareHouse</th>
+                    <th>Status</th>
+                    <th>Mode</th>
+                    <th>Total Quantity</th>
+                    <th>Recieved Quantity</th>
+                    <th>Date</th>
+                    <th class="text-center">Actions</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-st>
+                <tr>
+                    <td>{{ st.name }}</td>
+                    <td>{{ st.transferNumber }}</td>
+                    <td>{{ st.fromWarehouseName }}</td>
+                    <td>{{ st.toWarehouseName }}</td>
+
+                    <td>
+                        <span class="status-badge" [ngClass]="getSTStatusClass(st.status)">
+                            {{ stStatusLabel(st.status) }}
+                        </span>
+                    </td>
+                    <td>{{ saModeLabel(st.mode) }}</td>
+                    <td>{{ st.totalQuantity }}</td>
+                    <td>{{ st.receivedQuantity }}</td>
+                    <td>{{ st.transferDate | date:'yyyy-MM-dd' }}</td>
+
+                    <td>
+                        <div class="flex items-center justify-start gap-2">
+                            @if (st.status === stStatus.Draft) {
+                            <button class="status-badge close-year" (click)="ApproveST(st.id)">
+                                Approve
+                            </button>
+
+                            <button class="p-1" (click)="editST(st.id)" title="Edit">
+                                <span class="material-symbols-outlined icon-color">edit</span>
+                            </button>
+
+                            <button class="p-1" (click)="deleteST(st.id)" title="Delete">
+                                <span class="material-symbols-outlined icon-color">delete</span>
+                            </button>
+                            } @else if (
+                            st.status === stStatus.Approved ||
+                            st.status === stStatus.PartiallyReceived
+                            ) {
+                            <button class="status-badge close-year" (click)="RecievedST(st.id)">
+                                Receive
+                            </button>
+
+                            <button class="status-badge close-year" (click)="CancelST(st.id)">
+                                Cancel
+                            </button>
+                            } @else {
+                            <span class="text-gray-400 ps-4">-</span>
+                            }
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+
+        <!-- Pagination Controls -->
+        <div class="flex justify-end mt-3">
+            @if (hasPreviousPage()) {
+            <button class="pagination-button me-3" (click)="loadST('previous')">Previous</button>
+            }
+            @if (hasNextPage()) {
+            <button class="pagination-button me-3" (click)="loadST('next')">Next</button>
+            }
+        </div>
+    </div>
+</div>

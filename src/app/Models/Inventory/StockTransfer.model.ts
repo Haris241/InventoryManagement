@@ -42,7 +42,7 @@ export interface StockTransferListDto {
 export interface StockTransferSearchDto {
     id: string | null;
     fromWarehouseId: number | null;
-    tofromWarehouseId: number | null;
+    toWarehouseId: number | null;
     fromDate: string | null;
     toDate: string | null;
     fromDateUI: Date | null;
