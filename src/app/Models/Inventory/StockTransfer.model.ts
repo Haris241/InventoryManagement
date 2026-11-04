@@ -1,9 +1,10 @@
 import { AutoDropdown } from "../Pagination.model";
+import { ProductVariantSearchDto } from "./ProductSearch.model";
 
 export interface StockTransferDto {
     id?: string;
     name: string;
-    transferDate: string
+    transferDate: string;
     transferDateUI: Date | null;
     remarks: string;
     mode: StockTransferMode;
@@ -14,6 +15,7 @@ export interface StockTransferDto {
 export interface StockTransferLineDto {
     id?: string;
     productVariantId: string | null;
+    selectedProductVariant?: ProductVariantSearchDto;
     productName: string;
     barcode: string;
     uom: string;
@@ -23,7 +25,6 @@ export interface StockTransferLineDto {
     fromWarehouseLocationId: number | null;
     toWarehouseLocationId: number | null;
     remarks: string;
-
 }
 export interface StockTransferListDto {
     id?: string;
@@ -51,7 +52,6 @@ export interface StockTransferSearchDto {
     mode: StockTransferMode | null;
     nextCursor: string | null;
     previousCursor: string | null;
-
 }
 export interface StockTransferFormLookupsDto {
     warehouses: AutoDropdown[];

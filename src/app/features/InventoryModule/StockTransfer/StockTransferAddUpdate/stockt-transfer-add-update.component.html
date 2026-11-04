@@ -1,1 +1,320 @@
-<p>stockt-transfer-add-update works!</p>
+<!-- Inventory Work Flow Setting Button -->
+<div class="w-full grid grid-cols-2 lg:flex lg:justify-end lg:items-center mb-4 gap-2">
+    <button type="button" class="blog-button flex items-center justify-center whitespace-nowrap"
+        routerLink="/Setting/inventoryWorkflow">
+        <span class="material-symbols-outlined mr-1">settings</span>
+        Work Flow Setting
+    </button>
+</div>
+
+<!-- Stock Transfer Form -->
+<form (ngSubmit)="submitST($event)">
+    <div class="flex flex-wrap global-div p-5 gap-2 lg:gap-0">
+        <div class="w-full mb-4">
+            <h3 class="text-2xl font-semibold text-center mb-3">
+                @if(isRecievedMode()){
+                <span class="gradient-heading">Receive Stock Transfer</span>
+                }@else if(isEditMode()){
+                <span class="gradient-heading">Edit Stock Transfer</span>
+                }@else{
+                <span class="gradient-heading">Add Stock Transfer</span>
+                }
+            </h3>
+            <hr class="second-color">
+        </div>
+
+        <!-- Name -->
+        <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <input pInputText pSize="small" id="name" autocomplete="off" type="text" class="w-full"
+                        [formField]="stForm.name">
+                    <label for="name" class="required">Name</label>
+                </div>
+            </p-floatLabel>
+            <app-field-errorS [field]="stForm.name" [submit]="formSubmitted()" [backendErrors]="backendErrors()">
+            </app-field-errorS>
+        </div>
+
+        <!-- Transfer Date -->
+        <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <p-datepicker [(ngModel)]="stModel().transferDateUI" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('transferDateUI',$event)" view="date" dateFormat="dd/mm/yy"
+                        size="small" inputId="transferDateUI" class="w-full" [disabled]="isRecievedMode()" />
+                    <label for="transferDateUI" class="required">Transfer Date</label>
+                </div>
+            </p-floatLabel>
+            <app-field-errorS [field]="stForm.transferDateUI" [submit]="formSubmitted()"
+                [backendErrors]="backendErrors()">
+            </app-field-errorS>
+        </div>
+
+        <!-- Transfer Mode -->
+        <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <p-select [(ngModel)]="stModel().mode" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('mode', $event)" [options]="modes()" optionLabel="name"
+                        optionValue="value" class="w-full" [disabled]="isRecievedMode()" />
+                    <label for="mode" class="required">Mode</label>
+                </div>
+            </p-floatLabel>
+            <app-field-errorS [field]="stForm.mode" [submit]="formSubmitted()" [backendErrors]="backendErrors()">
+            </app-field-errorS>
+        </div>
+
+        <!-- From Warehouse -->
+        <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <p-select [ngModel]="stModel().fromWarehouseId" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="onFromWarehouseChange($event)" [options]="warehouses()" optionLabel="name"
+                        optionValue="id" class="w-full" [showClear]="!isRecievedMode() && !isEditMode()"
+                        [filter]="true" filterBy="name" [disabled]="isRecievedMode() || isEditMode()" />
+                    <label for="fromWarehouseId" class="required">From Warehouse</label>
+                </div>
+            </p-floatLabel>
+            <app-field-errorS [field]="stForm.fromWarehouseId" [submit]="formSubmitted()"
+                [backendErrors]="backendErrors()">
+            </app-field-errorS>
+        </div>
+
+        <!-- To Warehouse -->
+        <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <p-select [ngModel]="stModel().toWarehouseId" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="onToWarehouseChange($event)" [options]="warehouses()" optionLabel="name"
+                        optionValue="id" class="w-full" [showClear]="!isRecievedMode() && !isEditMode()"
+                        [filter]="true" filterBy="name" [disabled]="isRecievedMode() || isEditMode()" />
+                    <label for="toWarehouseId" class="required">To Warehouse</label>
+                </div>
+            </p-floatLabel>
+            <app-field-errorS [field]="stForm.toWarehouseId" [submit]="formSubmitted()"
+                [backendErrors]="backendErrors()">
+            </app-field-errorS>
+        </div>
+
+        <!-- Remarks -->
+        <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <input pInputText pSize="small" id="remarks" autocomplete="off" type="text" class="w-full"
+                        [formField]="stForm.remarks">
+                    <label for="remarks">Remarks</label>
+                </div>
+            </p-floatLabel>
+        </div>
+
+        <!-- Lines Header -->
+        <div class="w-full mt-3">
+            <h4 class="text-base sm:text-lg font-semibold mb-2 float-left">
+                <span>Stock Transfer Lines</span>
+            </h4>
+            @if(!isRecievedMode()){
+            <button type="button" class="global-button float-right" (click)="addLine()">
+                <span class="material-symbols-outlined second-color">add</span> Add Line
+            </button>
+            }
+        </div>
+
+        <div class="w-full">
+            <hr class="second-color my-4">
+        </div>
+
+        <!-- Lines -->
+        <div class="w-full">
+            @for (line of stModel().lines; track $index) {
+            <div class="flex flex-wrap items-start gap-2 pb-3 mb-3 border-b second-color">
+
+                <!-- Product -->
+                <div class="w-[calc(50%-0.25rem)] lg:w-2/8 mb-3">
+                    @if (isRecievedMode()) {
+                    <p-floatLabel variant="on">
+                        <div class="w-full">
+                            <input pInputText pSize="small" [value]="line.productName" readonly class="w-full">
+                            <label>Product</label>
+                        </div>
+                    </p-floatLabel>
+                    } @else {
+                    <p-floatLabel variant="on">
+                        <div class="w-full">
+                            <p-autoComplete [ngModel]="line.selectedProductVariant"
+                                [ngModelOptions]="{standalone: true}"
+                                (ngModelChange)="onProductVariantChange($index, $event)"
+                                (completeMethod)="SearchDropDown($event, productSearch.searchterm)"
+                                [dropdown]="true" optionLabel="displayName" [suggestions]="productSearchList()"
+                                [showClear]="true" class="w-full">
+                            </p-autoComplete>
+                            <label class="required">Product</label>
+                        </div>
+                    </p-floatLabel>
+                    <app-field-errorS [field]="stForm.lines[$index].productVariantId" [submit]="formSubmitted()"
+                        [backendErrors]="backendErrors()" [fieldPath]="'lines[' + $index + '].productVariantId'">
+                    </app-field-errorS>
+                    }
+                </div>
+
+                <!-- Barcode -->
+                @if (enableBarcode()) {
+                <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
+                    @if (isRecievedMode()) {
+                    <p-floatLabel variant="on">
+                        <div class="w-full">
+                            <input pInputText pSize="small" [value]="line.barcode" readonly class="w-full">
+                            <label>Barcode</label>
+                        </div>
+                    </p-floatLabel>
+                    } @else {
+                    <p-floatLabel variant="on">
+                        <div class="w-full">
+                            <input pInputText pSize="small" autocomplete="off" type="text" class="w-full"
+                                [formField]="stForm.lines[$index].barcode"
+                                (keydown.enter)="searchBarcode($index, $event)">
+                            <label>Barcode</label>
+                        </div>
+                    </p-floatLabel>
+                    }
+                </div>
+                }
+
+                <!-- UOM -->
+                <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
+                    <p-floatLabel variant="on">
+                        <div class="w-full">
+                            <input pInputText pSize="small" [value]="line.uom" readonly class="w-full">
+                            <label>UOM</label>
+                        </div>
+                    </p-floatLabel>
+                </div>
+
+                <!-- From Warehouse Location -->
+                @if (enableLocation()) {
+                <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
+                    <p-floatLabel variant="on">
+                        <div class="w-full">
+                            <p-select [ngModel]="line.fromWarehouseLocationId" [ngModelOptions]="{standalone: true}"
+                                (ngModelChange)="onFromLocationChange($index, $event)"
+                                [options]="getWarehouseLocations(stModel().fromWarehouseId)" optionLabel="name"
+                                optionValue="id" [filter]="true" filterBy="name" class="w-full"
+                                [showClear]="!isRecievedMode()" [disabled]="isRecievedMode()">
+                            </p-select>
+                            <label>From Location</label>
+                        </div>
+                    </p-floatLabel>
+                </div>
+                }
+
+                <!-- Available Quantity (Readonly) -->
+                <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
+                    <p-floatLabel variant="on">
+                        <div class="w-full">
+                            <input pInputText pSize="small" [value]="line.availableQuantity" readonly class="w-full">
+                            <label>Available Qty</label>
+                        </div>
+                    </p-floatLabel>
+                </div>
+
+                <!-- Transfer Quantity -->
+                <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
+                    <p-floatLabel variant="on">
+                        <div class="w-full">
+                            <input pInputText pSize="small" autocomplete="off" type="number" class="w-full"
+                                [formField]="stForm.lines[$index].quantity">
+                            <label class="required">Qty</label>
+                        </div>
+                    </p-floatLabel>
+                    <app-field-errorS [field]="stForm.lines[$index].quantity" [submit]="formSubmitted()"
+                        [backendErrors]="backendErrors()" [fieldPath]="'lines[' + $index + '].quantity'">
+                    </app-field-errorS>
+                </div>
+
+                <!-- To Warehouse Location (Always editable in both normal and received mode!) -->
+                @if (enableLocation()) {
+                <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
+                    <p-floatLabel variant="on">
+                        <div class="w-full">
+                            <p-select [ngModel]="line.toWarehouseLocationId" [ngModelOptions]="{standalone: true}"
+                                (ngModelChange)="onToLocationChange($index, $event)"
+                                [options]="getWarehouseLocations(stModel().toWarehouseId)" optionLabel="name"
+                                optionValue="id" [filter]="true" filterBy="name" class="w-full"
+                                [showClear]="true">
+                            </p-select>
+                            <label>To Location</label>
+                        </div>
+                    </p-floatLabel>
+                </div>
+                }
+
+                <!-- Received Quantity (Only shows in received mode) -->
+                @if (isRecievedMode()) {
+                <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
+                    <p-floatLabel variant="on">
+                        <div class="w-full">
+                            <input pInputText pSize="small" autocomplete="off" type="number" class="w-full"
+                                [formField]="stForm.lines[$index].receivedQuantity">
+                            <label class="required">Received Qty</label>
+                        </div>
+                    </p-floatLabel>
+                    <app-field-errorS [field]="stForm.lines[$index].receivedQuantity" [submit]="formSubmitted()"
+                        [backendErrors]="backendErrors()" [fieldPath]="'lines[' + $index + '].receivedQuantity'">
+                    </app-field-errorS>
+                </div>
+                }
+
+                <!-- Remarks -->
+                <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
+                    <p-floatLabel variant="on">
+                        <div class="w-full">
+                            <input pInputText pSize="small" autocomplete="off" type="text" class="w-full"
+                                [formField]="stForm.lines[$index].remarks">
+                            <label>Remarks</label>
+                        </div>
+                    </p-floatLabel>
+                </div>
+
+                <!-- Action -->
+                @if (!isRecievedMode()) {
+                <div class="w-full lg:w-1/12 mt-1 flex items-center justify-center">
+                    <button type="button" (click)="deleteLine($index)">
+                        <span class="material-symbols-outlined icon-color">delete</span>
+                    </button>
+                </div>
+                }
+
+            </div>
+            }
+        </div>
+
+        <!-- Errors -->
+        <div class="w-full mt-3">
+            <ul class="text-red-500 text-sm font-medium pl-4">
+                @if (errors()) {
+                @for (e of errors(); track e) {
+                <li>{{ e }}</li>
+                }
+                }
+            </ul>
+        </div>
+
+        <!-- Submitting the form -->
+        <div class="w-full flex justify-center m-3">
+            @if(isRecievedMode()){
+            <button class="global-button" type="submit" [disabled]="submit()">
+                {{ submit() ? 'Processing...' : 'Receive Stock Transfer' }}
+            </button>
+            }@else if(isEditMode()){
+            <button class="global-button" type="submit" [disabled]="submit()">
+                {{ submit() ? 'Processing...' : 'Update Stock Transfer' }}
+            </button>
+            }@else{
+            <button class="global-button" type="submit" [disabled]="submit()">
+                {{ submit() ? 'Processing...' : 'Save Stock Transfer' }}
+            </button>
+            }
+        </div>
+
+    </div>
+</form>

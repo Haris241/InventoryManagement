@@ -3,6 +3,7 @@ import { DataLayerService } from "../data-layer.service";
 import { ProductVariantSearchDto } from "../../Models/Inventory/ProductSearch.model";
 import { AutoDropdown } from "../../Models/Pagination.model";
 import { Observable } from "rxjs";
+
 @Injectable({
     providedIn: 'root'
 })
@@ -17,6 +18,11 @@ export class ProductSearchService {
         return this.dataService.getAllSimple<AutoDropdown>(`Dropdowns/LocationsByWarehouse/${warehouseId}`);
     }
 
-
-
+    getProductVariantAvailableStock(warehouseId: number, productVariantId: string, warehouseLocationId?: number | null): Observable<{ success: boolean; availableQuantity: number }> {
+        let url = `Dropdowns/ProductVariantAvailableStock?warehouseId=${warehouseId}&productVariantId=${productVariantId}`;
+        if (warehouseLocationId != null) {
+            url += `&warehouseLocationId=${warehouseLocationId}`;
+        }
+        return this.dataService.getAll<{ success: boolean; availableQuantity: number }>(url);
+    }
 }

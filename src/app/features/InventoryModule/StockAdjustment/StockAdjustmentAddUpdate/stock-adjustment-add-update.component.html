@@ -1,1 +1,242 @@
-<p>stock-adjustment-add-update works!</p>
+<!-- Inventory Work Flow Setting Button -->
+<div class="w-full grid grid-cols-2 lg:flex lg:justify-end lg:items-center mb-4 gap-2">
+    <button type="button" class="blog-button flex items-center justify-center whitespace-nowrap"
+        routerLink="/Setting/inventoryWorkflow">
+        <span class="material-symbols-outlined mr-1">settings</span>
+        Work Flow Setting
+    </button>
+</div>
+
+<!-- Stock Adjustment Form -->
+<form (ngSubmit)="submitSA($event)">
+    <div class="flex flex-wrap global-div p-5 gap-2 lg:gap-0">
+        <div class="w-full mb-4">
+            <h3 class="text-2xl font-semibold text-center mb-3">
+                @if(isEditMode()){
+                <span class="gradient-heading">Edit Stock Adjustment</span>
+                }@else{
+                <span class="gradient-heading">Add Stock Adjustment</span>
+                }
+            </h3>
+            <hr class="second-color">
+        </div>
+
+        <!-- Name -->
+        <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <input pInputText pSize="small" id="name" autocomplete="off" type="text" class="w-full"
+                        [formField]="saForm.name">
+                    <label for="name" class="required">Name</label>
+                </div>
+            </p-floatLabel>
+            <app-field-errorS [field]="saForm.name" [submit]="formSubmitted()" [backendErrors]="backendErrors()">
+            </app-field-errorS>
+        </div>
+
+        <!-- Adjustment Date -->
+        <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <p-datepicker [(ngModel)]="saModel().adjustmentDateUI" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('adjustmentDateUI',$event)" view="date" dateFormat="dd/mm/yy"
+                        size="small" inputId="adjustmentDateUI" class="w-full" />
+                    <label for="adjustmentDateUI" class="required">Adjustment Date</label>
+                </div>
+            </p-floatLabel>
+            <app-field-errorS [field]="saForm.adjustmentDateUI" [submit]="formSubmitted()"
+                [backendErrors]="backendErrors()">
+            </app-field-errorS>
+        </div>
+
+        <!-- Reason -->
+        <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <p-select [(ngModel)]="saModel().reason" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('reason', $event)" [options]="reasons()" optionLabel="name"
+                        optionValue="value" class="w-full" />
+                    <label for="reason" class="required">Reason</label>
+                </div>
+            </p-floatLabel>
+            <app-field-errorS [field]="saForm.reason" [submit]="formSubmitted()" [backendErrors]="backendErrors()">
+            </app-field-errorS>
+        </div>
+
+        <!-- Warehouse -->
+        <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <p-select [ngModel]="saModel().warehouseId" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="onWarehouseChange($event)" [options]="warehouses()" optionLabel="name"
+                        optionValue="id" class="w-full" [showClear]="!isEditMode()" [filter]="true" filterBy="name"
+                        [disabled]="isEditMode()" />
+                    <label for="warehouseId" class="required">Warehouse</label>
+                </div>
+            </p-floatLabel>
+            <app-field-errorS [field]="saForm.warehouseId" [submit]="formSubmitted()"
+                [backendErrors]="backendErrors()">
+            </app-field-errorS>
+        </div>
+
+        <!-- Remarks -->
+        <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <input pInputText pSize="small" id="remarks" autocomplete="off" type="text" class="w-full"
+                        [formField]="saForm.remarks">
+                    <label for="remarks">Remarks</label>
+                </div>
+            </p-floatLabel>
+        </div>
+
+        <!-- Lines Header -->
+        <div class="w-full mt-3">
+            <h4 class="text-base sm:text-lg font-semibold mb-2 float-left">
+                <span>Stock Adjustment Lines</span>
+            </h4>
+            <button type="button" class="global-button float-right" (click)="addLine()">
+                <span class="material-symbols-outlined second-color">add</span> Add Line
+            </button>
+        </div>
+
+        <div class="w-full">
+            <hr class="second-color my-4">
+        </div>
+
+        <!-- Lines -->
+        <div class="w-full">
+            @for (line of saModel().lines; track $index) {
+            <div class="flex flex-wrap items-start gap-2 pb-3 mb-3 border-b second-color">
+
+                <!-- Product -->
+                <div class="w-[calc(50%-0.25rem)] lg:w-2/8 mb-3">
+                    <p-floatLabel variant="on">
+                        <div class="w-full">
+                            <p-autoComplete [ngModel]="line.selectedProductVariant"
+                                [ngModelOptions]="{standalone: true}"
+                                (ngModelChange)="onProductVariantChange($index, $event)"
+                                (completeMethod)="SearchDropDown($event, productSearch.searchterm)"
+                                [dropdown]="true" optionLabel="displayName" [suggestions]="productSearchList()"
+                                [showClear]="true" class="w-full">
+                            </p-autoComplete>
+                            <label class="required">Product</label>
+                        </div>
+                    </p-floatLabel>
+                    <app-field-errorS [field]="saForm.lines[$index].productVariantId" [submit]="formSubmitted()"
+                        [backendErrors]="backendErrors()" [fieldPath]="'lines[' + $index + '].productVariantId'">
+                    </app-field-errorS>
+                </div>
+
+                <!-- Barcode -->
+                @if (enableBarcode()) {
+                <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
+                    <p-floatLabel variant="on">
+                        <div class="w-full">
+                            <input pInputText pSize="small" autocomplete="off" type="text" class="w-full"
+                                [formField]="saForm.lines[$index].barcode"
+                                (keydown.enter)="searchBarcode($index, $event)">
+                            <label>Barcode</label>
+                        </div>
+                    </p-floatLabel>
+                </div>
+                }
+
+                <!-- UOM -->
+                <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
+                    <p-floatLabel variant="on">
+                        <div class="w-full">
+                            <input pInputText pSize="small" [value]="line.uom" readonly class="w-full">
+                            <label>UOM</label>
+                        </div>
+                    </p-floatLabel>
+                </div>
+
+                <!-- Warehouse Location -->
+                @if (enableLocation()) {
+                <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
+                    <p-floatLabel variant="on">
+                        <div class="w-full">
+                            <p-select [ngModel]="line.warehouseLocationId" [ngModelOptions]="{standalone: true}"
+                                (ngModelChange)="onLocationChange($index, $event)"
+                                [options]="getWarehouseLocations(saModel().warehouseId)" optionLabel="name"
+                                optionValue="id" [filter]="true" filterBy="name" class="w-full" [showClear]="true">
+                            </p-select>
+                            <label>Location</label>
+                        </div>
+                    </p-floatLabel>
+                </div>
+                }
+
+                <!-- Available Quantity (Readonly) -->
+                <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
+                    <p-floatLabel variant="on">
+                        <div class="w-full">
+                            <input pInputText pSize="small" [value]="line.availableQuantity" readonly class="w-full">
+                            <label>Available Qty</label>
+                        </div>
+                    </p-floatLabel>
+                </div>
+
+                <!-- Counted Quantity -->
+                <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
+                    <p-floatLabel variant="on">
+                        <div class="w-full">
+                            <input pInputText pSize="small" autocomplete="off" type="number" class="w-full"
+                                [formField]="saForm.lines[$index].countedQuantity">
+                            <label class="required">Counted Qty</label>
+                        </div>
+                    </p-floatLabel>
+                    <app-field-errorS [field]="saForm.lines[$index].countedQuantity" [submit]="formSubmitted()"
+                        [backendErrors]="backendErrors()" [fieldPath]="'lines[' + $index + '].countedQuantity'">
+                    </app-field-errorS>
+                </div>
+
+                <!-- Remarks -->
+                <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
+                    <p-floatLabel variant="on">
+                        <div class="w-full">
+                            <input pInputText pSize="small" autocomplete="off" type="text" class="w-full"
+                                [formField]="saForm.lines[$index].remarks">
+                            <label>Remarks</label>
+                        </div>
+                    </p-floatLabel>
+                </div>
+
+                <!-- Action -->
+                <div class="w-full lg:w-1/12 mt-1 flex items-center justify-center">
+                    <button type="button" (click)="deleteLine($index)">
+                        <span class="material-symbols-outlined icon-color">delete</span>
+                    </button>
+                </div>
+
+            </div>
+            }
+        </div>
+
+        <!-- Errors -->
+        <div class="w-full mt-3">
+            <ul class="text-red-500 text-sm font-medium pl-4">
+                @if (errors()) {
+                @for (e of errors(); track e) {
+                <li>{{ e }}</li>
+                }
+                }
+            </ul>
+        </div>
+
+        <!-- Submitting the form -->
+        <div class="w-full flex justify-center m-3">
+            @if(isEditMode()){
+            <button class="global-button" type="submit" [disabled]="submit()">
+                {{ submit() ? 'Processing...' : 'Update Stock Adjustment' }}
+            </button>
+            }@else{
+            <button class="global-button" type="submit" [disabled]="submit()">
+                {{ submit() ? 'Processing...' : 'Save Stock Adjustment' }}
+            </button>
+            }
+        </div>
+
+    </div>
+</form>

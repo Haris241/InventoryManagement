@@ -1,9 +1,10 @@
 import { AutoDropdown } from "../Pagination.model";
+import { ProductVariantSearchDto } from "./ProductSearch.model";
 
 export interface StockAdjustmentDto {
     id?: string;
     name: string;
-    adjustmentDate: string
+    adjustmentDate: string;
     adjustmentDateUI: Date | null;
     remarks: string;
     reason: StockAdjustmentReason | null;
@@ -13,15 +14,14 @@ export interface StockAdjustmentDto {
 export interface StockAdjustmentLineDto {
     id?: string;
     productVariantId: string | null;
+    selectedProductVariant?: ProductVariantSearchDto;
     productName: string;
     barcode: string;
     uom: string;
     countedQuantity: number;
-    availableQuantity: number;
-    fromWarehouseLocationId: number | null;
-    toWarehouseLocationId: number | null;
+    availableQuantity?: number | null;
+    warehouseLocationId: number | null;
     remarks: string;
-
 }
 export interface StockAdjustmentList {
     id?: string;
@@ -46,7 +46,6 @@ export interface StockAdjustmentSearch {
     reason: StockAdjustmentReason | null;
     nextCursor: string | null;
     previousCursor: string | null;
-
 }
 export interface StockAdjustmentFormLookupsDto {
     warehouses: AutoDropdown[];
