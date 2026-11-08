@@ -122,8 +122,10 @@ export class StockAdjustmentAddUpdateComponent {
   onWarehouseChange(warehouseId: number | null): void {
     this.updateField('warehouseId', warehouseId);
 
-    if (warehouseId != null && !this.warehouseLocations()[warehouseId]) {
-      this.loadWarehouseLocations(warehouseId);
+    // If locations are not enabled, don't manage locations
+    if (!this.enableLocation()) {
+      this.refreshAvailableStockForAllLines();
+      return;
     }
 
     // Reset location for all lines
@@ -134,6 +136,15 @@ export class StockAdjustmentAddUpdateComponent {
       }));
       return { ...prev, lines };
     });
+
+    if (warehouseId == null) {
+      this.refreshAvailableStockForAllLines();
+      return;
+    }
+
+    if (!this.warehouseLocations()[warehouseId]) {
+      this.loadWarehouseLocations(warehouseId);
+    }
 
     this.refreshAvailableStockForAllLines();
   }
@@ -160,6 +171,16 @@ export class StockAdjustmentAddUpdateComponent {
       });
   }
 
+  loadSALocationsIfRequired(): void {
+    if (!this.enableLocation()) {
+      return;
+    }
+    const whId = this.saModel().warehouseId;
+    if (whId != null && !this.warehouseLocations()[whId]) {
+      this.loadWarehouseLocations(whId);
+    }
+  }
+
   getWarehouseLocations(warehouseId: number | null): AutoDropdown[] {
     if (warehouseId == null) {
       return [];
@@ -171,6 +192,14 @@ export class StockAdjustmentAddUpdateComponent {
     const search = event.query?.trim() ?? '';
     if (search.length > 0) {
       searchtermsignal.set(search);
+    }
+  }
+
+  onProductVariantModelChange(index: number, event: any) {
+    if (!event) {
+      this.onProductVariantChange(index, null);
+    } else if (event.id) {
+      this.updateLineField(index, 'productVariantId', event.id);
     }
   }
 
@@ -269,6 +298,7 @@ export class StockAdjustmentAddUpdateComponent {
           this.warehouses.set(res.warehouses ?? []);
           this.enableBarcode.set(res.enableBarcode ?? false);
           this.enableLocation.set(res.enableLocations ?? false);
+          this.loadSALocationsIfRequired();
         },
         error: () => {
           // Fallback to general WareHouseDropDown if specific lookup endpoint is absent
@@ -279,6 +309,7 @@ export class StockAdjustmentAddUpdateComponent {
                 this.warehouses.set(warehouses ?? []);
                 this.enableBarcode.set(true);
                 this.enableLocation.set(true);
+                this.loadSALocationsIfRequired();
               }
             });
         }
@@ -307,9 +338,9 @@ export class StockAdjustmentAddUpdateComponent {
 
           data.adjustmentDateUI = data.adjustmentDate ? new Date(data.adjustmentDate) : null;
           this.saModel.set(data);
+          this.loadSALocationsIfRequired();
 
           if (data.warehouseId) {
-            this.loadWarehouseLocations(data.warehouseId);
             data.lines.forEach((line, idx) => {
               if (line.productVariantId && (line.availableQuantity == null || line.availableQuantity === 0)) {
                 this.fetchAvailableStock(idx, data.warehouseId!, line.productVariantId, line.warehouseLocationId);

@@ -70,7 +70,7 @@
             <p-floatLabel variant="on">
                 <div class="lg:w-8/12 w-full">
                     <p-select [ngModel]="stModel().fromWarehouseId" [ngModelOptions]="{standalone: true}"
-                        (ngModelChange)="onFromWarehouseChange($event)" [options]="warehouses()" optionLabel="name"
+                        (ngModelChange)="onFromWarehouseChange($event)" [options]="fromWarehouseOptions()" optionLabel="name"
                         optionValue="id" class="w-full" [showClear]="!isRecievedMode() && !isEditMode()"
                         [filter]="true" filterBy="name" [disabled]="isRecievedMode() || isEditMode()" />
                     <label for="fromWarehouseId" class="required">From Warehouse</label>
@@ -86,7 +86,7 @@
             <p-floatLabel variant="on">
                 <div class="lg:w-8/12 w-full">
                     <p-select [ngModel]="stModel().toWarehouseId" [ngModelOptions]="{standalone: true}"
-                        (ngModelChange)="onToWarehouseChange($event)" [options]="warehouses()" optionLabel="name"
+                        (ngModelChange)="onToWarehouseChange($event)" [options]="toWarehouseOptions()" optionLabel="name"
                         optionValue="id" class="w-full" [showClear]="!isRecievedMode() && !isEditMode()"
                         [filter]="true" filterBy="name" [disabled]="isRecievedMode() || isEditMode()" />
                     <label for="toWarehouseId" class="required">To Warehouse</label>
@@ -129,33 +129,22 @@
             @for (line of stModel().lines; track $index) {
             <div class="flex flex-wrap items-start gap-2 pb-3 mb-3 border-b second-color">
 
-                <!-- Product -->
-                <div class="w-[calc(50%-0.25rem)] lg:w-2/8 mb-3">
-                    @if (isRecievedMode()) {
+                <!-- From Warehouse Location -->
+                @if (enableLocation()) {
+                <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
                     <p-floatLabel variant="on">
                         <div class="w-full">
-                            <input pInputText pSize="small" [value]="line.productName" readonly class="w-full">
-                            <label>Product</label>
+                            <p-select [ngModel]="line.fromWarehouseLocationId" [ngModelOptions]="{standalone: true}"
+                                (ngModelChange)="onFromLocationChange($index, $event)"
+                                [options]="getWarehouseLocations(stModel().fromWarehouseId)" optionLabel="name"
+                                optionValue="id" [filter]="true" filterBy="name" class="w-full"
+                                [showClear]="!isRecievedMode()" [disabled]="isRecievedMode()">
+                            </p-select>
+                            <label>From Location</label>
                         </div>
                     </p-floatLabel>
-                    } @else {
-                    <p-floatLabel variant="on">
-                        <div class="w-full">
-                            <p-autoComplete [ngModel]="line.selectedProductVariant"
-                                [ngModelOptions]="{standalone: true}"
-                                (ngModelChange)="onProductVariantChange($index, $event)"
-                                (completeMethod)="SearchDropDown($event, productSearch.searchterm)"
-                                [dropdown]="true" optionLabel="displayName" [suggestions]="productSearchList()"
-                                [showClear]="true" class="w-full">
-                            </p-autoComplete>
-                            <label class="required">Product</label>
-                        </div>
-                    </p-floatLabel>
-                    <app-field-errorS [field]="stForm.lines[$index].productVariantId" [submit]="formSubmitted()"
-                        [backendErrors]="backendErrors()" [fieldPath]="'lines[' + $index + '].productVariantId'">
-                    </app-field-errorS>
-                    }
                 </div>
+                }
 
                 <!-- Barcode -->
                 @if (enableBarcode()) {
@@ -180,6 +169,58 @@
                 </div>
                 }
 
+                <!-- Product -->
+                <div class="w-full lg:w-1/4 mb-3">
+                    @if (isRecievedMode()) {
+                    <p-floatLabel variant="on">
+                        <div class="w-full">
+                            <input pInputText pSize="small" [value]="line.productName" readonly class="w-full">
+                            <label>Product</label>
+                        </div>
+                    </p-floatLabel>
+                    } @else {
+                    <p-floatLabel variant="on">
+                        <div class="w-full">
+                            <p-autoComplete [(ngModel)]="line.selectedProductVariant"
+                                [ngModelOptions]="{standalone: true}"
+                                (ngModelChange)="onProductVariantModelChange($index, $event)"
+                                (onSelect)="onProductVariantChange($index, $event.value)"
+                                (completeMethod)="SearchDropDown($event, productSearch.searchterm)"
+                                optionLabel="displayName" [suggestions]="productSearchList()" [showClear]="true"
+                                appendTo="body" fluid size="small" panelStyleClass="product-search-panel">
+                                <ng-template let-product pTemplate="item">
+                                    <div class="product-search-item">
+                                        <!-- Product -->
+                                        <div class="product-search-main">
+                                            {{ product.displayName }}
+                                        </div>
+                                        <!-- Details -->
+                                        <div class="product-search-meta">
+                                            <div class="product-search-detail">
+                                                <span class="product-search-label">SKU:</span>
+                                                <span class="product-search-value">
+                                                    {{ product.sku }}
+                                                </span>
+                                            </div>
+                                            <div class="product-search-detail">
+                                                <span class="product-search-label">Unit:</span>
+                                                <span class="product-search-value">
+                                                    {{ product.uom }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ng-template>
+                            </p-autoComplete>
+                            <label class="required">Product</label>
+                        </div>
+                    </p-floatLabel>
+                    <app-field-errorS [field]="stForm.lines[$index].productVariantId" [submit]="formSubmitted()"
+                        [backendErrors]="backendErrors()" [fieldPath]="'lines[' + $index + '].productVariantId'">
+                    </app-field-errorS>
+                    }
+                </div>
+
                 <!-- UOM -->
                 <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
                     <p-floatLabel variant="on">
@@ -189,23 +230,6 @@
                         </div>
                     </p-floatLabel>
                 </div>
-
-                <!-- From Warehouse Location -->
-                @if (enableLocation()) {
-                <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
-                    <p-floatLabel variant="on">
-                        <div class="w-full">
-                            <p-select [ngModel]="line.fromWarehouseLocationId" [ngModelOptions]="{standalone: true}"
-                                (ngModelChange)="onFromLocationChange($index, $event)"
-                                [options]="getWarehouseLocations(stModel().fromWarehouseId)" optionLabel="name"
-                                optionValue="id" [filter]="true" filterBy="name" class="w-full"
-                                [showClear]="!isRecievedMode()" [disabled]="isRecievedMode()">
-                            </p-select>
-                            <label>From Location</label>
-                        </div>
-                    </p-floatLabel>
-                </div>
-                }
 
                 <!-- Available Quantity (Readonly) -->
                 <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
@@ -223,7 +247,7 @@
                         <div class="w-full">
                             <input pInputText pSize="small" autocomplete="off" type="number" class="w-full"
                                 [formField]="stForm.lines[$index].quantity">
-                            <label class="required">Qty</label>
+                            <label class="required">Transfer Qty</label>
                         </div>
                     </p-floatLabel>
                     <app-field-errorS [field]="stForm.lines[$index].quantity" [submit]="formSubmitted()"
@@ -245,6 +269,9 @@
                             <label>To Location</label>
                         </div>
                     </p-floatLabel>
+                    <app-field-errorS [field]="stForm.lines[$index].toWarehouseLocationId" [submit]="formSubmitted()"
+                        [backendErrors]="backendErrors()" [fieldPath]="'lines[' + $index + '].toWarehouseLocationId'">
+                    </app-field-errorS>
                 </div>
                 }
 

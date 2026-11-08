@@ -74,8 +74,7 @@
                     <label for="warehouseId" class="required">Warehouse</label>
                 </div>
             </p-floatLabel>
-            <app-field-errorS [field]="saForm.warehouseId" [submit]="formSubmitted()"
-                [backendErrors]="backendErrors()">
+            <app-field-errorS [field]="saForm.warehouseId" [submit]="formSubmitted()" [backendErrors]="backendErrors()">
             </app-field-errorS>
         </div>
 
@@ -109,50 +108,7 @@
             @for (line of saModel().lines; track $index) {
             <div class="flex flex-wrap items-start gap-2 pb-3 mb-3 border-b second-color">
 
-                <!-- Product -->
-                <div class="w-[calc(50%-0.25rem)] lg:w-2/8 mb-3">
-                    <p-floatLabel variant="on">
-                        <div class="w-full">
-                            <p-autoComplete [ngModel]="line.selectedProductVariant"
-                                [ngModelOptions]="{standalone: true}"
-                                (ngModelChange)="onProductVariantChange($index, $event)"
-                                (completeMethod)="SearchDropDown($event, productSearch.searchterm)"
-                                [dropdown]="true" optionLabel="displayName" [suggestions]="productSearchList()"
-                                [showClear]="true" class="w-full">
-                            </p-autoComplete>
-                            <label class="required">Product</label>
-                        </div>
-                    </p-floatLabel>
-                    <app-field-errorS [field]="saForm.lines[$index].productVariantId" [submit]="formSubmitted()"
-                        [backendErrors]="backendErrors()" [fieldPath]="'lines[' + $index + '].productVariantId'">
-                    </app-field-errorS>
-                </div>
-
-                <!-- Barcode -->
-                @if (enableBarcode()) {
-                <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
-                    <p-floatLabel variant="on">
-                        <div class="w-full">
-                            <input pInputText pSize="small" autocomplete="off" type="text" class="w-full"
-                                [formField]="saForm.lines[$index].barcode"
-                                (keydown.enter)="searchBarcode($index, $event)">
-                            <label>Barcode</label>
-                        </div>
-                    </p-floatLabel>
-                </div>
-                }
-
-                <!-- UOM -->
-                <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
-                    <p-floatLabel variant="on">
-                        <div class="w-full">
-                            <input pInputText pSize="small" [value]="line.uom" readonly class="w-full">
-                            <label>UOM</label>
-                        </div>
-                    </p-floatLabel>
-                </div>
-
-                <!-- Warehouse Location -->
+                <!-- Location -->
                 @if (enableLocation()) {
                 <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
                     <p-floatLabel variant="on">
@@ -168,11 +124,79 @@
                 </div>
                 }
 
+                <!-- Barcode -->
+                @if (enableBarcode()) {
+                <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
+                    <p-floatLabel variant="on">
+                        <div class="w-full">
+                            <input pInputText pSize="small" autocomplete="off" type="text" class="w-full"
+                                [formField]="saForm.lines[$index].barcode"
+                                (keydown.enter)="searchBarcode($index, $event)">
+                            <label>Barcode</label>
+                        </div>
+                    </p-floatLabel>
+                </div>
+                }
+
+                <!-- Product -->
+                <div class="w-full lg:w-1/4 mb-3">
+                    <p-floatLabel variant="on">
+                        <div class="w-full">
+                            <p-autoComplete [(ngModel)]="line.selectedProductVariant"
+                                [ngModelOptions]="{standalone: true}"
+                                (ngModelChange)="onProductVariantModelChange($index, $event)"
+                                (onSelect)="onProductVariantChange($index, $event.value)"
+                                (completeMethod)="SearchDropDown($event, productSearch.searchterm)"
+                                optionLabel="displayName" [suggestions]="productSearchList()" [showClear]="true"
+                                appendTo="body" fluid size="small" panelStyleClass="product-search-panel">
+                                <ng-template let-product pTemplate="item">
+                                    <div class="product-search-item">
+                                        <!-- Product -->
+                                        <div class="product-search-main">
+                                            {{ product.displayName }}
+                                        </div>
+                                        <!-- Details -->
+                                        <div class="product-search-meta">
+                                            <div class="product-search-detail">
+                                                <span class="product-search-label">SKU:</span>
+                                                <span class="product-search-value">
+                                                    {{ product.sku }}
+                                                </span>
+                                            </div>
+                                            <div class="product-search-detail">
+                                                <span class="product-search-label">Unit:</span>
+                                                <span class="product-search-value">
+                                                    {{ product.uom }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ng-template>
+                            </p-autoComplete>
+                            <label class="required">Product</label>
+                        </div>
+                    </p-floatLabel>
+                    <app-field-errorS [field]="saForm.lines[$index].productVariantId" [submit]="formSubmitted()"
+                        [backendErrors]="backendErrors()" [fieldPath]="'lines[' + $index + '].productVariantId'">
+                    </app-field-errorS>
+                </div>
+
+                <!-- UOM -->
+                <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
+                    <p-floatLabel variant="on">
+                        <div class="w-full">
+                            <input pInputText pSize="small" [value]="line.uom" readonly class="w-full">
+                            <label>UOM</label>
+                        </div>
+                    </p-floatLabel>
+                </div>
+
                 <!-- Available Quantity (Readonly) -->
                 <div class="w-[calc(50%-0.25rem)] lg:w-1/8 mb-3">
                     <p-floatLabel variant="on">
                         <div class="w-full">
-                            <input pInputText pSize="small" [value]="line.availableQuantity" readonly class="w-full">
+                            <input pInputText pSize="small" [value]="line.availableQuantity ?? 0" readonly
+                                class="w-full">
                             <label>Available Qty</label>
                         </div>
                     </p-floatLabel>

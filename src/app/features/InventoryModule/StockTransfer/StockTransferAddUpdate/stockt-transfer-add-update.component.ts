@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, signal, WritableSignal } from '@angular/core';
+import { Component, computed, DestroyRef, inject, signal, WritableSignal } from '@angular/core';
 import { applyEach, form, FormField, readonly, required, validate } from '@angular/forms/signals';
 import { FloatLabel } from "primeng/floatlabel";
 import { FormsModule } from '@angular/forms';
@@ -50,6 +50,33 @@ export class StocktTransferAddUpdateComponent {
   modes = signal(enumToOptions(StockTransferMode, true));
   stModel = signal<StockTransferDto>(this.stService.createDefaultST());
 
+  // From and To warehouse computed options based on location enablement
+  fromWarehouseOptions = computed(() => {
+    const list = this.warehouses();
+    if (this.enableLocation()) {
+      return list;
+    }
+    const toId = this.stModel().toWarehouseId;
+    return toId != null ? list.filter(w => w.id !== toId) : list;
+  });
+
+  toWarehouseOptions = computed(() => {
+    const list = this.warehouses();
+    if (this.enableLocation()) {
+      return list;
+    }
+    const fromId = this.stModel().fromWarehouseId;
+    return fromId != null ? list.filter(w => w.id !== fromId) : list;
+  });
+
+  filterFromWarehouse(event?: any): AutoDropdown[] {
+    return this.fromWarehouseOptions();
+  }
+
+  filterToWarehouse(event?: any): AutoDropdown[] {
+    return this.toWarehouseOptions();
+  }
+
   // Global Product Search
   productSearch = this.pagination.autoSearchDropdown<ProductVariantSearchDto>('DropDowns/ProductsVariants');
   productSearchList = this.productSearch.result;
@@ -85,8 +112,10 @@ export class StocktTransferAddUpdateComponent {
     validate(schema.toWarehouseId, ({ value, valueOf }) => {
       const toWh = value();
       const fromWh = valueOf(schema.fromWarehouseId);
-      if (toWh != null && fromWh != null && toWh === fromWh) {
-        return { kind: 'sameWarehouse', message: 'From Warehouse and To Warehouse cannot be the same' };
+      if (!this.enableLocation()) {
+        if (toWh != null && fromWh != null && toWh === fromWh) {
+          return { kind: 'sameWarehouse', message: 'From Warehouse and To Warehouse cannot be the same' };
+        }
       }
       return null;
     });
@@ -102,6 +131,20 @@ export class StocktTransferAddUpdateComponent {
         const qty = value();
         if (qty == null || qty <= 0) {
           return { kind: 'positiveQuantity', message: 'Quantity must be greater than 0' };
+        }
+        return null;
+      });
+
+      validate(line.toWarehouseLocationId, ({ value, valueOf }) => {
+        if (!this.enableLocation()) {
+          return null;
+        }
+        const toLoc = value();
+        const fromLoc = valueOf(line.fromWarehouseLocationId);
+        const fromWh = this.stModel().fromWarehouseId;
+        const toWh = this.stModel().toWarehouseId;
+        if (fromWh != null && toWh != null && fromWh === toWh && toLoc != null && fromLoc != null && toLoc === fromLoc) {
+          return { kind: 'sameLocation', message: 'From Location and To Location cannot be the same within the same warehouse' };
         }
         return null;
       });
@@ -167,8 +210,13 @@ export class StocktTransferAddUpdateComponent {
   onFromWarehouseChange(warehouseId: number | null): void {
     this.updateField('fromWarehouseId', warehouseId);
 
-    if (warehouseId != null && !this.warehouseLocations()[warehouseId]) {
-      this.loadWarehouseLocations(warehouseId);
+    // If locations are not enabled, From Warehouse and To Warehouse cannot be the same
+    if (!this.enableLocation()) {
+      if (warehouseId != null && this.stModel().toWarehouseId === warehouseId) {
+        this.updateField('toWarehouseId', null);
+      }
+      this.refreshAvailableStockForAllLines();
+      return;
     }
 
     // Reset fromWarehouseLocationId for all lines
@@ -180,14 +228,22 @@ export class StocktTransferAddUpdateComponent {
       return { ...prev, lines };
     });
 
+    if (warehouseId != null && !this.warehouseLocations()[warehouseId]) {
+      this.loadWarehouseLocations(warehouseId);
+    }
+
     this.refreshAvailableStockForAllLines();
   }
 
   onToWarehouseChange(warehouseId: number | null): void {
     this.updateField('toWarehouseId', warehouseId);
 
-    if (warehouseId != null && !this.warehouseLocations()[warehouseId]) {
-      this.loadWarehouseLocations(warehouseId);
+    // If locations are not enabled, From Warehouse and To Warehouse cannot be the same
+    if (!this.enableLocation()) {
+      if (warehouseId != null && this.stModel().fromWarehouseId === warehouseId) {
+        this.updateField('fromWarehouseId', null);
+      }
+      return;
     }
 
     // Reset toWarehouseLocationId for all lines
@@ -198,6 +254,10 @@ export class StocktTransferAddUpdateComponent {
       }));
       return { ...prev, lines };
     });
+
+    if (warehouseId != null && !this.warehouseLocations()[warehouseId]) {
+      this.loadWarehouseLocations(warehouseId);
+    }
   }
 
   onFromLocationChange(index: number, locationId: number | null): void {
@@ -226,6 +286,20 @@ export class StocktTransferAddUpdateComponent {
       });
   }
 
+  loadSTLocationsIfRequired(): void {
+    if (!this.enableLocation()) {
+      return;
+    }
+    const fromWhId = this.stModel().fromWarehouseId;
+    if (fromWhId != null && !this.warehouseLocations()[fromWhId]) {
+      this.loadWarehouseLocations(fromWhId);
+    }
+    const toWhId = this.stModel().toWarehouseId;
+    if (toWhId != null && !this.warehouseLocations()[toWhId]) {
+      this.loadWarehouseLocations(toWhId);
+    }
+  }
+
   getWarehouseLocations(warehouseId: number | null): AutoDropdown[] {
     if (warehouseId == null) {
       return [];
@@ -237,6 +311,14 @@ export class StocktTransferAddUpdateComponent {
     const search = event.query?.trim() ?? '';
     if (search.length > 0) {
       searchtermsignal.set(search);
+    }
+  }
+
+  onProductVariantModelChange(index: number, event: any) {
+    if (!event) {
+      this.onProductVariantChange(index, null);
+    } else if (event.id) {
+      this.updateLineField(index, 'productVariantId', event.id);
     }
   }
 
@@ -334,6 +416,7 @@ export class StocktTransferAddUpdateComponent {
           this.warehouses.set(res.warehouses ?? []);
           this.enableBarcode.set(res.enableBarcode ?? false);
           this.enableLocation.set(res.enableLocations ?? false);
+          this.loadSTLocationsIfRequired();
         },
         error: () => {
           // Fallback to general WareHouseDropDown if specific lookup endpoint is absent
@@ -344,6 +427,7 @@ export class StocktTransferAddUpdateComponent {
                 this.warehouses.set(warehouses ?? []);
                 this.enableBarcode.set(true);
                 this.enableLocation.set(true);
+                this.loadSTLocationsIfRequired();
               }
             });
         }
@@ -372,13 +456,7 @@ export class StocktTransferAddUpdateComponent {
 
           data.transferDateUI = data.transferDate ? new Date(data.transferDate) : null;
           this.stModel.set(data);
-
-          if (data.fromWarehouseId) {
-            this.loadWarehouseLocations(data.fromWarehouseId);
-          }
-          if (data.toWarehouseId) {
-            this.loadWarehouseLocations(data.toWarehouseId);
-          }
+          this.loadSTLocationsIfRequired();
 
           // If available quantity is not returned by GET, query available stock
           if (data.fromWarehouseId) {
