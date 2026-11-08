@@ -98,6 +98,28 @@ export class StockAdjustmentAddUpdateComponent {
     this.saModel.update(prev => this.saService.updateLineField(prev, index, field, value));
   }
 
+  validateLines(): boolean {
+    const errs = this.saService.validateStockAdjustmentLines(
+      this.saModel().lines,
+      this.saModel().reason
+    );
+    this.errors.set(errs);
+    return errs.length === 0;
+  }
+
+  onCountedQuantityChange(): void {
+    if (this.errors().length > 0) {
+      this.validateLines();
+    }
+  }
+
+  onReasonChange(reason: StockAdjustmentReason | null): void {
+    this.updateField('reason', reason);
+    if (this.errors().length > 0) {
+      this.validateLines();
+    }
+  }
+
   addLine(): void {
     const index = this.saModel().lines.length - 1;
     const line = this.saForm.lines[index];
@@ -109,6 +131,10 @@ export class StockAdjustmentAddUpdateComponent {
       return;
     }
 
+    if (!this.validateLines()) {
+      return;
+    }
+
     this.saModel.update(prev => ({
       ...prev,
       lines: [...prev.lines, this.saService.createDefaultSAline(prev.lines)]
@@ -117,6 +143,9 @@ export class StockAdjustmentAddUpdateComponent {
 
   deleteLine(lineIndex: number): void {
     this.saModel.update(prev => this.saService.deleteLine(prev, lineIndex));
+    if (this.errors().length > 0) {
+      this.validateLines();
+    }
   }
 
   onWarehouseChange(warehouseId: number | null): void {
@@ -265,9 +294,15 @@ export class StockAdjustmentAddUpdateComponent {
       .subscribe({
         next: (res) => {
           this.updateLineField(index, 'availableQuantity', res.availableQuantity ?? 0);
+          if (this.errors().length > 0) {
+            this.validateLines();
+          }
         },
         error: () => {
           this.updateLineField(index, 'availableQuantity', 0);
+          if (this.errors().length > 0) {
+            this.validateLines();
+          }
         }
       });
   }
@@ -372,6 +407,12 @@ export class StockAdjustmentAddUpdateComponent {
 
     this.errors.set([]);
     this.backendErrors.set({});
+
+    if (!this.validateLines()) {
+      this.submit.set(false);
+      return;
+    }
+
     const formvalue = this.saForm().value() as StockAdjustmentDto;
     if (formvalue.lines.length === 0) {
       this.errors.set(['Please add at least one line']);

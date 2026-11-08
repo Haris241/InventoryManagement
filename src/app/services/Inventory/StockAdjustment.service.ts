@@ -78,6 +78,67 @@ export class StockAdjustmentService {
         };
     }
 
+    // Damage, expiry and theft only reduce stock
+    isDecreaseOnly(reason: StockAdjustmentReason): boolean {
+        return reason === StockAdjustmentReason.Damaged ||
+               reason === StockAdjustmentReason.Expired ||
+               reason === StockAdjustmentReason.LostOrTheft;
+    }
+
+    // Found stock and opening stock only add stock
+    isIncreaseOnly(reason: StockAdjustmentReason): boolean {
+        return reason === StockAdjustmentReason.Found ||
+               reason === StockAdjustmentReason.OpeningBalance;
+    }
+
+    directionError(reason: StockAdjustmentReason, difference: number): string | null {
+        const reasonName = StockAdjustmentReason[reason];
+
+        if (this.isDecreaseOnly(reason) && difference > 0) {
+            return `the counted quantity is higher than the system quantity, the reason '${reasonName}' can only reduce stock.`;
+        }
+
+        if (this.isIncreaseOnly(reason) && difference < 0) {
+            const hint = reason === StockAdjustmentReason.OpeningBalance
+                ? " To reduce stock use the Physical Count reason."
+                : "";
+            return `the counted quantity is lower than the system quantity, the reason '${reasonName}' can only increase stock.${hint}`;
+        }
+
+        return null;
+    }
+
+    validateStockAdjustmentLines(lines: StockAdjustmentLineDto[], reason: StockAdjustmentReason | null): string[] {
+        if (reason == null) {
+            return [];
+        }
+
+        const errors: string[] = [];
+        let lineNumber = 0;
+
+        for (const line of lines) {
+            lineNumber++;
+            if (!line.productVariantId) {
+                continue;
+            }
+
+            const onHand = (line.availableQuantity != null && !isNaN(Number(line.availableQuantity)))
+                ? Number(line.availableQuantity)
+                : 0;
+            const counted = (line.countedQuantity != null && !isNaN(Number(line.countedQuantity)))
+                ? Number(line.countedQuantity)
+                : 0;
+            const difference = counted - onHand;
+
+            const dirError = this.directionError(reason, difference);
+            if (dirError) {
+                errors.push(`Line ${lineNumber}: ${dirError}`);
+            }
+        }
+
+        return errors;
+    }
+
     deleteLine(sa: StockAdjustmentDto, lineIndex: number): StockAdjustmentDto {
         if (sa.lines.length === 1) {
             return { ...sa, lines: [{ ...this.createSAline() }] };

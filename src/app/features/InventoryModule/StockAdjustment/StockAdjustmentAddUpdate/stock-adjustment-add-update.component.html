@@ -54,7 +54,7 @@
             <p-floatLabel variant="on">
                 <div class="lg:w-8/12 w-full">
                     <p-select [(ngModel)]="saModel().reason" [ngModelOptions]="{standalone: true}"
-                        (ngModelChange)="updateField('reason', $event)" [options]="reasons()" optionLabel="name"
+                        (ngModelChange)="onReasonChange($event)" [options]="reasons()" optionLabel="name"
                         optionValue="value" class="w-full" />
                     <label for="reason" class="required">Reason</label>
                 </div>
@@ -207,7 +207,8 @@
                     <p-floatLabel variant="on">
                         <div class="w-full">
                             <input pInputText pSize="small" autocomplete="off" type="number" class="w-full"
-                                [formField]="saForm.lines[$index].countedQuantity">
+                                [formField]="saForm.lines[$index].countedQuantity"
+                                (input)="onCountedQuantityChange()">
                             <label class="required">Counted Qty</label>
                         </div>
                     </p-floatLabel>
@@ -241,7 +242,7 @@
         <!-- Errors -->
         <div class="w-full mt-3">
             <ul class="text-red-500 text-sm font-medium pl-4">
-                @if (errors()) {
+                @if (errors() && errors().length > 0) {
                 @for (e of errors(); track e) {
                 <li>{{ e }}</li>
                 }
