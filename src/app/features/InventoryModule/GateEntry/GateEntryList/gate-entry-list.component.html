@@ -150,6 +150,16 @@
                             } @else {
                             <span class="text-gray-400 ps-4">-</span>
                             }
+                            <button (click)="getGateEntryReport(ge.id,false)">
+                                <span class="material-symbols-outlined icon-color">
+                                    description
+                                </span>
+                            </button>
+                            <button (click)="getGateEntryReport(ge.id,true)">
+                                <span class="material-symbols-outlined icon-color">
+                                    description
+                                </span>
+                            </button>
                         </div>
                     </td>
                 </tr>

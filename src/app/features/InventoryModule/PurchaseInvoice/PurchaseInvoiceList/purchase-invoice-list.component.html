@@ -138,6 +138,16 @@
                             } @else {
                             <span class="text-gray-400 ps-4">-</span>
                             }
+                            <button (click)="getPurchaseInvoiceReport(pi.id,false)">
+                                <span class="material-symbols-outlined icon-color">
+                                    description
+                                </span>
+                            </button>
+                            <button (click)="getPurchaseInvoiceReport(pi.id,true)">
+                                <span class="material-symbols-outlined icon-color">
+                                    description
+                                </span>
+                            </button>
                         </div>
                     </td>
                 </tr>
