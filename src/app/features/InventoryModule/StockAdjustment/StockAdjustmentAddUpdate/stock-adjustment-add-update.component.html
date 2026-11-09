@@ -70,7 +70,7 @@
                     <p-select [ngModel]="saModel().warehouseId" [ngModelOptions]="{standalone: true}"
                         (ngModelChange)="onWarehouseChange($event)" [options]="warehouses()" optionLabel="name"
                         optionValue="id" class="w-full" [showClear]="!isEditMode()" [filter]="true" filterBy="name"
-                        [disabled]="isEditMode()" />
+                        [readonly]="isEditMode()" />
                     <label for="warehouseId" class="required">Warehouse</label>
                 </div>
             </p-floatLabel>
@@ -207,8 +207,7 @@
                     <p-floatLabel variant="on">
                         <div class="w-full">
                             <input pInputText pSize="small" autocomplete="off" type="number" class="w-full"
-                                [formField]="saForm.lines[$index].countedQuantity"
-                                (input)="onCountedQuantityChange()">
+                                [formField]="saForm.lines[$index].countedQuantity" (input)="onCountedQuantityChange()">
                             <label class="required">Counted Qty</label>
                         </div>
                     </p-floatLabel>
