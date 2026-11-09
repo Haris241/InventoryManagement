@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { INVENTORY_LAYOUT_CONFIG } from '../shared/GlobalLayout/ConfigFiles/inventory-layout.config';
+import { inventoryReportsRoutes } from './inventory-reports.routes';
 
 export const inventoryRoutes: Routes = [
     {
@@ -220,7 +221,7 @@ export const inventoryRoutes: Routes = [
                 path: 'editstockadjustment/:id',
                 loadComponent: () => import('../features/InventoryModule/StockAdjustment/StockAdjustmentAddUpdate/stock-adjustment-add-update.component').then(m => m.StockAdjustmentAddUpdateComponent)
             },
-
+            ...inventoryReportsRoutes,
             {
                 path: '',
                 redirectTo: 'dashboard',

@@ -10,6 +10,12 @@ export const INVENTORY_LAYOUT_CONFIG: ModuleLayoutConfig = {
             label: 'DashBoard',
             directRoute: '/Inventory/dashboard'
         },
+        {
+            key: 'reports',
+            icon: 'assignment',
+            label: 'Reports',
+            directRoute: '/Inventory/inventoryReports'
+        },
 
         {
             key: 'Product',
