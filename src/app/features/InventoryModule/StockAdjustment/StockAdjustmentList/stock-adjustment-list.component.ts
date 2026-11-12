@@ -10,7 +10,7 @@ import { FormsModule } from '@angular/forms';
 import { FloatLabel } from 'primeng/floatlabel';
 import { SelectModule } from 'primeng/select';
 import { CommonModule } from '@angular/common';
-import { enumToOptions, toDateOnlyString } from '../../../../shared/Utility';
+import { enumToOptions, openLoadingTab, showBlobInTab, toDateOnlyString } from '../../../../shared/Utility';
 import { DatePickerModule } from 'primeng/datepicker';
 import { ConfirmationService } from 'primeng/api';
 import { Component, inject, signal, WritableSignal } from '@angular/core';
@@ -191,5 +191,18 @@ export class StockAdjustmentListComponent {
       default:
         return '';
     }
+  }
+
+  getStockAdjustmentReport(id: string) {
+    const newTab = openLoadingTab();
+
+    this.dataService.getReport('StockAdjustment/report', id)
+      .subscribe({
+        next: (blob) => showBlobInTab(newTab, blob, `StockAdjustment-Report-${id}.pdf`),
+        error: (err) => {
+          if (newTab) newTab.close();
+          this.base.handleError(err, err.error?.message);
+        }
+      });
   }
 }

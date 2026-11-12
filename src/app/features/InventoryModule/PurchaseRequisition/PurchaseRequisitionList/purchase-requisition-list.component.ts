@@ -12,7 +12,7 @@ import { FormsModule } from '@angular/forms';
 import { FloatLabel } from 'primeng/floatlabel';
 import { SelectModule } from 'primeng/select';
 import { CommonModule } from '@angular/common';
-import { enumToOptions, toDateOnlyString } from '../../../../shared/Utility';
+import { enumToOptions, openLoadingTab, showBlobInTab, toDateOnlyString } from '../../../../shared/Utility';
 import { DatePickerModule } from 'primeng/datepicker';
 import { ConfirmationService } from 'primeng/api';
 
@@ -185,5 +185,18 @@ export class PurchaseRequisitionListComponent {
       default:
         return '';
     }
+  }
+
+  getPurchaseRequisitionReport(id: string, landscape: boolean) {
+    const newTab = openLoadingTab();
+
+    this.dataService.getReport('PurchaseRequisition/report', `${id}?landscape=${landscape}`)
+      .subscribe({
+        next: (blob) => showBlobInTab(newTab, blob, `PurchaseRequisition-Report-${id}.pdf`),
+        error: (err) => {
+          if (newTab) newTab.close();
+          this.base.handleError(err, err.error?.message);
+        }
+      });
   }
 }
