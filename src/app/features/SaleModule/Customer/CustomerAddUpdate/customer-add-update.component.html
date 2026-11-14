@@ -1,1 +1,239 @@
-<p>customer-add-update works!</p>
+<form (ngSubmit)="createCustomer($event)">
+    <div class="flex flex-wrap global-div p-5 gap-2 lg:gap-0">
+        <div class="w-full mb-4">
+            @if(isEditMode()){
+            <h3 class="text-2xl font-semibold text-center mb-3">
+                <span class="gradient-heading">Edit Customer</span>
+            </h3>
+            }@else{
+            <h3 class="text-2xl font-semibold text-center mb-3">
+                <span class="gradient-heading">Add Customer</span>
+            </h3>
+            }
+            <hr class="second-color">
+        </div>
+
+        <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <input pInputText pSize="small" id="name" autocomplete="off" type="text" class="w-full"
+                        [formField]="customerForm.name">
+                    <label for="name" class="required">Name</label>
+                </div>
+            </p-floatLabel>
+            <app-field-errorS [field]="customerForm.name" [submit]="formSubmitted()" [backendErrors]="backendErrors()">
+            </app-field-errorS>
+        </div>
+        <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <input pInputText pSize="small" id="code" autocomplete="off" type="text" class="w-full"
+                        [formField]="customerForm.code">
+                    <label for="code" class="required">Code</label>
+                </div>
+            </p-floatLabel>
+            <app-field-errorS [field]="customerForm.code" [submit]="formSubmitted()" [backendErrors]="backendErrors()">
+            </app-field-errorS>
+        </div>
+        <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <p-select [(ngModel)]="customerModel().customerType" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('customerType',$event)" [options]="customerTypes()"
+                        optionLabel="name" optionValue="value" class="w-full" />
+                    <label for="customerType" class="required">Customer Type</label>
+                </div>
+            </p-floatLabel>
+            <app-field-errorS [field]="customerForm.customerType" [submit]="formSubmitted()"
+                [backendErrors]="backendErrors()">
+            </app-field-errorS>
+        </div>
+        <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <input pInputText pSize="small" id="contactPerson" autocomplete="off" type="text" class="w-full"
+                        [formField]="customerForm.contactPerson">
+                    <label for="contactPerson">Contact Person</label>
+                </div>
+            </p-floatLabel>
+        </div>
+        <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <input pInputText pSize="small" id="email" autocomplete="off" type="text" class="w-full"
+                        [formField]="customerForm.email">
+                    <label for="email">Email</label>
+                </div>
+            </p-floatLabel>
+            <app-field-errorS [field]="customerForm.email" [submit]="formSubmitted()" [backendErrors]="backendErrors()">
+            </app-field-errorS>
+        </div>
+        <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <input pInputText pSize="small" id="phone" autocomplete="off" type="text" class="w-full"
+                        [formField]="customerForm.phone">
+                    <label for="phone">Phone</label>
+                </div>
+            </p-floatLabel>
+        </div>
+        <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <input pInputText pSize="small" id="website" autocomplete="off" type="text" class="w-full"
+                        [formField]="customerForm.website">
+                    <label for="website">Website</label>
+                </div>
+            </p-floatLabel>
+        </div>
+        <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <input pInputText pSize="small" id="billingAddress" autocomplete="off" type="text" class="w-full"
+                        [formField]="customerForm.billingAddress">
+                    <label for="billingAddress">Billing Address</label>
+                </div>
+            </p-floatLabel>
+        </div>
+        <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <input pInputText pSize="small" id="billingCity" autocomplete="off" type="text" class="w-full"
+                        [formField]="customerForm.billingCity">
+                    <label for="billingCity">Billing City</label>
+                </div>
+            </p-floatLabel>
+        </div>
+        <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <input pInputText pSize="small" id="billingCountry" autocomplete="off" type="text" class="w-full"
+                        [formField]="customerForm.billingCountry">
+                    <label for="billingCountry">Billing Country</label>
+                </div>
+            </p-floatLabel>
+        </div>
+        <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <input pInputText pSize="small" id="shippingAddress" autocomplete="off" type="text" class="w-full"
+                        [formField]="customerForm.shippingAddress">
+                    <label for="shippingAddress">Shipping Address</label>
+                </div>
+            </p-floatLabel>
+        </div>
+        <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <input pInputText pSize="small" id="shippingCity" autocomplete="off" type="text" class="w-full"
+                        [formField]="customerForm.shippingCity">
+                    <label for="shippingCity">Shipping City</label>
+                </div>
+            </p-floatLabel>
+        </div>
+        <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <input pInputText pSize="small" id="shippingCountry" autocomplete="off" type="text" class="w-full"
+                        [formField]="customerForm.shippingCountry">
+                    <label for="shippingCountry">Shipping Country</label>
+                </div>
+            </p-floatLabel>
+        </div>
+        <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <input pInputText pSize="small" id="ntn" autocomplete="off" type="text" class="w-full"
+                        [formField]="customerForm.ntn">
+                    <label for="ntn">NTN</label>
+                </div>
+            </p-floatLabel>
+        </div>
+        <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <input pInputText pSize="small" id="strn" autocomplete="off" type="text" class="w-full"
+                        [formField]="customerForm.strn">
+                    <label for="strn">STRN</label>
+                </div>
+            </p-floatLabel>
+        </div>
+        <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <input pInputText pSize="small" id="creditLimit" autocomplete="off" type="number" class="w-full"
+                        [formField]="customerForm.creditLimit">
+                    <label for="creditLimit" class="required">Credit Limit</label>
+                </div>
+            </p-floatLabel>
+            <app-field-errorS [field]="customerForm.creditLimit" [submit]="formSubmitted()"
+                [backendErrors]="backendErrors()">
+            </app-field-errorS>
+        </div>
+        <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <input pInputText pSize="small" id="creditDays" autocomplete="off" type="number" class="w-full"
+                        [formField]="customerForm.creditDays">
+                    <label for="creditDays" class="required">Credit Days</label>
+                </div>
+            </p-floatLabel>
+            <app-field-errorS [field]="customerForm.creditDays" [submit]="formSubmitted()"
+                [backendErrors]="backendErrors()">
+            </app-field-errorS>
+        </div>
+
+        <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <p-select [(ngModel)]="customerModel().chartOfAccountId" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('chartOfAccountId',$event)" [options]="coaCustomerList()"
+                        optionLabel="name" optionValue="id" class="w-full" inputId="chartOfAccountId" [showClear]="true"
+                        [filter]="true" filterBy="name" />
+                    <label for="chartOfAccountId" class="required">Chart Of Account</label>
+                </div>
+            </p-floatLabel>
+            <app-field-errorS [field]="customerForm.chartOfAccountId" [submit]="formSubmitted()"
+                [backendErrors]="backendErrors()">
+            </app-field-errorS>
+        </div>
+        <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3 flex items-center gap-2">
+            <input id="isTaxExempt" type="checkbox" [formField]="customerForm.isTaxExempt" class="w-auto" />
+            <label for="isTaxExempt" class="mb-0 !text-lg font-medium gradient-heading">Tax Exempt</label>
+        </div>
+        <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3 flex items-center gap-2">
+            <input id="isCreditAllowed" type="checkbox" [formField]="customerForm.isCreditAllowed" class="w-auto" />
+            <label for="isCreditAllowed" class="mb-0 !text-lg font-medium gradient-heading">Credit Allowed</label>
+        </div>
+        @if(isEditMode()){
+        <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3 flex items-center gap-2">
+            <input id="isActive" type="checkbox" [formField]="customerForm.isActive" class="w-auto" />
+            <label for="isActive" class="mb-0 !text-lg font-medium gradient-heading">Active</label>
+        </div>
+        }
+
+
+        <div class="w-full flex justify-center m-3">
+            @if(isEditMode()){
+            <button class="global-button" type="submit" [disabled]="submit()">
+                {{ submit() ? 'Processing...' : 'Update Customer' }}
+            </button>
+            }@else{
+            <button class="global-button" type="submit" [disabled]="submit()">
+                {{ submit() ? 'Processing...' : 'Create Customer' }}
+            </button>
+            }
+        </div>
+        <!-- Tell User to first Add Customer Account Usage Dto to Proceed -->
+        @if(!isEditMode() && coaCustomerList().length === 0){
+        <div class="w-full text-center">
+            <p class="p-6 text-center text-gray-500">Please Add Customer Chart of Account with Usage Type
+                <strong>'Customer'</strong>
+                in <strong>'Chart Of Accounts'</strong> Tab to
+                Proceed
+            </p>
+        </div>
+        }
+    </div>
+
+</form>

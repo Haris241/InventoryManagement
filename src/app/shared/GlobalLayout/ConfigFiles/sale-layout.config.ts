@@ -7,10 +7,10 @@ export const SALES_LAYOUT_CONFIG: ModuleLayoutConfig = {
         { key: 'reports', icon: 'assignment', label: 'Reports', directRoute: '/Sales/salesReports' },
 
         {
-            key: 'Customer', icon: 'description', label: 'Customer',
+            key: 'Customer', icon: 'person', label: 'Customer',
             children: [
-                { label: 'Add Customer', route: '/Sales/voucherManager' },
-                { label: 'Customer List', route: '/Sales/voucherList' },
+                { label: 'Add Customer', route: '/Sales/customerAdd' },
+                { label: 'Customer List', route: '/Sales/CustomerList' },
             ]
         }
     ]
