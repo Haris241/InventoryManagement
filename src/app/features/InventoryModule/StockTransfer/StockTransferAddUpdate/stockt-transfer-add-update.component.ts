@@ -18,6 +18,7 @@ import { ProductSearchService } from '../../../../services/Inventory/ProductSear
 import { StockTransferService } from '../../../../services/Inventory/StockTransfer.service';
 import { StockTransferDto, StockTransferLineDto, StockTransferMode } from '../../../../Models/Inventory/StockTransfer.model';
 import { DataLayerService } from '../../../../services/data-layer.service';
+import { validateDecimalPlaces } from '../../../../shared/validators/decimal.validator';
 
 @Component({
   selector: 'app-stockt-transfer-add-update',
@@ -132,7 +133,7 @@ export class StocktTransferAddUpdateComponent {
         if (qty == null || qty <= 0) {
           return { kind: 'positiveQuantity', message: 'Quantity must be greater than 0' };
         }
-        return null;
+        return validateDecimalPlaces(qty);
       });
 
       validate(line.toWarehouseLocationId, ({ value, valueOf }) => {
@@ -161,7 +162,7 @@ export class StocktTransferAddUpdateComponent {
         if (recQty > qty) {
           return { kind: 'receivedExceeded', message: `Received quantity cannot exceed transfer quantity (${qty})` };
         }
-        return null;
+        return validateDecimalPlaces(recQty);
       });
 
       // Lines readonly in received mode

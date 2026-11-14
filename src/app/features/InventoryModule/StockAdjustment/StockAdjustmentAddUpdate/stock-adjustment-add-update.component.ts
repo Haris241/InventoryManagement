@@ -18,6 +18,7 @@ import { ProductSearchService } from '../../../../services/Inventory/ProductSear
 import { StockAdjustmentService } from '../../../../services/Inventory/StockAdjustment.service';
 import { StockAdjustmentDto, StockAdjustmentLineDto, StockAdjustmentReason } from '../../../../Models/Inventory/StockAdjustment.model';
 import { DataLayerService } from '../../../../services/data-layer.service';
+import { validateDecimalPlaces } from '../../../../shared/validators/decimal.validator';
 
 @Component({
   selector: 'app-stock-adjustment-add-update',
@@ -81,7 +82,7 @@ export class StockAdjustmentAddUpdateComponent {
         if (qty == null || qty < 0) {
           return { kind: 'nonNegativeQuantity', message: 'Counted quantity must be greater than or equal to 0' };
         }
-        return null;
+        return validateDecimalPlaces(qty);
       });
     });
   });

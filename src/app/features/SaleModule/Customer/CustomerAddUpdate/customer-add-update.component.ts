@@ -13,6 +13,7 @@ import { PaginationService } from '../../../../services/pagination.service';
 import { AutoDropdown } from '../../../../Models/Pagination.model';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { CustomerDto, CustomerType } from '../../../../Models/Sale/Customer.model';
+import { validateDecimalPlaces } from '../../../../shared/validators/decimal.validator';
 import { enumToOptions } from '../../../../shared/Utility';
 
 @Component({
@@ -118,7 +119,7 @@ export class CustomerAddUpdateComponent {
       if (valueOf(schema.isCreditAllowed) && limit <= 0) {
         return { kind: 'positiveCreditLimit', message: 'Credit Limit must be greater than 0 when credit is allowed' };
       }
-      return null;
+      return validateDecimalPlaces(limit);
     });
 
     validate(schema.creditDays, ({ value }) => {
