@@ -99,13 +99,45 @@ export class StockAdjustmentAddUpdateComponent {
     this.saModel.update(prev => this.saService.updateLineField(prev, index, field, value));
   }
 
+  getDuplicateLineErrors(): string[] {
+    const lines = this.saModel().lines;
+    const seen = new Set<string>();
+    const dupErrors: string[] = [];
+
+    for (const line of lines) {
+      if (!line.productVariantId) {
+        continue;
+      }
+
+      const key = this.enableLocation()
+        ? `${line.productVariantId}_${line.warehouseLocationId ?? ''}`
+        : `${line.productVariantId}`;
+
+      if (seen.has(key)) {
+        const prodName = line.productName || 'selected product';
+        const msg = this.enableLocation()
+          ? `The product "${prodName}" with the same location is already added.`
+          : `The product "${prodName}" is already added.`;
+        if (!dupErrors.includes(msg)) {
+          dupErrors.push(msg);
+        }
+      } else {
+        seen.add(key);
+      }
+    }
+
+    return dupErrors;
+  }
+
   validateLines(): boolean {
-    const errs = this.saService.validateStockAdjustmentLines(
+    const dirErrs = this.saService.validateStockAdjustmentLines(
       this.saModel().lines,
       this.saModel().reason
     );
-    this.errors.set(errs);
-    return errs.length === 0;
+    const dupErrs = this.getDuplicateLineErrors();
+    const allErrors = [...dirErrs, ...dupErrs];
+    this.errors.set(allErrors);
+    return allErrors.length === 0;
   }
 
   onCountedQuantityChange(): void {
@@ -181,6 +213,9 @@ export class StockAdjustmentAddUpdateComponent {
 
   onLocationChange(index: number, locationId: number | null): void {
     this.updateLineField(index, 'warehouseLocationId', locationId);
+    if (this.errors().length > 0) {
+      this.validateLines();
+    }
     const line = this.saModel().lines[index];
     const whId = this.saModel().warehouseId;
     if (line.productVariantId && whId) {
@@ -241,6 +276,9 @@ export class StockAdjustmentAddUpdateComponent {
       this.updateLineField(index, 'uom', '');
       this.updateLineField(index, 'availableQuantity', 0);
       this.updateLineField(index, 'selectedProductVariant', undefined);
+      if (this.errors().length > 0) {
+        this.validateLines();
+      }
       return;
     }
 
@@ -265,6 +303,9 @@ export class StockAdjustmentAddUpdateComponent {
     const locId = this.saModel().lines[index].warehouseLocationId;
     if (whId && product.id) {
       this.fetchAvailableStock(index, whId, product.id, locId);
+    }
+    if (this.errors().length > 0) {
+      this.validateLines();
     }
   }
 

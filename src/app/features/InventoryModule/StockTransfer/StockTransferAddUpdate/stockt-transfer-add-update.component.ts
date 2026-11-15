@@ -189,6 +189,42 @@ export class StocktTransferAddUpdateComponent {
     this.stModel.update(prev => this.stService.updateLineField(prev, index, field, value));
   }
 
+  getDuplicateLineErrors(): string[] {
+    const lines = this.stModel().lines;
+    const seen = new Set<string>();
+    const dupErrors: string[] = [];
+
+    for (const line of lines) {
+      if (!line.productVariantId) {
+        continue;
+      }
+
+      const key = this.enableLocation()
+        ? `${line.productVariantId}_${line.fromWarehouseLocationId ?? ''}_${line.toWarehouseLocationId ?? ''}`
+        : `${line.productVariantId}`;
+
+      if (seen.has(key)) {
+        const prodName = line.productName || 'selected product';
+        const msg = this.enableLocation()
+          ? `The product "${prodName}" with the same location is already added.`
+          : `The product "${prodName}" is already added.`;
+        if (!dupErrors.includes(msg)) {
+          dupErrors.push(msg);
+        }
+      } else {
+        seen.add(key);
+      }
+    }
+
+    return dupErrors;
+  }
+
+  validateLines(): boolean {
+    const dupErrs = this.getDuplicateLineErrors();
+    this.errors.set(dupErrs);
+    return dupErrs.length === 0;
+  }
+
   addLine(): void {
     if (this.isRecievedMode()) return;
 
@@ -202,6 +238,10 @@ export class StocktTransferAddUpdateComponent {
       return;
     }
 
+    if (!this.validateLines()) {
+      return;
+    }
+
     this.stModel.update(prev => ({
       ...prev,
       lines: [...prev.lines, this.stService.createDefaultSTline(prev.lines)]
@@ -211,6 +251,9 @@ export class StocktTransferAddUpdateComponent {
   deleteLine(lineIndex: number): void {
     if (this.isRecievedMode()) return;
     this.stModel.update(prev => this.stService.deleteLine(prev, lineIndex));
+    if (this.errors().length > 0) {
+      this.validateLines();
+    }
   }
 
   onFromWarehouseChange(warehouseId: number | null): void {
@@ -268,6 +311,9 @@ export class StocktTransferAddUpdateComponent {
 
   onFromLocationChange(index: number, locationId: number | null): void {
     this.updateLineField(index, 'fromWarehouseLocationId', locationId);
+    if (this.errors().length > 0) {
+      this.validateLines();
+    }
     const line = this.stModel().lines[index];
     const fromWhId = this.stModel().fromWarehouseId;
     if (line.productVariantId && fromWhId) {
@@ -277,6 +323,9 @@ export class StocktTransferAddUpdateComponent {
 
   onToLocationChange(index: number, locationId: number | null): void {
     this.updateLineField(index, 'toWarehouseLocationId', locationId);
+    if (this.errors().length > 0) {
+      this.validateLines();
+    }
   }
 
   loadWarehouseLocations(warehouseId: number): void {
@@ -336,6 +385,9 @@ export class StocktTransferAddUpdateComponent {
       this.updateLineField(index, 'uom', '');
       this.updateLineField(index, 'availableQuantity', 0);
       this.updateLineField(index, 'selectedProductVariant', undefined);
+      if (this.errors().length > 0) {
+        this.validateLines();
+      }
       return;
     }
 
@@ -360,6 +412,9 @@ export class StocktTransferAddUpdateComponent {
     const fromLocId = this.stModel().lines[index].fromWarehouseLocationId;
     if (fromWhId && product.id) {
       this.fetchAvailableStock(index, fromWhId, product.id, fromLocId);
+    }
+    if (this.errors().length > 0) {
+      this.validateLines();
     }
   }
 
@@ -497,6 +552,12 @@ export class StocktTransferAddUpdateComponent {
 
     this.errors.set([]);
     this.backendErrors.set({});
+
+    if (!this.validateLines()) {
+      this.submit.set(false);
+      return;
+    }
+
     const formvalue = this.stForm().value() as StockTransferDto;
     if (formvalue.lines.length === 0) {
       this.errors.set(['Please add at least one line']);
