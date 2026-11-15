@@ -57,7 +57,7 @@
                 <div class="lg:w-8/12 w-full">
                     <p-select [(ngModel)]="stModel().mode" [ngModelOptions]="{standalone: true}"
                         (ngModelChange)="updateField('mode', $event)" [options]="modes()" optionLabel="name"
-                        optionValue="value" class="w-full" [disabled]="isRecievedMode()" />
+                        optionValue="value" class="w-full" [readonly]="isRecievedMode()" />
                     <label for="mode" class="required">Mode</label>
                 </div>
             </p-floatLabel>
@@ -70,9 +70,10 @@
             <p-floatLabel variant="on">
                 <div class="lg:w-8/12 w-full">
                     <p-select [ngModel]="stModel().fromWarehouseId" [ngModelOptions]="{standalone: true}"
-                        (ngModelChange)="onFromWarehouseChange($event)" [options]="fromWarehouseOptions()" optionLabel="name"
-                        optionValue="id" class="w-full" [showClear]="!isRecievedMode() && !isEditMode()"
-                        [filter]="true" filterBy="name" [disabled]="isRecievedMode() || isEditMode()" />
+                        (ngModelChange)="onFromWarehouseChange($event)" [options]="fromWarehouseOptions()"
+                        optionLabel="name" optionValue="id" class="w-full"
+                        [showClear]="!isRecievedMode() && !isEditMode()" [filter]="true" filterBy="name"
+                        [readonly]="isRecievedMode() || isEditMode()" />
                     <label for="fromWarehouseId" class="required">From Warehouse</label>
                 </div>
             </p-floatLabel>
@@ -86,9 +87,10 @@
             <p-floatLabel variant="on">
                 <div class="lg:w-8/12 w-full">
                     <p-select [ngModel]="stModel().toWarehouseId" [ngModelOptions]="{standalone: true}"
-                        (ngModelChange)="onToWarehouseChange($event)" [options]="toWarehouseOptions()" optionLabel="name"
-                        optionValue="id" class="w-full" [showClear]="!isRecievedMode() && !isEditMode()"
-                        [filter]="true" filterBy="name" [disabled]="isRecievedMode() || isEditMode()" />
+                        (ngModelChange)="onToWarehouseChange($event)" [options]="toWarehouseOptions()"
+                        optionLabel="name" optionValue="id" class="w-full"
+                        [showClear]="!isRecievedMode() && !isEditMode()" [filter]="true" filterBy="name"
+                        [readonly]="isRecievedMode() || isEditMode()" />
                     <label for="toWarehouseId" class="required">To Warehouse</label>
                 </div>
             </p-floatLabel>
@@ -263,8 +265,7 @@
                             <p-select [ngModel]="line.toWarehouseLocationId" [ngModelOptions]="{standalone: true}"
                                 (ngModelChange)="onToLocationChange($index, $event)"
                                 [options]="getWarehouseLocations(stModel().toWarehouseId)" optionLabel="name"
-                                optionValue="id" [filter]="true" filterBy="name" class="w-full"
-                                [showClear]="true">
+                                optionValue="id" [filter]="true" filterBy="name" class="w-full" [showClear]="true">
                             </p-select>
                             <label>To Location</label>
                         </div>

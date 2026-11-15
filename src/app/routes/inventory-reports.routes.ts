@@ -15,10 +15,6 @@ export const inventoryReportsRoutes: Routes = [
         loadComponent: () => import('../features/InventoryModule/InventoryReport/current-stock/current-stock.component').then(m => m.CurrentStockComponent)
     },
     {
-        path: 'inventoryReports/warehouseStock',
-        loadComponent: () => import('../features/InventoryModule/InventoryReport/warehouse-stock/warehouse-stock.component').then(m => m.WarehouseStockComponent)
-    },
-    {
         path: 'inventoryReports/stockValuation',
         loadComponent: () => import('../features/InventoryModule/InventoryReport/stock-valuation/stock-valuation.component').then(m => m.StockValuationComponent)
     },

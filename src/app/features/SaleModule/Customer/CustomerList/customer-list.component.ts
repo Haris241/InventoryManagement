@@ -12,7 +12,7 @@ import { FloatLabel } from 'primeng/floatlabel';
 import { SelectModule } from 'primeng/select';
 import { CommonModule } from '@angular/common';
 import { CustomerList, CustomerSearch, CustomerType } from '../../../../Models/Sale/Customer.model';
-import { enumToOptions } from '../../../../shared/Utility';
+import { enumToOptions, openLoadingTab, showBlobInTab } from '../../../../shared/Utility';
 
 
 @Component({
@@ -28,7 +28,7 @@ export class CustomerListComponent {
   dataService = inject(DataLayerService);
 
   customerList = signal<CustomerList[]>([]);
-  customerSearch = this.pagination.autoSearchDropdown<AutoDropdown>('DropDowns/CustomersList');
+  customerSearch = this.pagination.autoSearchDropdown<AutoDropdown>('SalesDropDown/CustomersList');
   customerSearchList = this.customerSearch.result;
   customerTypes = signal(enumToOptions(CustomerType, true));
 
@@ -94,12 +94,24 @@ export class CustomerListComponent {
   }
 
   editcustomer(id: string) {
-    this.router.navigate(['Inventory/editcustomer', id]);
+    this.router.navigate(['Sales/customerEdit', id]);
   }
   SearchDropDown(event: { query: string }, searchtermsignal: WritableSignal<string>) {
     const search = event.query?.trim() ?? '';
     if (search.length > 0) {
       searchtermsignal.set(search);
     }
+  }
+  getCustomerReport(id: string) {
+    const newTab = openLoadingTab();
+
+    this.dataService.getReport('Customer/report', id)
+      .subscribe({
+        next: (blob) => showBlobInTab(newTab, blob, `Customer-Report-${id}.pdf`),
+        error: (err) => {
+          if (newTab) newTab.close();
+          this.base.handleError(err, err.error?.message);
+        }
+      });
   }
 }

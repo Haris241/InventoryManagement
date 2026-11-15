@@ -12,6 +12,7 @@ import { FloatLabel } from 'primeng/floatlabel';
 import { SelectModule } from 'primeng/select';
 import { CommonModule } from '@angular/common';
 import { SupplierListDto, SupplierSearch } from '../../../../Models/Inventory/Supplier.model';
+import { openLoadingTab, showBlobInTab } from '../../../../shared/Utility';
 
 @Component({
   selector: 'app-suppliers',
@@ -97,5 +98,17 @@ export class SuppliersComponent {
     if (search.length > 0) {
       searchtermsignal.set(search);
     }
+  }
+  getSupplierReport(id: string) {
+    const newTab = openLoadingTab();
+
+    this.dataService.getReport('Supplier/Report', id)
+      .subscribe({
+        next: (blob) => showBlobInTab(newTab, blob, `Supplier-Report-${id}.pdf`),
+        error: (err) => {
+          if (newTab) newTab.close();
+          this.base.handleError(err, err.error?.message);
+        }
+      });
   }
 }

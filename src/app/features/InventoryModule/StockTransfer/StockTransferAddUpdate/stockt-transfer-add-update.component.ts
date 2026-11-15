@@ -128,11 +128,16 @@ export class StocktTransferAddUpdateComponent {
     applyEach(schema.lines, (line) => {
       required(line.productVariantId, { message: 'Product is required' });
 
-      validate(line.quantity, ({ value }) => {
+      validate(line.quantity, ({ value, valueOf }) => {
         const qty = value();
+        const availableQty = valueOf(line.availableQuantity) ?? 0;
         if (qty == null || qty <= 0) {
           return { kind: 'positiveQuantity', message: 'Quantity must be greater than 0' };
         }
+        if (qty > availableQty) {
+          return { kind: 'ExceededQty', message: `Transfer quantity (${qty}) cannot exceed available quantity (${availableQty})` };
+        }
+
         return validateDecimalPlaces(qty);
       });
 

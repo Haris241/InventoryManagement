@@ -180,7 +180,7 @@ export class CustomerAddUpdateComponent {
       next: () => {
         //Redirect To List For Edit
         if (this.isEditMode()) {
-          this.router.navigate(['Sales', 'customerlist']);
+          this.router.navigate(['Sales', 'CustomerList']);
           this.base.globalMessage('success', 'Customer Updated Successfully', false);
           return;
         }
@@ -209,7 +209,7 @@ export class CustomerAddUpdateComponent {
       },
       error: (err) => {
         this.base.handleError(err, err.error?.message);
-        this.router.navigate(['Sales', 'customerlist']);
+        this.router.navigate(['Sales', 'CustomerList']);
       }
     });
   }

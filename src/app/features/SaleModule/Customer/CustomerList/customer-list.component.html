@@ -77,7 +77,13 @@
                     <td>
                         <button class="me-3" (click)="editcustomer(customer.id)"><span
                                 class="material-symbols-outlined icon-color">edit</span></button>
+                        <button (click)="getCustomerReport(customer.id)">
+                            <span class="material-symbols-outlined icon-color">
+                                description
+                            </span>
+                        </button>
                     </td>
+
 
                 </tr>
             </ng-template>

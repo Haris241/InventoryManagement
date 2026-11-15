@@ -194,6 +194,10 @@ export class StocktTransferListComponent {
         return 'status-draft';
       case StockTransferStatus.Approved:
         return 'status-active';
+      case StockTransferStatus.Received:
+        return 'status-active';
+      case StockTransferStatus.PartiallyReceived:
+        return 'status-reclosure';
       case StockTransferStatus.Cancelled:
         return 'status-closed';
       default:

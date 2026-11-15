@@ -46,7 +46,6 @@ export const REPORT_CONFIG: ModuleReports[] = [
                 reports: [
                     { title: 'Stock Ledger', route: 'stockLedger' },
                     { title: 'Current Stock', route: 'currentStock' },
-                    { title: 'Warehouse-wise Stock', route: 'warehouseStock' },
                     { title: 'Stock Valuation', route: 'stockValuation' },
                     { title: 'Stock Aging', route: 'stockAging' },
                     { title: 'Slow & Non-Moving Stock', route: 'slowMovingStock' },
