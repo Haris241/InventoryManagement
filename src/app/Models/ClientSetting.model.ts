@@ -23,6 +23,10 @@ export interface InventoryWorkflowDto {
     postingPoint: VoucherPostingPoint;
 
 }
+export interface SalesWorkflowDto {
+    id: string;
+    enableNegativeStock: boolean;
+}
 export enum VoucherPostingPoint {
     PurchaseOrder,
     GRN,

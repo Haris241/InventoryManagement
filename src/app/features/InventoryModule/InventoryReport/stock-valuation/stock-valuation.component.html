@@ -147,8 +147,8 @@
         <!-- Include Zero Stock -->
         <div class="lg:w-1/4 w-full mb-3 flex items-center gap-2">
             <input id="includeZeroStock" type="checkbox" [(ngModel)]="stockValuationModel().includeZeroStock"
-                [ngModelOptions]="{standalone: true}"
-                (ngModelChange)="updateField('includeZeroStock', $event)" class="w-auto" />
+                [ngModelOptions]="{standalone: true}" (ngModelChange)="updateField('includeZeroStock', $event)"
+                class="w-auto" />
             <label for="includeZeroStock" class="mb-0 !text-lg font-medium gradient-heading">Include Zero Stock</label>
         </div>
 
@@ -178,8 +178,10 @@
         <div><span class="label-color">AS OF DATE:</span> {{ stockValuationData()!.asOfDate | date:'yyyy-MM-dd' }}</div>
         <div><span class="label-color">METHOD:</span> {{ stockValuationData()!.valuationMethod }}</div>
         <div><span class="label-color">TOTAL ITEMS:</span> {{ stockValuationData()!.totalItems }}</div>
-        <div><span class="label-color">TOTAL QUANTITY:</span> {{ stockValuationData()!.totalQuantity | number:'1.2-2' }}</div>
-        <div><span class="label-color">TOTAL VALUATION:</span> {{ stockValuationData()!.totalValuation | number:'1.2-2' }}</div>
+        <div><span class="label-color">TOTAL QUANTITY:</span> {{ stockValuationData()!.totalQuantity | number:'1.2-2' }}
+        </div>
+        <div><span class="label-color">TOTAL VALUATION:</span> {{ stockValuationData()!.totalValuation | number:'1.2-2'
+            }}</div>
         <div><span class="label-color">WAREHOUSE:</span> {{ stockValuationData()!.filterWarehouse || 'All' }}</div>
         <div><span class="label-color">CATEGORY:</span> {{ stockValuationData()!.filterCategory || 'All' }}</div>
     </div>

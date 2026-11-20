@@ -1,0 +1,182 @@
+<form (ngSubmit)="OnSearch()">
+    <div class="flex flex-wrap global-div p-5 gap-2 lg:gap-0">
+        <div class="w-full mb-4">
+            <h3 class="text-2xl font-semibold text-center mb-3">
+                <span class="gradient-heading">Sale Order List</span>
+            </h3>
+            <hr class="second-color">
+        </div>
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-10/12 w-full">
+                    <p-autoComplete [(ngModel)]="soFormModel().id" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('id',$event)"
+                        (completeMethod)="SearchDropDown($event,soSearch.searchterm)" inputId="id" optionLabel="name"
+                        [dropdown]="true" [suggestions]="soSearchList()" optionValue="id" [showClear]="true"
+                        class="w-full"></p-autoComplete>
+                    <label for="id">Search by Name or Number</label>
+                </div>
+
+            </p-floatLabel>
+
+        </div>
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-10/12 w-full">
+                    <p-autoComplete [(ngModel)]="soFormModel().customerId" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('customerId',$event)"
+                        (completeMethod)="SearchDropDown($event,CustomerSearch.searchterm)" inputId="id"
+                        optionLabel="name" [dropdown]="true" [suggestions]="CustomerSearchList()" optionValue="id"
+                        [showClear]="true" class="w-full"></p-autoComplete>
+                    <label for="id">Search by Customer</label>
+                </div>
+
+            </p-floatLabel>
+
+        </div>
+        <div class="lg:w-1/4  w-[calc(50%-0.25rem)] mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <p-select [(ngModel)]="soFormModel().status" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('status',$event)" [options]="soStatusOptions()" optionLabel="name"
+                        optionValue="value" class="w-full" [showClear]="true" />
+                    <label for="status">Status</label>
+                </div>
+            </p-floatLabel>
+        </div>
+        <div class="lg:w-1/4  w-[calc(50%-0.25rem)] mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <p-select [(ngModel)]="soFormModel().fulfillmentStatus" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('fulfillmentStatus',$event)"
+                        [options]="soFulfillmentStatusOptions()" optionLabel="name" optionValue="value" class="w-full"
+                        [showClear]="true" />
+                    <label for="fulfillmentStatus">Fulfillment Status</label>
+                </div>
+            </p-floatLabel>
+        </div>
+        <div class="lg:w-1/4  w-[calc(50%-0.25rem)] mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <p-select [(ngModel)]="soFormModel().invoicingStatus" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('invoicingStatus',$event)" [options]="soInvoiceStatusOptions()"
+                        optionLabel="name" optionValue="value" class="w-full" [showClear]="true" />
+                    <label for="sourceModule">Invoice Status</label>
+                </div>
+            </p-floatLabel>
+        </div>
+        <div class="lg:w-1/4  w-[calc(50%-0.25rem)] mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <p-datepicker [(ngModel)]="soFormModel().fromDateUI" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('fromDateUI',$event)" view="date" dateFormat="dd/mm/yy"
+                        size="small" inputId="fromDateUI" class="w-full" />
+                    <label for="fromDateUI">From Date</label>
+                </div>
+            </p-floatLabel>
+        </div>
+        <div class="lg:w-1/4 w-[calc(50%-0.25rem)] mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-8/12 w-full">
+                    <p-datepicker [(ngModel)]="soFormModel().toDateUI" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('toDateUI',$event)" view="date" dateFormat="dd/mm/yy" size="small"
+                        inputId="toDateUI" class="w-full" />
+                    <label for="toDateUI">To Date</label>
+                </div>
+            </p-floatLabel>
+        </div>
+
+        <div class="w-full flex justify-center m-3">
+            <button class="global-button">Search</button>
+        </div>
+    </div>
+</form>
+<div class="flex flex-wrap global-div mt-4 p-4">
+    <div class="w-full">
+        <p-table #dt [value]="soList()" [rows]="20" [lazy]="true" (onLazyLoad)="loadSo()"
+            [tableStyle]="{ 'min-width': '50rem' }">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Name</th>
+                    <th>Number</th>
+                    <th>Customer</th>
+                    <th>Status</th>
+                    <th>Fulfillment Status</th>
+                    <th>Invoice Status</th>
+                    <th>Total Qty</th>
+                    <th>Delivered Qty</th>
+                    <th>Grand Total</th>
+                    <th>Created At</th>
+                    <th class="text-center">Actions</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-so>
+                <tr>
+                    <td>{{ so.name }}</td>
+                    <td>{{ so.salesOrderNumberDisplay }}</td>
+                    <td>{{ so.customerName }}</td>
+                    <td>
+                        <span class="status-badge" [ngClass]="getSoStatusClass(so.status)">
+                            {{ soStatusLabel(so.status) }}
+                        </span>
+                    </td>
+                    <td>{{ soFulfillmentStatusLabel(so.fulfillmentStatus) }}</td>
+                    <td>{{ soinvoiceStatusLabel(so.invoicingStatus) }}</td>
+                    <td>{{ so.totalQuantity }}</td>
+                    <td>{{ so.deliveredQuantity }}</td>
+                    <td>{{ so.grandTotal }}</td>
+                    <td>{{ so.date | date:'yyyy-MM-dd' }}</td>
+
+                    <!-- Combined & Aligned Actions Column -->
+                    <td>
+                        <!-- Use justify-start to align every action button consistently to the left -->
+                        <div class="flex items-center justify-start gap-2">
+                            @if (so.status === soStatus.Draft) {
+                            <!-- Draft Actions: Approve + Edit + Delete -->
+                            <button class="status-badge close-year" (click)="ApproveSo(so.id)">
+                                Approve
+                            </button>
+
+                            <button class="p-1" (click)="editSo(so.id)">
+                                <span class="material-symbols-outlined icon-color">edit</span>
+                            </button>
+
+                            <button class="p-1" (click)="deleteSO(so.id)" title="Delete">
+                                <span class="material-symbols-outlined icon-color">delete</span>
+                            </button>
+                            } @else if (so.status === soStatus.Approved) {
+                            <!-- Approved Actions: Cancel only -->
+                            <button class="status-badge close-year" (click)="CancelSo(so.id)">
+                                Cancel
+                            </button>
+                            } @else {
+                            <span class="text-gray-400 ps-4">-</span>
+                            }
+                            <button (click)="getSaleOrderReport(so.id,false)">
+                                <span class="material-symbols-outlined icon-color">
+                                    description
+                                </span>
+                            </button>
+                            <button (click)="getSaleOrderReport(so.id,true)">
+                                <span class="material-symbols-outlined icon-color">
+                                    description
+                                </span>
+                            </button>
+
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+
+        <!-- Pagination Controls -->
+        <div class="flex justify-end mt-3">
+            @if (hasPreviousPage()) {
+            <button class="pagination-button me-3" (click)="loadSo('previous')">Previous</button>
+            }
+            @if (hasNextPage()) {
+            <button class="pagination-button me-3" (click)="loadSo('next')">Next</button>
+            }
+        </div>
+    </div>
+</div>

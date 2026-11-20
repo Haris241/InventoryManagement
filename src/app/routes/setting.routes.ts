@@ -15,6 +15,10 @@ export const settingRoutes: Routes = [
                 loadComponent: () => import('../features/SettingModule/InventoryWorkFlow/inventoryworlflow.component').then(m => m.InventoryworlflowComponent)
             },
             {
+                path: 'salesWorkflow',
+                loadComponent: () => import('../features/SettingModule/SalesWorkflow/sales-workflow.component').then(m => m.SalesWorkflowComponent)
+            },
+            {
                 path: 'accountMapping',
                 loadComponent: () => import('../features/SettingModule/AccountMapping/account-mapping.component').then(m => m.AccountMappingComponent)
             }

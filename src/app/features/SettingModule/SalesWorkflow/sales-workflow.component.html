@@ -1,0 +1,38 @@
+<!-- Sales Workflow Edit Form -->
+<form (ngSubmit)="updateSalesWorkflow($event)">
+    <div class="flex flex-wrap global-div p-5">
+        <div class="w-full mb-4">
+            <h3 class="text-2xl font-semibold text-center mb-3">
+                <span class="gradient-heading">Manage Sales Workflow</span>
+            </h3>
+            <hr class="second-color">
+        </div>
+
+
+        <div class="lg:w-1/4 w-full mb-3 flex items-center gap-2">
+            <input id="enableNegativeStock" type="checkbox" [formField]="salesWorkflowForm.enableNegativeStock"
+                class="w-auto" />
+            <label for="enableNegativeStock" class="mb-0 !text-lg font-medium gradient-heading">Enable Negative
+                Stock</label>
+        </div>
+
+
+        <!-- Errors -->
+        <div class="w-full mt-3">
+            <ul class="text-red-500 text-sm font-medium pl-4">
+                @if (errors()) {
+                @for (e of errors(); track e) {
+                <li>{{ e }}</li>
+                }
+                }
+            </ul>
+        </div>
+
+
+        <div class="w-full flex justify-center m-3">
+            <button class="global-button" type="submit" [disabled]="submit()">
+                {{ submit() ? 'Processing...' : 'Update' }}
+            </button>
+        </div>
+    </div>
+</form>

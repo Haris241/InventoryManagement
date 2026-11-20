@@ -51,3 +51,11 @@ export enum CustomerType {
     Business = 1,
     Individual = 2
 }
+export interface CustomerDetails {
+    creditDays: number;
+    isTaxExempt: boolean;
+    isCreditAllowed: boolean;
+    creditLimit: number;
+    shippingAddress: string;
+    billingAddress: string;
+}

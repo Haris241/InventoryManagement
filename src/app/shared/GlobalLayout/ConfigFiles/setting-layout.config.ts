@@ -10,6 +10,9 @@ export const SETTING_LAYOUT_CONFIG: ModuleLayoutConfig = {
             key: 'InventoryWorkflow', icon: 'inventory', label: 'Inventory Workflow', directRoute: '/Setting/inventoryWorkflow'
         },
         {
+            key: 'SalesWorkflow', icon: 'shopping_cart', label: 'Sales Workflow', directRoute: '/Setting/salesWorkflow'
+        },
+        {
             key: 'AccountMapping', icon: 'account_tree', label: 'Account Mapping', directRoute: '/Setting/accountMapping'
         }
     ]

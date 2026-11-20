@@ -12,6 +12,13 @@ export const SALES_LAYOUT_CONFIG: ModuleLayoutConfig = {
                 { label: 'Add Customer', route: '/Sales/customerAdd' },
                 { label: 'Customer List', route: '/Sales/CustomerList' },
             ]
+        },
+        {
+            key: 'SaleOrder', icon: 'list', label: 'Sale Order',
+            children: [
+                { label: 'Add Sale Order', route: '/Sales/saleorderadd' },
+                { label: 'Sale Order List', route: '/Sales/saleorderlist' },
+            ]
         }
     ]
 };
