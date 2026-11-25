@@ -1,15 +1,186 @@
 <!-- Redirect Back to Reports -->
 <div class="w-full flex mb-4">
-  <button type="button" class="redirect-button flex items-center" routerLink="/Inventory/inventoryReports">
-    Back
-  </button>
+    <button type="button" class="redirect-button flex items-center" routerLink="/Inventory/inventoryReports">
+        Back
+    </button>
 </div>
 
-<div class="flex flex-wrap global-div p-5">
-  <div class="w-full mb-4">
-    <h3 class="text-2xl font-semibold text-center mb-3">
-      <span class="gradient-heading">Three-Way Match</span>
-    </h3>
-    <hr class="second-color">
-  </div>
+<form (ngSubmit)="OnSearch($event)">
+    <div class="flex flex-wrap global-div p-5">
+        <div class="w-full mb-4">
+            <h3 class="text-2xl font-semibold text-center mb-3">
+                <span class="gradient-heading">Three-Way Match (PO vs GRN vs Invoice)</span>
+            </h3>
+            <hr class="second-color">
+        </div>
+        <div class="w-full mb-3">
+            <div class="w-full flex justify-end">
+                <button type="button" class="global-button flex items-center gap-2" (click)="generateReport()">
+                    <span class="material-symbols-outlined icon-color">description</span>Pdf
+                </button>
+            </div>
+        </div>
+
+        <!-- Supplier -->
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-10/12 w-full">
+                    <p-autoComplete [(ngModel)]="matchModel().supplierId" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('supplierId', $event)"
+                        (completeMethod)="SearchDropDown($event, supplierSearch.searchterm)" inputId="supplierId"
+                        optionLabel="name" [dropdown]="true" [suggestions]="supplierSearchList()" optionValue="id"
+                        [showClear]="true" class="w-full"></p-autoComplete>
+                    <label for="supplierId">Supplier</label>
+                </div>
+            </p-floatLabel>
+        </div>
+
+        <!-- Purchase Order -->
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-10/12 w-full">
+                    <p-autoComplete [(ngModel)]="matchModel().purchaseOrderId" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('purchaseOrderId', $event)"
+                        (completeMethod)="SearchDropDown($event, poSearch.searchterm)" inputId="purchaseOrderId"
+                        optionLabel="name" [dropdown]="true" [suggestions]="poSearchList()" optionValue="id"
+                        [showClear]="true" class="w-full"></p-autoComplete>
+                    <label for="purchaseOrderId">Purchase Order</label>
+                </div>
+            </p-floatLabel>
+        </div>
+
+        <!-- From Date -->
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-10/12 w-full">
+                    <p-datepicker [(ngModel)]="matchModel().fromDateUI" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('fromDateUI', $event)" view="date" dateFormat="dd/mm/yy"
+                        size="small" inputId="fromDateUI" class="w-full" />
+                    <label for="fromDateUI">From Date</label>
+                </div>
+            </p-floatLabel>
+        </div>
+
+        <!-- To Date -->
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-10/12 w-full">
+                    <p-datepicker [(ngModel)]="matchModel().toDateUI" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('toDateUI', $event)" view="date" dateFormat="dd/mm/yy"
+                        size="small" inputId="toDateUI" class="w-full" />
+                    <label for="toDateUI">To Date</label>
+                </div>
+            </p-floatLabel>
+        </div>
+
+        <!-- Variance Only -->
+        <div class="lg:w-1/4 w-full mb-3 flex items-center gap-2">
+            <input id="varianceOnly" type="checkbox" [(ngModel)]="matchModel().varianceOnly"
+                [ngModelOptions]="{standalone: true}"
+                (ngModelChange)="updateField('varianceOnly', $event)" class="w-auto" />
+            <label for="varianceOnly" class="mb-0 !text-lg font-medium gradient-heading">Discrepancy / Variance Only</label>
+        </div>
+
+        <!-- Search button -->
+        <div class="w-full flex justify-center m-3">
+            <button class="global-button" type="submit" [disabled]="submit()">
+                {{ submit() ? 'Processing...' : 'Search' }}
+            </button>
+        </div>
+    </div>
+
+    @if(closingMessage().length > 0) {
+    <div class="w-full my-4">
+        <div class="rounded-xl second-bgcolor px-4 py-3 shadow-sm">
+            <p class="text-center text-sm font-medium WhiteC">
+                {{ closingMessage() }}
+            </p>
+        </div>
+    </div>
+    }
+</form>
+
+@if(matchData()) {
+<div class="flex flex-wrap global-div mt-4 p-4">
+    <!-- Summary panel -->
+    <div class="w-full flex flex-wrap justify-between gl-summary-panel mb-3 p-3 gap-2">
+        <div><span class="label-color">TOTAL LINES:</span> {{ matchData()!.totalLines }}</div>
+        <div><span class="label-color">EXACT MATCH:</span> {{ matchData()!.exactMatchCount }}</div>
+        <div><span class="label-color">DISCREPANCY:</span> {{ matchData()!.discrepancyCount }}</div>
+        <div><span class="label-color">PENDING RECV:</span> {{ matchData()!.pendingReceiptCount }}</div>
+        <div><span class="label-color">PENDING INV:</span> {{ matchData()!.pendingInvoiceCount }}</div>
+        <div><span class="label-color">PO AMT:</span> {{ matchData()!.totalPoAmount | number:'1.2-2' }}</div>
+        <div><span class="label-color">GRN AMT:</span> {{ matchData()!.totalGrnAmount | number:'1.2-2' }}</div>
+        <div><span class="label-color">INV AMT:</span> {{ matchData()!.totalInvoiceAmount | number:'1.2-2' }}</div>
+        <div><span class="label-color">NET VARIANCE:</span> {{ matchData()!.netVarianceAmount | number:'1.2-2' }}</div>
+    </div>
+
+    <!-- Data Table -->
+    <div class="w-full">
+        <p-table [value]="matchData()?.items?.items ?? []" [tableStyle]="{ 'min-width': '95rem' }">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>PO No</th>
+                    <th>Supplier</th>
+                    <th>Product / Variant</th>
+                    <th class="text-right">PO (Qty / Amt)</th>
+                    <th>GRN No</th>
+                    <th class="text-right">GRN (Qty / Amt)</th>
+                    <th>Invoice No</th>
+                    <th class="text-right">Inv (Qty / Amt)</th>
+                    <th class="text-right">Qty Var</th>
+                    <th class="text-right">Amt Var</th>
+                    <th>Status</th>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-line>
+                <tr>
+                    <td>{{ line.purchaseNumber }}</td>
+                    <td>{{ line.supplierName }}</td>
+                    <td>{{ line.productName }} ({{ line.variantName }})</td>
+                    <td class="text-right">
+                        {{ line.poQuantity | number:'1.2-2' }} {{ line.uom }}<br>
+                        <span class="text-xs text-gray-400">@ {{ line.poRate | number:'1.2-2' }} = {{ line.poAmount | number:'1.2-2' }}</span>
+                    </td>
+                    <td>{{ line.grnNumbers || '-' }}</td>
+                    <td class="text-right">
+                        {{ line.grnQuantity | number:'1.2-2' }}<br>
+                        <span class="text-xs text-gray-400">{{ line.grnAmount | number:'1.2-2' }}</span>
+                    </td>
+                    <td>{{ line.invoiceNumbers || '-' }}</td>
+                    <td class="text-right">
+                        {{ line.invoiceQuantity | number:'1.2-2' }}<br>
+                        <span class="text-xs text-gray-400">{{ line.invoiceAmount | number:'1.2-2' }}</span>
+                    </td>
+                    <td class="text-right" [ngClass]="{'text-red-500 font-semibold': line.quantityVariance !== 0}">
+                        {{ line.quantityVariance | number:'1.2-2' }}
+                    </td>
+                    <td class="text-right" [ngClass]="{'text-red-500 font-semibold': line.amountVariance !== 0}">
+                        {{ line.amountVariance | number:'1.2-2' }}
+                    </td>
+                    <td>
+                        <span [ngClass]="{
+                            'second-color font-semibold': line.matchStatus === 'Discrepancy',
+                            'font-medium': line.matchStatus !== 'Discrepancy'
+                        }">
+                            {{ line.matchStatus }}
+                        </span>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+
+        <div class="flex justify-end mt-3">
+            @if(hasNextPage() || hasPreviousPage()) {
+            @if(hasPreviousPage()){
+            <button class="pagination-button me-3" (click)="loadMatch($event, 'previous')">Previous</button>
+            }
+            @if(hasNextPage()){
+            <button class="pagination-button me-3" (click)="loadMatch($event, 'next')">Next</button>
+            }
+            }
+        </div>
+    </div>
 </div>
+}

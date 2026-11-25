@@ -39,6 +39,18 @@ export const salesRoutes: Routes = [
                 path: 'saleorderlist',
                 loadComponent: () => import('../features/SaleModule/SaleOrder/SaleOrderList/sale-order-list.component').then(m => m.SaleOrderListComponent)
             },
+            {
+                path: 'saleinvoiceadd',
+                loadComponent: () => import('../features/SaleModule/SaleInvoice/SaleInvoiceAddUpdate/sale-invoice-add-update.component').then(m => m.SaleInvoiceAddUpdateComponent)
+            },
+            {
+                path: 'saleinvoiceedit/:id',
+                loadComponent: () => import('../features/SaleModule/SaleInvoice/SaleInvoiceAddUpdate/sale-invoice-add-update.component').then(m => m.SaleInvoiceAddUpdateComponent)
+            },
+            {
+                path: 'saleinvoicelist',
+                loadComponent: () => import('../features/SaleModule/SaleInvoice/SaleInvoiceList/sale-invoice-list.component').then(m => m.SaleInvoiceListComponent)
+            },
 
             {
                 path: '',

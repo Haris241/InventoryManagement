@@ -164,7 +164,7 @@ export class CurrentStockComponent {
     formvalue.nextCursor = direction === 'next' ? this.nextCursor() : null;
     formvalue.previousCursor = direction === 'previous' ? this.previousCursor() : null;
 
-    const url = 'StockReports/CurrentStockList';
+    const url = 'InventoryReports/CurrentStockList';
     const request$ = this.dataService.getAllPost<CurrentStockData, CurrentStockSearch>(url, formvalue);
 
     request$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
@@ -207,7 +207,7 @@ export class CurrentStockComponent {
       formvalue.productId = null;
     }
 
-    this.dataService.getReportOrJob<CurrentStockSearch, BackgroundJobResponse>('StockReports/CurrentStockReport', formvalue)
+    this.dataService.getReportOrJob<CurrentStockSearch, BackgroundJobResponse>('InventoryReports/CurrentStockReport', formvalue)
       .subscribe({
         next: (res) => {
           this.submit.set(false);
@@ -224,7 +224,7 @@ export class CurrentStockComponent {
 
           const sub = this.notifState.onJobComplete(res.job.jobId, (envelope) => {
             if (envelope.type === NotificationType.Success) {
-              const url = `StockReports/DownloadReport/${res.job.jobId}/CurrentStock`;
+              const url = `InventoryReports/DownloadReport/${res.job.jobId}/CurrentStock`;
               this.dataService.downloadReport(url).subscribe({
                 next: (blob) => {
                   const newTab = openLoadingTab();

@@ -142,7 +142,7 @@ export class StockLedgerComponent {
     formvalue.nextCursor = direction === 'next' ? this.nextCursor() : null;
     formvalue.previousCursor = direction === 'previous' ? this.previousCursor() : null;
 
-    const url = 'StockReports/StockLedgerList';
+    const url = 'InventoryReports/StockLedgerList';
     const request$ = this.dataService.getAllPost<StockLedgerData, StockLedgerSearch>(url, formvalue);
 
     request$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
@@ -182,7 +182,7 @@ export class StockLedgerComponent {
     formvalue.fromDate = toDateOnlyString(formvalue.fromDateUI);
     formvalue.toDate = toDateOnlyString(formvalue.toDateUI);
 
-    this.dataService.getReportOrJob<StockLedgerSearch, BackgroundJobResponse>('StockReports/StockLedgerReport', formvalue)
+    this.dataService.getReportOrJob<StockLedgerSearch, BackgroundJobResponse>('InventoryReports/StockLedgerReport', formvalue)
       .subscribe({
         next: (res) => {
           this.submit.set(false);
@@ -199,7 +199,7 @@ export class StockLedgerComponent {
 
           const sub = this.notifState.onJobComplete(res.job.jobId, (envelope) => {
             if (envelope.type === NotificationType.Success) {
-              const url = `StockReports/DownloadReport/${res.job.jobId}/StockLedger`;
+              const url = `InventoryReports/DownloadReport/${res.job.jobId}/StockLedger`;
               this.dataService.downloadReport(url).subscribe({
                 next: (blob) => {
                   const newTab = openLoadingTab();

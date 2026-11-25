@@ -19,6 +19,13 @@ export const SALES_LAYOUT_CONFIG: ModuleLayoutConfig = {
                 { label: 'Add Sale Order', route: '/Sales/saleorderadd' },
                 { label: 'Sale Order List', route: '/Sales/saleorderlist' },
             ]
+        },
+        {
+            key: 'SaleInvoice', icon: 'receipt', label: 'Sale Invoice',
+            children: [
+                { label: 'Add Sale Invoice', route: '/Sales/saleinvoiceadd' },
+                { label: 'Sale Invoice List', route: '/Sales/saleinvoicelist' },
+            ]
         }
     ]
 };

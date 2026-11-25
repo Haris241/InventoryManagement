@@ -168,7 +168,7 @@ export class StockValuationComponent {
     formvalue.nextCursor = direction === 'next' ? this.nextCursor() : null;
     formvalue.previousCursor = direction === 'previous' ? this.previousCursor() : null;
 
-    const url = 'StockReports/StockValuationList';
+    const url = 'InventoryReports/StockValuationList';
     const request$ = this.dataService.getAllPost<StockValuationData, StockValuationSearch>(url, formvalue);
 
     request$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
@@ -212,7 +212,7 @@ export class StockValuationComponent {
     }
     formvalue.asOfDate = toDateOnlyString(formvalue.asOfDateUI);
 
-    this.dataService.getReportOrJob<StockValuationSearch, BackgroundJobResponse>('StockReports/StockValuationReport', formvalue)
+    this.dataService.getReportOrJob<StockValuationSearch, BackgroundJobResponse>('InventoryReports/StockValuationReport', formvalue)
       .subscribe({
         next: (res) => {
           this.submit.set(false);
@@ -229,7 +229,7 @@ export class StockValuationComponent {
 
           const sub = this.notifState.onJobComplete(res.job.jobId, (envelope) => {
             if (envelope.type === NotificationType.Success) {
-              const url = `StockReports/DownloadReport/${res.job.jobId}/StockValuation`;
+              const url = `InventoryReports/DownloadReport/${res.job.jobId}/StockValuation`;
               this.dataService.downloadReport(url).subscribe({
                 next: (blob) => {
                   const newTab = openLoadingTab();

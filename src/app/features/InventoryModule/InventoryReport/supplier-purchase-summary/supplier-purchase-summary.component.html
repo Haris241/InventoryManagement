@@ -1,15 +1,149 @@
 <!-- Redirect Back to Reports -->
 <div class="w-full flex mb-4">
-  <button type="button" class="redirect-button flex items-center" routerLink="/Inventory/inventoryReports">
-    Back
-  </button>
+    <button type="button" class="redirect-button flex items-center" routerLink="/Inventory/inventoryReports">
+        Back
+    </button>
 </div>
 
-<div class="flex flex-wrap global-div p-5">
-  <div class="w-full mb-4">
-    <h3 class="text-2xl font-semibold text-center mb-3">
-      <span class="gradient-heading">Supplier Purchase Summary</span>
-    </h3>
-    <hr class="second-color">
-  </div>
+<form (ngSubmit)="OnSearch($event)">
+    <div class="flex flex-wrap global-div p-5">
+        <div class="w-full mb-4">
+            <h3 class="text-2xl font-semibold text-center mb-3">
+                <span class="gradient-heading">Supplier Purchase Summary</span>
+            </h3>
+            <hr class="second-color">
+        </div>
+        <div class="w-full mb-3">
+            <div class="w-full flex justify-end">
+                <button type="button" class="global-button flex items-center gap-2" (click)="generateReport()">
+                    <span class="material-symbols-outlined icon-color">description</span>Pdf
+                </button>
+            </div>
+        </div>
+
+        <!-- Supplier -->
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-10/12 w-full">
+                    <p-autoComplete [(ngModel)]="summaryModel().supplierId" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('supplierId', $event)"
+                        (completeMethod)="SearchDropDown($event, supplierSearch.searchterm)" inputId="supplierId"
+                        optionLabel="name" [dropdown]="true" [suggestions]="supplierSearchList()" optionValue="id"
+                        [showClear]="true" class="w-full"></p-autoComplete>
+                    <label for="supplierId">Supplier</label>
+                </div>
+            </p-floatLabel>
+        </div>
+
+        <!-- From Date -->
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-10/12 w-full">
+                    <p-datepicker [(ngModel)]="summaryModel().fromDateUI" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('fromDateUI', $event)" view="date" dateFormat="dd/mm/yy"
+                        size="small" inputId="fromDateUI" class="w-full" />
+                    <label for="fromDateUI">From Date</label>
+                </div>
+            </p-floatLabel>
+        </div>
+
+        <!-- To Date -->
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-10/12 w-full">
+                    <p-datepicker [(ngModel)]="summaryModel().toDateUI" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('toDateUI', $event)" view="date" dateFormat="dd/mm/yy"
+                        size="small" inputId="toDateUI" class="w-full" />
+                    <label for="toDateUI">To Date</label>
+                </div>
+            </p-floatLabel>
+        </div>
+
+        <!-- Active Only -->
+        <div class="lg:w-1/4 w-full mb-3 flex items-center gap-2">
+            <input id="activeOnly" type="checkbox" [(ngModel)]="summaryModel().activeOnly"
+                [ngModelOptions]="{standalone: true}"
+                (ngModelChange)="updateField('activeOnly', $event)" class="w-auto" />
+            <label for="activeOnly" class="mb-0 !text-lg font-medium gradient-heading">Active Only</label>
+        </div>
+
+        <!-- Search button -->
+        <div class="w-full flex justify-center m-3">
+            <button class="global-button" type="submit" [disabled]="submit()">
+                {{ submit() ? 'Processing...' : 'Search' }}
+            </button>
+        </div>
+    </div>
+
+    @if(closingMessage().length > 0) {
+    <div class="w-full my-4">
+        <div class="rounded-xl second-bgcolor px-4 py-3 shadow-sm">
+            <p class="text-center text-sm font-medium WhiteC">
+                {{ closingMessage() }}
+            </p>
+        </div>
+    </div>
+    }
+</form>
+
+@if(summaryData()) {
+<div class="flex flex-wrap global-div mt-4 p-4">
+    <!-- Summary panel -->
+    <div class="w-full flex flex-wrap justify-between gl-summary-panel mb-3 p-3 gap-2">
+        <div><span class="label-color">TOTAL SUPPLIERS:</span> {{ summaryData()!.totalSuppliers }}</div>
+        <div><span class="label-color">TOTAL ORDERS:</span> {{ summaryData()!.totalOrders }}</div>
+        <div><span class="label-color">PO AMT:</span> {{ summaryData()!.totalPoAmount | number:'1.2-2' }}</div>
+        <div><span class="label-color">INVOICED AMT:</span> {{ summaryData()!.totalInvoicedAmount | number:'1.2-2' }}</div>
+        <div><span class="label-color">RETURNED AMT:</span> {{ summaryData()!.totalReturnedAmount | number:'1.2-2' }}</div>
+        <div><span class="label-color">NET SPEND:</span> {{ summaryData()!.totalNetSpend | number:'1.2-2' }}</div>
+    </div>
+
+    <!-- Data Table -->
+    <div class="w-full">
+        <p-table [value]="summaryData()?.items?.items ?? []" [tableStyle]="{ 'min-width': '85rem' }">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Code</th>
+                    <th>Supplier Name</th>
+                    <th>Contact</th>
+                    <th>Phone</th>
+                    <th class="text-right">Orders</th>
+                    <th class="text-right">PO Amt</th>
+                    <th class="text-right">GRN Amt</th>
+                    <th class="text-right">Invoice Amt</th>
+                    <th class="text-right">Return Amt</th>
+                    <th class="text-right">Net Spend</th>
+                    <th class="text-right">Avg Order</th>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-line>
+                <tr>
+                    <td>{{ line.supplierCode }}</td>
+                    <td>{{ line.supplierName }}</td>
+                    <td>{{ line.contactPerson || '-' }}</td>
+                    <td>{{ line.phone || '-' }}</td>
+                    <td class="text-right">{{ line.totalOrdersCount }}</td>
+                    <td class="text-right">{{ line.totalOrderAmount | number:'1.2-2' }}</td>
+                    <td class="text-right">{{ line.totalGrnAmount | number:'1.2-2' }}</td>
+                    <td class="text-right">{{ line.totalInvoiceAmount | number:'1.2-2' }}</td>
+                    <td class="text-right">{{ line.totalReturnAmount | number:'1.2-2' }}</td>
+                    <td class="text-right font-semibold">{{ line.netSpend | number:'1.2-2' }}</td>
+                    <td class="text-right">{{ line.averageOrderValue | number:'1.2-2' }}</td>
+                </tr>
+            </ng-template>
+        </p-table>
+
+        <div class="flex justify-end mt-3">
+            @if(hasNextPage() || hasPreviousPage()) {
+            @if(hasPreviousPage()){
+            <button class="pagination-button me-3" (click)="loadSummary($event, 'previous')">Previous</button>
+            }
+            @if(hasNextPage()){
+            <button class="pagination-button me-3" (click)="loadSummary($event, 'next')">Next</button>
+            }
+            }
+        </div>
+    </div>
 </div>
+}

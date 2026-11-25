@@ -1,15 +1,227 @@
 <!-- Redirect Back to Reports -->
 <div class="w-full flex mb-4">
-  <button type="button" class="redirect-button flex items-center" routerLink="/Inventory/inventoryReports">
-    Back
-  </button>
+    <button type="button" class="redirect-button flex items-center" routerLink="/Inventory/inventoryReports">
+        Back
+    </button>
 </div>
 
-<div class="flex flex-wrap global-div p-5">
-  <div class="w-full mb-4">
-    <h3 class="text-2xl font-semibold text-center mb-3">
-      <span class="gradient-heading">Purchase Return Analysis</span>
-    </h3>
-    <hr class="second-color">
-  </div>
+<form (ngSubmit)="OnSearch($event)">
+    <div class="flex flex-wrap global-div p-5">
+        <div class="w-full mb-4">
+            <h3 class="text-2xl font-semibold text-center mb-3">
+                <span class="gradient-heading">Purchase Return Analysis</span>
+            </h3>
+            <hr class="second-color">
+        </div>
+        <div class="w-full mb-3">
+            <div class="w-full flex justify-end">
+                <button type="button" class="global-button flex items-center gap-2" (click)="generateReport()">
+                    <span class="material-symbols-outlined icon-color">description</span>Pdf
+                </button>
+            </div>
+        </div>
+
+        <!-- Note Banner for Product/Variant selection -->
+        <div class="w-full mb-3">
+            <div class="lg:w-1/2 w-full">
+                <p class="note-banner">Searching by product will search all its variants</p>
+            </div>
+        </div>
+
+        <!-- Supplier -->
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-10/12 w-full">
+                    <p-autoComplete [(ngModel)]="returnModel().supplierId" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('supplierId', $event)"
+                        (completeMethod)="SearchDropDown($event, supplierSearch.searchterm)" inputId="supplierId"
+                        optionLabel="name" [dropdown]="true" [suggestions]="supplierSearchList()" optionValue="id"
+                        [showClear]="true" class="w-full"></p-autoComplete>
+                    <label for="supplierId">Supplier</label>
+                </div>
+            </p-floatLabel>
+        </div>
+
+        <!-- Warehouse -->
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-10/12 w-full">
+                    <p-autoComplete [(ngModel)]="returnModel().warehouseId" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('warehouseId', $event)"
+                        (completeMethod)="SearchDropDown($event, wareHouseSearch.searchterm)" inputId="warehouseId"
+                        optionLabel="name" [dropdown]="true" [suggestions]="wareHouseSearchList()" optionValue="id"
+                        [showClear]="true" class="w-full"></p-autoComplete>
+                    <label for="warehouseId">Warehouse</label>
+                </div>
+            </p-floatLabel>
+        </div>
+
+        <!-- Product Search -->
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-10/12 w-full">
+                    <p-autoComplete [(ngModel)]="returnModel().productId" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="onProductChange($event)"
+                        (completeMethod)="SearchDropDown($event, productSearch.searchterm)" inputId="productId"
+                        optionLabel="name" [dropdown]="true" [suggestions]="productSearchList()" optionValue="id"
+                        [showClear]="true" class="w-full"></p-autoComplete>
+                    <label for="productId">Product</label>
+                </div>
+            </p-floatLabel>
+        </div>
+
+        <!-- Product Variant Search -->
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-10/12 w-full">
+                    <p-autoComplete [(ngModel)]="selectedProductVariant" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="onVariantChange($event)"
+                        (completeMethod)="SearchDropDown($event, productVariantSearch.searchterm)"
+                        optionLabel="displayName" [suggestions]="productVariantSearchList()" [showClear]="true"
+                        appendTo="body" fluid size="small" panelStyleClass="product-search-panel"
+                        inputId="productVariantId">
+                        <ng-template let-product pTemplate="item">
+                            <div class="product-search-item">
+                                <div class="product-search-main">
+                                    {{ product.displayName }}
+                                </div>
+                                <div class="product-search-meta">
+                                    <div class="product-search-detail">
+                                        <span class="product-search-label">SKU:</span>
+                                        <span class="product-search-value">{{ product.sku }}</span>
+                                    </div>
+                                    <div class="product-search-detail">
+                                        <span class="product-search-label">Unit:</span>
+                                        <span class="product-search-value">{{ product.uom }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </p-autoComplete>
+                    <label for="productVariantId">Product Variant</label>
+                </div>
+            </p-floatLabel>
+        </div>
+
+        <!-- Reason -->
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-10/12 w-full">
+                    <p-select [(ngModel)]="returnModel().reason" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('reason', $event)" [options]="returnReasonOptions"
+                        optionLabel="name" optionValue="value" [showClear]="true" class="w-full"
+                        inputId="reason" />
+                    <label for="reason">Return Reason</label>
+                </div>
+            </p-floatLabel>
+        </div>
+
+        <!-- From Date -->
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-10/12 w-full">
+                    <p-datepicker [(ngModel)]="returnModel().fromDateUI" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('fromDateUI', $event)" view="date" dateFormat="dd/mm/yy"
+                        size="small" inputId="fromDateUI" class="w-full" />
+                    <label for="fromDateUI">From Date</label>
+                </div>
+            </p-floatLabel>
+        </div>
+
+        <!-- To Date -->
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-10/12 w-full">
+                    <p-datepicker [(ngModel)]="returnModel().toDateUI" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('toDateUI', $event)" view="date" dateFormat="dd/mm/yy"
+                        size="small" inputId="toDateUI" class="w-full" />
+                    <label for="toDateUI">To Date</label>
+                </div>
+            </p-floatLabel>
+        </div>
+
+        <!-- Search button -->
+        <div class="w-full flex justify-center m-3">
+            <button class="global-button" type="submit" [disabled]="submit()">
+                {{ submit() ? 'Processing...' : 'Search' }}
+            </button>
+        </div>
+    </div>
+
+    @if(closingMessage().length > 0) {
+    <div class="w-full my-4">
+        <div class="rounded-xl second-bgcolor px-4 py-3 shadow-sm">
+            <p class="text-center text-sm font-medium WhiteC">
+                {{ closingMessage() }}
+            </p>
+        </div>
+    </div>
+    }
+</form>
+
+@if(returnData()) {
+<div class="flex flex-wrap global-div mt-4 p-4">
+    <!-- Summary panel -->
+    <div class="w-full flex flex-wrap justify-between gl-summary-panel mb-3 p-3 gap-2">
+        <div><span class="label-color">TOTAL RETURNS:</span> {{ returnData()!.totalReturns }}</div>
+        <div><span class="label-color">TOTAL LINES:</span> {{ returnData()!.totalLines }}</div>
+        <div><span class="label-color">RETURNED QTY:</span> {{ returnData()!.totalReturnedQuantity | number:'1.2-2' }}</div>
+        <div><span class="label-color">RETURNED VAL:</span> {{ returnData()!.totalReturnedValue | number:'1.2-2' }}</div>
+        <div><span class="label-color">DAMAGED:</span> {{ returnData()!.damagedValue | number:'1.2-2' }}</div>
+        <div><span class="label-color">QUALITY ISSUE:</span> {{ returnData()!.qualityIssueValue | number:'1.2-2' }}</div>
+        <div><span class="label-color">WRONG ITEM:</span> {{ returnData()!.wrongItemValue | number:'1.2-2' }}</div>
+    </div>
+
+    <!-- Data Table -->
+    <div class="w-full">
+        <p-table [value]="returnData()?.items?.items ?? []" [tableStyle]="{ 'min-width': '85rem' }">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Return No</th>
+                    <th>Date</th>
+                    <th>Supplier</th>
+                    <th>Warehouse</th>
+                    <th>Product</th>
+                    <th>Variant</th>
+                    <th>SKU</th>
+                    <th class="text-right">Quantity</th>
+                    <th class="text-right">Rate</th>
+                    <th class="text-right">Tax</th>
+                    <th class="text-right">Total</th>
+                    <th>Reason</th>
+                    <th>Note</th>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-line>
+                <tr>
+                    <td>{{ line.returnNumber }}</td>
+                    <td>{{ line.returnDate | date:'yyyy-MM-dd' }}</td>
+                    <td>{{ line.supplierName }}</td>
+                    <td>{{ line.warehouseName }}</td>
+                    <td>{{ line.productName }}</td>
+                    <td>{{ line.variantName }}</td>
+                    <td>{{ line.sku }}</td>
+                    <td class="text-right">{{ line.returnedQuantity | number:'1.2-2' }} {{ line.uom }}</td>
+                    <td class="text-right">{{ line.rate | number:'1.2-2' }}</td>
+                    <td class="text-right">{{ line.taxAmount | number:'1.2-2' }}</td>
+                    <td class="text-right">{{ line.lineTotal | number:'1.2-2' }}</td>
+                    <td>{{ line.reasonDisplay || line.reason }}</td>
+                    <td>{{ line.reasonNote || '-' }}</td>
+                </tr>
+            </ng-template>
+        </p-table>
+
+        <div class="flex justify-end mt-3">
+            @if(hasNextPage() || hasPreviousPage()) {
+            @if(hasPreviousPage()){
+            <button class="pagination-button me-3" (click)="loadReturns($event, 'previous')">Previous</button>
+            }
+            @if(hasNextPage()){
+            <button class="pagination-button me-3" (click)="loadReturns($event, 'next')">Next</button>
+            }
+            }
+        </div>
+    </div>
 </div>
+}

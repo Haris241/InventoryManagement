@@ -1,15 +1,227 @@
 <!-- Redirect Back to Reports -->
 <div class="w-full flex mb-4">
-  <button type="button" class="redirect-button flex items-center" routerLink="/Inventory/inventoryReports">
-    Back
-  </button>
+    <button type="button" class="redirect-button flex items-center" routerLink="/Inventory/inventoryReports">
+        Back
+    </button>
 </div>
 
-<div class="flex flex-wrap global-div p-5">
-  <div class="w-full mb-4">
-    <h3 class="text-2xl font-semibold text-center mb-3">
-      <span class="gradient-heading">Purchase Order Outstanding</span>
-    </h3>
-    <hr class="second-color">
-  </div>
+<form (ngSubmit)="OnSearch($event)">
+    <div class="flex flex-wrap global-div p-5">
+        <div class="w-full mb-4">
+            <h3 class="text-2xl font-semibold text-center mb-3">
+                <span class="gradient-heading">Purchase Order Outstanding</span>
+            </h3>
+            <hr class="second-color">
+        </div>
+        <div class="w-full mb-3">
+            <div class="w-full flex justify-end">
+                <button type="button" class="global-button flex items-center gap-2" (click)="generateReport()">
+                    <span class="material-symbols-outlined icon-color">description</span>Pdf
+                </button>
+            </div>
+        </div>
+
+        <!-- Note Banner for Product/Variant selection -->
+        <div class="w-full mb-3">
+            <div class="lg:w-1/2 w-full">
+                <p class="note-banner">Searching by product will search all its variants</p>
+            </div>
+        </div>
+
+        <!-- Supplier -->
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-10/12 w-full">
+                    <p-autoComplete [(ngModel)]="outstandingModel().supplierId"
+                        [ngModelOptions]="{standalone: true}" (ngModelChange)="updateField('supplierId', $event)"
+                        (completeMethod)="SearchDropDown($event, supplierSearch.searchterm)" inputId="supplierId"
+                        optionLabel="name" [dropdown]="true" [suggestions]="supplierSearchList()" optionValue="id"
+                        [showClear]="true" class="w-full"></p-autoComplete>
+                    <label for="supplierId">Supplier</label>
+                </div>
+            </p-floatLabel>
+        </div>
+
+        <!-- Warehouse -->
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-10/12 w-full">
+                    <p-autoComplete [(ngModel)]="outstandingModel().warehouseId"
+                        [ngModelOptions]="{standalone: true}" (ngModelChange)="updateField('warehouseId', $event)"
+                        (completeMethod)="SearchDropDown($event, wareHouseSearch.searchterm)" inputId="warehouseId"
+                        optionLabel="name" [dropdown]="true" [suggestions]="wareHouseSearchList()" optionValue="id"
+                        [showClear]="true" class="w-full"></p-autoComplete>
+                    <label for="warehouseId">Warehouse</label>
+                </div>
+            </p-floatLabel>
+        </div>
+
+        <!-- Product Search -->
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-10/12 w-full">
+                    <p-autoComplete [(ngModel)]="outstandingModel().productId" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="onProductChange($event)"
+                        (completeMethod)="SearchDropDown($event, productSearch.searchterm)" inputId="productId"
+                        optionLabel="name" [dropdown]="true" [suggestions]="productSearchList()" optionValue="id"
+                        [showClear]="true" class="w-full"></p-autoComplete>
+                    <label for="productId">Product</label>
+                </div>
+            </p-floatLabel>
+        </div>
+
+        <!-- Product Variant Search -->
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-10/12 w-full">
+                    <p-autoComplete [(ngModel)]="selectedProductVariant" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="onVariantChange($event)"
+                        (completeMethod)="SearchDropDown($event, productVariantSearch.searchterm)"
+                        optionLabel="displayName" [suggestions]="productVariantSearchList()" [showClear]="true"
+                        appendTo="body" fluid size="small" panelStyleClass="product-search-panel"
+                        inputId="productVariantId">
+                        <ng-template let-product pTemplate="item">
+                            <div class="product-search-item">
+                                <div class="product-search-main">
+                                    {{ product.displayName }}
+                                </div>
+                                <div class="product-search-meta">
+                                    <div class="product-search-detail">
+                                        <span class="product-search-label">SKU:</span>
+                                        <span class="product-search-value">{{ product.sku }}</span>
+                                    </div>
+                                    <div class="product-search-detail">
+                                        <span class="product-search-label">Unit:</span>
+                                        <span class="product-search-value">{{ product.uom }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </p-autoComplete>
+                    <label for="productVariantId">Product Variant</label>
+                </div>
+            </p-floatLabel>
+        </div>
+
+        <!-- From Date -->
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-10/12 w-full">
+                    <p-datepicker [(ngModel)]="outstandingModel().fromDateUI" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('fromDateUI', $event)" view="date" dateFormat="dd/mm/yy"
+                        size="small" inputId="fromDateUI" class="w-full" />
+                    <label for="fromDateUI">From Date</label>
+                </div>
+            </p-floatLabel>
+        </div>
+
+        <!-- To Date -->
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-10/12 w-full">
+                    <p-datepicker [(ngModel)]="outstandingModel().toDateUI" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('toDateUI', $event)" view="date" dateFormat="dd/mm/yy"
+                        size="small" inputId="toDateUI" class="w-full" />
+                    <label for="toDateUI">To Date</label>
+                </div>
+            </p-floatLabel>
+        </div>
+
+        <!-- Overdue Only -->
+        <div class="lg:w-1/4 w-full mb-3 flex items-center gap-2">
+            <input id="overdueOnly" type="checkbox" [(ngModel)]="outstandingModel().overdueOnly"
+                [ngModelOptions]="{standalone: true}"
+                (ngModelChange)="updateField('overdueOnly', $event)" class="w-auto" />
+            <label for="overdueOnly" class="mb-0 !text-lg font-medium gradient-heading">Overdue Only</label>
+        </div>
+
+        <!-- Search button -->
+        <div class="w-full flex justify-center m-3">
+            <button class="global-button" type="submit" [disabled]="submit()">
+                {{ submit() ? 'Processing...' : 'Search' }}
+            </button>
+        </div>
+    </div>
+
+    @if(closingMessage().length > 0) {
+    <div class="w-full my-4">
+        <div class="rounded-xl second-bgcolor px-4 py-3 shadow-sm">
+            <p class="text-center text-sm font-medium WhiteC">
+                {{ closingMessage() }}
+            </p>
+        </div>
+    </div>
+    }
+</form>
+
+@if(outstandingData()) {
+<div class="flex flex-wrap global-div mt-4 p-4">
+    <!-- Summary panel -->
+    <div class="w-full flex flex-wrap justify-between gl-summary-panel mb-3 p-3 gap-2">
+        <div><span class="label-color">TOTAL ORDERS:</span> {{ outstandingData()!.totalOrders }}</div>
+        <div><span class="label-color">TOTAL LINES:</span> {{ outstandingData()!.totalLines }}</div>
+        <div><span class="label-color">ORDERED QTY:</span> {{ outstandingData()!.totalOrderedQuantity | number:'1.2-2' }}</div>
+        <div><span class="label-color">RECEIVED QTY:</span> {{ outstandingData()!.totalReceivedQuantity | number:'1.2-2' }}</div>
+        <div><span class="label-color">OUTSTANDING QTY:</span> {{ outstandingData()!.totalOutstandingQuantity | number:'1.2-2' }}</div>
+        <div><span class="label-color">OUTSTANDING AMT:</span> {{ outstandingData()!.totalOutstandingAmount | number:'1.2-2' }}</div>
+        <div><span class="label-color">OVERDUE LINES:</span> {{ outstandingData()!.totalOverdueLines }}</div>
+    </div>
+
+    <!-- Data Table -->
+    <div class="w-full">
+        <p-table [value]="outstandingData()?.items?.items ?? []" [tableStyle]="{ 'min-width': '85rem' }">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>PO No</th>
+                    <th>Date</th>
+                    <th>Exp Delivery</th>
+                    <th>Supplier</th>
+                    <th>Warehouse</th>
+                    <th>Product</th>
+                    <th>Variant</th>
+                    <th class="text-right">Ordered</th>
+                    <th class="text-right">Received</th>
+                    <th class="text-right">Outstanding</th>
+                    <th class="text-right">Rate</th>
+                    <th class="text-right">Outstanding Amt</th>
+                    <th>Status</th>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-line>
+                <tr [ngClass]="{'opacity-80': line.isOverdue}">
+                    <td>{{ line.purchaseNumber }}</td>
+                    <td>{{ line.purchaseDate | date:'yyyy-MM-dd' }}</td>
+                    <td>
+                        {{ line.expectedDeliveryDate ? (line.expectedDeliveryDate | date:'yyyy-MM-dd') : '-' }}
+                        @if(line.isOverdue) {
+                        <span class="text-xs text-red-500 font-semibold block">({{ line.daysOverdue }}d late)</span>
+                        }
+                    </td>
+                    <td>{{ line.supplierName }}</td>
+                    <td>{{ line.warehouseName }}</td>
+                    <td>{{ line.productName }}</td>
+                    <td>{{ line.variantName }}</td>
+                    <td class="text-right">{{ line.orderedQuantity | number:'1.2-2' }} {{ line.uom }}</td>
+                    <td class="text-right">{{ line.receivedQuantity | number:'1.2-2' }}</td>
+                    <td class="text-right font-semibold">{{ line.outstandingQuantity | number:'1.2-2' }}</td>
+                    <td class="text-right">{{ line.rate | number:'1.2-2' }}</td>
+                    <td class="text-right">{{ line.outstandingAmount | number:'1.2-2' }}</td>
+                    <td>{{ line.fulfillmentStatus }}</td>
+                </tr>
+            </ng-template>
+        </p-table>
+
+        <div class="flex justify-end mt-3">
+            @if(hasNextPage() || hasPreviousPage()) {
+            @if(hasPreviousPage()){
+            <button class="pagination-button me-3" (click)="loadOutstanding($event, 'previous')">Previous</button>
+            }
+            @if(hasNextPage()){
+            <button class="pagination-button me-3" (click)="loadOutstanding($event, 'next')">Next</button>
+            }
+            }
+        </div>
+    </div>
 </div>
+}
