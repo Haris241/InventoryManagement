@@ -1,15 +1,240 @@
 <!-- Redirect Back to Reports -->
 <div class="w-full flex mb-4">
-  <button type="button" class="redirect-button flex items-center" routerLink="/Inventory/inventoryReports">
-    Back
-  </button>
+    <button type="button" class="redirect-button flex items-center" routerLink="/Inventory/inventoryReports">
+        Back
+    </button>
 </div>
 
-<div class="flex flex-wrap global-div p-5">
-  <div class="w-full mb-4">
-    <h3 class="text-2xl font-semibold text-center mb-3">
-      <span class="gradient-heading">Stock Reconciliation</span>
-    </h3>
-    <hr class="second-color">
-  </div>
+<form (ngSubmit)="OnSearch($event)">
+    <div class="flex flex-wrap global-div p-5">
+        <div class="w-full mb-4">
+            <h3 class="text-2xl font-semibold text-center mb-3">
+                <span class="gradient-heading">Stock Reconciliation</span>
+            </h3>
+            <hr class="second-color">
+        </div>
+        <div class="w-full mb-3">
+            <div class="w-full flex justify-end">
+                <button type="button" class="global-button flex items-center gap-2" (click)="generateReport()">
+                    <span class="material-symbols-outlined icon-color">description</span>Pdf
+                </button>
+            </div>
+        </div>
+
+        <!-- Note Banner for Product/Variant selection -->
+        <div class="w-full mb-3">
+            <div class="lg:w-1/2 w-full">
+                <p class="note-banner">Searching by product will search all its variants</p>
+            </div>
+        </div>
+
+        <!-- Warehouse -->
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-10/12 w-full">
+                    <p-autoComplete [(ngModel)]="reconciliationModel().warehouseId" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('warehouseId', $event)"
+                        (completeMethod)="SearchDropDown($event, wareHouseSearch.searchterm)" inputId="warehouseId"
+                        optionLabel="name" [dropdown]="true" [suggestions]="wareHouseSearchList()" optionValue="id"
+                        [showClear]="true" class="w-full"></p-autoComplete>
+                    <label for="warehouseId">Warehouse</label>
+                </div>
+            </p-floatLabel>
+        </div>
+
+        <!-- Product Search -->
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-10/12 w-full">
+                    <p-autoComplete [(ngModel)]="reconciliationModel().productId" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="onProductChange($event)"
+                        (completeMethod)="SearchDropDown($event, productSearch.searchterm)" inputId="productId"
+                        optionLabel="name" [dropdown]="true" [suggestions]="productSearchList()" optionValue="id"
+                        [showClear]="true" class="w-full"></p-autoComplete>
+                    <label for="productId">Product</label>
+                </div>
+            </p-floatLabel>
+        </div>
+
+        <!-- Product Variant Search -->
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-10/12 w-full">
+                    <p-autoComplete [(ngModel)]="selectedProductVariant" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="onVariantChange($event)"
+                        (completeMethod)="SearchDropDown($event, productVariantSearch.searchterm)"
+                        optionLabel="displayName" [suggestions]="productVariantSearchList()" [showClear]="true"
+                        appendTo="body" fluid size="small" panelStyleClass="product-search-panel"
+                        inputId="productVariantId">
+                        <ng-template let-product pTemplate="item">
+                            <div class="product-search-item">
+                                <div class="product-search-main">
+                                    {{ product.displayName }}
+                                </div>
+                                <div class="product-search-meta">
+                                    <div class="product-search-detail">
+                                        <span class="product-search-label">SKU:</span>
+                                        <span class="product-search-value">{{ product.sku }}</span>
+                                    </div>
+                                    <div class="product-search-detail">
+                                        <span class="product-search-label">Unit:</span>
+                                        <span class="product-search-value">{{ product.uom }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </p-autoComplete>
+                    <label for="productVariantId">Product Variant</label>
+                </div>
+            </p-floatLabel>
+        </div>
+
+        <!-- Mode -->
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-10/12 w-full">
+                    <p-select [(ngModel)]="reconciliationModel().mode" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('mode', $event)" [options]="modeOptions"
+                        optionLabel="name" optionValue="value" [showClear]="true" class="w-full"
+                        inputId="mode" />
+                    <label for="mode">Reconciliation Mode</label>
+                </div>
+            </p-floatLabel>
+        </div>
+
+        <!-- From Date -->
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-10/12 w-full">
+                    <p-datepicker [(ngModel)]="reconciliationModel().fromDateUI" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('fromDateUI', $event)" view="date" dateFormat="dd/mm/yy"
+                        size="small" inputId="fromDateUI" class="w-full" />
+                    <label for="fromDateUI">From Date</label>
+                </div>
+            </p-floatLabel>
+        </div>
+
+        <!-- To Date -->
+        <div class="lg:w-1/4 w-full mb-3">
+            <p-floatLabel variant="on">
+                <div class="lg:w-10/12 w-full">
+                    <p-datepicker [(ngModel)]="reconciliationModel().toDateUI" [ngModelOptions]="{standalone: true}"
+                        (ngModelChange)="updateField('toDateUI', $event)" view="date" dateFormat="dd/mm/yy"
+                        size="small" inputId="toDateUI" class="w-full" />
+                    <label for="toDateUI">To Date</label>
+                </div>
+            </p-floatLabel>
+        </div>
+
+        <!-- Variance Only -->
+        <div class="lg:w-1/4 w-full mb-3 flex items-center gap-2">
+            <input id="varianceOnly" type="checkbox" [(ngModel)]="reconciliationModel().varianceOnly"
+                [ngModelOptions]="{standalone: true}"
+                (ngModelChange)="updateField('varianceOnly', $event)" class="w-auto" />
+            <label for="varianceOnly" class="mb-0 !text-lg font-medium gradient-heading">Variance Only</label>
+        </div>
+
+        <!-- Search button -->
+        <div class="w-full flex justify-center m-3">
+            <button class="global-button" type="submit" [disabled]="submit()">
+                {{ submit() ? 'Processing...' : 'Search' }}
+            </button>
+        </div>
+    </div>
+
+    @if(closingMessage().length > 0) {
+    <div class="w-full my-4">
+        <div class="rounded-xl second-bgcolor px-4 py-3 shadow-sm">
+            <p class="text-center text-sm font-medium WhiteC">
+                {{ closingMessage() }}
+            </p>
+        </div>
+    </div>
+    }
+</form>
+
+@if(reconciliationData()) {
+<div class="flex flex-wrap global-div mt-4 p-4">
+    <!-- Summary panel -->
+    <div class="w-full flex flex-wrap justify-between gl-summary-panel mb-3 p-3 gap-2">
+        <div><span class="label-color">FROM:</span> {{ reconciliationData()!.fromDate | date:'yyyy-MM-dd' }}</div>
+        <div><span class="label-color">TO:</span> {{ reconciliationData()!.toDate | date:'yyyy-MM-dd' }}</div>
+        <div><span class="label-color">MODE:</span> {{ reconciliationData()!.mode }}</div>
+        <div><span class="label-color">WAREHOUSE:</span> {{ reconciliationData()!.filterWarehouse || 'All' }}</div>
+        <div><span class="label-color">TOTAL COUNTED:</span> {{ reconciliationData()!.totalItemsCounted }}</div>
+        <div><span class="label-color">MATCHED:</span> {{ reconciliationData()!.matchedItemsCount }}</div>
+        <div><span class="label-color">DISCREPANCY:</span> {{ reconciliationData()!.discrepancyItemsCount }}</div>
+        <div><span class="label-color">ACCURACY:</span> {{ reconciliationData()!.accuracyRate | number:'1.1-2' }}%</div>
+        <div><span class="label-color">BOOK VAL:</span> {{ reconciliationData()!.totalBookValue | number:'1.2-2' }}</div>
+        <div><span class="label-color">PHYSICAL VAL:</span> {{ reconciliationData()!.totalPhysicalValue | number:'1.2-2' }}</div>
+        <div><span class="label-color">NET VARIANCE:</span> {{ reconciliationData()!.netVarianceValue | number:'1.2-2' }}</div>
+    </div>
+
+    <!-- Data Table -->
+    <div class="w-full">
+        <p-table [value]="reconciliationData()?.items?.items ?? []" [tableStyle]="{ 'min-width': '95rem' }">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Date</th>
+                    <th>Doc No</th>
+                    <th>Warehouse</th>
+                    <th>Product / Variant</th>
+                    <th>SKU</th>
+                    <th class="text-right">Book Qty</th>
+                    <th class="text-right">Physical Qty</th>
+                    <th class="text-right">Variance Qty</th>
+                    <th class="text-right">Unit Cost</th>
+                    <th class="text-right">Variance Val</th>
+                    <th>Status</th>
+                    <th>Remarks</th>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-line>
+                <tr>
+                    <td>{{ line.reconciliationDate | date:'yyyy-MM-dd' }}</td>
+                    <td>{{ line.documentNo }}</td>
+                    <td>{{ line.warehouseName }}</td>
+                    <td>{{ line.productName }} ({{ line.variantName }})</td>
+                    <td>{{ line.sku }}</td>
+                    <td class="text-right">{{ line.bookQuantity | number:'1.2-2' }} {{ line.uom }}</td>
+                    <td class="text-right">{{ line.physicalQuantity | number:'1.2-2' }}</td>
+                    <td class="text-right font-semibold" [ngClass]="{
+                        'text-emerald-500': line.varianceQuantity > 0,
+                        'text-red-500': line.varianceQuantity < 0
+                    }">
+                        {{ line.varianceQuantity | number:'1.2-2' }}
+                    </td>
+                    <td class="text-right">{{ line.unitCost | number:'1.2-2' }}</td>
+                    <td class="text-right font-semibold" [ngClass]="{
+                        'text-emerald-500': line.varianceValue > 0,
+                        'text-red-500': line.varianceValue < 0
+                    }">
+                        {{ line.varianceValue | number:'1.2-2' }}
+                    </td>
+                    <td>
+                        <span [ngClass]="{
+                            'second-color font-semibold': line.reconciliationStatus === 'Discrepancy',
+                            'font-medium': line.reconciliationStatus !== 'Discrepancy'
+                        }">
+                            {{ line.reconciliationStatus }}
+                        </span>
+                    </td>
+                    <td>{{ line.remarks || '-' }}</td>
+                </tr>
+            </ng-template>
+        </p-table>
+
+        <div class="flex justify-end mt-3">
+            @if(hasNextPage() || hasPreviousPage()) {
+            @if(hasPreviousPage()){
+            <button class="pagination-button me-3" (click)="loadReconciliation($event, 'previous')">Previous</button>
+            }
+            @if(hasNextPage()){
+            <button class="pagination-button me-3" (click)="loadReconciliation($event, 'next')">Next</button>
+            }
+            }
+        </div>
+    </div>
 </div>
+}
